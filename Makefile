@@ -14,12 +14,13 @@ PYTHON ?= $(shell \
 		command -v python3; \
 	fi)
 
-.PHONY: help lint test check demo revoke isolate clean
+.PHONY: help lint test check cost demo revoke isolate clean
 
 help:
 	@echo "make lint    ruff over the tree"
 	@echo "make test    the offline suite ($(PYTHON))"
 	@echo "make check   lint + test"
+	@echo "make cost    what a compromised tool costs, with the graph and without"
 	@echo "make demo    the poisoning scenario, with Custody and without"
 	@echo "make revoke  G3 offline: revoke a compromised tool across the graph"
 	@echo "make isolate G4 offline: cross-department isolation, trust and quarantine"
@@ -31,6 +32,9 @@ test:
 	$(PYTHON) -m unittest discover -s tests -t . -v
 
 check: lint test
+
+cost:
+	@$(PYTHON) scripts/cost.py
 
 demo:
 	@$(PYTHON) scripts/demo.py
