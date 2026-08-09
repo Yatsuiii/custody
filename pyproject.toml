@@ -1,0 +1,14 @@
+[project]
+name = "custody"
+version = "0.1.0"
+description = "Chain of custody for agent memory: origin, derivation, and retroactive revocation over ADK Memory Bank."
+requires-python = ">=3.12"
+# The core imports no SDK on purpose, so the full suite runs without this.
+# Install it and the ADK conformance tests stop skipping.
+dependencies = []
+
+[project.optional-dependencies]
+adk = ["google-adk>=2.6.3"]
+
+[tool.ruff]
+line-length = 88
