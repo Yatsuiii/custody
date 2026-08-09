@@ -1,1 +1,14 @@
-google-adk>=2.6.3
+# google-adk is the seam: BaseMemoryService is the port Custody governs.
+google-adk>=2.6.3,<3
+
+# Memory Bank itself. This is the Vertex AI SDK, which is what GEAP is; there
+# is no separate GEAP package.
+google-cloud-aiplatform[agent-engines]>=1.148.1,<2
+
+# Pinned deliberately. google-adk requires opentelemetry <=1.42.1 and
+# google-cloud-aiplatform pulls an exporter that wants ~=1.44.0, so an
+# unpinned install produces a set pip itself reports as broken. That failure
+# surfaces at deploy rather than locally, which is the worst place to find it.
+opentelemetry-api>=1.39,<=1.42.1
+opentelemetry-sdk>=1.39,<=1.42.1
+opentelemetry-exporter-otlp-proto-http<=1.42.1

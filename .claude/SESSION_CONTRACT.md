@@ -204,10 +204,33 @@ Baseline:
 - Pinned by test: `InMemoryMemoryService.search_memory` matches on `part.text`
   only, so a raw `function_response` is stored and never retrieved. The laundered
   restatement is the dangerous form because it is the retrievable one.
-- **Day-one checks, when the account lands 2026-08-10.** Whether Memory Bank
-  supports deletion. Whether Vertex's `agent_engines.memories.retrieve` accepts
-  filters ADK does not pass. Whether GEAP components are reachable on a fresh
-  account at all. A 200 on any other account is not evidence.
+- **Two of the three day-one checks settled 2026-08-10 without credentials**,
+  by reading `google-cloud-aiplatform` 1.163.0 rather than waiting for an
+  account. Both were questions about a client library's surface.
+
+  **Deletion is supported.** `agent_engines.memories.delete(name=...)` exists,
+  keyed on the memory's resource name
+  (`projects/{p}/locations/{l}/reasoningEngines/{r}/memories/{m}`). So G3's
+  preferred revocation path is available and the post-filter fallback is not
+  needed. Consequence: a custody record must map to that resource name, which
+  is what `memories/{memory_ref}` in the data model is for. **Unresolved:** ADK's
+  `add_session_to_memory` returns `None`, so the names of memories it created
+  are not handed back. Obtaining the mapping needs either the raw client or a
+  list call, and that is a real design decision, not a detail.
+
+  **Scope is an arbitrary, enforced isolation primitive**, and this is the more
+  useful finding. `Memory.scope` is `dict[str, str]`, documented as *"Required.
+  Immutable. Represents the scope of the Memory. Memories are isolated within
+  their scope."* ADK merely happens to pass `{app_name, user_id}`. So
+  department, and potentially trust, can be carried in scope and Memory Bank
+  enforces the isolation itself rather than Custody enforcing it alone. That
+  strengthens G4 and gives back a read-side filter if one is ever needed.
+  **Inferred, not yet run:** that arbitrary scope keys are accepted and that
+  retrieval matches on them exactly. The docstring says so; the account will
+  settle it.
+
+  **Still needs the account:** whether GEAP components are reachable on a fresh
+  trial project at all. A 200 on any other account is not evidence.
 
 Acceptance gates:
 
