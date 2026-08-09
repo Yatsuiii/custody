@@ -225,7 +225,19 @@ screen.
 
 ## Stated assumption, not a finding
 
-**No enterprise incident data exists for memory poisoning.** It has formal
+**Two bets, not one, and they stack.**
+
+First: **long-term memory adoption is early.** Measured 2026-08-09, 2 of 34
+official ADK sample agents use a memory service and 1 writes to it. For the
+hackathon this is not a problem, because the Fleet track mandates context across
+weeks of asynchronous operations, so the judged population must use memory. For
+the subscription plan it is a real constraint and should be priced.
+
+What survived testing: the governed path is canonical. ADK's own docstring
+recommends `await ctx.add_session_to_memory()` in an after-agent callback, which
+writes the whole session including every function response.
+
+Second: **no enterprise incident data exists for memory poisoning.** It has formal
 standing as OWASP ASI06 and demonstrated attack success rates in research, which
 is more than the predecessor's threat model ever had, but recognised and
 demonstrated is not happening to customers. This is a declared bet on a problem

@@ -254,10 +254,34 @@ Carried from two dead projects, and it is the reason this one exists.
 and measure how often it occurs in real data.** No design until that number
 exists.
 
-Custody's justification for skipping the frequency test: it has no triggering
-event. Every memory write either carries origin or it does not, permanently, in
-every fleet. That is what makes it structurally immune to the failure that killed
-Warrant and Vigil, and it is the single strongest argument for the project.
+**Corrected the same day, after being challenged and then tested.** The original
+wording claimed Custody skips the frequency test because it has no triggering
+event. The first half is true: every memory write either carries origin or it
+does not, permanently. The conclusion drawn from it was wrong. The failure that
+killed Warrant and Vigil is *the thing you protect is not used*, and that risk
+applies here as **adoption** rather than as an event.
+
+Measured rather than assumed: of **34 official ADK sample agents, 2 use a memory
+service at all and 1 writes to it.** Long-term memory adoption is around 6% in
+Google's own samples.
+
+The exposure splits into two different bets and they must not be conflated:
+
+- **The hackathon bet is fine, arguably ideal.** The Fleet track mandates
+  "context across weeks of asynchronous operations", so every serious entry must
+  use long-term memory. Within the judged population adoption is effectively
+  total.
+- **The market bet is early.** 6% adoption, stacked on top of the other declared
+  bet that memory poisoning has no enterprise incident data. **Two
+  arriving-problem bets at once.** Warrant died holding one. Anyone planning to
+  sell this should price that.
+
+What did survive testing, and it matters: the path Custody governs is the
+canonical one. ADK's own docstring recommends `await ctx.add_session_to_memory()`
+in an after-agent callback, which writes the **entire session** including every
+function response. The API server exposes the same operation, and the memory
+tools are read-only, so there is no narrower write path a developer would reach
+for instead. **When memory is on, tool output goes in.**
 
 Corollary: **measure on a representative sample.** Six MCP reference servers said
 tool definitions never change; the 7,046-server registry said 97% do.
