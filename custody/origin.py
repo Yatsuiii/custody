@@ -107,12 +107,17 @@ class CustodyRecord:
 class Admitted:
     text: str
     record: CustodyRecord
+    #: Which event in the session carried this. Taint is a session-level
+    #: property, so custody is taken over the whole session and callers need
+    #: this to map a verdict back to the event it belongs to.
+    event_index: int = 0
 
 
 @dataclass(frozen=True)
 class Rejected:
     text: str
     reason: Refusal
+    event_index: int = 0
 
 
 @dataclass(frozen=True)
@@ -163,7 +168,7 @@ def take_custody(events: Iterable[Event], tools: ToolTrust | None = None) -> Cus
     #: later in the same invocation are derived from it.
     tainted: dict[str, str] = {}
 
-    for event in events:
+    for index, event in enumerate(events):
         content = getattr(event, "content", None)
         parts = getattr(content, "parts", None) if content else None
         if not parts:
@@ -183,15 +188,18 @@ def take_custody(events: Iterable[Event], tools: ToolTrust | None = None) -> Cus
                 continue
 
             if not invocation:
-                refused.append(Rejected(text=text, reason=Refusal.NO_INVOCATION))
+                refused.append(
+                    Rejected(text, Refusal.NO_INVOCATION, event_index=index)
+                )
                 continue
             if not author:
-                refused.append(Rejected(text=text, reason=Refusal.NO_AUTHOR))
+                refused.append(Rejected(text, Refusal.NO_AUTHOR, event_index=index))
                 continue
 
             admitted.append(
                 Admitted(
                     text=text,
+                    event_index=index,
                     record=_attribute(
                         text=text,
                         author=author,
