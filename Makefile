@@ -10,12 +10,13 @@ PYTHON ?= $(shell \
 		command -v python3; \
 	fi)
 
-.PHONY: help lint test check clean
+.PHONY: help lint test check demo clean
 
 help:
 	@echo "make lint    ruff over the tree"
 	@echo "make test    the offline suite ($(PYTHON))"
 	@echo "make check   lint + test"
+	@echo "make demo    the poisoning scenario, with Custody and without"
 
 lint:
 	ruff check .
@@ -24,6 +25,9 @@ test:
 	$(PYTHON) -m unittest discover -s tests -t . -v
 
 check: lint test
+
+demo:
+	@$(PYTHON) scripts/demo.py
 
 clean:
 	rm -rf .ruff_cache
