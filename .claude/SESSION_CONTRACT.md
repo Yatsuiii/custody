@@ -53,7 +53,7 @@ text arrived from a tool rather than from the user or the model" is a structural
 property of the event. The labelling step needs **no model**. If that ever stops
 being true, the project's main claim to determinism goes with it.
 
-## Non-goals
+Non-goals:
 
 - **No model decides provenance.** Origin comes from event structure. A model may
   summarise or explain, never label or adjudicate.
@@ -115,19 +115,32 @@ not exist.
 Every CANDIDATE has an in-memory implementation behind the same port, so an
 unreachable GEAP row degrades rather than blocks.
 
-## Baseline
+Baseline:
 
 New repository. Environment facts verified 2026-08-09:
 
 - ADK memory and event models read from `google/adk-python` at `main`; the field
   sets above are quoted from source.
+- **Day-one kill check run early, 2026-08-09, from source.** Memory Bank does
+  not close the gap. In `memory/vertex_ai_memory_bank_service.py` the entire
+  scoping axis is `scope={'app_name':..., 'user_id':...}`; `metadata` is a
+  free-form "mapping of custom metadata key-value pairs" the caller supplies and
+  nothing validates. Decisively, `search_memory(app_name, user_id, query)` takes
+  **no filter parameter at all**, so even provenance diligently written into
+  metadata is **write-only: recordable, and unusable at retrieval time.**
+  Consequence for the design: enforcement cannot live inside Memory Bank and
+  must wrap `search_memory`, retrieving and then partitioning by custody record.
+  Unverified until the account exists: whether the underlying Vertex
+  `agent_engines.memories.retrieve` accepts filters that ADK simply does not
+  pass. Check on 08-10. If it does, G2 gets simpler; the gap does not close,
+  because the write side still carries no enforced origin.
 - Google Cloud account for the build **arrives 2026-08-10** (confirmed by Raghav
   on 08-09). Gemini 3.5+, Memory Bank and every GEAP row are unverified on it and
   are the first thing to check when it lands. A 200 on any other account is not
   evidence, and a 404 or PERMISSION_DENIED is a kill-condition input rather than
   a config nuisance.
 
-## Acceptance gates
+Acceptance gates:
 
 - **G1 deployment.** A Cloud Run service accepts a trigger and returns a run id;
   the record shows a Gemini 3.5-or-newer model served through Vertex AI; at least
@@ -172,6 +185,16 @@ New repository. Environment facts verified 2026-08-09:
 
 G2 and G3 are the riskiest and both came out of a pressure test on 2026-08-09.
 G4 exists because the honest cost of this design is recall.
+
+Verification:
+
+`make check` runs lint and the offline suite with no network and no cloud: the
+custody function is pure, so its whole contract is testable without either.
+`make demo` runs the poisoning scenario end to end and prints the two paths,
+Custody off and Custody on. `make gates` prints PASS/FAIL per gate by reading
+persisted custody records, quarantine entries and action records rather than by
+asserting in prose. Manual: watch the four-minute recording and confirm every
+claim is visible on screen.
 
 ## Stated assumption, not a finding
 
