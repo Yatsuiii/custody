@@ -14,12 +14,14 @@ PYTHON ?= $(shell \
 		command -v python3; \
 	fi)
 
-.PHONY: help lint test check gates cost demo revoke isolate clean
+.PHONY: help lint test check serve image gates cost demo revoke isolate clean
 
 help:
 	@echo "make lint    ruff over the tree"
 	@echo "make test    the offline suite ($(PYTHON))"
 	@echo "make check   lint + test"
+	@echo "make serve   the control plane locally on :8080"
+	@echo "make image   build the Cloud Run container and check the pins hold"
 	@echo "make gates   PASS/FAIL per gate, judged from proof-out/"
 	@echo "make cost    what a compromised tool costs, with the graph and without"
 	@echo "make demo    the poisoning scenario, with Custody and without"
@@ -33,6 +35,12 @@ test:
 	$(PYTHON) -m unittest discover -s tests -t . -v
 
 check: lint test
+
+serve:
+	@$(PYTHON) -m custody.control_plane
+
+image:
+	docker build -t custody:local .
 
 gates:
 	@$(PYTHON) scripts/gates.py

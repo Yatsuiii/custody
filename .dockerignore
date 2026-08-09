@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+.ruff_cache/
+*.pyc
+.git/
+tests/
+scripts/
+docs/
+proof-out/
+*.md
