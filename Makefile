@@ -14,12 +14,13 @@ PYTHON ?= $(shell \
 		command -v python3; \
 	fi)
 
-.PHONY: help lint test check cost demo revoke isolate clean
+.PHONY: help lint test check gates cost demo revoke isolate clean
 
 help:
 	@echo "make lint    ruff over the tree"
 	@echo "make test    the offline suite ($(PYTHON))"
 	@echo "make check   lint + test"
+	@echo "make gates   PASS/FAIL per gate, judged from proof-out/"
 	@echo "make cost    what a compromised tool costs, with the graph and without"
 	@echo "make demo    the poisoning scenario, with Custody and without"
 	@echo "make revoke  G3 offline: revoke a compromised tool across the graph"
@@ -32,6 +33,9 @@ test:
 	$(PYTHON) -m unittest discover -s tests -t . -v
 
 check: lint test
+
+gates:
+	@$(PYTHON) scripts/gates.py
 
 cost:
 	@$(PYTHON) scripts/cost.py
@@ -46,5 +50,5 @@ isolate:
 	@$(PYTHON) scripts/isolate.py
 
 clean:
-	rm -rf .ruff_cache
+	rm -rf .ruff_cache proof-out
 	find . -name __pycache__ -type d -prune -exec rm -rf {} +
