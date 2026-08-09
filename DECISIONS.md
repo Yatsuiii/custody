@@ -271,10 +271,27 @@ The exposure splits into two different bets and they must not be conflated:
   "context across weeks of asynchronous operations", so every serious entry must
   use long-term memory. Within the judged population adoption is effectively
   total.
-- **The market bet is early.** 6% adoption, stacked on top of the other declared
-  bet that memory poisoning has no enterprise incident data. **Two
-  arriving-problem bets at once.** Warrant died holding one. Anyone planning to
-  sell this should price that.
+- **The market bet is early, and the evidence says new rather than dead.**
+  Measured: the Memory Bank client landed in ADK on 2025-06-24, has 29 commits,
+  and was last touched 2026-08-03. The official `memory-bank` sample first
+  appeared 2026-04-14, alongside GEAP's launch at Next '26. So 6% adoption is a
+  four-month-old, actively developed capability rather than an abandoned one.
+
+  This is a materially better kind of early than Warrant's. Warrant bet on agent
+  fleets taking unattended external actions, where no vendor shipped a product
+  and nothing was driving adoption. Custody bets on agent long-term memory, where
+  **Google built the product, launched it, wrote the sample, still commits to it
+  weekly, and wrote a hackathon track that mandates using it.** A vendor-created
+  and vendor-promoted market is not the same as an empty one. It also means no
+  entrenched incumbent, which is exactly what killed Vigil's differentiation.
+
+  It still stacks with the other declared bet, that memory poisoning has no
+  enterprise incident data. Two arriving-problem bets at once, where Warrant died
+  holding one. Price it before selling.
+
+  **The falsifier, so this stays honest:** if adoption is still around 6% in six
+  months, it was early-and-static rather than early. The forcing function has to
+  actually fire, and a four-month trend is not a law.
 
 What did survive testing, and it matters: the path Custody governs is the
 canonical one. ADK's own docstring recommends `await ctx.add_session_to_memory()`
