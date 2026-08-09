@@ -21,7 +21,9 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Protocol, Sequence
 
-from custody.origin import CustodyRecord, ToolTrust, Trust, take_custody
+from custody.catalog import TrustCatalog
+from custody.graph import CustodyGraph
+from custody.origin import Admitted, CustodyRecord, ToolTrust, Trust, take_custody
 
 
 class Session(Protocol):
@@ -84,6 +86,10 @@ class Split:
     admitted_events: tuple[object, ...] = ()
     withheld_events: tuple[object, ...] = ()
     quarantined: tuple[Quarantined, ...] = ()
+    #: The admitted records actually written downstream, trust and all. This is
+    #: what a `CustodyGraph` needs to add after the write, so a later session's
+    #: retrieval of this content can be attributed back to it.
+    trusted: tuple[Admitted, ...] = ()
     refused: int = 0
 
     @property
@@ -96,18 +102,24 @@ class Split:
 
 
 def split_session(
-    session: Session, tools: ToolTrust | None = None
+    session: Session,
+    tools: ToolTrust | None = None,
+    graph: CustodyGraph | None = None,
 ) -> Split:
     """Partition a session's events into what may be remembered and what may not.
 
-    Pure, so the enforcement rule is testable without a memory service at all.
+    Pure with `graph` omitted, so the enforcement rule is testable without a
+    memory service at all. With a graph, a `load_memory` response that matches
+    content the graph already holds is attributed as a citation, inheriting
+    that record's trust and lineage, rather than judged as new, unvouched
+    content: see `take_custody`.
     """
     events = list(session.events)
     # Custody is taken over the whole session in one pass, never per event.
     # Taint crosses event boundaries by design: the hostile tool response and
     # the model turn that launders it are different events, and evaluating
     # each alone would clear the laundered copy.
-    custody = take_custody(events, tools)
+    custody = take_custody(events, tools, resolver=graph)
 
     untrusted_at = {
         a.event_index
@@ -136,11 +148,13 @@ def split_session(
         if a.record.trust is Trust.UNTRUSTED
     ]
     refused = len(custody.refused)
+    trusted = tuple(a for a in custody.admitted if a.record.trust is Trust.TRUSTED)
 
     return Split(
         admitted_events=tuple(admitted),
         withheld_events=tuple(withheld),
         quarantined=tuple(held),
+        trusted=trusted,
         refused=refused,
     )
 
@@ -167,13 +181,30 @@ class CustodyMemoryService:
     downstream: MemoryService
     quarantine: QuarantineStore
     tools: ToolTrust = field(default_factory=ToolTrust)
+    #: The derivation graph. Every trusted record this service writes is added
+    #: to it, and every session it splits is checked against it first, so a
+    #: `load_memory` retrieval of content this service wrote earlier, in this
+    #: session or another, carries a `derived_from` edge back to the original.
+    graph: CustodyGraph = field(default_factory=CustodyGraph)
+    #: If set with `department`, trust is read fresh from the catalog on every
+    #: call instead of from the static `tools` above. This is what makes G4
+    #: real rather than assumed: a grant recorded for another department is
+    #: structurally invisible here, because `trust_for` never looks at it.
+    catalog: TrustCatalog | None = None
+    department: str | None = None
     splits: list[Split] = field(default_factory=list)
 
+    def _tools(self) -> ToolTrust:
+        if self.catalog is not None and self.department is not None:
+            return self.catalog.trust_for(self.department)
+        return self.tools
+
     async def add_session_to_memory(self, session: Session) -> Split:
-        split = split_session(session, self.tools)
+        split = split_session(session, self._tools(), self.graph)
         for item in split.quarantined:
             self.quarantine.hold(item)
         self.splits.append(split)
+        self.graph.extend(a.record for a in split.trusted)
 
         if split.admitted_events:
             await self.downstream.add_session_to_memory(

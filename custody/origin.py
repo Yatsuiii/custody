@@ -22,6 +22,12 @@ from typing import Iterable, Protocol, Sequence
 #: The author string ADK uses for a human turn. Anything else is an agent name.
 USER_AUTHOR = "user"
 
+#: ADK's own memory-retrieval tool (`google.adk.tools.load_memory_tool`). A
+#: response from it is not new content, it is a citation of something already
+#: written, so `take_custody` attributes it by resolving it rather than by
+#: asking whether the tool is vouched for.
+DEFAULT_RETRIEVAL_TOOLS: frozenset[str] = frozenset({"load_memory"})
+
 
 class Origin(str, Enum):
     """Where content entered the system, not who stored it."""
@@ -93,6 +99,14 @@ class CustodyRecord:
     #: The tool whose response introduced this content, or tainted the model
     #: turn that produced it. Absent for user turns and clean model turns.
     source_tool: str | None = None
+    #: Identifies this record within a `custody.graph.CustodyGraph`. Empty for
+    #: records built outside `take_custody`, e.g. in tests of downstream
+    #: consumers that never join the graph.
+    id: str = ""
+    #: Ids of the records this one was derived from. Populated for a DERIVED
+    #: model turn, pointing at the untrusted arrival that tainted it. This is
+    #: the graph edge retroactive revocation walks.
+    derived_from: tuple[str, ...] = ()
 
     def instruction_eligible(self) -> bool:
         """Whether this may enter context the model treats as instructions.
@@ -101,6 +115,18 @@ class CustodyRecord:
         rule lives with the data rather than being re-derived by every caller.
         """
         return self.trust is Trust.TRUSTED
+
+
+class RecordResolver(Protocol):
+    """Something that can say whether content already has a custody record.
+
+    `custody.graph.CustodyGraph` satisfies this structurally. Named here
+    rather than imported from `graph.py` because `graph.py` already depends on
+    this module; the resolver is the narrow slice `take_custody` needs, not
+    the whole graph.
+    """
+
+    def resolve(self, content_sha256: str) -> CustodyRecord | None: ...
 
 
 @dataclass(frozen=True)
@@ -155,18 +181,38 @@ class ToolTrust:
         return Trust.UNTRUSTED
 
 
-def take_custody(events: Iterable[Event], tools: ToolTrust | None = None) -> Custody:
+def take_custody(
+    events: Iterable[Event],
+    tools: ToolTrust | None = None,
+    *,
+    resolver: RecordResolver | None = None,
+    retrieval_tools: frozenset[str] = DEFAULT_RETRIEVAL_TOOLS,
+) -> Custody:
     """Attribute every piece of content in a session to where it came from.
 
-    Pure: no clock, no network, no store. The one place the product's claim is
-    actually made, and therefore the one place worth testing exhaustively.
+    Pure with `resolver` omitted, and that is still most of what this does:
+    the one place the product's claim is actually made, and therefore the one
+    place worth testing exhaustively. With a resolver, a response from a
+    retrieval tool is checked against it before falling back to `tools`: a
+    match means the content is not new, it is a citation of something already
+    admitted, possibly in an earlier session or a different department, and it
+    inherits that record's trust and lineage rather than starting fresh. This
+    has to happen inline rather than as a pass over the result, because the
+    verdict feeds taint tracking for every turn later in the same invocation.
     """
     trust = tools or ToolTrust()
     admitted: list[Admitted] = []
     refused: list[Rejected] = []
-    #: Invocations in which untrusted content has already appeared. Model turns
-    #: later in the same invocation are derived from it.
-    tainted: dict[str, str] = {}
+    #: Invocations in which untrusted content has already appeared, keyed to
+    #: (record id, tool name) of the arrival that caused it. Model turns later
+    #: in the same invocation are derived from that record.
+    tainted: dict[str, tuple[str, str]] = {}
+    #: The most recent tool response record id in each invocation, regardless
+    #: of trust. A model turn following it is derived from it on the graph even
+    #: when the tool is currently trusted: trust is a point-in-time judgement,
+    #: and a tool trusted today can be demoted tomorrow, at which point this
+    #: edge is what lets revocation find the restatement.
+    lineage: dict[str, str] = {}
 
     for index, event in enumerate(events):
         content = getattr(event, "content", None)
@@ -177,7 +223,7 @@ def take_custody(events: Iterable[Event], tools: ToolTrust | None = None) -> Cus
         author = getattr(event, "author", "") or ""
         invocation = getattr(event, "invocation_id", "") or ""
 
-        for part in parts:
+        for part_index, part in enumerate(parts):
             response = getattr(part, "function_response", None)
             text = (
                 _response_text(response)
@@ -204,9 +250,13 @@ def take_custody(events: Iterable[Event], tools: ToolTrust | None = None) -> Cus
                         text=text,
                         author=author,
                         invocation=invocation,
+                        record_id=f"{invocation}:{index}:{part_index}",
                         response=response,
                         trust=trust,
                         tainted=tainted,
+                        lineage=lineage,
+                        resolver=resolver,
+                        retrieval_tools=retrieval_tools,
                     ),
                 )
             )
@@ -219,24 +269,45 @@ def _attribute(
     text: str,
     author: str,
     invocation: str,
+    record_id: str,
     response: FunctionResponse | None,
     trust: ToolTrust,
-    tainted: dict[str, str],
+    tainted: dict[str, tuple[str, str]],
+    lineage: dict[str, str],
+    resolver: RecordResolver | None,
+    retrieval_tools: frozenset[str],
 ) -> CustodyRecord:
     common = {
         "author": author,
         "invocation_id": invocation,
         "content_sha256": digest(text),
+        "id": record_id,
     }
 
     if response is not None:
         tool = getattr(response, "name", None)
-        verdict = trust.of(tool)
+        cited = (
+            resolver.resolve(common["content_sha256"])
+            if resolver is not None and tool in retrieval_tools
+            else None
+        )
+        if cited is not None:
+            verdict = cited.trust
+            derived_from: tuple[str, ...] = (cited.id,)
+        else:
+            verdict = trust.of(tool)
+            derived_from = ()
+
         if verdict is Trust.UNTRUSTED:
             # The first untrusted arrival taints what follows in this invocation.
-            tainted.setdefault(invocation, tool or "unnamed-tool")
+            tainted.setdefault(invocation, (record_id, tool or "unnamed-tool"))
+        lineage[invocation] = record_id
         return CustodyRecord(
-            origin=Origin.TOOL, trust=verdict, source_tool=tool, **common
+            origin=Origin.TOOL,
+            trust=verdict,
+            source_tool=tool,
+            derived_from=derived_from,
+            **common,
         )
 
     if author == USER_AUTHOR:
@@ -244,13 +315,28 @@ def _attribute(
 
     source = tainted.get(invocation)
     if source is not None:
+        source_id, source_tool = source
+        # Chained to the most recent link, not always the original tool
+        # response, so a restatement of a restatement is two hops on the
+        # graph rather than two parallel edges into the same root.
+        derived_from = (lineage.get(invocation, source_id),)
+        lineage[invocation] = record_id
         return CustodyRecord(
             origin=Origin.DERIVED,
             trust=Trust.UNTRUSTED,
-            source_tool=source,
+            source_tool=source_tool,
+            derived_from=derived_from,
             **common,
         )
-    return CustodyRecord(origin=Origin.MODEL, trust=Trust.TRUSTED, **common)
+    derived_from = (lineage[invocation],) if invocation in lineage else ()
+    if derived_from:
+        lineage[invocation] = record_id
+    return CustodyRecord(
+        origin=Origin.MODEL,
+        trust=Trust.TRUSTED,
+        derived_from=derived_from,
+        **common,
+    )
 
 
 def _response_text(response: FunctionResponse) -> str:

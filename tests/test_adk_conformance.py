@@ -23,6 +23,7 @@ except ImportError:  # pragma: no cover - exercised only where ADK is absent
     ADK = False
 
 from custody.action import Export, ExportGateway
+from custody.graph import CustodyGraph
 from custody.origin import Origin, ToolTrust, Trust, take_custody
 from custody.service import (
     CustodyMemoryService,
@@ -106,6 +107,24 @@ class TheCoreReadsRealAdkObjects(unittest.TestCase):
         trust = ToolTrust(frozenset({"payroll"}))
         (admitted,) = take_custody([tool_event("payroll", {"salary": 1})], trust).admitted
         self.assertIs(admitted.record.trust, Trust.TRUSTED)
+
+    def test_a_real_load_memory_call_is_attributed_by_content(self):
+        """`load_memory` is ADK's real tool name (`load_memory_tool.py`), not a
+        fixture invention. A genuine Event carrying its response is resolved
+        against the graph the same way the fixture-based tests already prove."""
+        graph = CustodyGraph()
+        (original,) = take_custody(
+            [tool_event("crm_lookup", {"result": "balance: 500"}, invocation="inv-1")],
+            ToolTrust(frozenset({"crm_lookup"})),
+        ).admitted
+        graph.add(original.record)
+
+        (admitted,) = take_custody(
+            [tool_event("load_memory", {"result": "balance: 500"}, invocation="inv-2")],
+            resolver=graph,
+        ).admitted
+        self.assertIs(admitted.record.trust, Trust.TRUSTED)
+        self.assertEqual(admitted.record.derived_from, (original.record.id,))
 
 
 @unittest.skipUnless(ADK, "google-adk is not installed")

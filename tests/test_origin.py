@@ -143,6 +143,44 @@ class TaintPropagatesThroughTheModel(unittest.TestCase):
         (_, derived) = take_custody(session).admitted
         self.assertEqual(derived.record.source_tool, "scrape_site")
 
+    def test_the_derived_record_points_at_the_tool_records_id(self):
+        """The graph edge revocation walks: derived_from names the poisoned record."""
+        session = [
+            tool("scrape_site", "hostile"),
+            model("laundered restatement"),
+        ]
+        (poisoned, derived) = take_custody(session).admitted
+        self.assertEqual(derived.record.derived_from, (poisoned.record.id,))
+
+
+class RecordsCarryAGraphIdentity(unittest.TestCase):
+    def test_every_admitted_record_has_a_nonempty_id(self):
+        session = [user("a"), tool("t", "b"), model("c")]
+        result = take_custody(session)
+        ids = [a.record.id for a in result.admitted]
+        self.assertTrue(all(ids))
+
+    def test_ids_are_unique_within_a_session(self):
+        session = [user("a"), tool("t", "b"), model("c")]
+        result = take_custody(session)
+        ids = [a.record.id for a in result.admitted]
+        self.assertEqual(len(ids), len(set(ids)))
+
+    def test_a_clean_model_turn_has_no_derived_from(self):
+        result = take_custody([user("hi"), model("hello")])
+        self.assertTrue(all(a.record.derived_from == () for a in result.admitted))
+
+    def test_a_trusted_tools_restatement_still_carries_the_graph_edge(self):
+        """Trust is a point-in-time judgement: today's trusted tool can be
+        demoted tomorrow, and revocation needs this edge to find the
+        restatement even though nothing here was ever quarantined."""
+        trust = ToolTrust(trusted=frozenset({"crm_lookup"}))
+        session = [tool("crm_lookup", {"balance": 500}), model("Balance: 500.")]
+        (looked_up, restated) = take_custody(session, trust).admitted
+        self.assertIs(restated.record.origin, Origin.MODEL)
+        self.assertIs(restated.record.trust, Trust.TRUSTED)
+        self.assertEqual(restated.record.derived_from, (looked_up.record.id,))
+
 
 class PartitioningIsTheEnforcementPoint(unittest.TestCase):
     def test_untrusted_content_is_not_instruction_eligible(self):

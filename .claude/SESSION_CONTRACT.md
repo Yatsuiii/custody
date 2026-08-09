@@ -168,6 +168,31 @@ predecessor shipped a GEAP table describing an integration that did not exist.
 Every PLANNED row has an in-memory implementation behind the same port, so an
 unreachable component degrades rather than blocks.
 
+**Reachability established 2026-08-09, from the shipped SDKs rather than docs.**
+There is no separate GEAP product to find, and no GEAP SDK. **GEAP is Vertex AI
+renamed**; Google's own product page is titled "Gemini Enterprise Agent Platform
+(formerly Vertex AI)", it absorbed Agentspace at Next '26 in April 2026, and
+existing projects need no migration because the services underneath are
+identical. Anyone hunting for a distinct product will find only documentation,
+which is the correct outcome and not a sign of vapourware.
+
+What that means concretely for each row:
+
+- **Memory Bank** ships in `google-cloud-aiplatform[agent-engines]>=1.148.1,<2`,
+  which is the Vertex AI SDK. Reported GA. This is the `gcp` extra of ADK.
+- **Agent Identity** is a real ADK extra, `agent-identity`, requiring
+  `google-cloud-agentidentitycredentials` and `google-cloud-iamconnectorcredentials`,
+  with a shipped module at `google/adk/integrations/agent_identity/`. Reachable
+  as code today.
+- **Agent Observability** is the `otel-gcp` extra: OpenTelemetry instrumentation
+  for google-genai, grpc and httpx.
+- **Agent Gateway and Model Armor have no ADK module and no client library**,
+  because they are platform and networking services rather than SDK surfaces.
+  Demonstrating them is configuration and a routed call, not an import. Plan the
+  proof accordingly; do not wait for a package that will never exist.
+- Also present and unplanned: `a2a` and `antigravity` extras, if either becomes
+  useful.
+
 Baseline:
 
 - Built and green on 2026-08-09: 52 tests, lint clean, entirely offline.
