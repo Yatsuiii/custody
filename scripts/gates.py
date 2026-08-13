@@ -154,6 +154,95 @@ def _expected_memory(fact: object) -> bool:
     return "sales export" in normalized and "signed approval" in normalized
 
 
+def _g1_cloud_run_errors(cloud: dict, *, expected_scope: str) -> list[str]:
+    errors: list[str] = []
+    trigger = cloud.get("trigger", {})
+    if not cloud.get("ready"):
+        errors.append("Cloud Run is not Ready")
+    if cloud.get("traffic_percent") != 100:
+        errors.append("Cloud Run does not serve 100% traffic")
+    if not cloud.get("revision") or not cloud.get("url"):
+        errors.append("Cloud Run revision or URL is absent")
+    if cloud.get("health", {}).get("status") != "ok":
+        errors.append("Cloud Run health is not ok")
+    if (
+        trigger.get("department") != expected_scope
+        or not trigger.get("run_id")
+        or trigger.get("seen") != 1
+        or trigger.get("admitted") != 1
+        or trigger.get("quarantined") != 0
+        or trigger.get("refused") != 0
+    ):
+        errors.append("Cloud Run trigger is incomplete or belongs to another proof")
+    return errors
+
+
+def _g1_gemini_errors(gemini: dict, *, proof_id: str) -> list[str]:
+    errors: list[str] = []
+    expected_response = f"CUSTODY_G1_OK:{proof_id}"
+    if not gemini.get("vertex"):
+        errors.append("Gemini call is not marked as Vertex AI")
+    if not _model_at_least_3_5(gemini.get("requested_model")):
+        errors.append("requested Gemini model is older than 3.5")
+    if not _model_at_least_3_5(gemini.get("model_version")):
+        errors.append("served Gemini model is older than 3.5")
+    if (
+        gemini.get("response") != expected_response
+        or gemini.get("expected_response") != expected_response
+    ):
+        errors.append("Gemini response is not bound to this proof id")
+    return errors
+
+
+def _g1_adk_run_errors(memory: dict, *, proof_id: str) -> list[str]:
+    errors: list[str] = []
+    if memory.get("framework") != "google-adk":
+        errors.append("the live run did not identify google-adk")
+    if not memory.get("agent_run_completed") or memory.get("runner_event_count", 0) < 1:
+        errors.append("the ADK Runner did not complete with an event")
+    if proof_id not in memory.get("agent_text", ""):
+        errors.append("the ADK agent response is not bound to this proof id")
+    if not _model_at_least_3_5(memory.get("configured_model")):
+        errors.append("the ADK agent is not configured for Gemini 3.5+")
+    return errors
+
+
+def _g1_memory_bank_errors(
+    memory: dict, *, expected_scope: str, project: str
+) -> list[str]:
+    errors: list[str] = []
+    split = memory.get("custody_split", {})
+    scope = memory.get("scope", {})
+    operation_names = memory.get("memory_operation_names", [])
+    if scope.get("user_id") != expected_scope or scope.get("app_name") != "custody-g1":
+        errors.append("Memory Bank scope is not unique to this proof")
+    if memory.get("memory_write_count") != 1 or len(operation_names) != 1:
+        errors.append("the ADK callback did not produce exactly one Memory Bank write")
+    if not operation_names or operation_names[0] == "completed-without-name":
+        errors.append("Memory Bank ingestion operation has no resource name")
+    if memory.get("written_event_count", 0) < 2:
+        errors.append("Memory Bank did not receive both user and model events")
+    if split.get("total", 0) < 2 or split.get("withheld") != 0 or split.get("refused") != 0:
+        errors.append("Custody did not admit the complete clean ADK session")
+    if memory.get("retrieved_memory_count", 0) < 1:
+        errors.append("Memory Bank returned no memory")
+    if not memory.get("retrieved_memory_names"):
+        errors.append("retrieved Memory Bank resource name is absent")
+    if not _expected_memory(memory.get("retrieved_fact")):
+        errors.append("retrieved memory does not preserve the submitted invariant")
+    if project not in str(memory.get("agent_engine", "")):
+        errors.append("Agent Engine belongs to another project")
+    return errors
+
+
+def _g1_memory_errors(
+    memory: dict, *, proof_id: str, expected_scope: str, project: str
+) -> list[str]:
+    return _g1_adk_run_errors(memory, proof_id=proof_id) + _g1_memory_bank_errors(
+        memory, expected_scope=expected_scope, project=project
+    )
+
+
 def judge_g1(e: dict | None, *, now: datetime | None = None) -> Verdict:
     if e is None:
         return Verdict(
@@ -194,67 +283,13 @@ def judge_g1(e: dict | None, *, now: datetime | None = None) -> Verdict:
         )
 
     expected_scope = f"g1-{proof_id}"
-    trigger = cloud.get("trigger", {})
-    if not cloud.get("ready"):
-        errors.append("Cloud Run is not Ready")
-    if cloud.get("traffic_percent") != 100:
-        errors.append("Cloud Run does not serve 100% traffic")
-    if not cloud.get("revision") or not cloud.get("url"):
-        errors.append("Cloud Run revision or URL is absent")
-    if cloud.get("health", {}).get("status") != "ok":
-        errors.append("Cloud Run health is not ok")
-    if (
-        trigger.get("department") != expected_scope
-        or not trigger.get("run_id")
-        or trigger.get("seen") != 1
-        or trigger.get("admitted") != 1
-        or trigger.get("quarantined") != 0
-        or trigger.get("refused") != 0
-    ):
-        errors.append("Cloud Run trigger is incomplete or belongs to another proof")
-
-    expected_response = f"CUSTODY_G1_OK:{proof_id}"
-    if not gemini.get("vertex"):
-        errors.append("Gemini call is not marked as Vertex AI")
-    if not _model_at_least_3_5(gemini.get("requested_model")):
-        errors.append("requested Gemini model is older than 3.5")
-    if not _model_at_least_3_5(gemini.get("model_version")):
-        errors.append("served Gemini model is older than 3.5")
-    if (
-        gemini.get("response") != expected_response
-        or gemini.get("expected_response") != expected_response
-    ):
-        errors.append("Gemini response is not bound to this proof id")
-
-    split = memory.get("custody_split", {})
-    scope = memory.get("scope", {})
-    operation_names = memory.get("memory_operation_names", [])
-    if memory.get("framework") != "google-adk":
-        errors.append("the live run did not identify google-adk")
-    if not memory.get("agent_run_completed") or memory.get("runner_event_count", 0) < 1:
-        errors.append("the ADK Runner did not complete with an event")
-    if proof_id not in memory.get("agent_text", ""):
-        errors.append("the ADK agent response is not bound to this proof id")
-    if not _model_at_least_3_5(memory.get("configured_model")):
-        errors.append("the ADK agent is not configured for Gemini 3.5+")
-    if scope.get("user_id") != expected_scope or scope.get("app_name") != "custody-g1":
-        errors.append("Memory Bank scope is not unique to this proof")
-    if memory.get("memory_write_count") != 1 or len(operation_names) != 1:
-        errors.append("the ADK callback did not produce exactly one Memory Bank write")
-    if not operation_names or operation_names[0] == "completed-without-name":
-        errors.append("Memory Bank ingestion operation has no resource name")
-    if memory.get("written_event_count", 0) < 2:
-        errors.append("Memory Bank did not receive both user and model events")
-    if split.get("total", 0) < 2 or split.get("withheld") != 0 or split.get("refused") != 0:
-        errors.append("Custody did not admit the complete clean ADK session")
-    if memory.get("retrieved_memory_count", 0) < 1:
-        errors.append("Memory Bank returned no memory")
-    if not memory.get("retrieved_memory_names"):
-        errors.append("retrieved Memory Bank resource name is absent")
-    if not _expected_memory(memory.get("retrieved_fact")):
-        errors.append("retrieved memory does not preserve the submitted invariant")
-    if project not in str(memory.get("agent_engine", "")):
-        errors.append("Agent Engine belongs to another project")
+    errors.extend(_g1_cloud_run_errors(cloud, expected_scope=expected_scope))
+    errors.extend(_g1_gemini_errors(gemini, proof_id=proof_id))
+    errors.extend(
+        _g1_memory_errors(
+            memory, proof_id=proof_id, expected_scope=expected_scope, project=project
+        )
+    )
 
     if errors:
         return Verdict(
@@ -359,8 +394,9 @@ def judge_g5(e: dict) -> Verdict:
         "BLOCKED",
         f"{len(passed)} of 4 groups independently demonstrable "
         f"({', '.join(passed) or 'none'}); missing {', '.join(missing)} and "
-        "a Cloud Scheduler record proving real elapsed time. Model Armor also "
-        "remains a separate unbuilt security capability.",
+        "a Cloud Scheduler record proving real elapsed time. Model Armor "
+        "(`make model-armor-gates`) is live-proven and folds into "
+        "security/governance; it is not itself a required G5 group.",
     )
 
 

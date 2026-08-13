@@ -1,4 +1,4 @@
-# Custody recovery handoff, 2026-08-13 (post schema-v2 Gateway proof)
+# Custody recovery handoff, 2026-08-13 (post schema-v2 Gateway + Model Armor proofs)
 
 This is a live handoff document for Claude or another coding agent. Continue
 from the current repository state. Do not restart the project, redesign the
@@ -11,22 +11,30 @@ diffs before editing.
 Lane: agentic security infrastructure, built as an evidence-gated systems
 project for the Google All Things Agentic Hackathon, Fortified Enterprise Fleet.
 
-The Gateway artifact this file previously tracked as in-progress is now
-**complete and independently judged**. `proof-out/live-gateway.json` (schema
-v2, proof `e2b9f562fa3a48249054b977b5779a21`) exists and `make gateway-gates`
-reports twenty PASS results (twelve from the offline judge, eight from
-independent live Google Cloud attestation). README.md and
-`.claude/SESSION_CONTRACT.md` were updated from this evidence and are
-authoritative for the S1 claim text; do not restate S1 from memory, read them.
+Both the Gateway (S1) and Model Armor (M1) artifacts this file previously
+tracked as in-progress/not-started are now **complete and independently
+judged**:
+
+- `proof-out/live-gateway.json` (schema v2, proof
+  `e2b9f562fa3a48249054b977b5779a21`); `make gateway-gates` reports twenty PASS
+  results (twelve offline judge, eight independent live attestation).
+- `proof-out/live-model-armor.json` (proof
+  `4af5a4b8d3244c3c80054c15b69e58ad`); `make model-armor-gates` reports nine
+  PASS results (six offline judge, three independent live attestation).
+
+README.md and `.claude/SESSION_CONTRACT.md` were updated from this evidence
+and are authoritative for the S1/M1 claim text; do not restate either from
+memory, read them.
+
+The last commit (`df334f1`, see `git log -1`) landed all accumulated G1/R1/S1
+work. M1 was built and evidenced after that commit and is **not yet
+committed** as of this handoff — check `git status` before assuming otherwise.
 
 ## Git and working-tree state
 
 - Branch: `feat/memory-provenance`
-- HEAD: `8dae6a0` (`Rewrite the handoff against the current state...`)
-- Origin is at the same commit.
-- The tree is intentionally dirty with all work from this and the prior
-  session. Nothing has been committed or pushed. Do not commit or push without
-  explicit authorization.
+- Origin is one commit behind local HEAD (`df334f1` is not pushed).
+- Nothing has been pushed. Do not push without explicit authorization.
 - Preserve every unrelated/preexisting modification. Inspect with:
 
 ```sh
@@ -36,20 +44,13 @@ git diff --stat
 git log -5 --oneline --decorate
 ```
 
-The main new/untracked Gateway files are:
+The Model Armor files added after the last commit:
 
 ```text
-live/gateway/
-live/gateway_probe/agent.py
-scripts/setup_gateway.py
-scripts/deploy_gateway_probe.py
-scripts/live_gateway.py
-scripts/gateway_gates.py
-scripts/gateway_live_attestation.py
-tests/test_gateway_gates.py
-tests/test_gateway_live_attestation.py
-tests/test_live_gateway_producer.py
-tests/test_registry_attack_server_logs.py
+scripts/live_model_armor.py
+scripts/model_armor_gates.py
+tests/test_model_armor_gates.py
+tests/test_live_model_armor_producer.py
 ```
 
 The MCP server used by both the stale-Registry proof and Gateway proof is
@@ -60,14 +61,14 @@ or forwarding behavior; it was not touched in this pass.
 
 - G1 is complete: live Cloud Run, Gemini/Vertex, ADK, and Memory Bank evidence.
 - Live stale Agent Registry proof (R1) is complete.
-- `make registry-gates` independently judges that artifact: 8/8 PASS.
-- `make revision-spike` passes all five revision gates.
+  `make registry-gates`: 8/8 PASS. `make revision-spike`: 5/5 PASS.
 - **S1 (Gateway) is complete**, schema v2, `make gateway-gates`: 20/20 PASS.
-  See "What changed in this session" below for exactly what was fixed to get
-  here; do not re-litigate it.
+- **M1 (Model Armor) is complete**, `make model-armor-gates`: 9/9 PASS.
 - Structural TOOL roots and MODEL/DERIVED descendants are already enforced.
 - Offline G2, G3, G4 pass; `make gates` reports 4 PASS, 0 FAIL, 1 BLOCKED (G5,
-  expected — see below).
+  expected — missing telemetry and a Cloud Scheduler elapsed-time record, not
+  a regression; Model Armor being live no longer changes this, it folds into
+  the already-complete security/governance group).
 
 Known limitations that must remain explicit unless new direct evidence changes
 them:
@@ -77,11 +78,15 @@ them:
 - The admitted surface-read to dispatch path has a TOCTOU window and is not
   cryptographically atomic.
 - Behavior-only drift with identical `tools/list` is outside the revision claim.
-- Model Armor and submission-grade Observability remain unproven (this is the
-  expected G5 BLOCKED reason, not a regression).
+- Submission-grade Agent Observability remains unproven (this is the expected
+  G5 BLOCKED reason, not a regression).
 - The Gateway proof covers one owned Agent Runtime identity, one registered MCP
   projection, and four controlled calls (allow, tool-scope-canary, expiry,
   final deny). It does not prove all fleet egress is covered.
+- The Model Armor proof covers one owned Template and two controlled
+  `sanitizeUserPrompt` calls. It does not screen traffic Custody has not
+  explicitly routed through that Template, and it does not gate MCP tool
+  admission or IAP — those remain separate, additive claims.
 
 ## Owned Google Cloud scope
 
@@ -107,6 +112,8 @@ Runtime principal:
   principal://agents.global.org-521713171342.system.id.goog/resources/aiplatform/projects/742122658452/locations/us-central1/reasoningEngines/5289382654590844928
 MCP endpoint:
   https://custody-export-mcp-anexdhueiq-uc.a.run.app/mcp
+Model Armor Template:
+  projects/project-988bc9fe-092c-4b32-90c/locations/us-central1/templates/custody-approved-tool-ingress
 ```
 
 Repo-local Google credentials/configuration live under ignored `.gcloud/`.
@@ -122,81 +129,72 @@ api.getAttribute('iap.googleapis.com/mcp.toolName', '') in ['custody_policy_cana
 Re-read the policy before any future mutation. Never assume it. The exact
 command shape is encoded in `DedicatedIapPolicy.current()`.
 
+**Model Armor Template `custody-approved-tool-ingress`** was found already
+provisioned in the project (created 2026-08-13T05:24:35Z, before this
+session), with `piAndJailbreakFilterSettings` at `MEDIUM_AND_ABOVE` and
+`logSanitizeOperations`/`logTemplateOperations` enabled, labeled
+`custody-proof: approved-tool-ingress`. Nothing in the repo referenced it
+before this session. Confirmed with the user and reused as the owned M1
+Template rather than creating a new one. It is read-only from the proof's
+perspective — `sanitizeUserPrompt` calls do not mutate the Template — so there
+is no lease/etag/CAS state machine to reason about here, unlike Gateway's IAP
+policy.
+
 ## What changed in this session (2026-08-13)
 
-The prior handoff left the project mid-recovery: a schema-v2 run
-(`8030f2119417461bb9db9c4eb066ef64`) had been deliberately rejected because its
-CEL expired the empty-name MCP-handshake clause together with the
-`lookup_customer` lease, so a post-expiry call could fail before `tools/call`
-and produce no log. Recovery from that run succeeded and left the policy at
-exact safe deny; no cloud mutation was left in flight.
+Two pieces of work, in order. Full narrative detail (exact bugs, exact fixes)
+is preserved in `git log` commit `df334f1` and the diff itself; this section
+is a summary so a future agent does not need to re-derive it.
 
-This session, in order:
+**1. Fixed and completed the schema-v2 Gateway proof (S1).** The prior handoff
+left a rejected schema-v2 run whose CEL expired the empty-name MCP-handshake
+clause together with the `lookup_customer` lease. Fixed the CEL to an
+independent-clause shape (`... == '' || (request.time < timestamp(...) && ...
+== 'lookup_customer')`) in `scripts/live_gateway.py` and
+`scripts/gateway_gates.py`, added a bounded outer timeout around
+`engine.async_query`, and gave `_gateway_logs` bounded/recovering polling. The
+first live rerun then surfaced two bugs the CEL fix didn't touch: an IAP etag
+base64-alphabet mismatch between `gcloud` readbacks (url-safe) and raw Admin
+Activity payloads (standard) breaking audit-chain correlation, and the offline
+judge assuming strict causal order between two independent same-process clock
+reads ~300 microseconds apart. Both fixed with regression tests
+(`_canonical_etag` normalization; a `_CLOCK_SKEW_BOUND` tolerance).
+`gateway_live_attestation.py` also assumed a flat MCP result shape when the
+live server actually returns the standard `content`/`structuredContent`
+envelope — fixed to unwrap it. Result: `make live-gateway` succeeded, `make
+gateway-gates` reported 20/20, all other gates (`registry-gates`,
+`revision-spike`, `gates`, `check`) stayed green. README.md and
+SESSION_CONTRACT.md updated from the evidence. All committed in `df334f1`.
 
-1. **Fixed the CEL shape** in `scripts/live_gateway.py`
-   (`TemporaryAdmission.expression`, `_TEMPORARY_ALLOW`) and
-   `scripts/gateway_gates.py` (`allow_expression`) to the required
-   independent-clause form:
+**2. Scoped and built the Model Armor proof (M1).** Per this file's own prior
+instruction, updated `.claude/SESSION_CONTRACT.md` with a Model Armor-scoped
+objective and acceptance gates before writing code. Confirmed `gcloud
+model-armor` reachability (`templates create/describe/list/update/delete`,
+`sanitize-user-prompt`, `sanitize-model-response`). Discovered an
+already-provisioned, unreferenced Template (see above); confirmed with the
+user and reused it. Built `scripts/live_model_armor.py` (producer: validates
+the owned Template, issues one proof-bound jailbreak/PI `sanitizeUserPrompt`
+call expecting BLOCK and one proof-bound clean call expecting ALLOW, polls
+Cloud Logging for the matching server-authored entries, writes
+`proof-out/live-model-armor.json`) and `scripts/model_armor_gates.py`
+(offline judge plus independent live attestation, mirroring the
+producer/judge split used for R1/S1 but without the IAM-lease machinery,
+since sanitize calls don't mutate the Template). Correlation between a proof
+run and its Cloud Logging entry is by exact `sanitizationInput.text` equality
+(the prompt embeds the proof ID), since Model Armor's API does not accept a
+client-supplied trace ID the way IAP does. First live run passed all 9 gates
+with no rework needed. Added `tests/test_model_armor_gates.py` (16 adversarial
+offline + 4 live-attestation tests) and
+`tests/test_live_model_armor_producer.py` (8 fault-injection tests). Ran
+`make check` (233 tests), `make registry-gates`, `make revision-spike`, `make
+gates`, and `git diff --check`, all clean. Updated README.md and
+`.claude/SESSION_CONTRACT.md` from the evidence. Fixed a stale G5 message in
+`scripts/gates.py` that still called Model Armor unbuilt, and fixed a
+pre-existing `C901` complexity violation in `judge_g1` surfaced by the
+clean-code hook while editing that file (extracted `_g1_cloud_run_errors`,
+`_g1_gemini_errors`, `_g1_adk_run_errors`, `_g1_memory_bank_errors`).
 
-   ```cel
-   api.getAttribute('iap.googleapis.com/mcp.toolName', '') == '' ||
-   (request.time < timestamp('<10-minute-expiry>') &&
-    api.getAttribute('iap.googleapis.com/mcp.toolName', '') == 'lookup_customer')
-   ```
-
-   The empty-name clause no longer depends on `request.time`, so handshake
-   passthrough survives the tool lease expiring. The parser now rejects the
-   old all-expiring shape; both `tests/test_gateway_gates.py` and
-   `tests/test_live_gateway_producer.py` assert this.
-2. Added a bounded outer timeout around every `engine.async_query` call
-   (`asyncio.wait_for`, `RUNTIME_QUERY_TIMEOUT_SECONDS`).
-3. Gave `_gateway_logs` a bounded attempt count with transient-read recovery
-   (it previously propagated `CalledProcessError`/`TimeoutExpired` instead of
-   retrying, unlike its sibling log-polling functions).
-4. Added the adversarial tests HANDOFF asked for: empty-name passthrough
-   survives expiry, `lookup_customer` admitted before/denied after expiry,
-   `custody_policy_canary` never admitted by the temporary lease, the old CEL
-   shape is rejected, bounded runtime-query timeout, bounded+recovering log
-   polling.
-5. Ran `make check` and `git diff --check` clean, re-read the live IAP policy
-   (confirmed exact safe deny), then ran `make live-gateway`. It failed — not
-   on the CEL fix, but on two bugs the live run surfaced that the prior
-   handoff had not anticipated:
-   - **IAP etag base64-alphabet mismatch.** `gcloud iap web get-iam-policy`
-     returns etags in the URL-safe alphabet (`-`/`_`); the same etag inside a
-     raw Admin Activity audit payload was observed in the standard alphabet
-     (`+`/`/`). Strict string equality between a policy readback and an audit
-     log entry rejected a genuine match. Fixed with a `_canonical_etag`
-     normalization applied at every readback-vs-audit-log comparison in both
-     `scripts/live_gateway.py` (`_iap_audit_logs`) and
-     `scripts/gateway_gates.py` (`_iap_audit_transition_is_bound`). Regression
-     test: `test_etag_across_base64_alphabets_still_binds_the_audit_chain`.
-   - **Dispatch-log clock-read ordering.** The offline judge required
-     `dispatched <= logged` between the payload's self-reported
-     `server_dispatched_at` and the log entry's own `timestamp` — two
-     independent `datetime.now()` reads in the same server request, observed
-     ~300 microseconds out of order. Relaxed to a skew tolerance
-     (`_CLOCK_SKEW_BOUND = 1.0` second) in `scripts/gateway_gates.py`
-     (`_server_dispatch_is_bound`) and the duplicated check in
-     `scripts/gateway_live_attestation.py`.
-   - Also in `gateway_live_attestation.py`: it assumed the MCP tool result was
-     a flat `data` object; the live server actually returns the standard MCP
-     envelope (`content` + `structuredContent`). Fixed to unwrap
-     `structuredContent` when present. Regression test:
-     `test_mcp_envelope_structured_content_shape_is_understood`.
-6. Reran `make live-gateway` successfully (proof
-   `e2b9f562fa3a48249054b977b5779a21`), then `make gateway-gates` (20/20),
-   `make registry-gates` (8/8), `make revision-spike` (5/5), `make gates`
-   (4 PASS / 0 FAIL / 1 BLOCKED — G5, expected), `make check` (205 tests), and
-   `git diff --check`, all clean.
-7. Updated `README.md` and `.claude/SESSION_CONTRACT.md` from the generated
-   evidence. Did not touch anything else; did not commit or push.
-
-Two pre-existing `C901` complexity violations were also fixed as a side effect
-of editing `_apply_reconciled` (`scripts/live_gateway.py`), `_judge`
-(`scripts/gateway_gates.py`), and a test fixture (`FakeCloud.json` in
-`tests/test_gateway_live_attestation.py`) — the clean-code pre-commit/per-edit
-hook blocks on these, and all three were pre-existing, not introduced here.
+**Not yet committed** — see git state above.
 
 ## Evidence and claim discipline
 
@@ -213,18 +211,23 @@ hook blocks on these, and all three were pre-existing, not introduced here.
 - All synthetic IDs and `example.invalid` addresses are controls. Do not use
   external targets or real customer data.
 - Keep TOOL call roots structural. Never let a model label provenance, trust,
-  revision admission, or policy outcomes.
+  revision admission, or policy outcomes. Model Armor's structured
+  match/no-match verdict is a fact Custody may read, same as a CEL admission
+  or a revision digest — never let a model relabel it either.
 
-## Next capability after Gateway
+## Next capability after Gateway and Model Armor
 
-Since the schema-v2 live proof and independent gates now pass, the next
-highest-value missing Fleet capability is Model Armor. Observability follows
-Model Armor; Agent Identity is already genuinely present in the Gateway proof,
-but its claim must stay scoped to that Runtime. Live Memory Bank selective
-deletion comes later and only if the actual API semantics preserve Custody's
-lineage contract.
+The next highest-value missing Fleet capability is Agent Observability.
+Agent Identity is already genuinely present in the Gateway proof, but its
+claim must stay scoped to that Runtime. Live Memory Bank selective deletion
+comes later and only if the actual API semantics preserve Custody's lineage
+contract.
 
-Before starting Model Armor: update `.claude/SESSION_CONTRACT.md` with a new
+Before starting Observability: update `.claude/SESSION_CONTRACT.md` with a new
 session contract scoped to that capability (objective, allowed files,
 acceptance gates) per the global evidence-gated protocol — do not silently
-broaden scope under the existing Gateway-scoped contract.
+broaden scope under the existing Gateway/Model-Armor-scoped contracts. Note
+that G5 also needs a Cloud Scheduler record proving real elapsed time across
+the whole project's timeline (an early-admitted, later-revoked custody
+record), which is a separate concern from Observability itself and should not
+be silently folded into the same contract without saying so.

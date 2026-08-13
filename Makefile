@@ -14,7 +14,7 @@ PYTHON ?= $(shell \
 		command -v python3; \
 	fi)
 
-.PHONY: help lint test check serve image gates cost demo revoke isolate revision-spike live-memory-bank live-g1 live-registry-attack registry-gates setup-gateway deploy-gateway-probe live-gateway gateway-gates clean
+.PHONY: help lint test check serve image gates cost demo revoke isolate revision-spike live-memory-bank live-g1 live-registry-attack registry-gates setup-gateway deploy-gateway-probe live-gateway gateway-gates live-model-armor model-armor-gates clean
 
 help:
 	@echo "make lint    ruff over the tree"
@@ -36,6 +36,8 @@ help:
 	@echo "make deploy-gateway-probe deploy/update the identity-bound Runtime probe"
 	@echo "make live-gateway prove enforced Agent Gateway allow/deny controls"
 	@echo "make gateway-gates independently judge the live Gateway artifact"
+	@echo "make live-model-armor prove Model Armor blocks a jailbreak, allows clean"
+	@echo "make model-armor-gates independently judge the live Model Armor artifact"
 
 lint:
 	ruff check .
@@ -92,6 +94,12 @@ live-gateway:
 
 gateway-gates:
 	@$(PYTHON) scripts/gateway_gates.py
+
+live-model-armor:
+	@$(PYTHON) scripts/live_model_armor.py
+
+model-armor-gates:
+	@$(PYTHON) scripts/model_armor_gates.py
 
 clean:
 	rm -rf .ruff_cache proof-out

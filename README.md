@@ -202,7 +202,8 @@ sidesteps `search_memory` having no filter parameter.
 | Cloud Run control plane, Gemini 3.5 on Vertex, ADK to live Memory Bank | **built**, `make live-g1` |
 | Agent Registry and live stale-tool admission | **built**, `make live-registry-attack` |
 | Agent Runtime, Agent Identity, and enforced Agent Gateway IAP | **built**, `make live-gateway` |
-| Model Armor and Agent Observability | **not built** |
+| Model Armor content screening | **built**, `make live-model-armor` |
+| Agent Observability | **not built** |
 
 Nothing in this table moves to built without a command that demonstrates it.
 
@@ -315,6 +316,46 @@ live Memory Bank.
 allowed call and stayed at 1 through the canary, expiry, and final deny
 controls. `make gateway-gates` reported twenty PASS results across the offline
 judge and the independent live Google Cloud attestation.
+
+### Live Model Armor proof
+
+```bash
+CLOUDSDK_CONFIG="$PWD/.gcloud" make live-model-armor
+
+CLOUDSDK_CONFIG="$PWD/.gcloud" make model-armor-gates
+```
+
+Model Armor has no ADK module and no client library, same as Agent Gateway;
+the proof is a routed call against one owned Template
+(`custody-approved-tool-ingress`) with its PI-and-jailbreak filter enabled at
+`MEDIUM_AND_ABOVE`. The producer validates the Template's exact configuration,
+then issues two proof-bound `sanitizeUserPrompt` calls: a jailbreak-style
+payload embedding the proof ID, and an unrelated clean payload embedding the
+same proof ID. Model Armor blocks the first
+(`MODEL_ARMOR_SANITIZATION_VERDICT_BLOCK`, "The prompt violated Prompt
+Injection and Jailbreak filters.") and allows the second
+(`MODEL_ARMOR_SANITIZATION_VERDICT_ALLOW`). Both calls are independently
+logged server-side because the Template has `logSanitizeOperations` enabled;
+the exact prompt text in each Cloud Logging entry is what ties a log line to
+one proof run, the same role a trace ID plays in the Gateway proof.
+
+`make model-armor-gates` rejects a drifted or unowned Template, a malicious
+control that wasn't actually blocked, a clean control that was wrongly
+matched, a log entry reused between the two controls, and a log entry outside
+the proof's time window or bound to another template/region. It then
+independently rereads the Template and both log entries (by their
+server-issued insert IDs) from Google Cloud using code-owned resource
+identifiers, never ones the artifact supplies. This proves content screening
+for one owned Template; it does not screen any traffic Custody has not
+explicitly routed through it, and it does not gate MCP tool admission or IAP.
+Model Armor and origin/derivation are complementary, not the same claim: a
+memory can be admitted by Custody's origin rules and still be screened by
+Model Armor before it ever reaches that path, and neither one substitutes for
+the other.
+
+**M1 passed live on 2026-08-13**, proof `4af5a4b8d3244c3c80054c15b69e58ad`.
+`make model-armor-gates` reported nine PASS results across the offline judge
+and the independent live Google Cloud attestation.
 
 **A stated bet, not a finding:** no enterprise incident data exists for memory
 poisoning. It has formal standing as OWASP ASI06 and demonstrated attack success

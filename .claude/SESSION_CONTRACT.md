@@ -192,7 +192,7 @@ predecessor shipped a GEAP table describing an integration that did not exist.
 | Execution and state | **Agent Runtime** | identity-bound deterministic Gateway probe | **LIVE**, `make live-gateway` |
 | Security and governance | **Agent Identity** | exact principal authorized for the registered MCP tool | **LIVE**, `make live-gateway` |
 | Security and governance | **Agent Gateway** | IAP-enforced allow/deny boundary before owned MCP dispatch | **LIVE**, `make live-gateway` |
-| Security and governance | **Model Armor** | screens content; complements origin, does not replace it | PLANNED |
+| Security and governance | **Model Armor** | screens content; complements origin, does not replace it | **LIVE**, `make live-model-armor` |
 | Telemetry | **Agent Observability** | traces carrying the custody digest, so a quarantine is reproducible | PLANNED |
 | mandatory | **Gemini 3.5+ via Vertex** | explains quarantined memories; never labels | **LIVE**, Gemini 3.5 Flash |
 | mandatory | **ADK** | the seam; `BaseMemoryService` is the port | **LIVE**, real Runner callback in G1 |
@@ -316,6 +316,21 @@ Acceptance gates:
   distinct trace-correlated `tools/call` logs independently judged and reread
   from Google Cloud by `make gateway-gates`.
 
+- **M1 Model Armor content screening.** One owned Model Armor Template
+  (`custody-approved-tool-ingress`, PI-and-jailbreak filter enabled at
+  `MEDIUM_AND_ABOVE`, discovered already provisioned in the project and reused
+  rather than recreated) screens a proof-bound jailbreak/PI payload and a
+  proof-bound clean payload through live `sanitizeUserPrompt` calls. Model
+  Armor has no ADK client library, same as Agent Gateway; the proof is
+  configuration plus a routed call, not an import. Proof shape mirrors R1/S1:
+  `scripts/live_model_armor.py` writes `proof-out/live-model-armor.json`, and
+  `scripts/model_armor_gates.py` independently judges it offline, then
+  independently rereads the Template and both Cloud Logging entries (by
+  server-issued insert ID) from Google Cloud using code-owned resource
+  identifiers. Non-goal: Model Armor does not gate MCP tool admission or IAP;
+  it is a separate, additive content check, not folded into
+  `DedicatedIapPolicy`.
+
 Verification:
 
 `make check` runs lint and the offline suite with no network and no cloud; the
@@ -390,6 +405,20 @@ the offline judge and the independent live Google Cloud attestation. The
 proof is bounded to this owned Runtime, Gateway and MCP path; it does not
 establish universal egress coverage, repair stale Registry metadata, remove
 the allowed call TOCTOU boundary, or delete live Memory Bank descendants.
+
+**M1 passed live on 2026-08-13, proof `4af5a4b8d3244c3c80054c15b69e58ad`.**
+Template `custody-approved-tool-ingress` was found already provisioned in the
+project with `logSanitizeOperations` enabled and was reused rather than
+recreated. A proof-bound jailbreak/PI prompt was blocked
+(`MODEL_ARMOR_SANITIZATION_VERDICT_BLOCK`, "The prompt violated Prompt
+Injection and Jailbreak filters."); a proof-bound clean prompt with the same
+proof ID was allowed (`MODEL_ARMOR_SANITIZATION_VERDICT_ALLOW`). Both calls
+produced one server-authored Cloud Logging entry each, bound to the exact
+proof-embedded prompt text. `make model-armor-gates` reported nine PASS
+results across the offline judge and the independent live Google Cloud
+attestation. The proof is bounded to this one owned Template; it does not
+screen traffic Custody has not explicitly routed through it and does not gate
+MCP tool admission or IAP.
 
 ## Stated assumption, not a finding
 
