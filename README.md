@@ -204,7 +204,7 @@ sidesteps `search_memory` having no filter parameter.
 | Agent Registry and live stale-tool admission | **built**, `make live-registry-attack` |
 | Agent Runtime, Agent Identity, and enforced Agent Gateway IAP | **built**, `make live-gateway` |
 | Model Armor content screening | **built**, `make live-model-armor` |
-| Agent Observability | **not built** |
+| Agent Observability | **built**, `make live-observability` |
 
 Nothing in this table moves to built without a command that demonstrates it.
 
@@ -373,6 +373,45 @@ open: enough real days need to pass, then the record gets revoked near
 filming and `scripts/scheduler_gates.py` (not yet written; building a judge
 before there is a multi-day span to judge would have nothing real to check)
 independently proves the whole span.
+
+### Live Agent Observability proof
+
+```bash
+CLOUDSDK_CONFIG="$PWD/.gcloud" \
+CUSTODY_PROJECT=project-988bc9fe-092c-4b32-90c \
+CUSTODY_AGENT_ENGINE_ID=6936011268348182528 \
+make live-observability
+
+CLOUDSDK_CONFIG="$PWD/.gcloud" make observability-gates
+```
+
+Google's Agent Development Kit ships real GCP OpenTelemetry export
+(`google.adk.telemetry.google_cloud.get_gcp_exporters`), so the proof runs
+the same live ADK admission G1 already proves, wrapped in one OTel span
+carrying the exact digest of the admitted custody record as a
+`custody.digest` attribute, and exports that span to Cloud Trace. **A real
+environment limit changed this proof's shape**: this project's Cloud Trace
+v1 read API returns no default trace bucket for any trace this producer
+exports, and the v2 API has no read or list endpoint at all, so a span's own
+storage in Cloud Trace is not independently verifiable here. What is
+independently verifiable, and is the falsifiable claim, is that the span's
+exact trace ID, span ID, and admitted digest are also recorded together in
+one server-authored Cloud Logging entry, the same read-back mechanism every
+other live proof in this repo already uses.
+
+`make observability-gates` rejects a digest that isn't one of the run's own
+admitted records, a log entry bound to a different trace, span, or proof ID,
+a log entry outside the proof's time window, and a G1 run that withheld or
+refused anything (the admission must be clean for the digest to mean what it
+claims). It then independently rereads the one log entry from Google Cloud
+by its server-issued insert ID. This proves a trace/digest binding exists for
+one live admission, reproducible the way a later quarantine would need to be
+traced; it does not verify Cloud Trace's own storage, and it does not change
+G1's admitted/withheld counts or Memory Bank behavior.
+
+**O1 passed live on 2026-08-13**, proof `753d24b91d2845dbb1dd58eb5bd5429e`.
+`make observability-gates` reported seven PASS results across the offline
+judge and the independent live Google Cloud attestation.
 
 **A stated bet, not a finding:** no enterprise incident data exists for memory
 poisoning. It has formal standing as OWASP ASI06 and demonstrated attack success

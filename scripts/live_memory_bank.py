@@ -251,6 +251,11 @@ async def prove_adk_memory_bank(
             "withheld": split.withheld,
             "refused": split.refused,
         },
+        #: The exact digests of the admitted records this run produced. A
+        #: quarantine later needs to name what it is quarantining; this is
+        #: that name, and it is what the Observability proof (O1) binds to a
+        #: trace, so a later revocation can be traced back to this run.
+        "admitted_digests": [a.record.content_sha256 for a in split.trusted],
     }
 
 

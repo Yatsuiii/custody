@@ -202,6 +202,24 @@ class LiveGatewayAttestationTests(unittest.TestCase):
         self.assertTrue(gates["live_attestation_available"])
         self.assertFalse(gates["live_gateway_configuration"])
 
+    def test_server_side_etag_and_update_time_drift_does_not_fail_rereading(
+        self,
+    ) -> None:
+        """Google reconciles these resources' etag/updateTime on its own
+        schedule; rereading hours after the proof must not fail for that
+        reason alone, only for an actual configuration change.
+        """
+        live = trusted_evidence()
+        drifted = copy.deepcopy(live)
+        drifted["gateway"]["etag"] = "a-later-server-etag"
+        drifted["gateway"]["updateTime"] = "2027-01-01T00:00:00Z"
+        drifted["extension"]["updateTime"] = "2027-01-01T00:00:00Z"
+        drifted["authz_policy"]["updateTime"] = "2027-01-01T00:00:00Z"
+
+        gates = live_attestation.attest_live(live, FakeCloud(drifted))
+
+        self.assertTrue(gates["live_gateway_configuration"])
+
     def test_coherent_forged_log_cannot_replace_server_readback(self) -> None:
         live = trusted_evidence()
         forged = copy.deepcopy(live)

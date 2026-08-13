@@ -345,6 +345,29 @@ def _runtime_matches(expected: dict[str, Any], observed: Any) -> bool:
     return expected_server_view == observed_server_view
 
 
+# Google reconciles these resources' own etag/updateTime on a schedule
+# unrelated to any configuration change Custody would care about; comparing
+# them exactly would fail a rereading done hours after the proof for reasons
+# that have nothing to do with what the proof actually claims.
+_VOLATILE_RESOURCE_FIELDS = ("etag", "updateTime")
+
+
+def _config_matches(expected: dict[str, Any], observed: Any) -> bool:
+    if not isinstance(observed, dict):
+        return False
+    expected_config = {
+        key: value
+        for key, value in expected.items()
+        if key not in _VOLATILE_RESOURCE_FIELDS
+    }
+    observed_config = {
+        key: value
+        for key, value in observed.items()
+        if key not in _VOLATILE_RESOURCE_FIELDS
+    }
+    return expected_config == observed_config
+
+
 def _server_dispatch_is_bound(
     evidence: dict[str, Any], entry: dict[str, Any], revision: str
 ) -> bool:
@@ -550,9 +573,9 @@ def _attest(evidence: dict[str, Any], cloud: CloudReadClient) -> dict[str, bool]
         "live_attestation_available": True,
         "trusted_project_identity": trusted_project,
         "live_gateway_configuration": (
-            live["gateway"] == evidence["gateway"]
-            and live["extension"] == evidence["extension"]
-            and live["authz_policy"] == evidence["authz_policy"]
+            _config_matches(evidence["gateway"], live["gateway"])
+            and _config_matches(evidence["extension"], live["extension"])
+            and _config_matches(evidence["authz_policy"], live["authz_policy"])
         ),
         "live_registry_runtime_target": (
             service == registry["service"]

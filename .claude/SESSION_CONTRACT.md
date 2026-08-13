@@ -193,7 +193,7 @@ predecessor shipped a GEAP table describing an integration that did not exist.
 | Security and governance | **Agent Identity** | exact principal authorized for the registered MCP tool | **LIVE**, `make live-gateway` |
 | Security and governance | **Agent Gateway** | IAP-enforced allow/deny boundary before owned MCP dispatch | **LIVE**, `make live-gateway` |
 | Security and governance | **Model Armor** | screens content; complements origin, does not replace it | **LIVE**, `make live-model-armor` |
-| Telemetry | **Agent Observability** | traces carrying the custody digest, so a quarantine is reproducible | PLANNED, reachability confirmed (O1 not started) |
+| Telemetry | **Agent Observability** | traces carrying the custody digest, so a quarantine is reproducible | **LIVE**, `make live-observability` |
 | mandatory | **Gemini 3.5+ via Vertex** | explains quarantined memories; never labels | **LIVE**, Gemini 3.5 Flash |
 | mandatory | **ADK** | the seam; `BaseMemoryService` is the port | **LIVE**, real Runner callback in G1 |
 | mandatory | **Cloud Run** | control plane and reviewer | **LIVE**, control plane revision `00001-hz6` |
@@ -331,25 +331,25 @@ Acceptance gates:
   it is a separate, additive content check, not folded into
   `DedicatedIapPolicy`.
 
-- **O1 Agent Observability, next up, not yet started.** Reachability confirmed
-  2026-08-13: `google-adk` ships real GCP OTel export
-  (`google.adk.telemetry.google_cloud.get_gcp_exporters(enable_cloud_tracing=
-  True, ...)`), and `opentelemetry-exporter-gcp-trace`/`-gcp-logging` are
-  already installed transitively. Cloud Trace API is already enabled on the
-  owned project. There is no `gcloud trace traces describe`; independent
-  live readback must use the Cloud Trace v1 REST API directly
-  (`https://cloudtrace.googleapis.com/v1/projects/{project}/traces/{traceId}`)
-  with a bearer token, the same pattern `gateway_live_attestation.py`'s
-  `rest_json` already uses for the Agent Engine REST endpoint. Scope: extend
-  the G1 live ADK Runner call (`scripts/live_memory_bank.py`) with an explicit
-  OTel span wrapping the admitted session, carrying the exact
-  `content_sha256` digest of the admitted `CustodyRecord` as a span attribute
-  (`custody.digest`), exported to Cloud Trace. The claim: "a quarantine is
-  reproducible from a trace," so a trace/span independently reread from Cloud
-  Trace must carry that exact digest, not a value the offline judge merely
-  trusts from the artifact. Non-goal: this is additive telemetry on the
-  already-passing G1 path, not a new agent capability; it must not change G1's
-  admitted/withheld counts or Memory Bank behavior.
+- **O1 Agent Observability.** Extends the G1 live ADK Runner call
+  (`scripts/live_memory_bank.py`, additive only: one new `admitted_digests`
+  field, no change to G1's admitted/withheld counts or Memory Bank behavior)
+  with an explicit OTel span wrapping the admitted session, carrying the
+  exact `content_sha256` digest of one admitted `CustodyRecord` as a
+  `custody.digest` span attribute, exported to Cloud Trace via
+  `google.adk.telemetry.google_cloud.get_gcp_exporters(enable_cloud_tracing=
+  True, ...)`. **A real environment limit reshaped the claim during
+  building**: `cloudtrace.googleapis.com/v1` returns "_Trace bucket not
+  found in project" for every trace this producer exports, and `v2` has no
+  read/list endpoint at all — Cloud Trace's own span storage is not
+  independently verifiable in this project via any API found. The
+  independently-verified claim instead binds through Cloud Logging: the
+  producer also writes one structured log entry (`custody-observability`
+  log) carrying the exact trace ID, span ID, and digest, and
+  `scripts/observability_gates.py` rereads that entry from Google Cloud by
+  its server-issued insert ID, the same mechanism every other live proof
+  here already uses. `scripts/live_observability.py` writes
+  `proof-out/live-observability.json`.
 
 - **G5 Cloud Scheduler elapsed-time record, clock started 2026-08-13, gate
   itself still open.** Structurally different from every other gate: it
@@ -475,6 +475,21 @@ results across the offline judge and the independent live Google Cloud
 attestation. The proof is bounded to this one owned Template; it does not
 screen traffic Custody has not explicitly routed through it and does not gate
 MCP tool admission or IAP.
+
+**O1 passed live on 2026-08-13, proof `753d24b91d2845dbb1dd58eb5bd5429e`.**
+The same live ADK admission G1 proves ran inside one OTel span
+(`custody.g1.admission`, trace `dc70e417a45d636c86d7fa1d273a7101`, span
+`e2de8000416c1e5a`) carrying the exact digest of one admitted `CustodyRecord`
+as a `custody.digest` attribute, exported to Cloud Trace. One server-authored
+Cloud Logging entry recorded that same trace ID, span ID, and digest
+together. `make observability-gates` reported seven PASS results across the
+offline judge and the independent live Google Cloud attestation, which
+rereads the log entry, not the Cloud Trace span: this project's Cloud Trace
+v1 API returns no default trace bucket for any exported trace, and v2 has no
+read endpoint, so Cloud Trace's own storage is not independently verifiable
+here. The proof shows a trace/digest binding exists for one live admission;
+it does not verify Cloud Trace storage, and it does not change G1's
+admitted/withheld counts or Memory Bank behavior.
 
 ## Stated assumption, not a finding
 
