@@ -43,6 +43,22 @@ class MemoryService(Protocol):
     async def search_memory(self, *, app_name: str, user_id: str, query: str): ...
 
 
+class RecordWriter(Protocol):
+    """A downstream that can write one custody record as one deletable
+    memory, keyed by the record's own id (`custody/memory_bank.py`).
+
+    Optional and additive: `add_session_to_memory` only ever received raw
+    session events, never a record boundary, because that is all
+    `ingest_events` needs. A `memory_id`-pinned write needs the boundary
+    `add_session_to_memory` doesn't carry, so a downstream that wants
+    per-record deletion offers this instead.
+    """
+
+    async def write_record(
+        self, *, app_name: str, user_id: str, admitted: Admitted
+    ) -> None: ...
+
+
 @dataclass(frozen=True)
 class Quarantined:
     """An event withheld from memory, with the reason it was withheld."""
@@ -206,7 +222,18 @@ class CustodyMemoryService:
         self.splits.append(split)
         self.graph.extend(a.record for a in split.trusted)
 
-        if split.admitted_events:
+        writer = getattr(self.downstream, "write_record", None)
+        if writer is not None:
+            # A per-record write, not a session write: only this shape gives
+            # each memory the record boundary `memory_id`-pinned deletion
+            # needs, which the raw events below never carried.
+            for admitted in split.trusted:
+                await writer(
+                    app_name=session.app_name,
+                    user_id=session.user_id,
+                    admitted=admitted,
+                )
+        elif split.admitted_events:
             await self.downstream.add_session_to_memory(
                 _AdmittedSession(
                     id=session.id,

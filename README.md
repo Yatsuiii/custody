@@ -192,16 +192,35 @@ cannot be matched back to a custody record afterwards; a memory derived from
 mixed-trust events has no single origin at all. Splitting before the write also
 sidesteps `search_memory` having no filter parameter.
 
+**Checked live 2026-08-13, not just from docs, and now built:**
+`agent_engines.memories.delete` exists and works, but through G1's governed
+`ingest_events` write path (ADK's own `add_session_to_memory`), nothing
+hands back a name to delete with, and a same-scope, same-topic second write
+was observed overwriting an earlier memory in place. Selective deletion is
+real for a second, additive write path instead:
+`memories.create(config={"memory_id": memory_id_for(record.id)})` gives a
+deterministic, collision-free mapping, and `custody/adapters/
+memory_bank.py`'s `RevokingMemoryBankGraph` wraps `custody/graph.py`'s own
+`revoke` to delete each removed record's memory by that name. Live-proven
+end to end (`make live-memory-deletion`, `make memory-deletion-gates`, seven
+PASS): revoke a tool, and its memory is gone from `search_memory` while a
+sibling tool's memory is untouched. G1's `ingest_events` path, its Cloud Run
+proof, and anything already written through it are unchanged; only content
+written through the new path is deletable this way. Full evidence in
+`DECISIONS.md` #2.
+
 ## Status, honestly
 
 | | |
 | --- | --- |
 | Core, verified against real google-adk 2.6.3 | **built**, 170 tests |
 | Derivation graph and retroactive revocation | **built** |
+| Selective live Memory Bank deletion (new opt-in write path) | **built**, `make live-memory-deletion` |
 | Cross-department isolation | **built** |
 | Durable stores surviving a restart | **built**, SQLite |
 | Cloud Run control plane, Gemini 3.5 on Vertex, ADK to live Memory Bank | **built**, `make live-g1` |
 | Agent Registry and live stale-tool admission | **built**, `make live-registry-attack` |
+| Dispatch bound to the tools/list that authorized it (R2) | **built**, `make live-revision-binding` |
 | Agent Runtime, Agent Identity, and enforced Agent Gateway IAP | **built**, `make live-gateway` |
 | Model Armor content screening | **built**, `make live-model-armor` |
 | Agent Observability | **built**, `make live-observability` |
@@ -254,6 +273,34 @@ live Gateway proof below governs a registered tool name, but it does not bind a
 revision digest to dispatch; closing that time-of-check/time-of-use window still
 requires revision attestation at the Gateway or server. The demonstrated
 mismatch path is fail-closed because it never reaches dispatch.
+
+### Live revision-binding proof (R2)
+
+```bash
+CLOUDSDK_CONFIG="$PWD/.gcloud" \
+CUSTODY_PROJECT=project-988bc9fe-092c-4b32-90c \
+make live-revision-binding
+
+make revision-binding-gates
+```
+
+Closes the gap the paragraph above states: IAP and Custody's own client-side
+admission check both run at read time, not dispatch time, so nothing
+previously stopped a `tools/call` from proceeding on a token minted against a
+surface that changed underneath it. `custody-export-mcp` now mints a
+short-lived, HMAC-signed token bound to the digest it returns from every
+`tools/list`, and checks it itself, at the instant of dispatch, before the
+tool body runs. A token minted against v1's digest, presented after the same
+service redeployed to v2, is refused server-side citing `digest_mismatch`
+with the dispatch counter unmoved; the same token replayed a second time
+against v1 is refused citing `replayed`. `make revision-binding-gates`
+independently rereads both denial log entries and both Cloud Run revisions
+from Google Cloud by their own server-issued identifiers, not just the
+producer's narration of them. This closes the declared-surface TOCTOU only:
+a behavior-only change under an identical `tools/list` remains undetected,
+since nothing here attests the server's running code, only the schema it
+declares, and the replay ledger is process-local, the same single-instance
+scope the Gateway and Registry proofs above already require.
 
 ### Live Agent Gateway proof
 

@@ -17,15 +17,31 @@ from datetime import UTC, datetime
 from typing import Mapping
 
 from fastmcp import FastMCP
+from fastmcp.exceptions import ToolError
 from fastmcp.server.dependencies import get_http_request
+from fastmcp.server.middleware import Middleware
 from mcp.types import ToolAnnotations
 from starlette.requests import Request
 from starlette.responses import JSONResponse
+
+from custody.revision import (
+    ApprovedTool,
+    AttestationAuthority,
+    Denial,
+    SurfaceAttestation,
+    ToolSurface,
+)
 
 
 SUPPORTED_REVISIONS = frozenset({"v1", "v2"})
 GATEWAY_DISPATCH_EVENT = "custody.gateway.lookup.dispatched.v1"
 GATEWAY_UNBOUND_EVENT = "custody.gateway.lookup.unbound.v1"
+#: R2: an allowed ``tools/call`` must carry the token minted by the most
+#: recent ``tools/list`` read of this exact server, closing the window R1
+#: left open between admission and dispatch.
+ATTESTATION_DENIED_EVENT = "custody.attestation.denied.v1"
+ATTESTATION_SERVER_LABEL = "custody-export-mcp"
+_ATTESTATION_META_KEY = "custody_attestation"
 _GATEWAY_CUSTOMER_ID = re.compile(
     r"custody-gateway-(?P<proof_id>[0-9a-f]{32})-(?P<control>allow|deny)"
 )
@@ -44,6 +60,28 @@ def _configured_revision() -> str:
             f"unsupported CUSTODY_MCP_REVISION={revision!r}; expected {supported}"
         )
     return revision
+
+
+def _configured_attestation_secret() -> bytes:
+    """A random per-process fallback keeps import-time construction safe for
+    anything that never dispatches a real tool call (offline tests, ad hoc
+    imports). It is never adequate for a live proof: two Cloud Run revisions
+    of ``custody-export-mcp`` are two different processes, and R2's negative
+    control specifically needs a token minted by one to verify against the
+    other, so the live deploy must always pass the same
+    ``CUSTODY_ATTESTATION_SECRET`` explicitly to both revisions."""
+    secret = os.environ.get("CUSTODY_ATTESTATION_SECRET", "").strip()
+    return secret.encode("utf-8") if secret else uuid.uuid4().bytes
+
+
+def _configured_attestation_ttl_seconds() -> float:
+    """Default matches ``AttestationAuthority``'s own default (45s), a
+    realistic dispatch window. A live redeploy-based proof needs a token
+    minted before one Cloud Run revision swap to still be presentable after
+    it, so the proof deploy overrides this higher; the mechanism being
+    proved (digest recheck at dispatch) is unchanged either way."""
+    raw = os.environ.get("CUSTODY_ATTESTATION_TTL_SECONDS", "").strip()
+    return float(raw) if raw else 45.0
 
 
 class DispatchLedger:
@@ -81,7 +119,136 @@ class DispatchLedger:
 
 REVISION = _configured_revision()
 LEDGER = DispatchLedger(revision=REVISION)
+ATTESTATION = AttestationAuthority(
+    _configured_attestation_secret(), _configured_attestation_ttl_seconds()
+)
 mcp = FastMCP("Custody Export MCP")
+
+
+def _tool_revision(tool) -> str:
+    """The same canonical digest a client computes from a real ``tools/list``.
+
+    Built fresh from the tool's own declared identity every time this is
+    called, never from a cached value, so a dispatch-time recheck reflects
+    what this server would return right now, not what it returned earlier.
+    """
+    raw = tool.to_mcp_tool(include_fastmcp_meta=False).model_dump(
+        mode="json", by_alias=True, exclude_none=True
+    )
+    surface = ToolSurface.from_tools_list(
+        server=ATTESTATION_SERVER_LABEL, payload={"tools": [raw]}
+    )
+    return surface.tools[0].revision
+
+
+def _dump_attestation(token: SurfaceAttestation) -> dict[str, object]:
+    return {
+        "tool_id": token.tool_id,
+        "revision": token.revision,
+        "nonce": token.nonce,
+        "issued_at": token.issued_at,
+        "expires_at": token.expires_at,
+        "signature": token.signature,
+    }
+
+
+def _load_attestation(fastmcp_context) -> SurfaceAttestation | None:
+    """Pull a caller-presented token out of the request's ``_meta``.
+
+    Reads it from ``Context.request_context.meta``, not
+    ``MiddlewareContext.message.meta``: FastMCP's own dispatcher rebuilds
+    ``CallToolRequestParams`` from just ``(name, arguments)`` before handing
+    it to a middleware's ``on_call_tool``, discarding whatever ``_meta`` the
+    real request carried. The low-level MCP SDK still holds the original,
+    unmodified request meta in its own ``request_ctx`` contextvar for the
+    duration of the call, which ``Context.request_context`` exposes; that is
+    the only place this token survives to be read back.
+
+    ``_meta`` is the one field a caller cannot smuggle tool identity into
+    without also failing the signature check: it rides outside the fields
+    ``_tool_revision`` digests (see ``ToolSurface.from_tools_list``).
+    """
+    if fastmcp_context is None:
+        return None
+    meta = fastmcp_context.request_context.meta
+    raw = getattr(meta, _ATTESTATION_META_KEY, None) if meta is not None else None
+    if not isinstance(raw, Mapping):
+        return None
+    try:
+        return SurfaceAttestation(
+            tool_id=str(raw["tool_id"]),
+            revision=str(raw["revision"]),
+            nonce=str(raw["nonce"]),
+            issued_at=float(raw["issued_at"]),
+            expires_at=float(raw["expires_at"]),
+            signature=str(raw["signature"]),
+        )
+    except (KeyError, TypeError, ValueError):
+        return None
+
+
+def _log_attestation_denial(tool_name: str, reason: Denial) -> None:
+    snapshot = LEDGER.snapshot()
+    _write_structured_log(
+        {
+            "severity": "WARNING",
+            "message": "Custody dispatch attestation refused before invocation",
+            "event": ATTESTATION_DENIED_EVENT,
+            "tool_name": tool_name,
+            "reason": reason.value,
+            "instance_id": snapshot["instance_id"],
+            "revision": snapshot["revision"],
+            "dispatch_count": snapshot["dispatch_count"],
+        }
+    )
+
+
+class SurfaceAttestationMiddleware(Middleware):
+    """Binds an allowed ``tools/call`` to the ``tools/list`` read that
+    authorized it (R2), closing the window R1 left open between admission
+    and dispatch.
+
+    Every ``tools/list`` response mints one short-lived, server-signed token
+    per tool, carried in that tool's ``_meta``. A ``tools/call`` must present
+    the matching token; this server recomputes the tool's live digest at the
+    instant of dispatch and refuses to run it on any mismatch, expiry, replay,
+    or invalid signature. This closes the declared-surface TOCTOU only: a
+    behavior-only change under an identical ``tools/list`` is not, and cannot
+    be, detected here, since nothing here attests the server's running code,
+    only the schema it declares. The consumed-nonce set is process-local,
+    the same single-owned-instance scope this proof's dispatch ledger
+    already requires.
+    """
+
+    async def on_list_tools(self, context, call_next):
+        tools = await call_next(context)
+        attested = []
+        for tool in tools:
+            approved = ApprovedTool(
+                tool_id=f"{ATTESTATION_SERVER_LABEL}/{tool.name}",
+                runtime_name=tool.name,
+                revision=_tool_revision(tool),
+            )
+            token = ATTESTATION.mint(tool=approved)
+            meta = dict(tool.meta or {})
+            meta[_ATTESTATION_META_KEY] = _dump_attestation(token)
+            attested.append(tool.model_copy(update={"meta": meta}))
+        return attested
+
+    async def on_call_tool(self, context, call_next):
+        tool_name = context.message.name
+        token = _load_attestation(context.fastmcp_context)
+        if token is None:
+            _log_attestation_denial(tool_name, Denial.SIGNATURE_INVALID)
+            raise ToolError(f"dispatch attestation missing for {tool_name}")
+
+        tool = await context.fastmcp_context.fastmcp.get_tool(tool_name)
+        denial = ATTESTATION.verify(token, live_revision=_tool_revision(tool))
+        if denial is not None:
+            _log_attestation_denial(tool_name, denial)
+            raise ToolError(f"dispatch attestation refused: {denial.value}")
+
+        return await call_next(context)
 
 
 def _customer_record(customer_id: str) -> dict[str, object]:
@@ -245,6 +412,9 @@ async def evidence(request: Request) -> JSONResponse:
     """Expose process-local counters without retaining tool arguments or PII."""
     del request
     return JSONResponse(LEDGER.snapshot())
+
+
+mcp.add_middleware(SurfaceAttestationMiddleware())
 
 
 if __name__ == "__main__":

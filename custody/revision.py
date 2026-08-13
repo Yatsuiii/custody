@@ -15,7 +15,10 @@ derivation graph without exposing registry details to the origin module.
 from __future__ import annotations
 
 import hashlib
+import hmac
 import json
+import secrets
+import time
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Mapping, Sequence
@@ -30,6 +33,14 @@ class ToolSurfaceError(ValueError):
 class Denial(str, Enum):
     MISSING = "missing"
     REVISION_MISMATCH = "revision_mismatch"
+    #: Dispatch-time denials, distinct from the two admission-time reasons
+    #: above: these fire inside ``AttestationAuthority.verify``, after a
+    #: surface was already admitted, when the specific ``tools/call`` cannot
+    #: be bound back to the ``tools/list`` read that authorized it.
+    EXPIRED = "expired"
+    REPLAYED = "replayed"
+    SIGNATURE_INVALID = "signature_invalid"
+    DIGEST_MISMATCH = "digest_mismatch"
 
 
 class ToolCallDenied(PermissionError):
@@ -73,6 +84,13 @@ class ToolSurface:
         JSON object key order and the order of tools in a discovery response are
         transport noise. Arrays inside an individual schema retain their order,
         because a general JSON array does not promise set semantics.
+
+        ``_meta`` is dropped before a definition is stored, and before it is
+        digested. The MCP spec reserves it for out-of-band, per-response
+        annotation, not tool identity; R2's dispatch attestation token rides
+        in exactly that field, minted fresh on every ``tools/list`` call, so
+        including it in the digest would make a tool's revision change on
+        every read regardless of whether its declared surface ever did.
         """
         result = payload.get("result", payload)
         if not isinstance(result, Mapping):
@@ -92,7 +110,8 @@ class ToolSurface:
             if name in names:
                 raise ToolSurfaceError(f"duplicate tool name: {name}")
             names.add(name)
-            definitions.append(ToolDefinition(server, name, dict(raw)))
+            identity = {key: value for key, value in raw.items() if key != "_meta"}
+            definitions.append(ToolDefinition(server, name, identity))
         return cls(server, tuple(sorted(definitions, key=lambda tool: tool.runtime_name)))
 
 
@@ -184,3 +203,108 @@ def _digest(definition: Mapping[str, object]) -> str:
         definition, sort_keys=True, separators=(",", ":"), ensure_ascii=True
     )
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+def mac(
+    secret: bytes,
+    *,
+    tool_id: str,
+    revision: str,
+    nonce: str,
+    issued_at: float,
+    expires_at: float,
+) -> str:
+    """The one signature both minting and verification compute.
+
+    Shared here rather than duplicated so a verifier can never drift from
+    what a minter signed. The secret itself is never carried in a
+    ``SurfaceAttestation``; only this function's caller holds it.
+    """
+    canonical = "|".join(
+        (tool_id, revision, nonce, repr(issued_at), repr(expires_at))
+    )
+    return hmac.new(secret, canonical.encode("utf-8"), hashlib.sha256).hexdigest()
+
+
+@dataclass(frozen=True)
+class SurfaceAttestation:
+    """A server-signed claim: 'I returned this digest for this tool, just now.'
+
+    Binds one ``tools/call`` dispatch back to the exact ``tools/list`` read
+    that authorized it. Carries no secret, only what a minting server signed;
+    a caller cannot forge or alter any field without invalidating the
+    signature.
+    """
+
+    tool_id: str
+    revision: str
+    nonce: str
+    issued_at: float
+    expires_at: float
+    signature: str
+
+
+@dataclass
+class AttestationAuthority:
+    """Mints and verifies ``SurfaceAttestation`` tokens for one MCP server.
+
+    Server-side only: holds the shared secret and the consumed-nonce set, so
+    it must never be constructed by a client. The nonce set is process-local,
+    same single-owned-instance scope R1 and S1 already accept for their own
+    ledgers; it does not by itself guarantee replay-safety across more than
+    one live server instance.
+    """
+
+    _secret: bytes
+    _ttl_seconds: float = 45.0
+    _consumed: set[str] = field(default_factory=set)
+
+    def mint(self, *, tool: ApprovedTool) -> SurfaceAttestation:
+        nonce = secrets.token_hex(16)
+        issued_at = time.time()
+        expires_at = issued_at + self._ttl_seconds
+        signature = mac(
+            self._secret,
+            tool_id=tool.tool_id,
+            revision=tool.revision,
+            nonce=nonce,
+            issued_at=issued_at,
+            expires_at=expires_at,
+        )
+        return SurfaceAttestation(
+            tool_id=tool.tool_id,
+            revision=tool.revision,
+            nonce=nonce,
+            issued_at=issued_at,
+            expires_at=expires_at,
+            signature=signature,
+        )
+
+    def verify(
+        self, token: SurfaceAttestation, *, live_revision: str
+    ) -> Denial | None:
+        """Fail closed: return the reason to deny dispatch, or ``None`` to allow.
+
+        Order matters. A token that fails signature verification proves
+        nothing, so its nonce is never marked consumed on that path alone; a
+        forged nonce could otherwise be used to burn a legitimate token
+        before it is ever presented.
+        """
+        expected = mac(
+            self._secret,
+            tool_id=token.tool_id,
+            revision=token.revision,
+            nonce=token.nonce,
+            issued_at=token.issued_at,
+            expires_at=token.expires_at,
+        )
+        if not hmac.compare_digest(expected, token.signature):
+            return Denial.SIGNATURE_INVALID
+        if time.time() >= token.expires_at:
+            return Denial.EXPIRED
+        if token.nonce in self._consumed:
+            return Denial.REPLAYED
+        if token.revision != live_revision:
+            return Denial.DIGEST_MISMATCH
+        self._consumed.add(token.nonce)
+        return None

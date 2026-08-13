@@ -43,6 +43,23 @@ class RecordingMemory:
         return list(self.written)
 
 
+@dataclass
+class RecordWritingMemory:
+    """A downstream offering `write_record`: the D2 per-record write path,
+    checked instead of `RecordingMemory`'s whole-session path."""
+
+    written: list = field(default_factory=list)
+
+    async def write_record(self, *, app_name, user_id, admitted) -> None:
+        self.written.append((app_name, user_id, admitted))
+
+    async def add_session_to_memory(self, session) -> None:
+        raise AssertionError("write_record must be preferred when offered")
+
+    async def search_memory(self, *, app_name, user_id, query):
+        return []
+
+
 def user(text, inv="inv-1"):
     return FakeEvent("user", inv, FakeContent([FakePart(text=text)]))
 
@@ -117,6 +134,41 @@ class UntrustedContentNeverReachesMemory(unittest.IsolatedAsyncioTestCase):
 
         self.assertEqual(len(downstream.written), 1)
         self.assertEqual(quarantine.held(app_name="fleet", user_id="u-1"), [])
+
+
+class ARecordWritingDownstreamIsPreferredWhenOffered(unittest.IsolatedAsyncioTestCase):
+    """D2: a downstream that can write one record as one deletable memory
+    is used instead of the whole-session path, never both."""
+
+    async def test_only_trusted_records_are_written_one_call_each(self):
+        downstream = RecordWritingMemory()
+        service = CustodyMemoryService(
+            downstream, InMemoryQuarantine(), ToolTrust(frozenset({"payroll"}))
+        )
+        session = FakeSession(
+            events=[
+                user("what is the payroll policy?"),
+                tool("payroll", {"policy": "biweekly"}),
+                tool("fetch_page", POISON),
+            ]
+        )
+
+        split = await service.add_session_to_memory(session)
+
+        self.assertEqual(len(downstream.written), len(split.trusted))
+        self.assertEqual(
+            {a.record.id for _, _, a in downstream.written},
+            {a.record.id for a in split.trusted},
+        )
+
+    async def test_an_untrusted_only_session_writes_nothing(self):
+        downstream = RecordWritingMemory()
+        service = CustodyMemoryService(downstream, InMemoryQuarantine())
+        session = FakeSession(events=[tool("fetch_page", POISON)])
+
+        await service.add_session_to_memory(session)
+
+        self.assertEqual(downstream.written, [])
 
 
 class TheBoundaryIsStructuralNotAdvisory(unittest.IsolatedAsyncioTestCase):

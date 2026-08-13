@@ -48,8 +48,89 @@ the design, which is the right thing for a judge to see.
 **Consequence accepted with it:** revocation reintroduces a read-side concern
 that the write-side split had removed, because an admitted memory can become
 untrusted later. Deletion from Memory Bank is preferred and doubles as
-right-to-be-forgotten. **Deletion support is unverified and is a day-one check.**
-Fallback is post-filtering retrieval.
+right-to-be-forgotten. **Checked live 2026-08-13 against Agent Engine
+`6936011268348182528`, and rejected: no reliable mapping exists.** The
+`memories.delete(name=...)` API call itself works, but nothing in the write
+path can name what to delete it with. `ingest_events`'s own
+`MemoryBankIngestEventsOperation` type has no `response` field at all (only
+`name`, `metadata`, `done`, `error`), confirmed live: `operation.response` is
+returned empty on every call. `IngestionDirectContentsSourceEvent` accepts no
+custom metadata that could carry a `CustodyRecord` id through to the generated
+`Memory`, only `content`, `event_id`, `event_time`. And a post-hoc
+content-match lookup (`memories.retrieve`/`list`, then match `fact` text back
+to a record) is not just fragile, it is unsound: ingesting a second event into
+the same scope on the same topic as a first was observed live to update the
+**same** memory resource name in place (`update_time` changed, `create_time`
+did not), overwriting the first fact's text entirely. A memory resource is not
+a 1:1 destination for one ingested event; it is a mutable, server-consolidated
+target that later, unrelated, still-trusted writes can overwrite. Deleting it
+to revoke one compromised record risks destroying content Memory Bank has
+since merged in from other sources, and the reverse failure is silent too: the
+compromised text can already be gone, superseded, while the record believes it
+is still live. Fallback is post-filtering retrieval, and it is no longer a
+fallback, it is the only sound option through this write path.
+
+**A narrower fix was also tried and also failed live, same day.**
+`IngestEventsConfig` exposes request-level `metadata` plus
+`metadata_merge_strategy=REQUIRE_EXACT_MATCH`, documented as "restrict
+consolidation to memories that have exactly the same metadata as the
+request." The idea was to tag every ingest with `{"custody_record_id": <id>}`
+so consolidation could never merge two different records, making deletion
+safe. Live test: two ingests into the same scope, same topic, different
+`custody_record_id` values each, `REQUIRE_EXACT_MATCH` set on both. They
+still collapsed into one memory resource, its fact rewritten to merge both
+inputs. The documented guarantee did not hold in practice for this write
+path. No architecture change is worth making on top of that; the limitation
+is closed for the `ingest_events` write path specifically.
+
+**Correction, same day, live-verified, not reasoned from a docstring this
+time:** `agent_engines.memories.create(fact=..., config={"memory_id": <id>,
+...})` does not share `ingest_events`'s consolidation behavior. Live test:
+`memory_id` set to a custody record id, two calls into the same scope, same
+topic, deliberately contradictory facts ("requires two approvals" then
+"requires one approval, not two, correction"). Both persisted as two
+separate memory resources, named exactly `rec-a-<proof>` and `rec-b-<proof>`
+as requested, `create_time` distinct for each, neither overwritten.
+`memories.delete()` on the predicted name for the first removed exactly that
+one and left the second's fact untouched. **This is a real, working,
+deterministic mapping** between a `CustodyRecord` id and a deletable Memory
+Bank resource name: no search, no content matching, no metadata filter, just
+`memory_id = record.id`.
+
+**The catch is architectural, not technical, and it is the one DECISIONS.md
+#3 already named.** `create()` takes `fact` from the caller; it does not
+derive it from raw session events the way `ingest_events` does. Using it
+means Custody stops being a governance layer over ADK's existing memory
+write (`add_session_to_memory` → `ingest_events`, the path G1's live proof
+already depends on) and starts authoring memory content itself. That is
+exactly the shift the framing rule in decision `#200` warns against: "every
+artifact frames the finding as extending Memory Bank, not replacing it."
+Selective deletion is now proven buildable, but only by trading away the
+"we govern the existing path" claim for a "we are a second memory writer"
+one, and by reworking the write path a live gate (G1) already depends on,
+this close to the submission deadline. That tradeoff has not been made
+system-wide; on explicit request it was made narrowly, for a new opt-in
+path only.
+
+**Built and proven live, same day, without touching G1.** `custody/
+service.py` gained `RecordWriter`, a capability a downstream can offer
+instead of the whole-session `add_session_to_memory`;
+`CustodyMemoryService` writes one record at a time through it when present,
+unchanged otherwise, so every existing downstream (offline fakes, G1's
+`ingest_events` adapter) is untouched. `custody/adapters/memory_bank.py`
+adds `AgentEngineMemoryBank` (writes via `memories.create`, `memory_id`
+pinned to `memory_id_for(record.id)`) and `RevokingMemoryBankGraph` (wraps
+any graph's `revoke`, then deletes each removed record's memory by that
+computed name). Live proof: one session wrote two trusted, different-tool
+records; both retrievable before revocation; revoking one tool removed
+exactly its record from the graph and deleted exactly its memory; a
+subsequent `search_memory` no longer returned it while the sibling tool's
+memory was untouched. `make memory-deletion-gates`, seven PASS. This is a
+second, additive write path, not a replacement: G1's `ingest_events` flow,
+its Cloud Run proof, and anything already written through it are unchanged
+and remain outside what this mechanism can delete. Migrating G1 onto this
+path, if ever wanted, is a separate decision with its own risk, not implied
+by this one.
 
 ---
 

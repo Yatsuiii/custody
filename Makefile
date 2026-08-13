@@ -14,7 +14,7 @@ PYTHON ?= $(shell \
 		command -v python3; \
 	fi)
 
-.PHONY: help lint test check serve image gates cost demo revoke isolate revision-spike live-memory-bank live-g1 live-registry-attack registry-gates setup-gateway deploy-gateway-probe live-gateway gateway-gates live-model-armor model-armor-gates live-observability observability-gates clean
+.PHONY: help lint test check serve image gates cost demo revoke isolate revision-spike live-memory-bank live-memory-deletion memory-deletion-gates live-g1 live-registry-attack registry-gates live-revision-binding revision-binding-gates setup-gateway deploy-gateway-probe live-gateway gateway-gates live-model-armor model-armor-gates live-observability observability-gates clean
 
 help:
 	@echo "make lint    ruff over the tree"
@@ -29,9 +29,13 @@ help:
 	@echo "make isolate G4 offline: cross-department isolation, trust and quarantine"
 	@echo "make revision-spike five-gate versioned tool-surface experiment"
 	@echo "make live-memory-bank live ADK -> Custody -> Vertex Memory Bank proof"
+	@echo "make live-memory-deletion prove D2: selective deletion via memory_id-pinned writes"
+	@echo "make memory-deletion-gates independently judge the live memory-deletion artifact"
 	@echo "make live-g1 Cloud Run + Gemini 3.5 + ADK/Memory Bank evidence"
 	@echo "make live-registry-attack deploy v1/v2 and prove stale Registry blocking"
 	@echo "make registry-gates independently judge the live Registry artifact"
+	@echo "make live-revision-binding prove R2: dispatch bound to the tools/list that authorized it"
+	@echo "make revision-binding-gates independently judge the live revision-binding artifact"
 	@echo "make setup-gateway import the three owned Gateway policy resources"
 	@echo "make deploy-gateway-probe deploy/update the identity-bound Runtime probe"
 	@echo "make live-gateway prove enforced Agent Gateway allow/deny controls"
@@ -76,6 +80,12 @@ revision-spike:
 live-memory-bank:
 	@$(PYTHON) scripts/live_memory_bank.py
 
+live-memory-deletion:
+	@$(PYTHON) scripts/live_memory_deletion.py
+
+memory-deletion-gates:
+	@$(PYTHON) scripts/memory_deletion_gates.py
+
 live-g1:
 	@$(PYTHON) scripts/live_g1.py
 
@@ -84,6 +94,12 @@ live-registry-attack:
 
 registry-gates:
 	@$(PYTHON) scripts/registry_gates.py
+
+live-revision-binding:
+	@$(PYTHON) scripts/live_revision_binding.py
+
+revision-binding-gates:
+	@$(PYTHON) scripts/revision_binding_gates.py
 
 setup-gateway:
 	@$(PYTHON) scripts/setup_gateway.py

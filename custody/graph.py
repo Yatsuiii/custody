@@ -13,8 +13,21 @@ walking edges, not by asking who owns the record.
 
 Deletion is preferred over post-filtering because it is also the
 right-to-be-forgotten path an enterprise will ask for (`DECISIONS.md` #2).
-This module deletes from its own store; wiring that deletion to live Memory
-Bank is a day-one check, not a design change here.
+This module deletes from its own store; wiring that to live Memory Bank
+lives one layer up, in `custody/adapters/memory_bank.py`
+(`RevokingMemoryBankGraph`), not here, because it needs a live client this
+pure module deliberately does not import. Through G1's governed
+`ingest_events` write path (ADK's own `add_session_to_memory`), no reliable
+mapping exists and none was built: the API returns no created-memory name,
+and a same-scope, same-topic second write was observed live overwriting an
+earlier memory in place. A second, additive write path
+(`custody/service.py`'s `RecordWriter`, backed by
+`memories.create(config={"memory_id": memory_id_for(record.id)})`) gives a
+real, deterministic mapping instead, live-verified end to end: write two
+records, revoke one tool, watch exactly its memory disappear from
+`search_memory` while the other's stays. G1's `ingest_events` path is
+unchanged and unaffected; only records written through the new path are
+deletable this way. See `DECISIONS.md` #2 for both findings.
 """
 
 from __future__ import annotations

@@ -305,6 +305,30 @@ Acceptance gates:
   `tools/list` digest, denied application-side admission trace and unchanged
   server dispatch counter, graph before and after.
 
+- **R2 dispatch-bound attestation, closing R1's stated TOCTOU gap.** R1's own
+  admission check runs client-side, at read time; nothing before this bound
+  the specific `tools/call` dispatch to the specific `tools/list` read that
+  authorized it, and IAP's static CEL conditions cannot carry a per-request
+  digest asserted by an earlier, separate call. The owned MCP server
+  (`custody-export-mcp`) now mints a short-lived, server-signed token over
+  the digest it just returned from `tools/list`, and refuses to dispatch a
+  tool unless the caller presents a token whose digest matches what the
+  server computes for that handler **at the instant of dispatch**, before it
+  runs. Proof: a token minted against one revision is refused server-side,
+  citing the digest mismatch, when presented after the server is redeployed
+  to a different revision; the dispatch counter does not move. **Non-goal,
+  stated plainly and never overclaimed**: this closes the declared-surface
+  TOCTOU only. It does not and cannot detect a behavior-only change under an
+  identical `tools/list` — that needs the server to attest its own running
+  code identity, a different and larger problem, left open. The nonce-replay
+  ledger is process-local, the same single-owned-instance scope R1 and S1
+  already accept, not a new, broader guarantee.
+
+- **R2 replay closed.** A structurally valid, unexpired token presented a
+  second time is refused citing nonce replay; only its first use's dispatch
+  counter moves. Proof: two `tools/call` traces under the same nonce, one
+  accepted, one denied, independently correlated from Cloud Logging.
+
 - **S1 Gateway enforcement.** One identity-enabled Agent Runtime is bound to an
   Agent-to-Anywhere Gateway and one registered owned MCP server. Under an exact
   tool allow-list, one call reaches the same-instance server ledger. After an
@@ -387,6 +411,46 @@ Acceptance gates:
   as a synthetic proof service, same posture as the Registry MCP server, not
   as a hardened design.
 
+- **D1 selective deletion from live Memory Bank, viability gate.** `G3`
+  proves revocation across `CustodyGraph`; it has never deleted the
+  underlying memory from live Memory Bank, per `custody/graph.py`'s own
+  module docstring ("wiring that deletion to live Memory Bank is a day-one
+  check, not a design change here") and `DECISIONS.md` #2/#3. Before writing
+  deletion code: verify live, against the real G1 Agent Engine
+  (`6936011268348182528`), whether a `CustodyRecord` can be mapped to a
+  deletable Memory Bank resource name (`memories.delete(name=...)`), using
+  `ingest_events`'s returned operation and/or a `memories.retrieve`/`list`
+  call to find the created memory's own name. **Fails, and the correct
+  outcome is documentation, not code**, if Memory Bank's server-side
+  derivation (already established in `DECISIONS.md` #3: "a stored memory is
+  therefore not byte-identical to any event and cannot be matched back to a
+  custody record afterwards") means no reliable one-to-one mapping exists
+  between an admitted `CustodyRecord` and one `memories.delete`-able name. If
+  it does pass: extend `FirestoreCustodyGraph.revoke` (or a thin wrapper) to
+  call `memories.delete` for each removed record's mapped memory name, and
+  prove it live — revoke a tool, then show the memory is gone from a
+  `search_memory` call afterward. Proof: `proof-out/live-memory-deletion.json`
+  or equivalent, showing the pre-revoke memory name(s), the revoke call, and
+  a post-revoke `search_memory`/`retrieve` that no longer returns it.
+
+- **D2 selective deletion, built on a corrected finding.** D1's `ingest_events`
+  finding stands (`DECISIONS.md` #2), but a live-tested correction found a
+  real, deterministic mapping through a different write path:
+  `agent_engines.memories.create(config={"memory_id": <id>})` does not share
+  `ingest_events`'s consolidation behavior, verified live with two
+  contradictory same-scope facts staying as two separate, independently
+  deletable resources. Build this as a new, additive, opt-in write
+  capability (`custody/service.py`'s `RecordWriter`, `custody/adapters/
+  memory_bank.py`), never a replacement for `ingest_events` or a change to
+  G1's already-proven Cloud Run flow. Proof: one session writes two
+  trusted, different-tool records through the new path to the real Agent
+  Engine; both are retrievable via `search_memory`; revoking one tool
+  deletes exactly its memory (`memories.delete` on the predicted
+  `memory_id_for(record.id)` name) and a subsequent `search_memory` no
+  longer returns it while the other tool's memory is untouched. Non-goal,
+  stated in every artifact: memories already written through `ingest_events`
+  (including G1's own) are not covered by this mechanism.
+
 Verification:
 
 `make check` runs lint and the offline suite with no network and no cloud; the
@@ -434,6 +498,34 @@ The live Gateway now enforces Agent Identity and tool-name admission, but its
 IAP condition does not attest the revision digest. Until the Gateway or MCP
 server binds that digest at dispatch, the broader no-unapproved-revision
 contract remains architecturally unshippable.
+
+**R2 passed live on 2026-08-13, proof `0aa93adc180a4e4794c85869bdcb312f`,
+closing the gap R1 stated above.** The owned `custody-export-mcp` server
+(revisions `custody-export-mcp-00011-rm5` then `-00012-8kz`, same Cloud Run
+URL, same secret) now mints a short-lived, HMAC-signed token bound to the
+digest it returns from every `tools/list`, and verifies it itself, at the
+instant of dispatch, before `lookup_customer` ever runs. A token minted
+against v1's digest, presented to the redeployed v2 instance, was refused
+server-side citing `digest_mismatch`, with `dispatch_count` staying at 0 on
+that instance; the same token replayed against v1 a second time was refused
+citing `replayed`, with `dispatch_count` staying at 1. Both denials, and both
+Cloud Run revisions, were independently reread live from Cloud Logging and
+Cloud Run by `make revision-binding-gates` (13 PASS: 9 offline structural
+checks, 4 live rereads by server-issued insert ID and revision name), not
+just trusted from the producer's own JSON. One real implementation surprise
+worth recording: the obvious channel, `MiddlewareContext.message.meta`, does
+not carry the caller's token, because FastMCP's own `tools/call` dispatcher
+rebuilds `CallToolRequestParams` from just `(name, arguments)` before a
+middleware ever sees it, discarding the request's `_meta`. The token only
+survives in the low-level MCP SDK's `request_ctx` contextvar, read via
+`Context.request_context.meta`; the first live attempt failed for exactly
+this reason before the fix was found and verified in-process. **Non-goal,
+unchanged from R1's own statement of it**: this closes the declared-surface
+TOCTOU only. A behavior-only change under an identical `tools/list` is still
+undetected, since nothing here attests the server's running code, only the
+schema it declares. The consumed-nonce set is process-local, the same
+single-owned-instance scope R1 and S1 already require, not a new, broader
+replay guarantee.
 
 **S1 passed live again on 2026-08-13 against schema v2, proof
 `e2b9f562fa3a48249054b977b5779a21`.** The first schema-v2 attempt
@@ -490,6 +582,95 @@ read endpoint, so Cloud Trace's own storage is not independently verifiable
 here. The proof shows a trace/digest binding exists for one live admission;
 it does not verify Cloud Trace storage, and it does not change G1's
 admitted/withheld counts or Memory Bank behavior.
+
+**D1 checked live on 2026-08-13 against Agent Engine
+`6936011268348182528`, and is a documented non-viability, not a build.**
+`agent_engines.memories.delete(name=...)` was already confirmed callable
+(day-one check). The open question was whether a `CustodyRecord` can be
+mapped to the name it deletes. It cannot, reliably, through the governed
+`ingest_events` write path Custody uses:
+`MemoryBankIngestEventsOperation` carries no `response` and no created-memory
+name (true of the type itself, and `operation.response` was empty on every
+live call); `IngestionDirectContentsSourceEvent` accepts no metadata Memory
+Bank passes through to the memory it generates, so no id can ride along at
+write time either. A post-hoc `memories.retrieve`/`list` content match was
+tried as a fallback and is unsound rather than merely approximate: ingesting
+a second, topically related fact into the same scope as a first was observed
+live overwriting the **same** memory resource name in place
+(`update_time` advanced, `create_time` did not, `fact` text replaced
+entirely). A Memory Bank memory is a mutable, server-consolidated target, not
+a 1:1 destination for one ingested event, so deleting it on one record's
+revocation can destroy content later merged in from other, still-trusted
+records, and failing to delete it can leave a revoked record's own content
+already silently superseded and gone. No code was added to
+`FirestoreCustodyGraph.revoke`. `custody/graph.py`'s module docstring,
+`DECISIONS.md` #2, and the README limitations section were updated to state
+this as a checked, live-confirmed limitation rather than an open day-one
+question.
+
+**A second, narrower hypothesis was raised and also checked live, same day.**
+`IngestEventsConfig` has request-level `metadata` plus
+`metadata_merge_strategy=REQUIRE_EXACT_MATCH`, documented as "restrict
+consolidation to memories that have exactly the same metadata as the
+request." The idea: tag every ingest with `{"custody_record_id": <id>}` so
+consolidation only ever merges writes from the same record, giving deletion a
+safe, filterable partition. Tested live, same engine, same scope-reuse
+pattern: two ingests carrying **different** `custody_record_id` metadata
+values, one topically related fact each, still collapsed into **one** memory
+resource, its fact rewritten to merge both ("...requires 90 days instead of
+30"). `REQUIRE_EXACT_MATCH` did not prevent cross-record consolidation in
+practice. Per the DDIA review's own stop condition ("if gate 1 fails, stop"),
+this closes the metadata-partition path too, without needing to chase the
+separate `list(filter=...)` syntax error the same probe also hit. No code
+was written for this path either. This does not change G3's offline graph-revocation guarantee, only
+closes the gap between it and live Memory Bank deletion as not closable
+through the `ingest_events` write path.
+
+**Corrected the same day, on request, live-verified rather than reasoned
+from a docstring.** `agent_engines.memories.create(fact=..., config=
+{"memory_id": <custody_record_id>, ...})` does not share `ingest_events`'s
+consolidation behavior: live-tested with two contradictory, same-topic
+facts in one scope, both `memory_id`-pinned to a record id, and both
+persisted as separate resources with distinct `create_time`s, no overwrite.
+`memories.delete()` on the predicted name removed exactly the targeted one
+and left the other's fact untouched. **Selective deletion is proven
+buildable now, with a real, deterministic `record.id → memory_id` mapping
+and no search or content-matching needed.** The catch is architectural, not
+technical, and is exactly what `DECISIONS.md` #3 already named: `create()`
+takes `fact` from the caller instead of deriving it from raw session events,
+so using it means Custody stops governing ADK's existing write path
+(`add_session_to_memory` → `ingest_events`, the one G1's live proof already
+depends on) and starts authoring memory content itself, trading the
+"extends Memory Bank" framing for "second memory writer." That tradeoff has
+not been made here; it is a roadmap decision, not a finding this session
+should make unilaterally this close to the submission deadline. Full
+write-up in `DECISIONS.md` #2.
+
+**D2 passed live on 2026-08-13, first attempt, against Agent Engine
+`6936011268348182528`.** On explicit request, the tradeoff above was made
+for a new, additive, opt-in write path only, never for G1's own:
+`custody/service.py` gained a `RecordWriter` capability
+(`CustodyMemoryService.add_session_to_memory` writes one record at a time
+through `downstream.write_record` when a downstream offers it, unchanged
+otherwise), and `custody/adapters/memory_bank.py` gained
+`AgentEngineMemoryBank` (writes via `memories.create`, `memory_id` pinned to
+`memory_id_for(record.id)`) and `RevokingMemoryBankGraph` (wraps any
+graph's `revoke`, then deletes each removed record's memory by that same
+computed name). One live session wrote two trusted, different-tool records
+(`sales/lookup`, `finance/lookup`); both facts were retrievable via
+`search_memory` before revocation. `RevokingMemoryBankGraph.revoke(tool=
+"sales/lookup", ...)` removed exactly `inv-sales:0:0` from the graph and
+deleted `.../memories/cr-5e69b7e2...`; a subsequent `search_memory` no
+longer returned the sales fact while the finance fact was untouched. `make
+memory-deletion-gates` independently recomputed `memory_id_for` for both
+records and reported seven PASS results. **This is the exact acceptance
+criterion the original ask stated**: "revoke a tool, show the memory is
+gone from a `search_memory` call afterward," now proven live rather than
+closed as non-viable. G1's Cloud Run control plane, its ADK Runner flow,
+and its `ingest_events`-written memories are unchanged and remain outside
+what this mechanism can delete; that boundary is stated in the producer's
+own `claim_boundary` field and checked by the gate script, not left as
+prose.
 
 ## Stated assumption, not a finding
 
