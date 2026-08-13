@@ -4,18 +4,20 @@ Working name: Custody. Chain of custody for agent memory. Rename is cheap until
 the first public artifact, expensive after the demo video.
 
 Objective: Ship one submittable artifact to the All Things Agentic Hackathon
-(Google, Devpost) under **Fortified Enterprise Fleet**. Custody is a provenance
-layer over agent long-term memory across a fleet of departmental agents. Every
-durable memory records where its content came from and what it was derived from.
-Untrusted-origin content never reaches the memory service. And because
-derivation is recorded, a tool discovered compromised later can have every memory
-descended from it identified and pulled, across every department, agent and
-session since.
+(Google, Devpost) under **Fortified Enterprise Fleet**. Custody is a
+revision-aware provenance layer over agent long-term memory across a fleet of
+departmental agents. An agent may bind only a tool whose live MCP definition
+matches the version its department approved. Every durable memory records where
+its content came from, which exact tool version introduced it, and what it was
+derived from. Because derivation is recorded, a tool revision discovered
+compromised later can have every memory descended from it identified and pulled,
+across every department, agent and session since.
 
 The product in one sentence, and it must stay one sentence:
 
-> Poisoned content never enters your agents' memory, and if a tool is later
-> found compromised, you can pull everything descended from it.
+> Custody blocks an observed unapproved tool revision before dispatch, and if
+> an approved revision is later compromised, identifies every memory descended
+> from it for selective revocation.
 
 One deployed Cloud Run control plane, a scalable population of governed ADK
 agents, one public repo, one four-minute video.
@@ -38,8 +40,9 @@ Verified 2026-08-09 in `google/adk-python`, not inferred:
   user_id, query)` takes **no filter parameter**.
 
 So Memory Bank answers **who appended content and for whom**. It does not answer
-**where the content came from** or **what it was derived from**. Custody supplies
-those two, on top, through the existing port and without modifying anything.
+**where the content came from**, **which tool version introduced it**, or **what
+it was derived from**. Custody supplies those facts, on top, through the
+existing port and without modifying anything.
 
 **Framing rule, and it is not cosmetic.** This is an extension of Memory Bank,
 never a correction of it. Memory Bank gives scope and identity; Custody adds
@@ -53,6 +56,29 @@ servers changed their published tool surface between first and latest release,
 and one registry audit found **76 confirmed malicious payloads**. Trust is a
 point-in-time judgement, so a write-time control without a revocation path is
 half a product.
+
+## Revision pivot, proven live on 2026-08-13
+
+Google Agent Registry does not automatically introspect an MCP server. If a
+server changes a tool schema, its owner must manually upload a new definition.
+That creates a measurable gap between the catalogued surface and the one an
+agent can bind at runtime. The source is [Google's Agent Registry MCP management
+documentation](https://docs.cloud.google.com/agent-registry/manage-mcp-tools?hl=en).
+
+`make revision-spike` is the decision artifact. It reads a saved registry
+snapshot and a changed later `tools/list` fixture, computes canonical SHA-256
+revision digests, and proves all five required gates:
+
+1. stale Registry metadata differs from the changed surface;
+2. the baseline binds the stale snapshot;
+3. the governed path refuses before tool dispatch;
+4. revision-specific revocation removes three cross-department descendant hops
+   and preserves a sibling revision plus unrelated memory; and
+5. the breach, detection, and containment story has a 150-second demo budget.
+
+The offline proof output is `proof-out/revision-spike.json`. Its live successor,
+`make live-registry-attack`, writes `proof-out/live-registry-attack.json` and is
+judged independently by `make registry-gates`.
 
 Non-goals:
 
@@ -78,16 +104,26 @@ Non-goals:
 
 ## Architecture
 
-**1. Origin labelling. Deterministic, no model.** Built and verified.
+**1. Revision admission. Deterministic, no model.** Built and verified live.
+`custody/revision.py` canonicalizes a live `tools/list` response, compares every
+server-qualified tool digest with the department's approved pin, and refuses a
+mismatch before dispatch. Its successful admission yields the trust and exact
+revision that the existing origin boundary consumes. The approved snapshot is
+read back from a real Agent Registry Service. The application-side catalog is
+still in-memory; durable approval storage remains future work.
+
+**2. Origin labelling. Deterministic, no model.** Built and verified.
 Every content part is USER, MODEL, TOOL or DERIVED, read off the event graph.
 `Event.get_function_responses()` makes tool origin structural. Taint propagates:
 a model turn following an untrusted tool response inside the same invocation is
 DERIVED and inherits the distrust, because an agent that summarises a hostile
 page produces a laundered copy while the raw response is discarded.
 
-**2. The derivation graph. The differentiator, and the hardest part.**
+**3. The derivation graph. The differentiator, and the hardest part.**
 A custody record carries `derived_from[]`, turning a per-item label into a graph
-that can be traversed. This is what makes retroactive revocation possible, and it
+that can be traversed. Tool roots carry a server-qualified tool id plus revision
+digest, so revocation can select one definition without deleting a later clean
+revision. This is what makes retroactive revocation possible, and it
 answers a question nothing else on the market can answer.
 
 **3. Enforcement at the write.** Built and verified.
@@ -151,16 +187,16 @@ predecessor shipped a GEAP table describing an integration that did not exist.
 
 | Capability group | Product | Role in Custody | Status |
 | --- | --- | --- | --- |
-| Discovery and lifecycle | **Agent Registry** | department agents and their tool grants | PLANNED |
-| Execution and state | **Memory Bank** | the governed substrate | PLANNED, central |
-| Execution and state | **Agent Runtime** | the Auditor's long-running revocation work | PLANNED |
-| Security and governance | **Agent Identity** | the principal that vouches for a tool grant | PLANNED |
-| Security and governance | **Agent Gateway** | refuses ungoverned memory writes and exports | PLANNED |
+| Discovery and lifecycle | **Agent Registry** | department agents and approved MCP revision pins | **LIVE**, stale v1 snapshot vs live v2 proof |
+| Execution and state | **Memory Bank** | the governed substrate | **LIVE**, `make live-g1` |
+| Execution and state | **Agent Runtime** | identity-bound deterministic Gateway probe | **LIVE**, `make live-gateway` |
+| Security and governance | **Agent Identity** | exact principal authorized for the registered MCP tool | **LIVE**, `make live-gateway` |
+| Security and governance | **Agent Gateway** | IAP-enforced allow/deny boundary before owned MCP dispatch | **LIVE**, `make live-gateway` |
 | Security and governance | **Model Armor** | screens content; complements origin, does not replace it | PLANNED |
 | Telemetry | **Agent Observability** | traces carrying the custody digest, so a quarantine is reproducible | PLANNED |
-| mandatory | **Gemini 3.5+ via Vertex** | explains quarantined memories; never labels | PLANNED |
-| mandatory | **ADK** | the seam; `BaseMemoryService` is the port | **BUILT** |
-| mandatory | **Cloud Run** | control plane and reviewer | PLANNED |
+| mandatory | **Gemini 3.5+ via Vertex** | explains quarantined memories; never labels | **LIVE**, Gemini 3.5 Flash |
+| mandatory | **ADK** | the seam; `BaseMemoryService` is the port | **LIVE**, real Runner callback in G1 |
+| mandatory | **Cloud Run** | control plane and reviewer | **LIVE**, control plane revision `00001-hz6` |
 | supporting | **Firestore** | the graph, quarantine, audit | PLANNED |
 | supporting | **Cloud Scheduler** | daily auditor run, which makes elapsed time real | PLANNED |
 | bonus | **Gemma** | cheap first-pass triage of the quarantine queue | OPTIONAL |
@@ -178,7 +214,7 @@ which is the correct outcome and not a sign of vapourware.
 
 What that means concretely for each row:
 
-- **Memory Bank** ships in `google-cloud-aiplatform[agent-engines]>=1.148.1,<2`,
+- **Memory Bank** ships in `google-cloud-aiplatform[agent-engines]==1.163.0`,
   which is the Vertex AI SDK. Reported GA. This is the `gcp` extra of ADK.
 - **Agent Identity** is a real ADK extra, `agent-identity`, requiring
   `google-cloud-agentidentitycredentials` and `google-cloud-iamconnectorcredentials`,
@@ -261,6 +297,25 @@ Acceptance gates:
   filming, with one custody record showing genuine timestamps across that span
   including a memory admitted early and revoked later. Nothing fast-forwarded.
 
+- **R1 revision-aware admission.** A real MCP server's registered tool
+  definition is approved, then its live `tools/list` definition changes without
+  a Registry update. An ungoverned agent still binds the stale catalogue entry;
+  Custody detects the digest mismatch before dispatch. A later revocation removes
+  all and only records descended from that revision. Proof: Registry entry, live
+  `tools/list` digest, denied application-side admission trace and unchanged
+  server dispatch counter, graph before and after.
+
+- **S1 Gateway enforcement.** One identity-enabled Agent Runtime is bound to an
+  Agent-to-Anywhere Gateway and one registered owned MCP server. Under an exact
+  tool allow-list, one call reaches the same-instance server ledger. After an
+  etag-protected transition to an allow-list containing no registered tool, the
+  same call returns 403 and every ledger field remains unchanged. Proof: raw
+  Gateway, extension, policy, Cloud Run, Registry, Runtime and Agent Identity
+  resources; the initial, allow and deny IAM policy snapshots; the
+  server-authored Admin Activity etag chain; both ledger transitions; and
+  distinct trace-correlated `tools/call` logs independently judged and reread
+  from Google Cloud by `make gateway-gates`.
+
 Verification:
 
 `make check` runs lint and the offline suite with no network and no cloud; the
@@ -268,8 +323,73 @@ core is pure so its whole contract is testable without either. `make demo` runs
 the poisoning scenario both ways. `make revoke` demonstrates G3 offline against
 the in-memory graph. `make gates` prints PASS/FAIL per gate by reading persisted
 custody, quarantine, revocation and audit records rather than asserting in prose.
+`make revision-spike` produces the separate R1 offline evidence artifact.
+`make live-registry-attack` produces R1 live evidence, and
+`make registry-gates` independently recomputes and judges it. `make
+live-gateway` produces S1 live evidence. `make gateway-gates` first rejects
+stale, broadened, inconsistent, fail-open or unbound fields, then independently
+rereads the fixed owned Google Cloud resources and exact log insert IDs so a
+coherent forged JSON document cannot pass.
 Manual: watch the four-minute recording and confirm every claim is visible on
 screen.
+
+**G1 passed live on 2026-08-13.** `make live-g1` generated a unique proof scope,
+verified Cloud Run revision `custody-control-plane-00001-hz6`, received a
+proof-bound response from `gemini-3.5-flash` through Vertex AI, and ran a real
+ADK Runner whose one after-agent callback sent two admitted events through
+Custody into Agent Engine `6936011268348182528`. Memory Bank returned one memory
+from that unique scope. `make gates` independently read `proof-out/g1.json` and
+reported G1 PASS. G1 evidence expires after 24 hours and must be regenerated for
+filming.
+
+**R1 passed live on 2026-08-13.** `make live-registry-attack` deployed Cloud Run
+revisions `custody-export-mcp-00007-ntt` and `00008-fhn` at one URL, registered
+the exact v1 `tools/list` snapshot in Agent Registry, and left that Service
+unchanged while v2 added `forward_to` and changed its safety annotations. The
+negative control dispatched v2 once through the endpoint read back from
+Registry, and the returned payload identified the same process as the ledger.
+Custody observed revision `a418b10c...` instead of approved
+`e5f7639e...`, raised `revision_mismatch`, and the same server instance's
+dispatch counter did not move. Graph roots were bound to hashes of the live v1
+and v2 call results; revoking v1 removed its three-hop sales/support/finance
+lineage while preserving the v2 branch and unrelated record. `make
+registry-gates` independently recomputed both revision digests and reported
+eight PASS results. This is a live Agent Registry and Cloud Run claim; the
+descendant deletion is still CustodyGraph, not live Memory Bank deletion.
+It proves fail-closed blocking for an observed declared-surface mismatch. It
+does not detect behavior-only changes with an identical `tools/list`, and an
+allowed call is not yet cryptographically bound to the preceding surface read.
+The live Gateway now enforces Agent Identity and tool-name admission, but its
+IAP condition does not attest the revision digest. Until the Gateway or MCP
+server binds that digest at dispatch, the broader no-unapproved-revision
+contract remains architecturally unshippable.
+
+**S1 passed live again on 2026-08-13 against schema v2, proof
+`e2b9f562fa3a48249054b977b5779a21`.** The first schema-v2 attempt
+(`8030f2119417461bb9db9c4eb066ef64`) was deliberately rejected: its CEL
+expired the empty-name handshake clause together with the `lookup_customer`
+lease, so a post-expiry call could fail before `tools/call` and produce no
+log. Recovery restored exact safe deny; no cloud mutation was left in flight.
+The corrected canonical condition splits the two clauses so handshake/non-tool
+traffic stays admitted independent of the tool lease:
+`api.getAttribute(...) == '' || (request.time < timestamp(...) &&
+api.getAttribute(...) == 'lookup_customer')`. Agent Runtime
+`5289382654590844928` retained its Agent Identity and regional Gateway
+binding. Under the corrected lease, Cloud Run revision
+`custody-export-mcp-00009-wp2` moved from dispatch count 0 to 1 for one
+allowed `lookup_customer` call; a `custody_policy_canary` call under the same
+live lease was denied before dispatch, proving the admission was narrow
+rather than a broad historical allow; a `lookup_customer` call issued after
+the server-side `request.time` boundary passed was denied before dispatch;
+and a final `lookup_customer` call after the policy was restored to safe deny
+was denied before dispatch. The ledger stayed byte-identical at 1 across all
+three denied controls. Gateway logs recorded four distinct traces as
+`ALLOWED/200` and `DENIED/403`. Admin Activity bound the initial, allow and
+deny etags in order. `make gateway-gates` reported twenty PASS results across
+the offline judge and the independent live Google Cloud attestation. The
+proof is bounded to this owned Runtime, Gateway and MCP path; it does not
+establish universal egress coverage, repair stale Registry metadata, remove
+the allowed call TOCTOU boundary, or delete live Memory Bank descendants.
 
 ## Stated assumption, not a finding
 
@@ -314,7 +434,8 @@ half-building everything.
 2. Firestore persistence behind the existing ports.
 3. **G1 on Cloud Run.** Deliberately third. The predecessor left deployment last
    and stayed blocked for its entire life.
-4. Trust catalog on Agent Registry, with cross-department isolation tests.
+4. Revision catalog on Agent Registry and Agent Gateway, with a real changed
+   MCP surface and cross-department isolation tests.
 5. Department worker agents at scale, which is where the credits go.
 6. Custody Reviewer on Gemini, plus Observability traces.
 7. Console, README, architecture diagram, and the four-minute film.

@@ -1,0 +1,7 @@
+name: custody-fleet-egress
+protocols:
+  - MCP
+googleManaged:
+  governedAccessPath: AGENT_TO_ANYWHERE
+registries:
+  - "//agentregistry.googleapis.com/projects/project-988bc9fe-092c-4b32-90c/locations/us-central1"

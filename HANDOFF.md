@@ -1,215 +1,230 @@
-# Handoff, written 2026-08-10, for a cold Codex session
+# Custody recovery handoff, 2026-08-13 (post schema-v2 Gateway proof)
 
-You have touched nothing in this repo yet. This document exists so you do not
-have to re-derive two days of decisions before doing useful work. Read
-`.claude/SESSION_CONTRACT.md` in full before editing anything. On the Claude
-side an evidence-gate hook blocks edits when it is absent, incomplete, or does
-not match the branch; that hook will not fire for you, but the rules in the
-contract are the ones this project is held to regardless of which tool is
-editing it.
+This is a live handoff document for Claude or another coding agent. Continue
+from the current repository state. Do not restart the project, redesign the
+product, revert the dirty tree, or redo passing work. Read this file, then read
+`.claude/SESSION_CONTRACT.md`, `README.md`, `DECISIONS.md`, and the current
+diffs before editing.
 
-## What Custody is, in one sentence
+## Lane and artifact
 
-> Poisoned content never enters your agents' memory, and if a tool is later
-> found compromised, you can pull everything descended from it.
+Lane: agentic security infrastructure, built as an evidence-gated systems
+project for the Google All Things Agentic Hackathon, Fortified Enterprise Fleet.
 
-A provenance layer over ADK long-term memory (`BaseMemoryService`). Every
-durable memory records where its content came from (USER/MODEL/TOOL/DERIVED,
-decided from event structure, never by a model) and what it was derived from
-(a graph edge). Untrusted-origin content is quarantined before it ever
-reaches the memory service. Target: All Things Agentic Hackathon (Google,
-Devpost), Fortified Enterprise Fleet track. Submission closes 2026-08-31
-17:00 PDT, which is 2026-09-01 05:30 IST, the local date is a day later than
-the posted one.
+The Gateway artifact this file previously tracked as in-progress is now
+**complete and independently judged**. `proof-out/live-gateway.json` (schema
+v2, proof `e2b9f562fa3a48249054b977b5779a21`) exists and `make gateway-gates`
+reports twenty PASS results (twelve from the offline judge, eight from
+independent live Google Cloud attestation). README.md and
+`.claude/SESSION_CONTRACT.md` were updated from this evidence and are
+authoritative for the S1 claim text; do not restate S1 from memory, read them.
 
-## State right now
+## Git and working-tree state
 
-Branch `feat/memory-provenance`, working tree clean, nothing uncommitted,
-nothing pushed. Latest commit `e447b54` ("Add the control plane and the image
-Cloud Run will run"). 113 tests, lint clean, all offline, no network or cloud
-account needed for any of it.
+- Branch: `feat/memory-provenance`
+- HEAD: `8dae6a0` (`Rewrite the handoff against the current state...`)
+- Origin is at the same commit.
+- The tree is intentionally dirty with all work from this and the prior
+  session. Nothing has been committed or pushed. Do not commit or push without
+  explicit authorization.
+- Preserve every unrelated/preexisting modification. Inspect with:
 
-```
-$ make check   # lint + 113 tests, ~0.03s
-$ make gates   # PASS/FAIL per acceptance gate, judged from proof-out/ on disk
-```
-
-Current `make gates` output:
-
-```
-[PASS   ] G2 enforcement is structural, and reports its cost
-[PASS   ] G3 retroactive revocation across the graph
-[PASS   ] G4 cross-department isolation
-[BLOCKED] G1 deployment and live substrate       -- needs the cloud account
-[BLOCKED] G5 four capability groups, real elapsed time -- needs the cloud account
+```sh
+git status --short --branch
+git diff --check
+git diff --stat
+git log -5 --oneline --decorate
 ```
 
-Three of five acceptance gates are proven offline, with evidence files
-written to `proof-out/` that `gates.py` reads and judges rather than trusting
-a script's own printed claim of success. The two blocked gates need one
-thing: a usable Google Cloud account with billing enabled. As of the last
-check that account was not usable. If it has become usable since, that is
-the single highest-leverage thing to check first, see "Next actions" below.
+The main new/untracked Gateway files are:
 
-## Repository map
-
-```
-custody/
-  origin.py      Deep module. take_custody(events) labels every content part
-                 USER/MODEL/TOOL/DERIVED, deterministically, no model in the
-                 loop. Taint propagates within an invocation: a model turn
-                 after an untrusted tool response is DERIVED and inherits
-                 the distrust, because a laundered summary is the dangerous
-                 form, not the raw response. Also resolves cross-session
-                 retrieval: a load_memory tool response earns a derived_from
-                 edge back to the CustodyRecord it matches by content hash,
-                 via a RecordResolver Protocol passed into take_custody and
-                 resolved INLINE during the same forward pass. That inline
-                 placement is load-bearing: resolving it as post-processing
-                 after the pass was tried, was structurally wrong (it let a
-                 stale default-untrusted verdict feed taint tracking for the
-                 rest of the invocation before the patch could run), and was
-                 caught by test_cross_department.py, not by inspection.
-  graph.py       CustodyGraph, pure in-memory derivation graph. add, extend,
-                 records, resolve(content_sha256), descendants(tool) via
-                 BFS, revoke(tool, revocation_id) idempotent on
-                 revocation_id, revocations().
-  catalog.py     TrustCatalog, per-department tool grants. request(Vouch)
-                 refuses a department vouching for another department's
-                 tool and logs the refusal as audit trail either way,
-                 allowed or denied. trust_for(department) -> ToolTrust.
-  service.py     CustodyMemoryService, the enforcement point. Splits a
-                 session by origin before it is ever written downstream.
-                 Quarantine sits behind a port (InMemoryQuarantine or the
-                 durable SqliteQuarantine).
-  store.py       Durable SQLite stand-ins for what would be Firestore
-                 collections: SqliteQuarantine, SqliteCustodyGraph,
-                 SqliteTrustCatalog. Each wraps the pure in-memory class and
-                 rebuilds it on construction by replaying a persisted
-                 append-only log through that same class's own methods
-                 (add/revoke/request), so the algorithm exists in exactly
-                 one place and only the durability is new. Proven to survive
-                 a simulated Cloud Run restart in
-                 tests/test_durable_integration.py: fresh SQLite
-                 connections, zero shared in-memory state, three simulated
-                 redeploys, both G3 and G4 checked after each one.
-  action.py      The export gateway. An external action must cite the
-                 CustodyRecord(s) that justified it and is refused if any
-                 cited record's trust is untrusted.
-  control_plane.py  The Cloud Run surface (make serve runs it locally on
-                 :8080). Not deployed anywhere yet, but exercised offline in
-                 test_control_plane.py.
-  adapters/adk.py   CustodyMemoryBank(BaseMemoryService), the actual ADK
-                 integration point, proven against real ADK objects in
-                 test_adk_conformance.py and test_adk_memory_bank.py, not
-                 just duck-typed stand-ins.
-
-scripts/
-  demo.py        make demo     the poisoning scenario, with Custody and
-                 without, side by side.
-  revoke.py      make revoke   G3 offline: a tool trusted on day one,
-                 demoted on day N, removed across two departments and a
-                 real load_memory retrieval earned by content match, not
-                 hand-wired for the demo.
-  isolate.py     make isolate  G4 offline: adversarial cross-department
-                 vouch attempts, both refused and audited; quarantine
-                 read-side isolation.
-  cost.py        make cost     what a compromised tool costs, with the
-                 graph and without, as a number rather than a claim.
-  gates.py       make gates    PASS/FAIL per acceptance gate, read from
-                 proof-out/.
-
-Dockerfile, .dockerignore   make image builds the Cloud Run container and
-                 checks the dependency pins hold. Not pushed or deployed.
-docs/architecture.md        the architecture diagram the README points to.
-proof-out/       g2.json, g3.json, g4.json, the evidence gates.py reads.
-DECISIONS.md     append-only decision log. Read the tail before assuming a
-                 design question is open; it may already be settled there,
-                 with the reasoning, including the fuller story on why two
-                 predecessor projects (Warrant, Vigil) were killed and what
-                 survived from each.
+```text
+live/gateway/
+live/gateway_probe/agent.py
+scripts/setup_gateway.py
+scripts/deploy_gateway_probe.py
+scripts/live_gateway.py
+scripts/gateway_gates.py
+scripts/gateway_live_attestation.py
+tests/test_gateway_gates.py
+tests/test_gateway_live_attestation.py
+tests/test_live_gateway_producer.py
+tests/test_registry_attack_server_logs.py
 ```
 
-## Rules that are not optional
+The MCP server used by both the stale-Registry proof and Gateway proof is
+`live/registry_attack/server/server.py`. Do not remove its existing revision
+or forwarding behavior; it was not touched in this pass.
 
-- **No model decides a fact.** Origin and derivation come from event
-  structure only. A model may summarize, explain, or draft a verdict for a
-  human to approve. It must never label, adjudicate, or set trust. This is
-  the one idea carried forward from both killed predecessor projects and it
-  is not up for renegotiation.
-- **No em dashes** anywhere: code, comments, commit messages, docs. Use
-  periods, commas, or hyphens with spaces.
-- **Commit and push only with explicit authorization** in the session you
-  are in. Nothing should reach a remote without being asked for directly.
-- **No row in the Google-product mapping table (in the session contract)
-  moves to BUILT without a command that demonstrates it.** A predecessor
-  project shipped a table describing integrations that did not exist; this
-  project's whole discipline is proof over prose. `make gates` is the
-  enforcement mechanism for the acceptance gates specifically.
-- **Absence of evidence is not a clean bill of health.** Content that cannot
-  be attributed to an origin is refused, never defaulted to trusted. If you
-  find yourself adding a default trust level anywhere, stop and reconsider
-  the design instead.
-- **Do not read from or modify** `~/datahub-causality-agent`, `~/priorto`,
-  Throughline, or Chronicle. `../warrant` and `../vigil` are the same
-  author's own in-period prior work, no disclosure burden, but leave them
-  alone too.
-- Update `.claude/SESSION_CONTRACT.md` before widening scope, not after.
+## Previously proven state, do not redo
 
-## What's actually blocking G1 and G5
+- G1 is complete: live Cloud Run, Gemini/Vertex, ADK, and Memory Bank evidence.
+- Live stale Agent Registry proof (R1) is complete.
+- `make registry-gates` independently judges that artifact: 8/8 PASS.
+- `make revision-spike` passes all five revision gates.
+- **S1 (Gateway) is complete**, schema v2, `make gateway-gates`: 20/20 PASS.
+  See "What changed in this session" below for exactly what was fixed to get
+  here; do not re-litigate it.
+- Structural TOOL roots and MODEL/DERIVED descendants are already enforced.
+- Offline G2, G3, G4 pass; `make gates` reports 4 PASS, 0 FAIL, 1 BLOCKED (G5,
+  expected — see below).
 
-A usable Google Cloud account with billing. The code side is not the
-bottleneck: everything provable offline behind real interfaces (ports for
-Quarantine, CustodyGraph, TrustCatalog, all with durable SQLite
-implementations already proven to survive a restart) has been proven. Two of
-the three day-one questions about the Vertex client library were already
-settled by reading `google-cloud-aiplatform` 1.163.0 source directly rather
-than waiting for credentials: `agent_engines.memories.delete` exists for the
-revocation path, and `Memory.scope` accepts arbitrary string keys so
-department isolation can be enforced by Memory Bank itself, not only by
-Custody. Full detail is in the contract's "Baseline" section. The one
-genuinely unverified thing is whether GEAP components are reachable at all
-on a fresh trial project, which needs the account to answer.
+Known limitations that must remain explicit unless new direct evidence changes
+them:
 
-Kill condition already recorded in the contract: if the account cannot serve
-Gemini 3.5+ through Vertex, or an ADK agent cannot reach Cloud Run, by
-**2026-08-20**, stop rather than keep building around it.
+- CustodyGraph revocation does not delete live Memory Bank descendants.
+- RevisionCatalog and some approval state are application-side.
+- The admitted surface-read to dispatch path has a TOCTOU window and is not
+  cryptographically atomic.
+- Behavior-only drift with identical `tools/list` is outside the revision claim.
+- Model Armor and submission-grade Observability remain unproven (this is the
+  expected G5 BLOCKED reason, not a regression).
+- The Gateway proof covers one owned Agent Runtime identity, one registered MCP
+  projection, and four controlled calls (allow, tool-scope-canary, expiry,
+  final deny). It does not prove all fleet egress is covered.
 
-## Next actions, roughly in order
+## Owned Google Cloud scope
 
-1. Check whether a usable cloud account exists yet. If yes, run the
-   remaining day-one check (GEAP reachability on the trial project) before
-   anything else, then move on G1: deploy the control plane to Cloud Run,
-   confirm a Gemini 3.5+ call through Vertex, confirm an ADK agent reaches
-   it, confirm a write through live Memory Bank. That single gate unblocks
-   most of G5 too.
-2. If still no account, remaining offline staging items from the contract:
-   department worker agents at scale (item 5), Gemini reviewer plus
-   Observability traces (item 6, the reviewer logic can be built and tested
-   offline but the live Gemini call itself needs the account), console and
-   the four-minute film (item 7).
-3. Whichever you build, run `make check` before calling it done and
-   `make gates` before claiming any gate moved status.
+All live work is defensive and limited to these user-owned resources:
 
-## Assistant failure modes observed on this project so far
+```text
+project id:      project-988bc9fe-092c-4b32-90c
+project number:  742122658452
+region:          us-central1
+organization:    521713171342
 
-Assume you are capable of all of them too.
+Agent Gateway:   custody-fleet-egress
+AuthzExtension:  custody-fleet-iap-enforced
+AuthzPolicy:     custody-fleet-request-authz
+Registry service: custody-export-mcp
+Registry MCP projection:
+  agentregistry-00000000-0000-0000-8247-c8250af4b9b8
+Agent Runtime:
+  projects/742122658452/locations/us-central1/reasoningEngines/5289382654590844928
+Registered Runtime Agent:
+  agentregistry-00000000-0000-0000-5b70-78deb73916d5
+Runtime principal:
+  principal://agents.global.org-521713171342.system.id.goog/resources/aiplatform/projects/742122658452/locations/us-central1/reasoningEngines/5289382654590844928
+MCP endpoint:
+  https://custody-export-mcp-anexdhueiq-uc.a.run.app/mcp
+```
 
-- Idea generation was weak on both predecessor projects; both were proposed
-  and killed within hours, on measurement, not on taste.
-- Numbers reported before the measurement behind them was audited (a
-  materiality classifier bug inflated a result by a third before a second
-  look caught it).
-- A control test that asserted something a mocked service could never have
-  proven either way (a poisoned function_response asserted retrievable
-  through a service that never indexes function_response content).
-- Prose written ahead of the code it described (a capability table claiming
-  an integration that did not exist).
-- A demo built before the integration it claimed to demonstrate was
-  installed and actually run against.
-- A post-processing fix that looked correct but changed the wrong pass (the
-  cross-session derivation bug described under `origin.py` above): caught by
-  a failing test, not by re-reading the diff.
+Repo-local Google credentials/configuration live under ignored `.gcloud/`.
+Never print, copy, or commit credential contents.
 
-Before writing a sentence claiming something works, run the thing that would
-prove it.
+**Live IAP resting state, confirmed 2026-08-13 after the successful S1 run:**
+the dedicated projection's policy is at exact safe deny —
+
+```cel
+api.getAttribute('iap.googleapis.com/mcp.toolName', '') in ['custody_policy_canary', '']
+```
+
+Re-read the policy before any future mutation. Never assume it. The exact
+command shape is encoded in `DedicatedIapPolicy.current()`.
+
+## What changed in this session (2026-08-13)
+
+The prior handoff left the project mid-recovery: a schema-v2 run
+(`8030f2119417461bb9db9c4eb066ef64`) had been deliberately rejected because its
+CEL expired the empty-name MCP-handshake clause together with the
+`lookup_customer` lease, so a post-expiry call could fail before `tools/call`
+and produce no log. Recovery from that run succeeded and left the policy at
+exact safe deny; no cloud mutation was left in flight.
+
+This session, in order:
+
+1. **Fixed the CEL shape** in `scripts/live_gateway.py`
+   (`TemporaryAdmission.expression`, `_TEMPORARY_ALLOW`) and
+   `scripts/gateway_gates.py` (`allow_expression`) to the required
+   independent-clause form:
+
+   ```cel
+   api.getAttribute('iap.googleapis.com/mcp.toolName', '') == '' ||
+   (request.time < timestamp('<10-minute-expiry>') &&
+    api.getAttribute('iap.googleapis.com/mcp.toolName', '') == 'lookup_customer')
+   ```
+
+   The empty-name clause no longer depends on `request.time`, so handshake
+   passthrough survives the tool lease expiring. The parser now rejects the
+   old all-expiring shape; both `tests/test_gateway_gates.py` and
+   `tests/test_live_gateway_producer.py` assert this.
+2. Added a bounded outer timeout around every `engine.async_query` call
+   (`asyncio.wait_for`, `RUNTIME_QUERY_TIMEOUT_SECONDS`).
+3. Gave `_gateway_logs` a bounded attempt count with transient-read recovery
+   (it previously propagated `CalledProcessError`/`TimeoutExpired` instead of
+   retrying, unlike its sibling log-polling functions).
+4. Added the adversarial tests HANDOFF asked for: empty-name passthrough
+   survives expiry, `lookup_customer` admitted before/denied after expiry,
+   `custody_policy_canary` never admitted by the temporary lease, the old CEL
+   shape is rejected, bounded runtime-query timeout, bounded+recovering log
+   polling.
+5. Ran `make check` and `git diff --check` clean, re-read the live IAP policy
+   (confirmed exact safe deny), then ran `make live-gateway`. It failed — not
+   on the CEL fix, but on two bugs the live run surfaced that the prior
+   handoff had not anticipated:
+   - **IAP etag base64-alphabet mismatch.** `gcloud iap web get-iam-policy`
+     returns etags in the URL-safe alphabet (`-`/`_`); the same etag inside a
+     raw Admin Activity audit payload was observed in the standard alphabet
+     (`+`/`/`). Strict string equality between a policy readback and an audit
+     log entry rejected a genuine match. Fixed with a `_canonical_etag`
+     normalization applied at every readback-vs-audit-log comparison in both
+     `scripts/live_gateway.py` (`_iap_audit_logs`) and
+     `scripts/gateway_gates.py` (`_iap_audit_transition_is_bound`). Regression
+     test: `test_etag_across_base64_alphabets_still_binds_the_audit_chain`.
+   - **Dispatch-log clock-read ordering.** The offline judge required
+     `dispatched <= logged` between the payload's self-reported
+     `server_dispatched_at` and the log entry's own `timestamp` — two
+     independent `datetime.now()` reads in the same server request, observed
+     ~300 microseconds out of order. Relaxed to a skew tolerance
+     (`_CLOCK_SKEW_BOUND = 1.0` second) in `scripts/gateway_gates.py`
+     (`_server_dispatch_is_bound`) and the duplicated check in
+     `scripts/gateway_live_attestation.py`.
+   - Also in `gateway_live_attestation.py`: it assumed the MCP tool result was
+     a flat `data` object; the live server actually returns the standard MCP
+     envelope (`content` + `structuredContent`). Fixed to unwrap
+     `structuredContent` when present. Regression test:
+     `test_mcp_envelope_structured_content_shape_is_understood`.
+6. Reran `make live-gateway` successfully (proof
+   `e2b9f562fa3a48249054b977b5779a21`), then `make gateway-gates` (20/20),
+   `make registry-gates` (8/8), `make revision-spike` (5/5), `make gates`
+   (4 PASS / 0 FAIL / 1 BLOCKED — G5, expected), `make check` (205 tests), and
+   `git diff --check`, all clean.
+7. Updated `README.md` and `.claude/SESSION_CONTRACT.md` from the generated
+   evidence. Did not touch anything else; did not commit or push.
+
+Two pre-existing `C901` complexity violations were also fixed as a side effect
+of editing `_apply_reconciled` (`scripts/live_gateway.py`), `_judge`
+(`scripts/gateway_gates.py`), and a test fixture (`FakeCloud.json` in
+`tests/test_gateway_live_attestation.py`) — the clean-code pre-commit/per-edit
+hook blocks on these, and all three were pre-existing, not introduced here.
+
+## Evidence and claim discipline
+
+- Admin Activity authenticates the policy resource, actor, role/member, and
+  etag transitions, but currently omits historical CEL condition/title. Do not
+  claim the log itself contains the CEL. Scope and post-expiry 403 controls are
+  the falsifiable behavioral evidence for those semantics.
+- The Cloud Run dispatch event closes the old replay hole where a fabricated
+  proof ID or ledger could be grafted onto genuine Gateway logs.
+- Cloud Run is still public because it is a synthetic MCP proof service. Do not
+  generalize that posture to production customer data.
+- The stale Registry service remains pinned to its v1 read-only surface while
+  Cloud Run serves v2. Do not update Registry during Gateway work.
+- All synthetic IDs and `example.invalid` addresses are controls. Do not use
+  external targets or real customer data.
+- Keep TOOL call roots structural. Never let a model label provenance, trust,
+  revision admission, or policy outcomes.
+
+## Next capability after Gateway
+
+Since the schema-v2 live proof and independent gates now pass, the next
+highest-value missing Fleet capability is Model Armor. Observability follows
+Model Armor; Agent Identity is already genuinely present in the Gateway proof,
+but its claim must stay scoped to that Runtime. Live Memory Bank selective
+deletion comes later and only if the actual API semantics preserve Custody's
+lineage contract.
+
+Before starting Model Armor: update `.claude/SESSION_CONTRACT.md` with a new
+session contract scoped to that capability (objective, allowed files,
+acceptance gates) per the global evidence-gated protocol — do not silently
+broaden scope under the existing Gateway-scoped contract.

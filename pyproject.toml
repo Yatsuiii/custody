@@ -9,6 +9,7 @@ dependencies = []
 
 [project.optional-dependencies]
 adk = ["google-adk>=2.6.3"]
+registry = ["fastmcp==2.13.1"]
 
 [tool.ruff]
 line-length = 88

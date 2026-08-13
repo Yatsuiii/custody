@@ -22,6 +22,7 @@ def record(
     record_id: str,
     *,
     source_tool: str | None = None,
+    source_revision: str | None = None,
     derived_from: tuple[str, ...] = (),
     trust: Trust = Trust.TRUSTED,
     origin: Origin = Origin.MODEL,
@@ -35,6 +36,7 @@ def record(
         invocation_id=f"inv-{record_id}",
         content_sha256=digest(content) if content is not None else "x" * 64,
         source_tool=source_tool,
+        source_revision=source_revision,
         id=record_id,
         derived_from=derived_from,
     )
@@ -111,6 +113,30 @@ class DescendantsCanBePreviewedWithoutRemoving(unittest.TestCase):
         preview = graph.descendants("evil_tool")
         self.assertEqual(set(preview), {"a", "b"})
         self.assertEqual(len(graph), 2)
+
+
+class RevisionRevocationIsPrecise(unittest.TestCase):
+    def test_one_tool_revision_removes_only_its_descendants(self):
+        graph = CustodyGraph()
+        tool = "vendor-knowledge/fetch_page"
+        graph.add(record("old-root", source_tool=tool, source_revision="old"))
+        graph.add(record("sales", derived_from=("old-root",)))
+        graph.add(record("support", derived_from=("sales",)))
+        graph.add(record("finance", derived_from=("support",)))
+        graph.add(record("new-root", source_tool=tool, source_revision="new"))
+        graph.add(record("unrelated", source_tool="crm/lookup", source_revision="x"))
+
+        revocation = graph.revoke_revision(
+            tool=tool, revision="old", revocation_id="revision-rev-1"
+        )
+
+        self.assertEqual(
+            set(revocation.removed), {"old-root", "sales", "support", "finance"}
+        )
+        self.assertEqual(revocation.revision, "old")
+        self.assertEqual(
+            {record.id for record in graph.records()}, {"new-root", "unrelated"}
+        )
 
 
 class ResolveFindsARecordByItsContent(unittest.TestCase):

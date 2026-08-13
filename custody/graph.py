@@ -38,6 +38,7 @@ class Revocation:
     id: str
     tool: str
     removed: tuple[str, ...]
+    revision: str | None = None
 
 
 @dataclass
@@ -76,6 +77,18 @@ class CustodyGraph:
         regardless of hop count.
         """
         roots = {r.id for r in self._records.values() if r.source_tool == tool}
+        return self._walk(roots)
+
+    def descendants_for_revision(self, *, tool: str, revision: str) -> tuple[str, ...]:
+        """Every record descended from one exact admitted tool definition."""
+        roots = {
+            r.id
+            for r in self._records.values()
+            if r.source_tool == tool and r.source_revision == revision
+        }
+        return self._walk(roots)
+
+    def _walk(self, roots: set[str]) -> tuple[str, ...]:
         found = set(roots)
         frontier = roots
         while frontier:
@@ -95,15 +108,30 @@ class CustodyGraph:
         second traversal finds nothing further, and the id lookup means a
         replay never appends a second audit entry for the same event.
         """
+        return self._revoke(tool=tool, revision=None, revocation_id=revocation_id)
+
+    def revoke_revision(
+        self, *, tool: str, revision: str, revocation_id: str
+    ) -> Revocation:
+        """Remove descendants of one tool revision, preserving sibling revisions."""
+        return self._revoke(tool=tool, revision=revision, revocation_id=revocation_id)
+
+    def _revoke(
+        self, *, tool: str, revision: str | None, revocation_id: str
+    ) -> Revocation:
         existing = self._revocations.get(revocation_id)
         if existing is not None:
             return existing
-
-        removed = self.descendants(tool)
+        removed = (
+            self.descendants(tool)
+            if revision is None
+            else self.descendants_for_revision(tool=tool, revision=revision)
+        )
         for record_id in removed:
             del self._records[record_id]
-
-        revocation = Revocation(id=revocation_id, tool=tool, removed=removed)
+        revocation = Revocation(
+            id=revocation_id, tool=tool, removed=removed, revision=revision
+        )
         self._revocations[revocation_id] = revocation
         return revocation
 

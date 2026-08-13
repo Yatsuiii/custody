@@ -18,6 +18,7 @@ flowchart TB
 
     subgraph custody["Custody"]
         direction TB
+        REV["revision.py<br/>pin live MCP tool revisions<br/>block drift before dispatch"]
         ORIGIN["origin.py<br/>label by structure<br/>USER · MODEL · TOOL · DERIVED"]
         SPLIT["service.py<br/>split before the write"]
         GRAPH["graph.py<br/>derivation graph<br/>descendants · revoke"]
@@ -33,7 +34,8 @@ flowchart TB
 
     QUAR[["quarantine<br/>withheld, reviewable"]]
 
-    A1 & A2 & A3 -->|"session events"| ORIGIN
+    A1 & A2 & A3 -->|"discover and bind tools"| REV
+    REV -->|"admitted session events"| ORIGIN
     ORIGIN --> SPLIT
     CAT -->|"which tools this<br/>department vouched for"| SPLIT
     SPLIT -->|"trusted only"| MB
@@ -47,11 +49,50 @@ flowchart TB
 
     classDef built fill:#1f6f3f,stroke:#0d3d22,color:#fff
     classDef planned fill:#5a4a1f,stroke:#332a10,color:#fff
-    class ORIGIN,SPLIT,GRAPH,CAT,GATE,QUAR built
-    class MB,FS,GEM planned
+    class REV,ORIGIN,SPLIT,GRAPH,CAT,GATE,QUAR,MB,GEM built
+    class FS planned
 ```
 
-Green is built and tested. Amber needs the cloud account.
+Green is built and evidenced. Amber is not yet built.
+
+## The live Gateway enforcement slice
+
+```mermaid
+sequenceDiagram
+    participant P as proof producer
+    participant I as IAP policy
+    participant R as Agent Runtime<br/>Agent Identity
+    participant G as Agent Gateway
+    participant C as Agent Registry
+    participant M as owned MCP on Cloud Run
+
+    P->>I: allow exact principal + lookup_customer
+    P->>R: query with W3C trace A
+    R->>G: MCP tools/call lookup_customer
+    G->>C: resolve registered server and tool
+    G->>I: evaluate roles/iap.egressor condition
+    I-->>G: ALLOWED
+    G->>M: dispatch
+    M-->>P: ledger count +1
+
+    P->>I: replace with handshake/non-tool passthrough<br/>and no registered tool
+    P->>R: query with W3C trace B
+    R->>G: MCP tools/call lookup_customer
+    G->>I: evaluate roles/iap.egressor condition
+    I-->>G: DENIED
+    G-->>R: 403 before dispatch
+    M-->>P: ledger unchanged
+    P->>I: read Admin Activity etag chain
+    P->>G: reread exact trace + insert IDs
+```
+
+This slice proves one owned Runtime-to-Gateway-to-MCP route. The Registry still
+contains the stale v1 surface while Cloud Run serves v2; Gateway IAP authorizes
+the registered tool name, not a revision digest. It therefore strengthens the
+execution boundary without closing Custody's allowed-call surface-read to
+dispatch TOCTOU window. The empty-name condition passes MCP handshake/non-tool
+requests; the demonstrated enforcement claim is specifically registered
+`tools/call` admission, not universal request classification.
 
 ## The path one piece of content takes
 
@@ -59,14 +100,17 @@ Every branch below is a place the content can be stopped, and each is a test.
 
 ```mermaid
 flowchart TD
-    START(["a tool returns text"]) --> STRUCT{"is it inside a<br/>function_response?"}
+    START(["an agent discovers a tool"]) --> PIN{"does its live definition<br/>match the approved revision?"}
+    PIN -->|no| BLOCK["refused before dispatch"]
+    PIN -->|yes| TOOL_CALL(["a tool returns text"])
+    TOOL_CALL --> STRUCT{"is it inside a<br/>function_response?"}
 
     STRUCT -->|yes| TOOL["origin = TOOL"]
     STRUCT -->|"no, and author is 'user'"| USER["origin = USER"]
     STRUCT -->|"no, and an untrusted tool<br/>already answered in<br/>this invocation"| DERIV["origin = DERIVED<br/>inherits the distrust"]
     STRUCT -->|"no, clean invocation"| MODEL["origin = MODEL"]
 
-    TOOL --> VOUCH{"did this department<br/>vouch for the tool?"}
+    TOOL --> VOUCH{"was this exact tool revision<br/>approved for the department?"}
     VOUCH -->|no| UNTRUSTED
     VOUCH -->|yes| TRUSTED
 
@@ -79,7 +123,7 @@ flowchart TD
     ATTR -->|no| REFUSED[["refused<br/>never stored as trusted"]]
     ATTR -->|yes| WRITE["written to Memory Bank<br/>record added to the graph"]
 
-    WRITE --> LATER{"is the source tool<br/>demoted later?"}
+    WRITE --> LATER{"is the source tool revision<br/>demoted later?"}
     LATER -->|yes| REVOKE[["revoked<br/>with every descendant"]]
     LATER -->|no| RETRIEVE["retrievable"]
 
@@ -89,7 +133,7 @@ flowchart TD
 
     classDef stop fill:#7a2020,stroke:#3d0f0f,color:#fff
     classDef ok fill:#1f6f3f,stroke:#0d3d22,color:#fff
-    class HELD,REFUSED,REVOKE,DENY stop
+    class BLOCK,HELD,REFUSED,REVOKE,DENY stop
     class SEND,RETRIEVE ok
 ```
 

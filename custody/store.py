@@ -53,6 +53,7 @@ def _dump(record: CustodyRecord) -> str:
             "invocation_id": record.invocation_id,
             "content_sha256": record.content_sha256,
             "source_tool": record.source_tool,
+            "source_revision": record.source_revision,
             "id": record.id,
             "derived_from": list(record.derived_from),
         }
@@ -68,6 +69,7 @@ def _load(payload: str) -> CustodyRecord:
         invocation_id=data["invocation_id"],
         content_sha256=data["content_sha256"],
         source_tool=data["source_tool"],
+        source_revision=data.get("source_revision"),
         id=data["id"],
         derived_from=tuple(data["derived_from"]),
     )

@@ -150,21 +150,20 @@ git clone <this repo> && cd custody
 python3.12 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 
-make check     # ruff, then 104 tests, none skipped
+make check     # ruff, then 170 tests, none skipped
 make demo      # the poisoning scenario, with Custody and without
 make cost      # what a compromised tool destroys, with the graph and without
 make revoke    # retroactive revocation across departments, and a replay
 make isolate   # two departments, one catalog, no shared trust unless earned
 ```
 
-`google-adk` is the only dependency, and it is what the 18 conformance tests
+`google-adk` is the core integration dependency, and it is what the conformance tests
 need: they build genuine `google.adk.events.Event` objects and run the core over
 them, so the duck-typed core is proved against the real SDK rather than against
 stand-ins written in this repo.
 
-Skip the install and the suite still runs, but honestly reports `OK (skipped=18)`
-rather than pretending. 86 tests execute against stand-ins; the 18 that prove the
-SDK shapes match are the ones you lose.
+Skip the install and the SDK conformance tests report skips rather than
+pretending. The pure core remains runnable without cloud credentials.
 
 ## Architecture
 
@@ -182,6 +181,7 @@ deciding what they mean.
 | Enforcement | `custody/service.py` | splits a session before the write |
 | Export gateway | `custody/action.py` | egress must cite trusted memory |
 | Trust catalog | `custody/catalog.py` | per-department grants |
+| Revision admission | `custody/revision.py` | pins MCP tool definitions and blocks drift before dispatch |
 | Durable stores | `custody/store.py` | survive a restart |
 | ADK shell | `custody/adapters/adk.py` | `BaseMemoryService` ADK accepts |
 
@@ -195,14 +195,126 @@ sidesteps `search_memory` having no filter parameter.
 
 | | |
 | --- | --- |
-| Core, verified against real google-adk 2.6.3 | **built**, 104 tests |
+| Core, verified against real google-adk 2.6.3 | **built**, 170 tests |
 | Derivation graph and retroactive revocation | **built** |
 | Cross-department isolation | **built** |
 | Durable stores surviving a restart | **built**, SQLite |
-| Cloud Run, live Memory Bank, Gemini reviewer | **not built** |
-| Agent Registry, Identity, Gateway, Model Armor, Observability | **not built** |
+| Cloud Run control plane, Gemini 3.5 on Vertex, ADK to live Memory Bank | **built**, `make live-g1` |
+| Agent Registry and live stale-tool admission | **built**, `make live-registry-attack` |
+| Agent Runtime, Agent Identity, and enforced Agent Gateway IAP | **built**, `make live-gateway` |
+| Model Armor and Agent Observability | **not built** |
 
 Nothing in this table moves to built without a command that demonstrates it.
+
+### Live G1 proof
+
+Authenticate `gcloud` and Application Default Credentials into the ignored
+`.gcloud/` directory, then reuse the provisioned Agent Engine:
+
+```bash
+CLOUDSDK_CONFIG="$PWD/.gcloud" \
+CUSTODY_PROJECT=project-988bc9fe-092c-4b32-90c \
+CUSTODY_AGENT_ENGINE_ID=6936011268348182528 \
+make live-g1
+
+make gates
+```
+
+`make live-g1` uses a fresh proof id and scope every time. It verifies the
+deployed Cloud Run health and trigger, receives an exact proof-bound response
+from Gemini 3.5 Flash through Vertex AI, then runs a real ADK agent whose
+after-agent callback writes one clean session through Custody into Memory Bank.
+The independent judge reads `proof-out/g1.json`; a failed rerun removes the old
+artifact, and evidence older than 24 hours returns to BLOCKED.
+
+### Live stale-Registry proof
+
+```bash
+CLOUDSDK_CONFIG="$PWD/.gcloud" \
+CUSTODY_PROJECT=project-988bc9fe-092c-4b32-90c \
+make live-registry-attack
+
+make registry-gates
+```
+
+The proof deploys a v1 FastMCP tool to Cloud Run, uploads its actual
+`tools/list` response to Agent Registry, and successfully calls it through the
+endpoint read back from Registry. It then deploys a forwarding-capable v2 to
+the same URL without updating Registry. The negative control dispatches v2;
+Custody recomputes the live definition digest, emits `revision_mismatch`, and
+blocks before the server counter moves. Revision-specific revocation removes
+only the lineage rooted in the live v1 call result and preserves the v2 branch.
+The independent judge recomputes both digests and binds the graph roots to the
+live call-result hashes. This proves declared MCP surface drift, not a
+behavior-only binary change with an identical `tools/list` definition. The
+surface read and a later allowed dispatch are not cryptographically atomic. The
+live Gateway proof below governs a registered tool name, but it does not bind a
+revision digest to dispatch; closing that time-of-check/time-of-use window still
+requires revision attestation at the Gateway or server. The demonstrated
+mismatch path is fail-closed because it never reaches dispatch.
+
+### Live Agent Gateway proof
+
+```bash
+make setup-gateway
+
+GOOGLE_APPLICATION_CREDENTIALS="$PWD/.gcloud/application_default_credentials.json" \
+CUSTODY_PROJECT=project-988bc9fe-092c-4b32-90c \
+make deploy-gateway-probe
+
+CLOUDSDK_CONFIG="$PWD/.gcloud" make live-gateway
+
+CLOUDSDK_CONFIG="$PWD/.gcloud" make gateway-gates
+```
+
+The deployed custom Agent Runtime has `AGENT_IDENTITY` and is bound to the
+regional `custody-fleet-egress` Agent Gateway. The proof installs one
+proof-owned, server-expiring IAM condition:
+
+```cel
+api.getAttribute('iap.googleapis.com/mcp.toolName', '') == '' ||
+(request.time < timestamp('<10-minute-expiry>') &&
+ api.getAttribute('iap.googleapis.com/mcp.toolName', '') == 'lookup_customer')
+```
+
+The empty-name clause is unconditional, so MCP handshake/non-tool traffic stays
+admitted independent of the tool lease; only the registered `lookup_customer`
+admission is time-boxed. After IAM convergence the proof runs four controls
+under this one policy and its restored safe-deny successor: an allowed
+`lookup_customer` call while the lease is live; a `custody_policy_canary` call
+under the same live lease, which the exact tool-name match denies before
+dispatch (this is what proves a narrow admission rather than a broad
+historical allow); a `lookup_customer` call after the server-side
+`request.time` boundary passes, denied before dispatch even though the empty
+name clause is still open; and a final `lookup_customer` call after the policy
+is restored to the safe canary/deny condition. The dedicated proof policy
+refuses to overwrite unrelated bindings, uses the current etag on every write,
+and restores the no-registered-tool state on any failure. The owned,
+single-instance Cloud Run ledger moves exactly once, for the allowed call, and
+does not move for any of the three denied calls; the successful tool result
+names the same process. Cloud Logging independently records `tools/call` as
+`ALLOWED/200` for the admitted call and `DENIED/403` for each denied call,
+under four distinct W3C trace IDs. Admin Activity records the
+initial→allow→deny etag chain.
+
+`make gateway-gates` rejects stale or broadened claims, dry-run/fail-open
+extensions, wrong resources or identities, non-exact IAM policies (including
+the schema-v1 shape that expired the handshake clause along with the tool
+lease), fabricated dispatch results, changed server instances, reversed
+transitions, and unbound or duplicate logs. It then performs authenticated
+read-only Google Cloud readbacks of the fixed project resources, final deny
+policy, Runtime, Cloud Run target, and exact Gateway/Audit log insert IDs.
+This proves one owned Runtime-to-Gateway-to-MCP path. It does not prove all
+egress is covered, govern unclassified non-tool traffic, repair stale Registry
+metadata, bind a tool revision atomically, or delete revoked descendants from
+live Memory Bank.
+
+**S1 passed live again on 2026-08-13 against schema v2**, proof
+`e2b9f562fa3a48249054b977b5779a21`. Cloud Run revision
+`custody-export-mcp-00009-wp2` moved from dispatch count 0 to 1 for the one
+allowed call and stayed at 1 through the canary, expiry, and final deny
+controls. `make gateway-gates` reported twenty PASS results across the offline
+judge and the independent live Google Cloud attestation.
 
 **A stated bet, not a finding:** no enterprise incident data exists for memory
 poisoning. It has formal standing as OWASP ASI06 and demonstrated attack success

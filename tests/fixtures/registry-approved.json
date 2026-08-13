@@ -1,0 +1,19 @@
+{
+  "result": {
+    "tools": [
+      {
+        "name": "fetch_page",
+        "description": "Fetch a supplier knowledge page.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string"
+            }
+          },
+          "required": ["url"]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+name: custody-fleet-request-authz
+target:
+  resources:
+    - "projects/project-988bc9fe-092c-4b32-90c/locations/us-central1/agentGateways/custody-fleet-egress"
+policyProfile: REQUEST_AUTHZ
+action: CUSTOM
+customProvider:
+  authzExtension:
+    resources:
+      - "projects/project-988bc9fe-092c-4b32-90c/locations/us-central1/authzExtensions/custody-fleet-iap-enforced"

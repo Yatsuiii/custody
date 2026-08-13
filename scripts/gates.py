@@ -15,8 +15,10 @@ PASS.
 from __future__ import annotations
 
 import json
+import re
 import sys
 from dataclasses import dataclass
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -36,6 +38,8 @@ from scripts.demo import (  # noqa: E402
     week_one,
 )
 from scripts.isolate import grant  # noqa: E402
+from scripts.gateway_gates import judge as judge_gateway  # noqa: E402
+from scripts.registry_gates import judge as judge_registry  # noqa: E402
 from scripts.revoke import (  # noqa: E402
     COMPROMISED_TOOL,
     sales_session,
@@ -140,13 +144,132 @@ async def evidence_for_g4() -> dict:
 # -- phase two: judge by reading the files back ------------------------------
 
 
-def judge_g1(_: dict | None) -> Verdict:
+def _model_at_least_3_5(model: object) -> bool:
+    match = re.search(r"gemini-(\d+)\.(\d+)", str(model or ""))
+    return bool(match and tuple(map(int, match.groups())) >= (3, 5))
+
+
+def _expected_memory(fact: object) -> bool:
+    normalized = str(fact or "").lower()
+    return "sales export" in normalized and "signed approval" in normalized
+
+
+def judge_g1(e: dict | None, *, now: datetime | None = None) -> Verdict:
+    if e is None:
+        return Verdict(
+            "G1",
+            "deployment and live substrate",
+            "BLOCKED",
+            "no proof-out/g1.json; run make live-g1 with the project and Agent "
+            "Engine environment configured",
+        )
+
+    errors: list[str] = []
+    try:
+        proof_id = e["proof_id"]
+        captured = datetime.fromisoformat(e["captured_at"])
+        project = e["project"]
+        cloud = e["cloud_run"]
+        gemini = e["gemini"]
+        memory = e["adk_memory_bank"]
+    except (KeyError, TypeError, ValueError) as error:
+        return Verdict(
+            "G1",
+            "deployment and live substrate",
+            "FAIL",
+            f"malformed g1.json: {error}",
+        )
+
+    current = now or datetime.now(UTC)
+    if captured.tzinfo is None:
+        errors.append("captured_at has no timezone")
+    elif captured > current + timedelta(minutes=5):
+        errors.append("captured_at is in the future")
+    elif current - captured > timedelta(hours=24):
+        return Verdict(
+            "G1",
+            "deployment and live substrate",
+            "BLOCKED",
+            "g1.json is older than 24 hours; rerun make live-g1",
+        )
+
+    expected_scope = f"g1-{proof_id}"
+    trigger = cloud.get("trigger", {})
+    if not cloud.get("ready"):
+        errors.append("Cloud Run is not Ready")
+    if cloud.get("traffic_percent") != 100:
+        errors.append("Cloud Run does not serve 100% traffic")
+    if not cloud.get("revision") or not cloud.get("url"):
+        errors.append("Cloud Run revision or URL is absent")
+    if cloud.get("health", {}).get("status") != "ok":
+        errors.append("Cloud Run health is not ok")
+    if (
+        trigger.get("department") != expected_scope
+        or not trigger.get("run_id")
+        or trigger.get("seen") != 1
+        or trigger.get("admitted") != 1
+        or trigger.get("quarantined") != 0
+        or trigger.get("refused") != 0
+    ):
+        errors.append("Cloud Run trigger is incomplete or belongs to another proof")
+
+    expected_response = f"CUSTODY_G1_OK:{proof_id}"
+    if not gemini.get("vertex"):
+        errors.append("Gemini call is not marked as Vertex AI")
+    if not _model_at_least_3_5(gemini.get("requested_model")):
+        errors.append("requested Gemini model is older than 3.5")
+    if not _model_at_least_3_5(gemini.get("model_version")):
+        errors.append("served Gemini model is older than 3.5")
+    if (
+        gemini.get("response") != expected_response
+        or gemini.get("expected_response") != expected_response
+    ):
+        errors.append("Gemini response is not bound to this proof id")
+
+    split = memory.get("custody_split", {})
+    scope = memory.get("scope", {})
+    operation_names = memory.get("memory_operation_names", [])
+    if memory.get("framework") != "google-adk":
+        errors.append("the live run did not identify google-adk")
+    if not memory.get("agent_run_completed") or memory.get("runner_event_count", 0) < 1:
+        errors.append("the ADK Runner did not complete with an event")
+    if proof_id not in memory.get("agent_text", ""):
+        errors.append("the ADK agent response is not bound to this proof id")
+    if not _model_at_least_3_5(memory.get("configured_model")):
+        errors.append("the ADK agent is not configured for Gemini 3.5+")
+    if scope.get("user_id") != expected_scope or scope.get("app_name") != "custody-g1":
+        errors.append("Memory Bank scope is not unique to this proof")
+    if memory.get("memory_write_count") != 1 or len(operation_names) != 1:
+        errors.append("the ADK callback did not produce exactly one Memory Bank write")
+    if not operation_names or operation_names[0] == "completed-without-name":
+        errors.append("Memory Bank ingestion operation has no resource name")
+    if memory.get("written_event_count", 0) < 2:
+        errors.append("Memory Bank did not receive both user and model events")
+    if split.get("total", 0) < 2 or split.get("withheld") != 0 or split.get("refused") != 0:
+        errors.append("Custody did not admit the complete clean ADK session")
+    if memory.get("retrieved_memory_count", 0) < 1:
+        errors.append("Memory Bank returned no memory")
+    if not memory.get("retrieved_memory_names"):
+        errors.append("retrieved Memory Bank resource name is absent")
+    if not _expected_memory(memory.get("retrieved_fact")):
+        errors.append("retrieved memory does not preserve the submitted invariant")
+    if project not in str(memory.get("agent_engine", "")):
+        errors.append("Agent Engine belongs to another project")
+
+    if errors:
+        return Verdict(
+            "G1",
+            "deployment and live substrate",
+            "FAIL",
+            "; ".join(errors),
+        )
     return Verdict(
         "G1",
         "deployment and live substrate",
-        "BLOCKED",
-        "needs a Cloud Run service, a Vertex Gemini 3.5+ call, and live Memory "
-        "Bank. No cloud account yet. Settled by: gcloud run services describe.",
+        "PASS",
+        f"Cloud Run {cloud['revision']} is Ready; {gemini['model_version']} served "
+        f"through Vertex; one ADK callback wrote and retrieved live Memory Bank "
+        f"scope {expected_scope}",
     )
 
 
@@ -205,14 +328,39 @@ def judge_g4(e: dict) -> Verdict:
     )
 
 
-def judge_g5(_: dict | None) -> Verdict:
+def _all_live_gates_pass(evidence: dict | None, judge) -> bool:
+    if evidence is None:
+        return False
+    try:
+        gates = judge(evidence)
+    except (AttributeError, KeyError, IndexError, TypeError, ValueError):
+        return False
+    return bool(gates) and all(gates.values())
+
+
+def judge_g5(e: dict) -> Verdict:
+    groups = {
+        "discovery/lifecycle": _all_live_gates_pass(
+            e.get("registry"), judge_registry
+        ),
+        "execution/state": judge_g1(e.get("g1")).state == "PASS",
+        "security/governance": _all_live_gates_pass(
+            e.get("gateway"), judge_gateway
+        ),
+        # No artifact may infer this from Gateway request logs. G5 requires the
+        # actual Agent Observability integration and its custody trace fields.
+        "telemetry": False,
+    }
+    passed = [name for name, complete in groups.items() if complete]
+    missing = [name for name, complete in groups.items() if not complete]
     return Verdict(
         "G5",
         "four capability groups, with real elapsed time",
         "BLOCKED",
-        "needs Agent Registry, Runtime, Identity, Gateway, Model Armor and "
-        "Observability on a live project, plus Cloud Scheduler running daily "
-        "from first deploy to filming. 0 of 4 groups demonstrable today.",
+        f"{len(passed)} of 4 groups independently demonstrable "
+        f"({', '.join(passed) or 'none'}); missing {', '.join(missing)} and "
+        "a Cloud Scheduler record proving real elapsed time. Model Armor also "
+        "remains a separate unbuilt security capability.",
     )
 
 
@@ -230,13 +378,31 @@ async def main() -> int:
     read = {
         name: json.loads((OUT / f"{name}.json").read_text()) for name in produced
     }
+    g1_path = OUT / "g1.json"
+    try:
+        g1 = json.loads(g1_path.read_text()) if g1_path.exists() else None
+    except json.JSONDecodeError as error:
+        g1 = {"malformed": str(error)}
+
+    def read_optional(name: str) -> dict | None:
+        path = OUT / name
+        try:
+            return json.loads(path.read_text()) if path.exists() else None
+        except (OSError, json.JSONDecodeError):
+            return None
+
+    fleet_evidence = {
+        "g1": g1,
+        "registry": read_optional("live-registry-attack.json"),
+        "gateway": read_optional("live-gateway.json"),
+    }
 
     verdicts = [
-        judge_g1(None),
+        judge_g1(g1),
         judge_g2(read["g2"]),
         judge_g3(read["g3"]),
         judge_g4(read["g4"]),
-        judge_g5(None),
+        judge_g5(fleet_evidence),
     ]
 
     print(f"\nAcceptance gates, judged from {OUT.name}/\n")
@@ -251,7 +417,7 @@ async def main() -> int:
     if failed:
         print("  a gate FAILED; this is a regression, not a missing account\n")
         return 1
-    print("  blocked gates need the cloud account, not more code\n")
+    print("  blocked gates name missing proof; they are not regressions\n")
     return 0
 
 

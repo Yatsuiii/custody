@@ -17,7 +17,7 @@ from __future__ import annotations
 import hashlib
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Iterable, Protocol, Sequence
+from typing import Iterable, Mapping, Protocol, Sequence
 
 #: The author string ADK uses for a human turn. Anything else is an agent name.
 USER_AUTHOR = "user"
@@ -99,6 +99,10 @@ class CustodyRecord:
     #: The tool whose response introduced this content, or tainted the model
     #: turn that produced it. Absent for user turns and clean model turns.
     source_tool: str | None = None
+    #: The immutable digest of the tool definition that introduced this content.
+    #: It is absent for old records and user-only content. A source tool alone
+    #: is not enough for selective revocation once a tool changes in place.
+    source_revision: str | None = None
     #: Identifies this record within a `custody.graph.CustodyGraph`. Empty for
     #: records built outside `take_custody`, e.g. in tests of downstream
     #: consumers that never join the graph.
@@ -174,11 +178,26 @@ class ToolTrust:
     """
 
     trusted: frozenset[str] = field(default_factory=frozenset)
+    #: A runtime function name may be backed by a server-qualified tool id.
+    #: Empty keeps the pre-revision interface exactly compatible.
+    source_ids: Mapping[str, str] = field(default_factory=dict)
+    #: Revision pins are supplied only by a successful revision admission.
+    revisions: Mapping[str, str] = field(default_factory=dict)
 
     def of(self, tool: str | None) -> Trust:
         if tool is not None and tool in self.trusted:
             return Trust.TRUSTED
         return Trust.UNTRUSTED
+
+    def source_for(self, tool: str | None) -> str | None:
+        if tool is None:
+            return None
+        return self.source_ids.get(tool, tool)
+
+    def revision_for(self, tool: str | None) -> str | None:
+        if tool is None or self.of(tool) is Trust.UNTRUSTED:
+            return None
+        return self.revisions.get(tool)
 
 
 def take_custody(
@@ -206,13 +225,12 @@ def take_custody(
     #: Invocations in which untrusted content has already appeared, keyed to
     #: (record id, tool name) of the arrival that caused it. Model turns later
     #: in the same invocation are derived from that record.
-    tainted: dict[str, tuple[str, str]] = {}
-    #: The most recent tool response record id in each invocation, regardless
-    #: of trust. A model turn following it is derived from it on the graph even
-    #: when the tool is currently trusted: trust is a point-in-time judgement,
-    #: and a tool trusted today can be demoted tomorrow, at which point this
-    #: edge is what lets revocation find the restatement.
-    lineage: dict[str, str] = {}
+    tainted: dict[str, tuple[str, str, str | None]] = {}
+    #: The most recent record and its source revision in each invocation. A
+    #: model turn following a trusted tool remains bound to that tool version:
+    #: if it is demoted tomorrow, the graph and the record both explain why the
+    #: restatement is in scope.
+    lineage: dict[str, tuple[str, str | None, str | None]] = {}
 
     for index, event in enumerate(events):
         content = getattr(event, "content", None)
@@ -272,8 +290,8 @@ def _attribute(
     record_id: str,
     response: FunctionResponse | None,
     trust: ToolTrust,
-    tainted: dict[str, tuple[str, str]],
-    lineage: dict[str, str],
+    tainted: dict[str, tuple[str, str, str | None]],
+    lineage: dict[str, tuple[str, str | None, str | None]],
     resolver: RecordResolver | None,
     retrieval_tools: frozenset[str],
 ) -> CustodyRecord:
@@ -285,27 +303,34 @@ def _attribute(
     }
 
     if response is not None:
-        tool = getattr(response, "name", None)
+        runtime_name = getattr(response, "name", None)
         cited = (
             resolver.resolve(common["content_sha256"])
-            if resolver is not None and tool in retrieval_tools
+            if resolver is not None and runtime_name in retrieval_tools
             else None
         )
         if cited is not None:
             verdict = cited.trust
             derived_from: tuple[str, ...] = (cited.id,)
+            source_tool = cited.source_tool
+            source_revision = cited.source_revision
         else:
-            verdict = trust.of(tool)
+            verdict = trust.of(runtime_name)
             derived_from = ()
+            source_tool = trust.source_for(runtime_name)
+            source_revision = trust.revision_for(runtime_name)
 
         if verdict is Trust.UNTRUSTED:
             # The first untrusted arrival taints what follows in this invocation.
-            tainted.setdefault(invocation, (record_id, tool or "unnamed-tool"))
-        lineage[invocation] = record_id
+            tainted.setdefault(
+                invocation, (record_id, source_tool or "unnamed-tool", source_revision)
+            )
+        lineage[invocation] = (record_id, source_tool, source_revision)
         return CustodyRecord(
             origin=Origin.TOOL,
             trust=verdict,
-            source_tool=tool,
+            source_tool=source_tool,
+            source_revision=source_revision,
             derived_from=derived_from,
             **common,
         )
@@ -315,25 +340,32 @@ def _attribute(
 
     source = tainted.get(invocation)
     if source is not None:
-        source_id, source_tool = source
+        source_id, source_tool, source_revision = source
         # Chained to the most recent link, not always the original tool
         # response, so a restatement of a restatement is two hops on the
         # graph rather than two parallel edges into the same root.
-        derived_from = (lineage.get(invocation, source_id),)
-        lineage[invocation] = record_id
+        predecessor_id, _, _ = lineage.get(
+            invocation, (source_id, source_tool, source_revision)
+        )
+        derived_from = (predecessor_id,)
+        lineage[invocation] = (record_id, source_tool, source_revision)
         return CustodyRecord(
             origin=Origin.DERIVED,
             trust=Trust.UNTRUSTED,
             source_tool=source_tool,
+            source_revision=source_revision,
             derived_from=derived_from,
             **common,
         )
-    derived_from = (lineage[invocation],) if invocation in lineage else ()
+    predecessor = lineage.get(invocation)
+    derived_from = (predecessor[0],) if predecessor is not None else ()
     if derived_from:
-        lineage[invocation] = record_id
+        lineage[invocation] = (record_id, predecessor[1], predecessor[2])
     return CustodyRecord(
         origin=Origin.MODEL,
         trust=Trust.TRUSTED,
+        source_tool=predecessor[1] if predecessor is not None else None,
+        source_revision=predecessor[2] if predecessor is not None else None,
         derived_from=derived_from,
         **common,
     )
