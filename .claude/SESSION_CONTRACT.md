@@ -193,11 +193,11 @@ predecessor shipped a GEAP table describing an integration that did not exist.
 | Security and governance | **Agent Identity** | exact principal authorized for the registered MCP tool | **LIVE**, `make live-gateway` |
 | Security and governance | **Agent Gateway** | IAP-enforced allow/deny boundary before owned MCP dispatch | **LIVE**, `make live-gateway` |
 | Security and governance | **Model Armor** | screens content; complements origin, does not replace it | **LIVE**, `make live-model-armor` |
-| Telemetry | **Agent Observability** | traces carrying the custody digest, so a quarantine is reproducible | PLANNED |
+| Telemetry | **Agent Observability** | traces carrying the custody digest, so a quarantine is reproducible | PLANNED, reachability confirmed (O1 not started) |
 | mandatory | **Gemini 3.5+ via Vertex** | explains quarantined memories; never labels | **LIVE**, Gemini 3.5 Flash |
 | mandatory | **ADK** | the seam; `BaseMemoryService` is the port | **LIVE**, real Runner callback in G1 |
 | mandatory | **Cloud Run** | control plane and reviewer | **LIVE**, control plane revision `00001-hz6` |
-| supporting | **Firestore** | the graph, quarantine, audit | PLANNED |
+| supporting | **Firestore** | the graph, quarantine, audit | PARTIAL: `custody`/`revocations`/`auditor` collections LIVE behind `FirestoreCustodyGraph`/`FirestoreAuditorLog` (G5); `quarantine`/`departments`/`grants` remain in-memory, PLANNED |
 | supporting | **Cloud Scheduler** | daily auditor run, which makes elapsed time real | PLANNED |
 | bonus | **Gemma** | cheap first-pass triage of the quarantine queue | OPTIONAL |
 
@@ -330,6 +330,62 @@ Acceptance gates:
   identifiers. Non-goal: Model Armor does not gate MCP tool admission or IAP;
   it is a separate, additive content check, not folded into
   `DedicatedIapPolicy`.
+
+- **O1 Agent Observability, next up, not yet started.** Reachability confirmed
+  2026-08-13: `google-adk` ships real GCP OTel export
+  (`google.adk.telemetry.google_cloud.get_gcp_exporters(enable_cloud_tracing=
+  True, ...)`), and `opentelemetry-exporter-gcp-trace`/`-gcp-logging` are
+  already installed transitively. Cloud Trace API is already enabled on the
+  owned project. There is no `gcloud trace traces describe`; independent
+  live readback must use the Cloud Trace v1 REST API directly
+  (`https://cloudtrace.googleapis.com/v1/projects/{project}/traces/{traceId}`)
+  with a bearer token, the same pattern `gateway_live_attestation.py`'s
+  `rest_json` already uses for the Agent Engine REST endpoint. Scope: extend
+  the G1 live ADK Runner call (`scripts/live_memory_bank.py`) with an explicit
+  OTel span wrapping the admitted session, carrying the exact
+  `content_sha256` digest of the admitted `CustodyRecord` as a span attribute
+  (`custody.digest`), exported to Cloud Trace. The claim: "a quarantine is
+  reproducible from a trace," so a trace/span independently reread from Cloud
+  Trace must carry that exact digest, not a value the offline judge merely
+  trusts from the artifact. Non-goal: this is additive telemetry on the
+  already-passing G1 path, not a new agent capability; it must not change G1's
+  admitted/withheld counts or Memory Bank behavior.
+
+- **G5 Cloud Scheduler elapsed-time record, clock started 2026-08-13, gate
+  itself still open.** Structurally different from every other gate: it
+  requires genuine calendar time between first deploy and filming ("nothing
+  fast-forwarded"), so it cannot be produced and verified in one session, only
+  started. DDIA review chose Firestore (Native mode, us-central1) as an
+  append-only log behind the existing `CustodyGraph`/`TrustCatalog` ports,
+  mirroring `custody/store.py`'s SQLite pattern; `custody/firestore_store.py`
+  implements `FirestoreCustodyGraph` and `FirestoreAuditorLog`.
+  `CustodyRecord.admitted_at` and `Revocation.revoked_at` are new optional
+  fields (`None` unless a durable store stamps them from its own
+  server-assigned write time; the pure core never sets them). The control
+  plane gained `POST /auditor` (idempotent daily heartbeat; seeds one fixed
+  synthetic record, `g5-elapsed-time-seed`, on the very first invocation
+  ever) and `GET /custody/{id}` (durable read-back). Deployed as Cloud Run
+  revision `custody-control-plane-00003-hd2` with
+  `CUSTODY_FIRESTORE_PROJECT` set and `max-instances=1`. **Durability across a
+  real cold start was verified live**: the seed record's `admitted_at`
+  (`2026-08-13T11:55:24.745231+00:00`) was byte-identical after forcing a new
+  revision, and the heartbeat correctly reported `first_run: false`. Cloud
+  Scheduler job `custody-g5-auditor` (`us-central1`, daily at 06:00 UTC,
+  `POST /auditor`) is created and `ENABLED`. Non-goal for now: the eventual
+  revocation of the seed record (near filming, via the existing `/revoke`
+  endpoint) and `scripts/scheduler_gates.py` (offline judge plus live
+  attestation, mirroring `model_armor_gates.py`) are deliberately deferred —
+  building a judge for a multi-day span before any days have elapsed would
+  have nothing real to judge. Known gap: the control plane is fully public
+  (`allUsers` invoker, unchanged from its existing G1 posture) rather than
+  gated behind OIDC as DDIA recommended; Cloud Run IAM is service-level, not
+  per-route, and every other mutating endpoint on this service (`/sessions`,
+  `/vouch`, `/revoke`) was already public and unauthenticated before this
+  session, so gating only `/auditor` was not possible without either
+  splitting it into a second service or authenticating the whole demo
+  control plane — judged out of scope for this pass. Document this precisely
+  as a synthetic proof service, same posture as the Registry MCP server, not
+  as a hardened design.
 
 Verification:
 

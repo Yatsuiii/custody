@@ -111,6 +111,13 @@ class CustodyRecord:
     #: model turn, pointing at the untrusted arrival that tainted it. This is
     #: the graph edge retroactive revocation walks.
     derived_from: tuple[str, ...] = ()
+    #: RFC 3339 admission time. Never set by `take_custody`, which is pure and
+    #: does no I/O; a durable store fills it in from its own server-assigned
+    #: write time when it reloads a record; None for a record that only ever
+    #: lived in memory. Not a fact this dataclass can attest to on its own,
+    #: only carry: a judge must reread the store's own timestamp, never trust
+    #: this field from an untrusted artifact.
+    admitted_at: str | None = None
 
     def instruction_eligible(self) -> bool:
         """Whether this may enter context the model treats as instructions.

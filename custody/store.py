@@ -56,6 +56,7 @@ def _dump(record: CustodyRecord) -> str:
             "source_revision": record.source_revision,
             "id": record.id,
             "derived_from": list(record.derived_from),
+            "admitted_at": record.admitted_at,
         }
     )
 
@@ -72,6 +73,7 @@ def _load(payload: str) -> CustodyRecord:
         source_revision=data.get("source_revision"),
         id=data["id"],
         derived_from=tuple(data["derived_from"]),
+        admitted_at=data.get("admitted_at"),
     )
 
 

@@ -23,16 +23,39 @@ import signal
 import threading
 import uuid
 from dataclasses import dataclass, field
+from datetime import UTC, datetime
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from typing import Any
 
 from custody.catalog import Grant, TrustCatalog, Vouch
 from custody.graph import CustodyGraph
-from custody.origin import Trust, take_custody
+from custody.origin import CustodyRecord, Origin, Trust, digest, take_custody
 from custody.service import InMemoryQuarantine, Quarantined
 
 #: Cloud Run's contract: listen on $PORT, bind every interface.
 DEFAULT_PORT = 8080
+
+#: The one G5 seed record's fixed identity, so a replayed first run resolves
+#: to the same document rather than minting a second seed.
+G5_SEED_RECORD_ID = "g5-elapsed-time-seed"
+G5_SEED_TOOL = "custody_g5_seed"
+
+
+@dataclass
+class InMemoryAuditorLog:
+    """The offline/local heartbeat log: no persistence, no elapsed-time claim.
+
+    A real elapsed-time claim needs a durable log across process restarts;
+    this default exists so the control plane and its tests run without one.
+    """
+
+    days: set[str] = field(default_factory=set)
+
+    def heartbeat(self, day: str) -> bool:
+        """Record one UTC day's heartbeat; return True the first time ever."""
+        first = not self.days
+        self.days.add(day)
+        return first
 
 
 @dataclass
@@ -45,6 +68,7 @@ class ControlPlane:
     graph: CustodyGraph = field(default_factory=CustodyGraph)
     catalog: TrustCatalog = field(default_factory=TrustCatalog)
     quarantine: InMemoryQuarantine = field(default_factory=InMemoryQuarantine)
+    auditor_log: InMemoryAuditorLog = field(default_factory=InMemoryAuditorLog)
     runs: dict[str, dict] = field(default_factory=dict)
 
     def ingest(self, payload: dict) -> dict:
@@ -113,6 +137,52 @@ class ControlPlane:
             "tool": revocation.tool,
             "removed": list(revocation.removed),
             "records_remaining": len(self.graph),
+        }
+
+    def auditor(self, payload: dict) -> dict:
+        """The daily heartbeat Cloud Scheduler calls (G5).
+
+        Idempotent per UTC day: a retried Scheduler invocation on the same
+        day is a no-op. On the very first invocation ever, seeds one fixed
+        synthetic custody record, so there is a single record whose admission
+        can be read back and, later, compared against its eventual
+        revocation timestamp to prove genuine elapsed time.
+        """
+        del payload
+        today = datetime.now(UTC).date().isoformat()
+        first = self.auditor_log.heartbeat(today)
+        seeded_record_id = None
+        if first:
+            seed = CustodyRecord(
+                origin=Origin.TOOL,
+                trust=Trust.TRUSTED,
+                author="custody-auditor",
+                invocation_id="g5-seed",
+                content_sha256=digest(
+                    "Custody G5 elapsed-time seed record: synthetic, no "
+                    "customer data."
+                ),
+                source_tool=G5_SEED_TOOL,
+                id=G5_SEED_RECORD_ID,
+            )
+            self.graph.add(seed)
+            seeded_record_id = seed.id
+        return {"day": today, "first_run": first, "seeded_record_id": seeded_record_id}
+
+    def record(self, record_id: str) -> dict | None:
+        """Durable view of one record: its admission, and revocation if any."""
+        found = self.graph.record(record_id)
+        if found is None:
+            return None
+        record, revocation = found
+        return {
+            "id": record.id,
+            "origin": record.origin.value,
+            "trust": record.trust.value,
+            "source_tool": record.source_tool,
+            "admitted_at": record.admitted_at,
+            "revocation_id": revocation.id if revocation else None,
+            "revoked_at": revocation.revoked_at if revocation else None,
         }
 
     def census(self) -> dict:
@@ -198,6 +268,13 @@ class _Handler(BaseHTTPRequestHandler):
                     ]
                 },
             )
+        elif self.path.startswith("/custody/"):
+            record_id = self.path.removeprefix("/custody/")
+            found = self.plane.record(record_id) if record_id else None
+            if found is None:
+                self._json(404, {"error": "no such custody record"})
+            else:
+                self._json(200, found)
         else:
             self._json(404, {"error": "no such endpoint"})
 
@@ -212,6 +289,7 @@ class _Handler(BaseHTTPRequestHandler):
             "/sessions": self.plane.ingest,
             "/vouch": self.plane.vouch,
             "/revoke": self.plane.revoke,
+            "/auditor": self.plane.auditor,
         }
         handler = routes.get(self.path)
         if handler is None:
@@ -238,8 +316,26 @@ class _Handler(BaseHTTPRequestHandler):
         """Silence per-request logging; Cloud Run captures stdout already."""
 
 
+def _default_plane() -> ControlPlane:
+    """Firestore-backed when deployed with a project configured; pure
+    in-memory otherwise, so local runs and tests need no cloud account.
+    """
+    project = os.environ.get("CUSTODY_FIRESTORE_PROJECT")
+    if not project:
+        return ControlPlane()
+    from google.cloud import firestore
+
+    from custody.firestore_store import FirestoreAuditorLog, FirestoreCustodyGraph
+
+    client = firestore.Client(project=project)
+    return ControlPlane(
+        graph=FirestoreCustodyGraph(client),
+        auditor_log=FirestoreAuditorLog(client),
+    )
+
+
 def serve(port: int | None = None, plane: ControlPlane | None = None) -> HTTPServer:
-    _Handler.plane = plane or ControlPlane()
+    _Handler.plane = plane or _default_plane()
     resolved = port if port is not None else int(os.environ.get("PORT", DEFAULT_PORT))
     return HTTPServer(("0.0.0.0", resolved), _Handler)  # noqa: S104
 

@@ -9,6 +9,10 @@ google-cloud-aiplatform[agent-engines]==1.163.0
 # producer and client; kept exact so its tools/list serialization is stable.
 fastmcp==2.13.1
 
+# The durable custody log's live backend (G5). SqliteCustodyGraph is the
+# offline fake for the same Firestore layout described in SESSION_CONTRACT.md.
+google-cloud-firestore>=2.28,<3
+
 # Pinned deliberately. google-adk requires opentelemetry <=1.42.1 and
 # google-cloud-aiplatform pulls an exporter that wants ~=1.44.0, so an
 # unpinned install produces a set pip itself reports as broken. That failure

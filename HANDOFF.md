@@ -1,4 +1,4 @@
-# Custody recovery handoff, 2026-08-13 (post schema-v2 Gateway + Model Armor proofs)
+# Custody recovery handoff, 2026-08-13 (post S1/M1 proofs, G5 clock started)
 
 This is a live handoff document for Claude or another coding agent. Continue
 from the current repository state. Do not restart the project, redesign the
@@ -11,31 +11,28 @@ diffs before editing.
 Lane: agentic security infrastructure, built as an evidence-gated systems
 project for the Google All Things Agentic Hackathon, Fortified Enterprise Fleet.
 
-Both the Gateway (S1) and Model Armor (M1) artifacts this file previously
-tracked as in-progress/not-started are now **complete and independently
-judged**:
+Three capabilities are complete and independently judged:
 
-- `proof-out/live-gateway.json` (schema v2, proof
-  `e2b9f562fa3a48249054b977b5779a21`); `make gateway-gates` reports twenty PASS
-  results (twelve offline judge, eight independent live attestation).
-- `proof-out/live-model-armor.json` (proof
-  `4af5a4b8d3244c3c80054c15b69e58ad`); `make model-armor-gates` reports nine
-  PASS results (six offline judge, three independent live attestation).
+- S1 (Gateway): `proof-out/live-gateway.json`, `make gateway-gates` 20/20 PASS.
+- M1 (Model Armor): `proof-out/live-model-armor.json`, `make model-armor-gates`
+  9/9 PASS.
+- R1 (stale Registry) and G1 (Cloud Run/Vertex/ADK/Memory Bank) were already
+  complete before this session.
 
-README.md and `.claude/SESSION_CONTRACT.md` were updated from this evidence
-and are authoritative for the S1/M1 claim text; do not restate either from
-memory, read them.
+A fourth, G5's elapsed-time record, is **started but structurally cannot be
+"complete" today** — see below.
 
-The last commit (`df334f1`, see `git log -1`) landed all accumulated G1/R1/S1
-work. M1 was built and evidenced after that commit and is **not yet
-committed** as of this handoff — check `git status` before assuming otherwise.
+README.md and `.claude/SESSION_CONTRACT.md` are authoritative for all claim
+text; do not restate any of it from memory, read them.
 
 ## Git and working-tree state
 
 - Branch: `feat/memory-provenance`
-- Origin is one commit behind local HEAD (`df334f1` is not pushed).
-- Nothing has been pushed. Do not push without explicit authorization.
-- Preserve every unrelated/preexisting modification. Inspect with:
+- Two commits landed this session: `df334f1` (S1 fix + accumulated G1/R1
+  work) and `94bcad4` (M1). Neither pushed.
+- **The G5 persistence/Scheduler work below is NOT yet committed.** Check
+  `git status` before assuming otherwise.
+- Do not push without explicit authorization.
 
 ```sh
 git status --short --branch
@@ -44,53 +41,28 @@ git diff --stat
 git log -5 --oneline --decorate
 ```
 
-The Model Armor files added after the last commit:
-
-```text
-scripts/live_model_armor.py
-scripts/model_armor_gates.py
-tests/test_model_armor_gates.py
-tests/test_live_model_armor_producer.py
-```
-
-The MCP server used by both the stale-Registry proof and Gateway proof is
-`live/registry_attack/server/server.py`. Do not remove its existing revision
-or forwarding behavior; it was not touched in this pass.
-
 ## Previously proven state, do not redo
 
-- G1 is complete: live Cloud Run, Gemini/Vertex, ADK, and Memory Bank evidence.
-- Live stale Agent Registry proof (R1) is complete.
-  `make registry-gates`: 8/8 PASS. `make revision-spike`: 5/5 PASS.
-- **S1 (Gateway) is complete**, schema v2, `make gateway-gates`: 20/20 PASS.
-- **M1 (Model Armor) is complete**, `make model-armor-gates`: 9/9 PASS.
+- G1, R1, S1, M1 as above.
 - Structural TOOL roots and MODEL/DERIVED descendants are already enforced.
 - Offline G2, G3, G4 pass; `make gates` reports 4 PASS, 0 FAIL, 1 BLOCKED (G5,
-  expected — missing telemetry and a Cloud Scheduler elapsed-time record, not
-  a regression; Model Armor being live no longer changes this, it folds into
-  the already-complete security/governance group).
+  correctly BLOCKED — its elapsed-time requirement is real, not a bug).
 
 Known limitations that must remain explicit unless new direct evidence changes
 them:
 
 - CustodyGraph revocation does not delete live Memory Bank descendants.
-- RevisionCatalog and some approval state are application-side.
 - The admitted surface-read to dispatch path has a TOCTOU window and is not
   cryptographically atomic.
 - Behavior-only drift with identical `tools/list` is outside the revision claim.
-- Submission-grade Agent Observability remains unproven (this is the expected
-  G5 BLOCKED reason, not a regression).
+- Agent Observability (O1) remains unproven — reachability was confirmed this
+  session (`google.adk.telemetry.google_cloud.get_gcp_exporters`) but nothing
+  was built. See "Next capability" below.
 - The Gateway proof covers one owned Agent Runtime identity, one registered MCP
-  projection, and four controlled calls (allow, tool-scope-canary, expiry,
-  final deny). It does not prove all fleet egress is covered.
-- The Model Armor proof covers one owned Template and two controlled
-  `sanitizeUserPrompt` calls. It does not screen traffic Custody has not
-  explicitly routed through that Template, and it does not gate MCP tool
-  admission or IAP — those remain separate, additive claims.
+  projection, and four controlled calls. The Model Armor proof covers one
+  owned Template and two controlled calls. Neither proves fleet-wide coverage.
 
 ## Owned Google Cloud scope
-
-All live work is defensive and limited to these user-owned resources:
 
 ```text
 project id:      project-988bc9fe-092c-4b32-90c
@@ -114,120 +86,143 @@ MCP endpoint:
   https://custody-export-mcp-anexdhueiq-uc.a.run.app/mcp
 Model Armor Template:
   projects/project-988bc9fe-092c-4b32-90c/locations/us-central1/templates/custody-approved-tool-ingress
+Control plane (Cloud Run, public):
+  https://custody-control-plane-742122658452.us-central1.run.app
+Firestore database:
+  projects/project-988bc9fe-092c-4b32-90c/databases/(default), Native mode, us-central1
+Cloud Scheduler job:
+  projects/project-988bc9fe-092c-4b32-90c/locations/us-central1/jobs/custody-g5-auditor
 ```
 
 Repo-local Google credentials/configuration live under ignored `.gcloud/`.
 Never print, copy, or commit credential contents.
 
-**Live IAP resting state, confirmed 2026-08-13 after the successful S1 run:**
-the dedicated projection's policy is at exact safe deny —
+**Live IAP resting state (S1's projection), confirmed 2026-08-13:** exact safe
+deny — `api.getAttribute('iap.googleapis.com/mcp.toolName', '') in
+['custody_policy_canary', '']`. Re-read before any future mutation, never
+assume it.
 
-```cel
-api.getAttribute('iap.googleapis.com/mcp.toolName', '') in ['custody_policy_canary', '']
-```
+## G5: what was built this session, and why it can't be "done" yet
 
-Re-read the policy before any future mutation. Never assume it. The exact
-command shape is encoded in `DedicatedIapPolicy.current()`.
+G5 requires "Cloud Scheduler running the Auditor daily from first deploy to
+filming, with one custody record showing genuine timestamps across that span
+including a memory admitted early and revoked later. Nothing fast-forwarded."
+That is a calendar-time requirement, not a build requirement — it can only be
+started, then must be left alone to accumulate real days.
 
-**Model Armor Template `custody-approved-tool-ingress`** was found already
-provisioned in the project (created 2026-08-13T05:24:35Z, before this
-session), with `piAndJailbreakFilterSettings` at `MEDIUM_AND_ABOVE` and
-`logSanitizeOperations`/`logTemplateOperations` enabled, labeled
-`custody-proof: approved-tool-ingress`. Nothing in the repo referenced it
-before this session. Confirmed with the user and reused as the owned M1
-Template rather than creating a new one. It is read-only from the proof's
-perspective — `sanitizeUserPrompt` calls do not mutate the Template — so there
-is no lease/etag/CAS state machine to reason about here, unlike Gateway's IAP
-policy.
+**The blocker found and fixed:** `custody/control_plane.py` as previously
+deployed was in-memory only — no volume, no Firestore — so its state does not
+survive a Cloud Run cold start, let alone weeks. A DDIA-architect review (see
+`git log` for the full review if needed; summary below) confirmed this made
+G5 architecturally unshippable as-is and recommended the minimal fix.
 
-## What changed in this session (2026-08-13)
+**What changed:**
 
-Two pieces of work, in order. Full narrative detail (exact bugs, exact fixes)
-is preserved in `git log` commit `df334f1` and the diff itself; this section
-is a summary so a future agent does not need to re-derive it.
+1. Enabled `firestore.googleapis.com` and `cloudscheduler.googleapis.com`.
+   Created the Firestore database (Native mode, `us-central1`, default DB).
+2. Added `admitted_at: str | None = None` to `CustodyRecord`
+   (`custody/origin.py`) and `revoked_at: str | None = None` to `Revocation`
+   (`custody/graph.py`). Both default `None` and are never set by the pure
+   core — only a durable store stamps them, from its own server-assigned
+   write time. `custody/store.py`'s SQLite serialization updated to match,
+   backward-compatible with old rows.
+3. Added a `record(record_id)` method to `CustodyGraph` (live records only;
+   the pure graph deletes on revocation, so it cannot answer for revoked
+   history — documented as a real limitation, not a bug).
+4. New `custody/firestore_store.py`: `FirestoreCustodyGraph` (mirrors
+   `SqliteCustodyGraph`'s replay-through-the-wrapped-class pattern, but
+   Firestore-backed; create-fails-if-exists writes, `AlreadyExists` swallowed
+   as success; replay order is each document's own server `create_time`, not
+   insertion order) and `FirestoreAuditorLog` (one heartbeat document per UTC
+   day, same idempotency discipline). Offline-tested against a fake Firestore
+   client in `tests/test_firestore_store.py` — `make check` stays networkless.
+5. `custody/control_plane.py` gained `POST /auditor` (idempotent daily
+   heartbeat; seeds one fixed record, id `g5-elapsed-time-seed`, only on the
+   very first invocation ever) and `GET /custody/{id}` (durable read-back:
+   admission time, revocation id/time if any). `InMemoryAuditorLog` is the
+   offline/local default; `_default_plane()` switches to
+   `FirestoreCustodyGraph`/`FirestoreAuditorLog` when
+   `CUSTODY_FIRESTORE_PROJECT` is set in the environment.
+6. Granted the Cloud Run service account (`742122658452-compute@...`)
+   `roles/datastore.user`. Redeployed the control plane
+   (`gcloud run deploy --source=.`) with `CUSTODY_FIRESTORE_PROJECT` set and
+   `max-instances=1` (required: two instances would each hold their own
+   replayed graph and could diverge between reloads).
+7. **Verified durability across a real cold start live**: called
+   `POST /auditor` (seeded the record, `admitted_at` =
+   `2026-08-13T11:55:24.745231+00:00`), forced a new Cloud Run revision
+   (`custody-control-plane-00003-hd2`), then confirmed `GET
+   /custody/g5-elapsed-time-seed` returned the byte-identical `admitted_at`
+   and a repeat `POST /auditor` correctly reported `first_run: false`. This
+   is the fact that actually falsifies (or, here, confirms) the design.
+8. Created Cloud Scheduler job `custody-g5-auditor` (`us-central1`, cron
+   `0 6 * * *` UTC, `POST /auditor`), state `ENABLED`. A manual "run now"
+   trigger did not show up in Cloud Run logs within the verification window
+   this session — most likely eventual-consistency lag right after job
+   creation, not a real failure, since the job is correctly configured and
+   the target endpoint is proven to work. **Confirm on next session** that
+   the job actually fired at its first scheduled 06:00 UTC run
+   (2026-08-14) via `gcloud logging read` for
+   `httpRequest.userAgent="Google-Cloud-Scheduler"` on the control plane, or
+   `gcloud scheduler jobs describe custody-g5-auditor --location=us-central1`
+   for a populated `lastAttemptTime`/`status`.
 
-**1. Fixed and completed the schema-v2 Gateway proof (S1).** The prior handoff
-left a rejected schema-v2 run whose CEL expired the empty-name MCP-handshake
-clause together with the `lookup_customer` lease. Fixed the CEL to an
-independent-clause shape (`... == '' || (request.time < timestamp(...) && ...
-== 'lookup_customer')`) in `scripts/live_gateway.py` and
-`scripts/gateway_gates.py`, added a bounded outer timeout around
-`engine.async_query`, and gave `_gateway_logs` bounded/recovering polling. The
-first live rerun then surfaced two bugs the CEL fix didn't touch: an IAP etag
-base64-alphabet mismatch between `gcloud` readbacks (url-safe) and raw Admin
-Activity payloads (standard) breaking audit-chain correlation, and the offline
-judge assuming strict causal order between two independent same-process clock
-reads ~300 microseconds apart. Both fixed with regression tests
-(`_canonical_etag` normalization; a `_CLOCK_SKEW_BOUND` tolerance).
-`gateway_live_attestation.py` also assumed a flat MCP result shape when the
-live server actually returns the standard `content`/`structuredContent`
-envelope — fixed to unwrap it. Result: `make live-gateway` succeeded, `make
-gateway-gates` reported 20/20, all other gates (`registry-gates`,
-`revision-spike`, `gates`, `check`) stayed green. README.md and
-SESSION_CONTRACT.md updated from the evidence. All committed in `df334f1`.
+**Deliberately deferred, do not start early:**
 
-**2. Scoped and built the Model Armor proof (M1).** Per this file's own prior
-instruction, updated `.claude/SESSION_CONTRACT.md` with a Model Armor-scoped
-objective and acceptance gates before writing code. Confirmed `gcloud
-model-armor` reachability (`templates create/describe/list/update/delete`,
-`sanitize-user-prompt`, `sanitize-model-response`). Discovered an
-already-provisioned, unreferenced Template (see above); confirmed with the
-user and reused it. Built `scripts/live_model_armor.py` (producer: validates
-the owned Template, issues one proof-bound jailbreak/PI `sanitizeUserPrompt`
-call expecting BLOCK and one proof-bound clean call expecting ALLOW, polls
-Cloud Logging for the matching server-authored entries, writes
-`proof-out/live-model-armor.json`) and `scripts/model_armor_gates.py`
-(offline judge plus independent live attestation, mirroring the
-producer/judge split used for R1/S1 but without the IAM-lease machinery,
-since sanitize calls don't mutate the Template). Correlation between a proof
-run and its Cloud Logging entry is by exact `sanitizationInput.text` equality
-(the prompt embeds the proof ID), since Model Armor's API does not accept a
-client-supplied trace ID the way IAP does. First live run passed all 9 gates
-with no rework needed. Added `tests/test_model_armor_gates.py` (16 adversarial
-offline + 4 live-attestation tests) and
-`tests/test_live_model_armor_producer.py` (8 fault-injection tests). Ran
-`make check` (233 tests), `make registry-gates`, `make revision-spike`, `make
-gates`, and `git diff --check`, all clean. Updated README.md and
-`.claude/SESSION_CONTRACT.md` from the evidence. Fixed a stale G5 message in
-`scripts/gates.py` that still called Model Armor unbuilt, and fixed a
-pre-existing `C901` complexity violation in `judge_g1` surfaced by the
-clean-code hook while editing that file (extracted `_g1_cloud_run_errors`,
-`_g1_gemini_errors`, `_g1_adk_run_errors`, `_g1_memory_bank_errors`).
+- Revoking the seed record. It must happen near filming, not now — the whole
+  point is genuine elapsed time between admission and revocation.
+- `scripts/scheduler_gates.py` (offline judge + live attestation, mirroring
+  `model_armor_gates.py`). Building it before there is a multi-day span would
+  have nothing real to judge. Build it once there is.
 
-**Not yet committed** — see git state above.
+**A known, accepted gap:** the control plane is fully public (`allUsers`
+Cloud Run invoker), unchanged from its pre-existing G1 posture. DDIA
+recommended OIDC-gating the Auditor endpoint specifically; Cloud Run IAM is
+service-level, not per-route, and `/sessions`, `/vouch`, `/revoke` were
+already public and unauthenticated before this session, so gating only
+`/auditor` was not achievable without splitting into a second service or
+authenticating the whole demo control plane. Judged out of scope for this
+pass. Document it precisely as a synthetic proof service, same posture as the
+Registry MCP server — do not claim it as hardened.
+
+**Time pressure, stated plainly:** if the seed record's span to revocation
+ends up too short to read as "weeks of operations" on camera, the honest move
+is to narrow the G5 wording in the submission, not to fake elapsed time.
 
 ## Evidence and claim discipline
 
-- Admin Activity authenticates the policy resource, actor, role/member, and
-  etag transitions, but currently omits historical CEL condition/title. Do not
-  claim the log itself contains the CEL. Scope and post-expiry 403 controls are
-  the falsifiable behavioral evidence for those semantics.
-- The Cloud Run dispatch event closes the old replay hole where a fabricated
-  proof ID or ledger could be grafted onto genuine Gateway logs.
-- Cloud Run is still public because it is a synthetic MCP proof service. Do not
-  generalize that posture to production customer data.
-- The stale Registry service remains pinned to its v1 read-only surface while
-  Cloud Run serves v2. Do not update Registry during Gateway work.
+- Admin Activity authenticates policy transitions but omits historical CEL
+  condition text; scope and post-expiry 403 controls are the falsifiable
+  evidence for S1's semantics, not the log text itself.
+- The Cloud Run dispatch event (S1) and the Model Armor prompt-text
+  correlation (M1) both exist to close replay/graft holes; do not weaken
+  either to make a future proof "easier."
+- Cloud Run and the control plane are public because they are synthetic proof
+  services. Do not generalize that posture to production customer data.
 - All synthetic IDs and `example.invalid` addresses are controls. Do not use
-  external targets or real customer data.
+  external targets or real customer data. The G5 seed record's content is
+  synthetic and stored as a SHA-256 digest, not raw text, in Firestore.
 - Keep TOOL call roots structural. Never let a model label provenance, trust,
-  revision admission, or policy outcomes. Model Armor's structured
-  match/no-match verdict is a fact Custody may read, same as a CEL admission
-  or a revision digest — never let a model relabel it either.
+  revision admission, or policy outcomes. Model Armor's verdict and a
+  Firestore document's `create_time` are both facts Custody may read, never
+  facts a model may relabel.
 
-## Next capability after Gateway and Model Armor
+## Next capability: Agent Observability (O1)
 
-The next highest-value missing Fleet capability is Agent Observability.
-Agent Identity is already genuinely present in the Gateway proof, but its
-claim must stay scoped to that Runtime. Live Memory Bank selective deletion
-comes later and only if the actual API semantics preserve Custody's lineage
-contract.
+Scoped in `.claude/SESSION_CONTRACT.md` but not started. Reachability
+confirmed: `google-adk` ships real GCP OTel export
+(`google.adk.telemetry.google_cloud.get_gcp_exporters(enable_cloud_tracing=
+True, ...)`); `opentelemetry-exporter-gcp-trace`/`-gcp-logging` are already
+installed transitively; Cloud Trace API is already enabled. There is no
+`gcloud trace traces describe` — independent live readback must hit the
+Cloud Trace v1 REST API directly with a bearer token (same pattern
+`gateway_live_attestation.py`'s `rest_json` already uses).
 
-Before starting Observability: update `.claude/SESSION_CONTRACT.md` with a new
-session contract scoped to that capability (objective, allowed files,
-acceptance gates) per the global evidence-gated protocol — do not silently
-broaden scope under the existing Gateway/Model-Armor-scoped contracts. Note
-that G5 also needs a Cloud Scheduler record proving real elapsed time across
-the whole project's timeline (an early-admitted, later-revoked custody
-record), which is a separate concern from Observability itself and should not
-be silently folded into the same contract without saying so.
+Plan: extend the G1 live ADK Runner call (`scripts/live_memory_bank.py`) with
+an explicit OTel span wrapping the admitted session, carrying the exact
+`content_sha256` of the admitted `CustodyRecord` as a span attribute
+(`custody.digest`), exported to Cloud Trace. The claim is "a quarantine is
+reproducible from a trace" — an independently reread trace must carry that
+exact digest, not a value the offline judge merely trusts from an artifact.
+Non-goal: this is additive telemetry on the already-passing G1 path; it must
+not change G1's admitted/withheld counts or Memory Bank behavior.

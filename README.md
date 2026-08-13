@@ -182,7 +182,8 @@ deciding what they mean.
 | Export gateway | `custody/action.py` | egress must cite trusted memory |
 | Trust catalog | `custody/catalog.py` | per-department grants |
 | Revision admission | `custody/revision.py` | pins MCP tool definitions and blocks drift before dispatch |
-| Durable stores | `custody/store.py` | survive a restart |
+| Durable stores | `custody/store.py` | offline SQLite fake, survives a restart |
+| Live durable store | `custody/firestore_store.py` | Firestore-backed, same ports, deployed for G5 |
 | ADK shell | `custody/adapters/adk.py` | `BaseMemoryService` ADK accepts |
 
 Enforcement happens at the **write**, not at retrieval. Memory Bank derives
@@ -356,6 +357,22 @@ the other.
 **M1 passed live on 2026-08-13**, proof `4af5a4b8d3244c3c80054c15b69e58ad`.
 `make model-armor-gates` reported nine PASS results across the offline judge
 and the independent live Google Cloud attestation.
+
+### G5's elapsed-time clock, in progress
+
+G5 needs one custody record with genuine timestamps spanning from first
+deploy to filming, not fast-forwarded. That cannot be produced in one
+sitting, so this is a status, not a pass/fail gate. `custody/firestore_store.py`
+backs the derivation graph with Firestore (Native mode, `us-central1`), same
+ports as the offline SQLite store; the control plane's `POST /auditor`
+(idempotent per UTC day) seeded one fixed synthetic record on 2026-08-13 and
+a daily Cloud Scheduler job keeps the heartbeat going. Durability across a
+real Cloud Run cold start is already verified: the seed record's admission
+timestamp was byte-identical after forcing a new revision. What's still
+open: enough real days need to pass, then the record gets revoked near
+filming and `scripts/scheduler_gates.py` (not yet written; building a judge
+before there is a multi-day span to judge would have nothing real to check)
+independently proves the whole span.
 
 **A stated bet, not a finding:** no enterprise incident data exists for memory
 poisoning. It has formal standing as OWASP ASI06 and demonstrated attack success

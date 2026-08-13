@@ -39,6 +39,10 @@ class Revocation:
     tool: str
     removed: tuple[str, ...]
     revision: str | None = None
+    #: RFC 3339 revocation time. Same discipline as `CustodyRecord.admitted_at`:
+    #: never set by this pure graph, filled in by a durable store from its own
+    #: server-assigned write time, and never trusted from an artifact by a judge.
+    revoked_at: str | None = None
 
 
 @dataclass
@@ -68,6 +72,17 @@ class CustodyGraph:
 
     def records(self) -> tuple[CustodyRecord, ...]:
         return tuple(self._records.values())
+
+    def record(self, record_id: str) -> tuple[CustodyRecord, None] | None:
+        """One live record's view, paired with its revocation (always None here).
+
+        This pure graph deletes a record's data on revocation, so it cannot
+        answer for a revoked id; only a durable store retains that history.
+        Same port as `custody.firestore_store.FirestoreCustodyGraph.record`,
+        narrower answer.
+        """
+        found = self._records.get(record_id)
+        return (found, None) if found is not None else None
 
     def descendants(self, tool: str) -> tuple[str, ...]:
         """Every record id that would be removed if `tool` were revoked now.
