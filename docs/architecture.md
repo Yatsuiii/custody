@@ -48,12 +48,15 @@ flowchart TB
     A1 -->|"export request"| GATE
 
     classDef built fill:#1f6f3f,stroke:#0d3d22,color:#fff
-    classDef planned fill:#5a4a1f,stroke:#332a10,color:#fff
-    class REV,ORIGIN,SPLIT,GRAPH,CAT,GATE,QUAR,MB,GEM built
-    class FS planned
+    class REV,ORIGIN,SPLIT,GRAPH,CAT,GATE,QUAR,MB,GEM,FS built
 ```
 
-Green is built and evidenced. Amber is not yet built.
+Green is built and evidenced. Every node above is green: Firestore was the
+last amber one, and it is live behind the same ports as the offline SQLite
+store (`custody/firestore_store.py`, `custody/nonce_ledger.py`), carrying
+the derivation graph, the demotion log, the approved revision pins, and the
+dispatch nonce ledger. See `README.md`'s status table for the command that
+demonstrates each.
 
 ## The live Gateway enforcement slice
 

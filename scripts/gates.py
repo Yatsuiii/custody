@@ -40,6 +40,7 @@ from scripts.demo import (  # noqa: E402
 )
 from scripts.isolate import grant  # noqa: E402
 from scripts.gateway_gates import judge as judge_gateway  # noqa: E402
+from scripts.observability_gates import judge as judge_observability  # noqa: E402
 from scripts.registry_gates import judge as judge_registry  # noqa: E402
 from scripts.revoke import (  # noqa: E402
     COMPROMISED_TOOL,
@@ -427,9 +428,16 @@ def judge_g5(e: dict) -> Verdict:
         "security/governance": _all_live_gates_pass(
             e.get("gateway"), judge_gateway
         ),
-        # No artifact may infer this from Gateway request logs. G5 requires the
-        # actual Agent Observability integration and its custody trace fields.
-        "telemetry": False,
+        # Judged from O1's own artifact, never inferred from Gateway request
+        # logs: the observability judge is what requires the real Agent
+        # Observability integration and its custody trace fields, so reusing
+        # it here is what keeps that requirement honest. This group was
+        # hardcoded False while O1 was unbuilt; leaving it hardcoded after
+        # O1 landed made G5 unpassable for a reason that had stopped being
+        # true, which is the failure this file exists to prevent.
+        "telemetry": _all_live_gates_pass(
+            e.get("observability"), judge_observability
+        ),
     }
     passed = [name for name, complete in groups.items() if complete]
     missing = [name for name, complete in groups.items() if not complete]
@@ -476,6 +484,7 @@ async def main() -> int:
         "g1": g1,
         "registry": read_optional("live-registry-attack.json"),
         "gateway": read_optional("live-gateway.json"),
+        "observability": read_optional("live-observability.json"),
     }
 
     verdicts = [

@@ -14,9 +14,9 @@ $ make incident
     source           vendor_portal
     status           TRUST REVOKED
     reason           source compromised after prior trusted use
-    trusted          2026-07-24T09:00:00+00:00  (day 1)
-    compromised      2026-08-14T14:00:00+00:00  (day 22)
-    gap              21 days of accumulated propagation before detection
+    trusted          2026-07-30T09:00:00+00:00  (day 1)
+    compromised      2026-08-14T14:00:00+00:00  (day 16)
+    gap              15 days of accumulated propagation before detection
 
   BLAST RADIUS
 
@@ -26,7 +26,7 @@ $ make incident
 
   INFLUENCE LINEAGE (one traced chain; the fleet fixture adds more roots)
 
-    [compromised root   ] vendor_portal          tool result
+    [compromised root   ] sales-chain:1:0        tool result: vendor_portal
     [affected descendant] sales-chain:2:0        derived model statement (sales)    <- derived_from sales-chain:1:0
     [affected descendant] support-chain:1:0      support memory, retrieved via load_memory    <- derived_from sales-chain:2:0
     [affected descendant] finance-chain:1:0      finance memory, retrieved via load_memory    <- derived_from support-chain:1:0
@@ -41,7 +41,7 @@ $ make incident
 
   EVIDENCE
 
-    trust transition   vendor_portal vouched 2026-07-24T09:00:00+00:00 -> demoted 2026-08-14T14:00:00+00:00
+    trust transition   vendor_portal vouched 2026-07-30T09:00:00+00:00 -> demoted 2026-08-14T14:00:00+00:00
     derivation path    vendor_portal -> sales -> support -> finance, 3 hops, 1 department boundary crossed twice
     enforcement result revocation rev-vendor-portal-2026-08-14, True that removed == computed blast radius
     audit record       1 revocation(s) logged, replay verified idempotent
@@ -219,7 +219,7 @@ git clone <this repo> && cd custody
 python3.12 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 
-make check     # ruff, then 170 tests, none skipped
+make check     # ruff, then 345 tests, none skipped
 make demo      # the poisoning scenario, with Custody and without
 make cost      # what a compromised tool destroys, with the graph and without
 make revoke    # retroactive revocation across departments, and a replay
@@ -300,19 +300,33 @@ evidence and the correction history in `DECISIONS.md` #2.
 
 | | |
 | --- | --- |
-| Core, verified against real google-adk 2.6.3 | **built**, 170 tests |
+| Core, verified against real google-adk 2.6.3 | **built**, 345 tests |
 | Derivation graph and retroactive revocation | **built** |
 | Selective live Memory Bank deletion (new opt-in write path) | **built**, `make live-memory-deletion` |
 | Cross-department isolation | **built** |
-| Durable stores surviving a restart | **built**, SQLite |
+| Durable stores surviving a restart | **built**, SQLite offline, Firestore live |
 | Cloud Run control plane, Gemini 3.5 on Vertex, ADK to live Memory Bank | **built**, `make live-g1` |
-| Agent Registry and live stale-tool admission | **built**, `make live-registry-attack` |
-| Dispatch bound to the tools/list that authorized it (R2) | **built**, `make live-revision-binding` |
+| Agent Registry, live stale-tool admission, and image-digest drift | **built**, `make live-registry-attack` |
+| Dispatch bound to the tools/list that authorized it, across processes (R2) | **built**, `make live-revision-binding` |
 | Agent Runtime, Agent Identity, and enforced Agent Gateway IAP | **built**, `make live-gateway` |
 | Model Armor content screening | **built**, `make live-model-armor` |
 | Agent Observability | **built**, `make live-observability` |
 
 Nothing in this table moves to built without a command that demonstrates it.
+
+**Where the evidence for those commands lives, and why it is not in this
+repo.** Every live proof writes a raw artifact to `proof-out/`, and every
+claim above is judged by reading one of those files back. `proof-out/` is
+generated, not committed (`.gitignore`), for a reason worth stating rather
+than hiding: each artifact expires after 24 hours by this project's own
+freshness gates, so a committed copy would be stale on arrival and would
+invite exactly the drift this project exists to prevent. **A fresh clone
+therefore has no live evidence in it.** `make check` and `make gates`'
+offline gates still run with no cloud account; the live rows report
+BLOCKED until you run their `make live-*` command yourself. To read the
+captured evidence without credentials, use the deployed page
+([Architecture & Evidence](https://custody-incident-cave2.vercel.app/architecture.html)),
+which embeds each artifact's own real captured data at render time.
 
 ### Live G1 proof
 
@@ -353,13 +367,23 @@ Custody recomputes the live definition digest, emits `revision_mismatch`, and
 blocks before the server counter moves. Revision-specific revocation removes
 only the lineage rooted in the live v1 call result and preserves the v2 branch.
 The independent judge recomputes both digests and binds the graph roots to the
-live call-result hashes. This proves declared MCP surface drift, not a
-behavior-only binary change with an identical `tools/list` definition. The
-surface read and a later allowed dispatch are not cryptographically atomic. The
-live Gateway proof below governs a registered tool name, but it does not bind a
-revision digest to dispatch; closing that time-of-check/time-of-use window still
-requires revision attestation at the Gateway or server. The demonstrated
-mismatch path is fail-closed because it never reaches dispatch.
+live call-result hashes.
+
+**Extended 2026-08-14, and the scope statement below is the artifact's own
+`claim_boundary`, not a summary of it.** The approval now also carries the
+Cloud Run revision name and the *resolved image digest* serving that surface,
+so a same-schema, different-image swap is caught too: the proof drives one
+live `RUNTIME_DRIFT` denial on an admission whose `tools/list` is byte-identical
+and whose running image is not. The approved pins themselves are no longer an
+in-memory spike either — `revision_catalog_backend: firestore` in the artifact
+is a durable `RevisionCatalog` that survives a restart. `make registry-gates`
+reports 9/9, including the new `runtime_binding_also_blocked`.
+
+What this still does not do: it does not cryptographically attest the running
+code itself, which is Binary Authorization territory. And an allowed call is
+still not cryptographically atomic with the preceding surface read — the R2
+proof below closes exactly that window. The demonstrated mismatch path is
+fail-closed because it never reaches dispatch.
 
 ### Live revision-binding proof (R2)
 
@@ -383,11 +407,24 @@ with the dispatch counter unmoved; the same token replayed a second time
 against v1 is refused citing `replayed`. `make revision-binding-gates`
 independently rereads both denial log entries and both Cloud Run revisions
 from Google Cloud by their own server-issued identifiers, not just the
-producer's narration of them. This closes the declared-surface TOCTOU only:
-a behavior-only change under an identical `tools/list` remains undetected,
-since nothing here attests the server's running code, only the schema it
-declares, and the replay ledger is process-local, the same single-instance
-scope the Gateway and Registry proofs above already require.
+producer's narration of them.
+
+**The replay ledger is no longer process-local.** `custody/nonce_ledger.py`
+backs it with Firestore (`nonce_ledger_backend: firestore` in the artifact),
+so a spent nonce stays spent across instances. The proof gained a seventh
+step to show it rather than assert it: redeploy v1 again, producing a
+genuinely fresh process proven by a differing Cloud Run revision name, then
+replay the original already-consumed v1 token against it. It is refused
+`replayed`. An in-memory ledger would have accepted that token, so this is
+the one control that could only pass with a durable one. `make
+revision-binding-gates` reports 16/16, including
+`replay_survives_process_restart` and its independent live Cloud Logging
+reread.
+
+What remains out of scope, stated in the artifact's own `claim_boundary`: a
+behavior-only change under an identical `tools/list` **and** an identical
+image digest remains undetected, since nothing here attests the server's
+running code, only the schema it declares and the image serving it.
 
 ### Live Agent Gateway proof
 
@@ -702,9 +739,9 @@ chain-hop records — sales's tool root and restatement, support's citation
 and restatement, finance's citation and restatement — confirmed by a live
 `search_memory` reread, while each department's own unrelated
 conversational memory and engineering's independent tool-origin memory stay
-retrievable, untouched. `make chain-gates` reports 20/20 PASS: 14 offline
+retrievable, untouched. `make chain-gates` reports 21/21 PASS: 14 offline
 structural checks (each hop's `derived_from` matches the exact upstream
-record id, the removed set is exactly the six expected records) plus 6
+record id, the removed set is exactly the six expected records) plus 7
 independent live Memory Bank rereads (`memories.get` by a
 `memory_id_for`-recomputed name, not the producer's claim) — 6 confirming
 the chain-hop memories are actually gone, 1 confirming engineering's own

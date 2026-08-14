@@ -66,14 +66,26 @@ to BUILT without one"). Verify, don't just read.
    per capability (e.g. `live-fleet.json`, `live-narration.json`,
    `live-chain.json`, `g1.json`). These are what the GUI widgets and
    `README.md`'s claims are actually built from.
+   **`proof-out/` is generated and deliberately not committed**, because
+   each artifact expires after 24 hours by this project's own freshness
+   gates and a committed copy would be stale on arrival. So if you cloned
+   this repo, you have none of them: the offline gates still run, the live
+   rows report BLOCKED until you run their `make live-*` command yourself,
+   and the deployed Architecture & Evidence page (item 4 above) is where
+   the captured evidence can be read without credentials. The reasoning is
+   restated in `README.md`'s "Status, honestly" section.
 
 ## How to independently verify, not just read
 
 ```sh
-make check          # 319/319 offline tests + lint, no cloud needed
-make gates           # G1-G4 PASS, G5 correctly BLOCKED (real elapsed time
-                      # hasn't finished accumulating — this is a true
-                      # gap, not a bug; see HANDOFF.md's G5 section)
+make check          # 345/345 offline tests + lint, no cloud needed
+make gates           # G1-G4 PASS, G5 correctly BLOCKED. Read its detail
+                      # line: it names which of the four capability groups
+                      # are demonstrable right now and which are not, and
+                      # every group is judged from that group's own
+                      # artifact. G5 also requires real elapsed time, which
+                      # is a true gap and cannot be produced in one
+                      # sitting; see HANDOFF.md's G5 section.
 make fleet-gates      # independently rereads live Memory Bank for the
                       # N=25 fleet claim (needs GCP credentials, see below)
 make narration-gates  # independently re-calls Cloud Text-to-Speech

@@ -2238,3 +2238,315 @@ at `custody-incident-cave2.vercel.app/architecture.html`, no console
 errors, `Fleet N=25` widget rendering real captured data.
 
 Status: complete
+
+## Sub-build: R1 digest versioning and the fail-open revocation path (opened 2026-08-14)
+
+Objective: a change to custody/revision.py's canonicalization silently
+invalidated every revision digest already written, and CustodyGraph's
+revision-specific revocation fails open when that happens: it removes
+nothing and reports success. Make a stored digest self-describing, make
+the revocation path fail loud, make admission fail closed under its own
+reason, and add the two kinds of test that would have caught it.
+
+Branch: feat/memory-provenance
+Parent: 560997f
+
+Allowed files: custody/revision.py, custody/graph.py, tests/test_revision.py,
+tests/test_graph.py, a new tests/test_stored_artifacts.py,
+scripts/registry_gates.py, scripts/live_registry_attack.py,
+scripts/live_revision_binding.py, DECISIONS.md, HANDOFF.md,
+.claude/SESSION_CONTRACT.md, proof-out/*. Optionally
+scripts/render_architecture.py and web/* for the badge in section 6.
+
+Non-goals:
+
+- No change to custody/origin.py, custody/service.py, custody/store.py,
+  custody/firestore_store.py or any custody/adapters/* file. Stored
+  bare-hex revisions stay readable and stay revocable by tool; only
+  revoke_revision refuses them, which is the safe direction. No data
+  migration.
+- No new live capability, no new Cloud Run service beyond what
+  make live-registry-attack already redeploys, no new GUI section.
+- Do not add code_revision/digest_algorithm to the other ten producers.
+
+Baseline: make check 319/319 offline with 0 skipped, make gates G1-G4
+PASS / G5 BLOCKED, make registry-gates 4/8 offline with three substantive
+failures (live_surface_changed, custody_blocked_before_dispatch,
+revision_specific_descendants_revoked). Record all three before editing.
+
+Acceptance gates: the six in R1_HANDOFF.md section 7.
+
+Verification: make check, make gates, make incident, then
+make live-registry-attack and make registry-gates (8/8), then make gui
+and a manual browser check of the redeployed page.
+
+**Closed 2026-08-14.** All eight steps and all six acceptance gates from
+R1_HANDOFF.md done and verified.
+
+Steps 1-6 (offline, no cloud): golden-digest test pinning `_digest`'s
+canonicalization (`tests/test_revision.py::TheDigestAlgorithmIsPinned`);
+`DIGEST_ALGORITHM = "sha256/2"` prefix plus `algorithm_of()` reader in
+`custody/revision.py`; `CustodyGraph.descendants_for_revision` now raises
+`RevisionAlgorithmMismatch` on a genuine algorithm boundary instead of
+silently returning `()` (three new tests in `tests/test_graph.py`);
+`RevisionCatalog.admit` denies an algorithm boundary under its own
+`Denial.ALGORITHM_SUPERSEDED`, never `REVISION_MISMATCH`; a comment on
+`AttestationAuthority.verify` explaining why it needs no change; a new
+`tests/test_stored_artifacts.py` that re-judges every artifact in
+`proof-out/` against its own offline judge, exempting only freshness —
+this is what turned `make check` red on the stale `live-registry-attack.json`
+before Step 8 regenerated it.
+
+Step 7: `scripts/live_registry_attack.py` and `scripts/live_revision_binding.py`
+now record `code_revision` (git SHA of HEAD at capture) and
+`digest_algorithm` (`custody.revision.DIGEST_ALGORITHM`) in their evidence.
+`scripts/registry_gates.py`'s `main()` prints a diagnostic note naming both
+algorithms and the recorded `code_revision` when a failing gate's evidence
+was captured under a different algorithm than the current build.
+
+Step 8, live, with two unrelated pieces of cloud drift discovered and fixed
+along the way (both within the allowed-files scope, `server.py` was not
+touched):
+
+- R2's commit added a mandatory `COPY custody ./custody` to the shared
+  server Dockerfile, but only `live_revision_binding.py`'s producer
+  vendored `custody/` into the Cloud Build context before submitting;
+  `live_registry_attack.py` never did, so its build broke silently the
+  moment R2 landed. Fixed by adding the same `_vendor_custody`/
+  `_remove_vendored_custody` pair `live_revision_binding.py` already used.
+- R2 also made the shared server (`live/registry_attack/server/server.py`)
+  refuse **every** `tools/call`, unconditionally, without a signed
+  dispatch-attestation token minted from a recent `tools/list` — not just
+  calls on R2's own governed path. `live_registry_attack.py`'s direct
+  calls (the "registered v1" and "ungoverned negative control" steps)
+  never minted one, so the server itself refused them before Custody's own
+  admission check ever ran. Fixed in `live_registry_attack.py` only (no
+  `server.py` change): a `_fresh_attestation` helper mints a token from a
+  `tools/list` read taken immediately before each direct dispatch, and
+  `_call_tool` now requires and forwards it via `client.call_tool(...,
+  meta=...)`. This does not weaken the proof: a token minted this close to
+  the call always matches the server's *live* revision, so server-side
+  attestation passes trivially regardless of which revision is deployed —
+  it is still Custody's own client-side `RevisionCatalog.admit`, comparing
+  against the stale *approved* pin, that is the mechanism being proven to
+  block dispatch on the governed path.
+
+`make live-registry-attack` ran live end to end against
+`project-988bc9fe-092c-4b32-90c`: fresh v1/v2 Cloud Run revisions, a real
+Agent Registry write, both digests recorded as `sha256/2:...`. `make
+registry-gates` reported 8/8. `make check` 325/325 offline (0 skipped, 0
+failures), `make gates` G1-G4 PASS / G5 BLOCKED (unaffected, now 2/4 groups
+demonstrable purely from the fresh R1 evidence). `make incident` unchanged.
+`make gui` regenerated `web/architecture.html` (a 2-line diff, the refreshed
+gate-data JSON only) and byte-identical `web/incident.html`. Deployed with
+the user's explicit go-ahead via the authenticated `vercel` CLI from disk
+(`vercel link --project custody-incident`, then `vercel deploy --prod`, run
+by the user directly after the harness's auto-mode classifier blocked the
+Bash invocation); live at `custody-incident.vercel.app`, both pages
+confirmed rendering correctly with zero console messages of any kind.
+
+Status: complete
+
+## Sub-build: durable RevisionCatalog, durable replay ledger, image-bound admission (opened 2026-08-14)
+
+Objective: close the three gaps R1_HANDOFF.md's "What this does not fix"
+section named. `RevisionCatalog` is an in-memory spike (durable pins via
+Firestore). `AttestationAuthority`'s replay-nonce set is process-local
+(durable via a new pluggable `NonceLedger`, Firestore-backed live). R1 only
+detects declared MCP surface drift, not a same-schema/different-image swap
+(bind the Cloud Run revision name + resolved image digest into admission,
+new `RuntimeBinding` / `Denial.RUNTIME_DRIFT`).
+
+Branch: feat/memory-provenance
+Parent: HEAD at open (post R1 hardening + live redeploy)
+
+Allowed files: custody/revision.py, custody/firestore_store.py,
+custody/nonce_ledger.py (new), tests/test_revision.py,
+tests/test_firestore_store.py, tests/test_nonce_ledger.py (new),
+scripts/live_registry_attack.py, scripts/live_revision_binding.py,
+scripts/registry_gates.py, scripts/revision_binding_gates.py,
+live/registry_attack/server/server.py,
+live/registry_attack/server/requirements.txt, DECISIONS.md,
+.claude/SESSION_CONTRACT.md, proof-out/*, web/* (regeneration only).
+
+Non-goals: no change to custody/origin.py or CustodyRecord (runtime binding
+is an admission-time gate, not threaded into stored derivation records);
+scripts/revision_spike.py untouched; no TTL/pruning for the growing
+dispatch_nonces collection; no multi-instance concurrent proof for the
+replay ledger (--max-instances=1 stays; durability-across-restart is what's
+proven instead).
+
+Baseline: make check 325/325 offline, 0 skipped, ruff clean. make gates
+G1-G4 PASS / G5 BLOCKED. make registry-gates 8/8. Record before editing.
+
+Acceptance gates: see the full plan at
+/home/Yatsuiii/.claude/plans/synthetic-booping-lagoon.md — offline mechanism
++ tests for all three gaps, then live re-proof of each (new
+runtime_binding_also_blocked gate in registry-gates, new
+replay_survives_process_restart gate in revision-binding-gates), make gates
+unaffected, make gui + a separate go-ahead before any Vercel redeploy.
+
+Verification: make check first (offline, must pass before any live step),
+then make live-registry-attack + make registry-gates, then
+make live-revision-binding + make revision-binding-gates, then make gates,
+then make gui and a manual browser console check.
+
+**Closed 2026-08-14.** All three gaps closed, offline mechanism plus live
+re-proof for each.
+
+Offline: `FirestoreRevisionCatalog` (custody/firestore_store.py, read-through,
+no local cache) and `FirestoreNonceLedger` (new custody/nonce_ledger.py,
+deliberately not co-located with firestore_store.py to avoid vendoring
+custody.catalog/custody.graph into the live server's Docker image) plus a
+pluggable `NonceLedger` protocol on `AttestationAuthority`; `RuntimeBinding`
+and `Denial.RUNTIME_DRIFT` for image-bound admission, opt-in via
+`ApprovedTool.runtime_binding` / `admit(observed_runtime=...)`, fully
+backward compatible. 20 new offline tests across tests/test_revision.py,
+tests/test_firestore_store.py (extended the fake client with `.set()`), and
+the new tests/test_nonce_ledger.py.
+
+Two bugs found and fixed only by running live, not offline:
+
+1. `_resolved_image_digest`'s first field-path guess
+   (`status.containerStatuses[0].imageDigest`) was wrong for this Knative
+   Revision schema; the real field is `spec.containers[0].image`, resolved
+   by Cloud Run to a `name@sha256:...` reference at deploy time. Fixed by
+   reading and confirmed against a live `revisions describe` call.
+2. Making the nonce ledger durable and Firestore-shared broke
+   `live_revision_binding.py`'s pre-existing digest-mismatch control: it
+   reused an *already-consumed* v1 token against v2, which used to test
+   DIGEST_MISMATCH only because the ledger was process-local (v2's process
+   had never seen that nonce). With a shared durable ledger, REPLAYED
+   correctly fires first, everywhere, which is stronger but broke that
+   control's isolation. Fixed by minting a second, dedicated, never-consumed
+   v1 token for the mismatch control specifically.
+
+Live, against project-988bc9fe-092c-4b32-90c: `make live-registry-attack`
+ran with `CUSTODY_FIRESTORE_PROJECT` set — evidence confirms
+`revision_catalog_backend: firestore` and a live `RUNTIME_DRIFT` denial on
+a same-schema, differently-revisioned admission check using real resolved
+Cloud Run image digests. `make registry-gates` 9/9 (new gate
+`runtime_binding_also_blocked`). `make live-revision-binding` added a
+7th step: redeploy v1 again (same digest, genuinely fresh process, proven
+by a differing Cloud Run revision name) and replay the original,
+already-consumed v1 token against it — durable ledger correctly returned
+`replayed`, proving the pre-fix gap (a fresh in-memory ledger would have
+wrongly accepted it) is now closed. `make revision-binding-gates` 16/16
+(new gate `replay_survives_process_restart` plus its independent live
+Cloud Logging re-read). `make check` 343/343 offline, 0 skipped. `make
+gates` G1-G4 PASS / G5 BLOCKED, unaffected. `make gui` regenerated
+web/architecture.html (2-line diff, gate-data JSON only); verified locally
+over a throwaway `python3 -m http.server`, zero console messages, R1 and R2
+rows showing the updated claim_boundary text and fresh evidence. Redeploy
+to the public Vercel page was not requested this session and was not done.
+
+Status: complete
+
+## Sub-build: close the judging-pass accuracy findings (opened 2026-08-14)
+
+Objective: a read-only judging pass (verbatim report kept at
+`SUBMISSION_HANDOFF.md`) found one substantive defect and seven accuracy
+defects. The substantive one (R1's digest break) was closed by the
+sub-build above. This closes the documentation and gate-honesty findings
+that remain, all of which are in judge-facing surfaces: the README's own
+headline transcript, two stale test counts, one wrong gate count, a
+diagram contradicting the status table, a gate hardcoded so it can never
+pass, and README text that now *understates* what R1/R2 actually prove
+after the durable-ledger and runtime-binding work landed.
+
+Branch: feat/memory-provenance
+Parent: 560997f
+
+Allowed files: `README.md`, `docs/architecture.md`, `JUDGE_HANDOFF.md`,
+`R1_HANDOFF.md`, a new `SUBMISSION_HANDOFF.md`, `scripts/gates.py`,
+`tests/test_g1_gate.py`, `.claude/SESSION_CONTRACT.md`, and `web/*` only
+as regenerated output of `make gui`.
+
+Non-goals:
+
+- No change to any `custody/*` module. Nothing here alters behaviour that
+  a live proof already gated.
+- No live proof reruns. Every artifact in `proof-out/` was captured this
+  same day by the sub-build above and stays untouched.
+- No Vercel redeploy. `make gui` regenerates the local page; publishing it
+  is a visible, hard-to-reverse action and needs explicit authorization.
+- Do not commit `proof-out/`. Whether captured evidence belongs in the
+  repo is a real decision, recorded as open in `SUBMISSION_HANDOFF.md`,
+  not something to settle silently inside a docs pass.
+
+Baseline: `make check` 343/343 offline with 0 skipped, `make gates` G1-G4
+PASS / G5 BLOCKED at 2 of 4 groups, `make registry-gates` 9/9,
+`make revision-binding-gates` 16/16.
+
+Acceptance gates:
+
+1. Every code block in `README.md` that shows command output matches what
+   that command prints today, verified by running it.
+2. No stated count in `README.md` disagrees with what the named command
+   reports (`make check` 343, `make chain-gates` 21).
+3. `scripts/gates.py`'s G5 judges telemetry from
+   `proof-out/live-observability.json` through the observability judge,
+   rather than from a hardcoded `False`. G5 stays BLOCKED on real elapsed
+   time, which is the only honest reason left.
+4. `docs/architecture.md`'s component diagram agrees with `README.md`'s
+   status table on every node.
+5. `README.md` states plainly that `proof-out/` is generated and not in
+   the repo, so a judge cloning it is not misled.
+6. `README.md`'s R1 and R2 scope paragraphs match those artifacts' own
+   `claim_boundary` strings, in both directions: no overclaim, and no
+   remaining understatement of the runtime-binding and durable-ledger work.
+
+Verification: `make check`, `make gates`, `make incident`, `make gui`, and
+a re-read of every changed paragraph against the artifact it describes.
+
+**Closed 2026-08-14.** All six gates met, no live proof rerun, no
+`custody/*` module touched.
+
+Gate 1: `README.md`'s `make incident` block was a stale hand-paste from
+before `VOUCHED_AT` changed (`scripts/incident.py:40`), claiming
+`2026-07-24 / day 22 / 21 days` where the command prints
+`2026-07-30 / day 16 / 15 days`, with a wrong lineage root label too.
+Repasted from real output and re-verified by running it. The irony was the
+finding's whole force: the sentence directly below that block claims the
+story and the numbers cannot drift apart.
+
+Gate 2: two stale test counts (`170`, in a suite that had reached 345) and
+F1's gate count (`20/20` where `chain_gates.py` prints 21 — 14 offline plus
+7 live rereads, and the README's own prose said "6 rereads ... 6 gone, 1
+survives", which does not add up either) corrected.
+
+Gate 3: `scripts/gates.py`'s G5 judged telemetry from a hardcoded `False`.
+That was correct while O1 was unbuilt and became a lie once O1 landed, so
+G5 could never reach 4 of 4 no matter what evidence existed. Now judged
+through `observability_gates.judge` on `live-observability.json`, wired in
+alongside the registry and gateway groups. G5 stays BLOCKED, which is
+right: real elapsed time is the honest remaining reason, and telemetry now
+reports missing only because O1's artifact aged past 24 hours. Gated by a
+new `G5NamesTheGroupsItCannotDemonstrate` in `tests/test_g1_gate.py`.
+
+Gate 4: `docs/architecture.md` still coloured Firestore amber ("not yet
+built") while the README's status table, the Auditor proof, the durable
+`RevisionCatalog` and the durable nonce ledger all depend on it. Now green,
+with the legend rewritten since no amber node remains.
+
+Gate 5: `proof-out/` being generated and uncommitted was true, reasonable,
+and nowhere stated, while `README.md` referenced it five times and
+`JUDGE_HANDOFF.md` pointed judges straight at it. Both now say plainly
+that a fresh clone has no live evidence, why committing 24-hour-expiring
+artifacts would be worse, and where to read the captured evidence instead.
+
+Gate 6: after the runtime-binding and durable-ledger work, `README.md` had
+started *understating* R1 and R2 — still describing the replay ledger as
+process-local and the proof as declared-surface-only. Both scope
+paragraphs rewritten against those artifacts' own `claim_boundary` strings
+rather than summarised, in both directions.
+
+Verification: `make check` 345/345 offline, 0 skipped. `make gates` G1-G4
+PASS / G5 BLOCKED at 2 of 4 groups. `make incident` output re-read against
+the README block line by line. `make gui` regenerated `web/architecture.html`
+(2-line `gate-data` diff, G5's detail line only); the deployed Vercel page
+is now two lines behind and redeploying it was not requested this session
+and was not done. Remaining submission work recorded in
+`SUBMISSION_HANDOFF.md`; `R1_HANDOFF.md` marked closed.
+
+Status: complete

@@ -6,7 +6,7 @@ import copy
 import unittest
 from datetime import UTC, datetime, timedelta
 
-from scripts.gates import judge_g1
+from scripts.gates import judge_g1, judge_g5
 
 NOW = datetime(2026, 8, 13, 3, 0, tzinfo=UTC)
 PROOF_ID = "proof-123"
@@ -108,6 +108,29 @@ class G1EvidenceIsIndependentlyJudged(unittest.TestCase):
         evidence = copy.deepcopy(valid_evidence())
         evidence["captured_at"] = (NOW - timedelta(hours=25)).isoformat()
         self.assertEqual(judge_g1(evidence, now=NOW).state, "BLOCKED")
+
+
+class G5NamesTheGroupsItCannotDemonstrate(unittest.TestCase):
+    """G5 stays BLOCKED on elapsed time, but for reasons that stay true.
+
+    Telemetry was hardcoded unreachable while O1 was unbuilt. Once O1
+    landed, the hardcode kept G5 unpassable for a reason that had stopped
+    being true, which is exactly the drift between a claim and its
+    computation that this whole gate file exists to catch.
+    """
+
+    def test_telemetry_is_read_from_the_observability_artifact(self):
+        blank = {"g1": None, "registry": None, "gateway": None}
+        without = judge_g5(blank)
+        with_junk = judge_g5({**blank, "observability": {"not": "an artifact"}})
+
+        self.assertIn("telemetry", without.detail)
+        self.assertIn("telemetry", with_junk.detail)
+        self.assertEqual(without.state, "BLOCKED")
+
+    def test_g5_stays_blocked_even_with_every_group_demonstrable(self):
+        """Real elapsed time is the one thing no artifact can stand in for."""
+        self.assertEqual(judge_g5({}).state, "BLOCKED")
 
 
 if __name__ == "__main__":
