@@ -2573,3 +2573,71 @@ The deploy itself was not run: `vercel deploy --prod` was blocked by this
 environment's permission classifier, and the `deploy_to_vercel` MCP tool
 takes inline file contents, which is the exact path that silently
 corrupted `architecture.html` before. Handed to the user to run.
+
+## Sub-build: make the post-deploy checks a command (opened 2026-08-14)
+
+Objective: three live regressions have now shipped behind a deploy that
+reported success -- an inline `<script>` corrupted in transit that blanked
+every widget on a clean 200, a project setting that put a login wall in
+front of every URL, and a 404 at `/`. None was visible in the deploy
+output, and the root 404 in particular sat unnoticed because nothing
+checked the one URL `README.md` and `JUDGE_HANDOFF.md` send judges to.
+Replace the prose checklist added earlier today with a real target, since
+this project's whole rule is that a claim needs a command behind it.
+
+Branch: feat/memory-provenance
+Parent: f591819
+
+Allowed files: new `scripts/verify_deploy.py`, new
+`tests/test_verify_deploy.py`, `Makefile`, `SUBMISSION_HANDOFF.md`,
+`README.md` and `JUDGE_HANDOFF.md` for the test count only,
+`.claude/SESSION_CONTRACT.md`.
+
+Non-goals:
+
+- Not part of `make check`. That suite is network-free and finishes in
+  0.12s, and both properties are load-bearing.
+- No browser automation. Executing the page is a different capability and
+  a much heavier dependency; the target states plainly that it does not
+  do it.
+- No change to any `custody/*` module or any live proof.
+
+Baseline: `make check` 345/345 offline, `make gates` G1-G4 PASS / G5
+BLOCKED, live pages byte-identical to `web/` and console-clean as of the
+2026-08-14 deploy.
+
+Acceptance gates:
+
+1. `make verify-deploy` fetches every route and compares served bytes with
+   the local build, exiting 0 clean / 1 defect / 2 unreachable, with
+   BLOCKED distinguished from FAIL the way `scripts/gates.py` already
+   distinguishes them.
+2. Fetching is separated from judging so the judge is testable with no
+   network, and `make check` stays offline and under a second.
+3. `tests/test_verify_deploy.py` covers all three regressions that really
+   shipped, plus a stale redeploy and a served `.env.local`.
+4. All three exit paths are exercised against real hosts before commit,
+   not just reasoned about.
+5. Every stated test count across `README.md`, `JUDGE_HANDOFF.md` and
+   `SUBMISSION_HANDOFF.md` matches what `make check` prints.
+
+Verification: `make check`, `make verify-deploy` against production, plus
+the FAIL and BLOCKED paths against a wrong host and an unresolvable one.
+
+**Closed 2026-08-14.** All five gates met. `scripts/verify_deploy.py`
+splits `fetch` from `judge`, so the four gates are pure and the seven new
+tests need no network; `make check` is 352/352 in 0.12s, unchanged in
+character. Run against production: 4/4 PASS. Run against `example.com`:
+correctly failed three page gates, and the detail line distinguished
+"HTTP 200 but the body is not web/incident.html: served 559 bytes, built
+27664" from a plain "HTTP 404, expected 200", which is the distinction
+that matters when diagnosing a bad deploy. Run against an unresolvable
+host: BLOCKED with exit 2, not FAIL. One correction along the way: the
+first `curl` loop written into `SUBMISSION_HANDOFF.md` earlier today was
+broken (`-w` does not printf-pad an arbitrary argument, and the path was
+passed as a stray URL); caught by running it, which is the reason it was
+run. The target's closing line states what it does not do -- it fetches
+bytes, it does not execute them -- so the browser console pass stays an
+explicit manual step rather than an implied one.
+
+Status: complete

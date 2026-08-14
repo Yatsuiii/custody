@@ -19,10 +19,11 @@ Verified by running the commands, not by reading prose:
 
 | | |
 | --- | --- |
-| `make check` | ruff clean, **345 tests, 0 skipped**, ~0.15s, no network |
+| `make check` | ruff clean, **352 tests, 0 skipped**, ~0.12s, no network |
 | `make gates` | G1-G4 **PASS**, G5 **BLOCKED** at 2 of 4 groups |
 | `make registry-gates` | 9/9 |
 | `make revision-binding-gates` | 16/16 |
+| `make verify-deploy` | 4/4, live pages byte-identical to `web/` |
 | Cloud Run control plane | live, `GET /health` -> `200 {"status":"ok"}` |
 | Vercel pages | live, **byte-identical to `web/`**, console clean, root serves the map |
 | `proof-out/` | R1 and R2 recaptured 2026-08-14 ~16:30Z; S1, M1, O1, D1/D2 are **older than 24h** |
@@ -108,7 +109,7 @@ raw `gcloud` calls. The offline gates need neither.
 Budget real time for this. Ten live proofs, several of which deploy Cloud
 Run revisions. Do not start it an hour before the deadline.
 
-## 3. Redeploying, and the four checks that must follow it
+## 3. Redeploying, and verifying what actually landed
 
 **Done once already on 2026-08-14** and currently in sync: the live pages
 are byte-identical to `web/`, the console is clean, and the root serves the
@@ -135,22 +136,31 @@ the corrupted inline script, a `ssoProtection` setting that put a login
 wall in front of every URL, and a 404 at the root. **None of the three
 was visible from the deploy output.**
 
+Checks 1 to 3 below are now one command:
+
 ```bash
-BASE=https://custody-incident-cave2.vercel.app
-for path in "" incident.html architecture.html .env.local; do
-  code=$(curl -sS -m 30 -o /dev/null -w '%{http_code}' "$BASE/$path")
-  printf '  %-20s -> %s\n' "/$path" "$code"
-done
+make verify-deploy
+CUSTODY_DEPLOY_URL=https://some-preview.vercel.app make verify-deploy
 ```
 
-Expected, and confirmed as the real output on 2026-08-14:
+It fetches every route and compares the served bytes with the build in
+`web/`. Exit 0 all clear, 1 a real defect with the reason named, 2 the
+origin was unreachable, which is `BLOCKED` rather than `FAIL` for the same
+reason `make gates` draws that line. Real output on 2026-08-14:
 
 ```
-  /                    -> 200
-  /incident.html       -> 200
-  /architecture.html   -> 200
-  /.env.local          -> 404
+  /                      -> 200
+  /incident.html         -> 200
+  /architecture.html     -> 200
+  /.env.local            -> 404
+
+  [PASS] / serves the current incident.html
+  [PASS] /incident.html serves the current incident.html
+  [PASS] /architecture.html serves the current architecture.html
+  [PASS] /.env.local is not served
 ```
+
+What it covers, and why each one is there rather than assumed:
 
 1. **The root must be 200.** `web/` contains `incident.html` and
    `architecture.html` and no `index.html`, so a plain static deploy leaves
@@ -158,24 +168,23 @@ Expected, and confirmed as the real output on 2026-08-14:
    that. This exact regression shipped unnoticed once, and it matters
    because `README.md` and `JUDGE_HANDOFF.md` both send judges to the bare
    root URL — it is the first thing a judge hits.
-2. **`/.env.local` must be 404.** The Vercel CLI writes a
+2. **Every page must match `web/` byte for byte.** Status codes cannot
+   catch the corrupted-`<script>` failure: it returned a clean 200 and
+   looked right in a screenshot. Byte equality is what catches it, and it
+   catches a plain forgotten redeploy at the same time.
+3. **`/.env.local` must be 404 or 403.** The Vercel CLI writes a
    `web/.env.local` holding a `VERCEL_OIDC_TOKEN` into the directory being
    uploaded. `web/.vercelignore` excludes it. Confirm rather than assume.
-3. **Diff the live pages against the repo**, which catches transcription
-   corruption that renders as a blank widget rather than an error:
-   ```bash
-   curl -sS https://custody-incident-cave2.vercel.app/architecture.html \
-     | diff -q - web/architecture.html && echo "architecture.html identical"
-   ```
-4. **Open both pages and read the browser console**, not just the status
-   code. Load `/`, click through to Architecture & Evidence, click the
-   back-link, and confirm zero console messages. The corrupted-script
-   failure produced a clean 200 and a blank page.
 
-A `make verify-deploy` target would be a better home for all four than a
-checklist someone has to remember — worth doing if this gets redeployed
-more than once or twice more. It has to stay out of `make check`, which is
-deliberately network-free and finishes in 0.15s.
+**The fourth check is still yours, and `make verify-deploy` says so on
+every run.** It fetches bytes, it does not execute them, so a page that is
+byte-perfect on disk and broken in a browser passes. Load `/`, click
+through to Architecture & Evidence, click the back-link, and confirm zero
+console messages.
+
+`tests/test_verify_deploy.py` covers the judge against all three
+regressions that really shipped, using fabricated responses so the check
+stays offline and `make check` stays network-free at 0.12s.
 
 ## 4. Stale evidence still renders as fresh evidence
 

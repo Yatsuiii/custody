@@ -78,7 +78,7 @@ to BUILT without one"). Verify, don't just read.
 ## How to independently verify, not just read
 
 ```sh
-make check          # 345/345 offline tests + lint, no cloud needed
+make check          # 352/352 offline tests + lint, no cloud needed
 make gates           # G1-G4 PASS, G5 correctly BLOCKED. Read its detail
                       # line: it names which of the four capability groups
                       # are demonstrable right now and which are not, and

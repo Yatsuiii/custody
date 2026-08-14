@@ -14,7 +14,7 @@ PYTHON ?= $(shell \
 		command -v python3; \
 	fi)
 
-.PHONY: help lint test check serve image gates incident gui cost demo revoke isolate revision-spike live-memory-bank live-memory-deletion memory-deletion-gates live-auditor auditor-gates live-review review-gates live-narration narration-gates live-fleet fleet-gates live-chain chain-gates live-g1 live-registry-attack registry-gates live-revision-binding revision-binding-gates setup-gateway deploy-gateway-probe live-gateway gateway-gates live-model-armor model-armor-gates live-observability observability-gates clean
+.PHONY: help lint test check serve image gates verify-deploy incident gui cost demo revoke isolate revision-spike live-memory-bank live-memory-deletion memory-deletion-gates live-auditor auditor-gates live-review review-gates live-narration narration-gates live-fleet fleet-gates live-chain chain-gates live-g1 live-registry-attack registry-gates live-revision-binding revision-binding-gates setup-gateway deploy-gateway-probe live-gateway gateway-gates live-model-armor model-armor-gates live-observability observability-gates clean
 
 help:
 	@echo "make lint    ruff over the tree"
@@ -23,6 +23,7 @@ help:
 	@echo "make serve   the control plane locally on :8080"
 	@echo "make image   build the Cloud Run container and check the pins hold"
 	@echo "make gates   PASS/FAIL per gate, judged from proof-out/"
+	@echo "make verify-deploy  what the deployed pages actually serve, vs the local build"
 	@echo "make incident  the judge-facing narrative: trust incident, blast radius, lineage, revoke, evidence"
 	@echo "make gui       renders web/incident.html, same data as make incident, open in a browser"
 	@echo "make cost    what a compromised tool costs, with the graph and without"
@@ -73,6 +74,10 @@ image:
 
 gates:
 	@$(PYTHON) scripts/gates.py
+
+# Networked on purpose, so deliberately not part of `make check`.
+verify-deploy:
+	@$(PYTHON) scripts/verify_deploy.py
 
 incident:
 	@$(PYTHON) scripts/incident.py

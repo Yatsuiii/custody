@@ -219,7 +219,7 @@ git clone <this repo> && cd custody
 python3.12 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 
-make check     # ruff, then 345 tests, none skipped
+make check     # ruff, then 352 tests, none skipped
 make demo      # the poisoning scenario, with Custody and without
 make cost      # what a compromised tool destroys, with the graph and without
 make revoke    # retroactive revocation across departments, and a replay
@@ -300,7 +300,7 @@ evidence and the correction history in `DECISIONS.md` #2.
 
 | | |
 | --- | --- |
-| Core, verified against real google-adk 2.6.3 | **built**, 345 tests |
+| Core, verified against real google-adk 2.6.3 | **built**, 352 tests |
 | Derivation graph and retroactive revocation | **built** |
 | Selective live Memory Bank deletion (new opt-in write path) | **built**, `make live-memory-deletion` |
 | Cross-department isolation | **built** |
