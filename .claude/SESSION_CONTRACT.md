@@ -2550,3 +2550,26 @@ and was not done. Remaining submission work recorded in
 `SUBMISSION_HANDOFF.md`; `R1_HANDOFF.md` marked closed.
 
 Status: complete
+
+**Addendum, same day.** Authorizing the redeploy surfaced a live
+regression that predates this session's work: `/` on the public site
+returns **404**. It served the dependency map earlier today (verified,
+HTTP 200, 27664 bytes), so the previous session's first
+`vercel deploy --prod` from `web/` dropped it — that directory holds
+`incident.html` and `architecture.html` and no `index.html`, and the
+earlier MCP-tool deploys had been uploading the incident page renamed.
+Both `README.md` and `JUDGE_HANDOFF.md` advertise the bare root URL, so
+this is the first thing a judge would hit.
+
+Fixed at the deploy boundary rather than by renaming a file the docs
+reference by name: `web/vercel.json` rewrites `/` to `/incident.html`,
+leaving `/incident.html` and the pages' own `href="incident.html"`
+back-links working unchanged. `web/.vercelignore` also added so the
+CLI-generated `web/.env.local` (a short-lived `VERCEL_OIDC_TOKEN`, already
+gitignored and confirmed not served) can never be uploaded as a static
+asset.
+
+The deploy itself was not run: `vercel deploy --prod` was blocked by this
+environment's permission classifier, and the `deploy_to_vercel` MCP tool
+takes inline file contents, which is the exact path that silently
+corrupted `architecture.html` before. Handed to the user to run.
