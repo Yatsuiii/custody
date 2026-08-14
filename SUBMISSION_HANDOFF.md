@@ -24,7 +24,7 @@ Verified by running the commands, not by reading prose:
 | `make registry-gates` | 9/9 |
 | `make revision-binding-gates` | 16/16 |
 | Cloud Run control plane | live, `GET /health` -> `200 {"status":"ok"}` |
-| Vercel pages | live, render clean, **2 lines behind the local build** (see item 3) |
+| Vercel pages | live, **byte-identical to `web/`**, console clean, root serves the map |
 | `proof-out/` | R1 and R2 recaptured 2026-08-14 ~16:30Z; S1, M1, O1, D1/D2 are **older than 24h** |
 
 Closed since the judging pass: the R1 digest break (the substantive one),
@@ -108,27 +108,74 @@ raw `gcloud` calls. The offline gates need neither.
 Budget real time for this. Ten live proofs, several of which deploy Cloud
 Run revisions. Do not start it an hour before the deadline.
 
-## 3. Redeploy the page (needs the user's go-ahead)
+## 3. Redeploying, and the four checks that must follow it
 
-`web/architecture.html` is currently **2 lines ahead** of what is deployed
-— the embedded `gate-data` JSON, from G5's telemetry group now being judged
-rather than hardcoded. Everything else matches.
+**Done once already on 2026-08-14** and currently in sync: the live pages
+are byte-identical to `web/`, the console is clean, and the root serves the
+dependency map. This section is the procedure for the *next* redeploy,
+which item 2 will require.
 
-This is a public production deploy, so **ask before running it**. Two
-things learned the hard way (`HANDOFF.md:48-70`):
+This is a public production deploy, so **ask before running it**:
 
 ```bash
-vercel link --project custody-incident   # once
-vercel deploy --prod                     # deploys web/ from disk
+cd web && vercel deploy --prod --yes    # deploys web/ from disk
 ```
 
-- Deploy **from disk with the `vercel` CLI**. Do not use the
-  `deploy_to_vercel` MCP tool: passing these files' contents as a JSON tool
-  parameter silently corrupted `architecture.html`'s inline `<script>` once,
-  blanking every widget on the live page. It was not visible in a
-  screenshot.
-- Afterwards check the browser **console**, not just that the deploy call
-  returned success.
+Deploy **from disk with the `vercel` CLI**. Do not use the
+`deploy_to_vercel` MCP tool: it takes inline file contents, and passing
+these files' contents as a JSON tool parameter silently corrupted
+`architecture.html`'s inline `<script>` once, blanking every widget on the
+live page. It was not visible in a screenshot.
+
+### Verify after every deploy, without exception
+
+A deploy reporting success proves nothing about what the page does. Three
+separate live regressions have now been caused by a deploy that "worked":
+the corrupted inline script, a `ssoProtection` setting that put a login
+wall in front of every URL, and a 404 at the root. **None of the three
+was visible from the deploy output.**
+
+```bash
+BASE=https://custody-incident-cave2.vercel.app
+for path in "" incident.html architecture.html .env.local; do
+  code=$(curl -sS -m 30 -o /dev/null -w '%{http_code}' "$BASE/$path")
+  printf '  %-20s -> %s\n' "/$path" "$code"
+done
+```
+
+Expected, and confirmed as the real output on 2026-08-14:
+
+```
+  /                    -> 200
+  /incident.html       -> 200
+  /architecture.html   -> 200
+  /.env.local          -> 404
+```
+
+1. **The root must be 200.** `web/` contains `incident.html` and
+   `architecture.html` and no `index.html`, so a plain static deploy leaves
+   `/` dead. `web/vercel.json` rewrites `/` to `/incident.html` to fix
+   that. This exact regression shipped unnoticed once, and it matters
+   because `README.md` and `JUDGE_HANDOFF.md` both send judges to the bare
+   root URL — it is the first thing a judge hits.
+2. **`/.env.local` must be 404.** The Vercel CLI writes a
+   `web/.env.local` holding a `VERCEL_OIDC_TOKEN` into the directory being
+   uploaded. `web/.vercelignore` excludes it. Confirm rather than assume.
+3. **Diff the live pages against the repo**, which catches transcription
+   corruption that renders as a blank widget rather than an error:
+   ```bash
+   curl -sS https://custody-incident-cave2.vercel.app/architecture.html \
+     | diff -q - web/architecture.html && echo "architecture.html identical"
+   ```
+4. **Open both pages and read the browser console**, not just the status
+   code. Load `/`, click through to Architecture & Evidence, click the
+   back-link, and confirm zero console messages. The corrupted-script
+   failure produced a clean 200 and a blank page.
+
+A `make verify-deploy` target would be a better home for all four than a
+checklist someone has to remember — worth doing if this gets redeployed
+more than once or twice more. It has to stay out of `make check`, which is
+deliberately network-free and finishes in 0.15s.
 
 ## 4. Stale evidence still renders as fresh evidence
 
@@ -198,5 +245,9 @@ for a judge to read than the current one.
   video, not the category selection. Item 1 could already be done.
 - **Whether the ten `make live-*` commands in item 2 still pass** is
   unknown for the eight that were not re-run today. R1 and R2 did pass.
-- The Cloud Run health check and both Vercel page loads were verified
-  directly. Those are the only live facts here.
+- The Cloud Run health check was verified directly, and so was the whole
+  of item 3 after the 2026-08-14 deploy: all four URLs returned the codes
+  shown, both pages diffed byte-identical against `web/`, and both pages
+  plus the back-link navigation produced zero console messages in a real
+  browser. Both commands quoted in item 3 were run as written. Those are
+  the live facts here; everything else above is read from artifacts.
