@@ -429,3 +429,59 @@ tool definitions never change; the 7,046-server registry said 97% do.
 Second corollary: **audit your own measurement before reporting it.** Three bugs
 in one day inflated or invalidated results, and each was caught only by looking
 again.
+
+---
+
+## 16. Close the three named gaps, and keep durability out of the pure modules
+
+R1_HANDOFF.md's "What this does not fix" section named three gaps on purpose,
+deferred rather than fixed at the time, so the digest-versioning fix could
+land small and be reviewed on its own. All three are now closed.
+
+**Decision:** `RevisionCatalog` and `AttestationAuthority`'s replay ledger both
+get Firestore-backed durable implementations, gated by `CUSTODY_FIRESTORE_PROJECT`
+exactly the way `custody/control_plane.py::_default_plane()` already gates
+`CustodyGraph`, `AuditorLog`, and `DemotionLog`: durable when a project is
+configured, pure in-memory otherwise, so offline tests and a bare local run
+never need a cloud account. R1 additionally binds the Cloud Run revision name
+and resolved image digest into admission, not just the declared MCP surface
+digest, closing "declared surface drift" to "declared surface or running
+image drift" — the cheap upgrade the handoff named but did not build.
+
+**The one design call worth recording:** the durable nonce ledger does not
+live in `custody/firestore_store.py` alongside the durable revision catalog,
+even though both are Firestore-backed and both close a gap from the same
+handoff. `firestore_store.py` already imports `custody.catalog` and
+`custody.graph` for its other collaborators, and the ledger is the one
+durable backend that gets vendored into the live MCP export server's Docker
+build context — the only place a durable ledger is actually used, since
+`RevisionCatalog` is client-side admission logic the script itself runs
+with the whole repo on its path. Vendoring `firestore_store.py` into that
+image would drag graph/catalog into a process that needs neither. So the
+ledger got its own file, `custody/nonce_ledger.py`, importing only
+`google.cloud.firestore` and satisfying `custody.revision.NonceLedger`
+structurally, no import of `revision.py` required. Two Firestore-backed
+classes closing two gaps from the same handoff, in two different files, for
+a real dependency-boundary reason rather than an arbitrary split.
+
+**What was proven live, not just offline:** an in-memory nonce ledger's
+actual gap is invisible within a single process, which is all the existing
+R2 proof (`live_revision_binding.py`) ever exercised. Proving durability
+needed a fresh process serving the *same* MCP digest so no `DIGEST_MISMATCH`
+could mask the result — achieved by redeploying v1 a second time (Cloud Run
+always creates a new revision/process even for an identical deploy) and
+replaying the original token against it. Pre-fix, a fresh process has never
+seen the nonce and wrongly accepts it a second time; post-fix, the shared
+Firestore document from the first process's consumption already exists, so
+the second process correctly refuses it. This is the actual bug being
+fixed, made falsifiable rather than argued from design alone.
+
+**Kept out of scope, matching R1's own precedent:** `custody/origin.py` and
+`CustodyRecord` are untouched — a runtime binding is an admission-time gate,
+not something threaded into stored derivation records. No TTL or pruning
+for the growing `dispatch_nonces` collection; unbounded growth was already
+true of the in-memory set it replaces, not a regression introduced here. No
+attempt at a true multi-instance concurrent proof for the replay ledger;
+`--max-instances=1` stays, because other gates' `instance_id` assertions
+depend on it, and durability-across-restart is the literal property named
+in the gap, not durability-across-concurrency.

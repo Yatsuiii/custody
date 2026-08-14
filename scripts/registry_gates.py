@@ -12,7 +12,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from custody.origin import digest  # noqa: E402
-from custody.revision import ToolSurface  # noqa: E402
+from custody.revision import DIGEST_ALGORITHM, ToolSurface  # noqa: E402
 
 OUT = REPO_ROOT / "proof-out" / "live-registry-attack.json"
 
@@ -198,7 +198,32 @@ def judge(evidence: dict, *, now: datetime | None = None) -> dict[str, bool]:
             == _content_digest(result_value)
             and revocation["live_memory_bank_deletion"] is False
         ),
+        "runtime_binding_also_blocked": _runtime_binding_also_blocked(
+            evidence.get("runtime_binding"), approved_tool=approved_tool
+        ),
     }
+
+
+def _runtime_binding_also_blocked(runtime_binding: dict | None, *, approved_tool) -> bool:
+    """Old evidence captured before this field existed fails this gate
+    rather than crashing the judge: a missing field is not the same claim
+    as a present-but-wrong one, but neither one is PASS."""
+    if not runtime_binding:
+        return False
+    approved = runtime_binding.get("approved") or {}
+    observed = runtime_binding.get("observed_on_identical_declared_surface") or {}
+    selected = runtime_binding.get("selected_denial") or {}
+    return bool(
+        approved.get("revision_name")
+        and approved.get("image_digest")
+        and observed.get("revision_name")
+        and observed.get("image_digest")
+        and approved != observed
+        and runtime_binding.get("denied") is True
+        and selected.get("tool_id") == approved_tool.tool_id
+        and selected.get("reason") == "runtime_drift"
+        and selected.get("expected_revision") == approved_tool.revision
+    )
 
 
 def main() -> int:
@@ -214,7 +239,18 @@ def main() -> int:
         return 1
     for name, passed in gates.items():
         print(f"[{'PASS' if passed else 'FAIL'}] {name}")
-    return 0 if gates and all(gates.values()) else 1
+    ok = bool(gates) and all(gates.values())
+    if not ok:
+        recorded = evidence.get("digest_algorithm")
+        if recorded and recorded != DIGEST_ALGORITHM:
+            print(
+                f"          note: evidence was captured under "
+                f"{recorded!r} (code_revision "
+                f"{evidence.get('code_revision', 'unknown')}), this build "
+                f"digests under {DIGEST_ALGORITHM!r}; re-run "
+                f"make live-registry-attack"
+            )
+    return 0 if ok else 1
 
 
 if __name__ == "__main__":

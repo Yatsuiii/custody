@@ -27,11 +27,13 @@ from google.cloud import firestore
 from custody.catalog import Demotion
 from custody.graph import CustodyGraph, Revocation
 from custody.origin import CustodyRecord, Origin, Trust
+from custody.revision import Admission, ApprovedTool, RevisionCatalog, RuntimeBinding, ToolSurface
 
 CUSTODY_COLLECTION = "custody"
 REVOCATIONS_COLLECTION = "revocations"
 AUDITOR_COLLECTION = "auditor"
 DEMOTIONS_COLLECTION = "demotions"
+REVISION_PINS_COLLECTION = "revision_pins"
 
 
 def _dump_record(record: CustodyRecord) -> dict:
@@ -182,6 +184,90 @@ class FirestoreCustodyGraph:
                 revoked_at=create_time.isoformat() if create_time else None,
             )
         return record, revocation
+
+
+def _dump_pin(tool: ApprovedTool) -> dict:
+    return {
+        "runtime_name": tool.runtime_name,
+        "revision": tool.revision,
+        "runtime_binding": (
+            {
+                "revision_name": tool.runtime_binding.revision_name,
+                "image_digest": tool.runtime_binding.image_digest,
+            }
+            if tool.runtime_binding is not None
+            else None
+        ),
+    }
+
+
+def _load_pin(tool_id: str, data: dict) -> ApprovedTool:
+    binding_data = data.get("runtime_binding")
+    return ApprovedTool(
+        tool_id=tool_id,
+        runtime_name=data["runtime_name"],
+        revision=data["revision"],
+        runtime_binding=(
+            RuntimeBinding(binding_data["revision_name"], binding_data["image_digest"])
+            if binding_data
+            else None
+        ),
+    )
+
+
+class FirestoreRevisionCatalog:
+    """Serves the same port ``RevisionCatalog`` does, durable across cold
+    starts: approved pins survive a restart and are visible to every
+    instance sharing this Firestore project.
+
+    Unlike ``FirestoreCustodyGraph``, there is no in-memory replica to
+    replay at construction. ``approve`` and ``admit`` each read or write
+    straight through to Firestore, one document per department. Caching a
+    local replica here would reintroduce exactly the stale-vs-live mismatch
+    class the revision digest check itself exists to close, for the sake of
+    a write path that is rare (department onboarding) serving a read path
+    that is the actual security-relevant one (every admission decision).
+
+    ``admit`` delegates the comparison itself to a throwaway in-memory
+    ``RevisionCatalog`` loaded from the read pins, so the admission
+    algorithm exists in exactly one place regardless of which durability
+    backend is in use, the same discipline ``FirestoreCustodyGraph``
+    documents for the derivation graph.
+    """
+
+    def __init__(self, client: firestore.Client):
+        self._collection = client.collection(REVISION_PINS_COLLECTION)
+
+    def approve(
+        self,
+        *,
+        department: str,
+        surface: ToolSurface,
+        runtime_binding: RuntimeBinding | None = None,
+    ) -> None:
+        pins = {
+            tool.tool_id: _dump_pin(
+                ApprovedTool(tool.tool_id, tool.runtime_name, tool.revision, runtime_binding)
+            )
+            for tool in surface.tools
+        }
+        self._collection.document(department).set({"pins": pins}, merge=True)
+
+    def admit(
+        self,
+        *,
+        department: str,
+        surface: ToolSurface,
+        observed_runtime: RuntimeBinding | None = None,
+    ) -> Admission:
+        doc = self._collection.document(department).get()
+        pins = (doc.to_dict() or {}).get("pins", {}) if doc.exists else {}
+        catalog = RevisionCatalog()
+        for tool_id, data in pins.items():
+            catalog._approved[(department, tool_id)] = _load_pin(tool_id, data)
+        return catalog.admit(
+            department=department, surface=surface, observed_runtime=observed_runtime
+        )
 
 
 class FirestoreAuditorLog:

@@ -21,7 +21,7 @@ import secrets
 import time
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Mapping, Sequence
+from typing import Mapping, Protocol, Sequence
 
 from custody.origin import ToolTrust
 
@@ -33,7 +33,21 @@ class ToolSurfaceError(ValueError):
 class Denial(str, Enum):
     MISSING = "missing"
     REVISION_MISMATCH = "revision_mismatch"
-    #: Dispatch-time denials, distinct from the two admission-time reasons
+    #: The live surface digests under a different algorithm than the pin was
+    #: approved under. This is an operational condition (a tooling change on
+    #: Custody's own side), never a security event, so it must never be
+    #: reported under the same name as an actual drifted tool surface: an
+    #: operator reading REVISION_MISMATCH here would go hunting a compromise
+    #: that did not happen.
+    ALGORITHM_SUPERSEDED = "algorithm_superseded"
+    #: The declared MCP surface matches, but the Cloud Run revision name or
+    #: image digest the approval was bound to does not. Distinguishes a
+    #: same-schema, different-running-code swap from an actual declared
+    #: surface drift (REVISION_MISMATCH) or an unrelated tooling change
+    #: (ALGORITHM_SUPERSEDED); only checked when the approval carries a
+    #: ``RuntimeBinding`` in the first place.
+    RUNTIME_DRIFT = "runtime_drift"
+    #: Dispatch-time denials, distinct from the three admission-time reasons
     #: above: these fire inside ``AttestationAuthority.verify``, after a
     #: surface was already admitted, when the specific ``tools/call`` cannot
     #: be bound back to the ``tools/list`` read that authorized it.
@@ -45,6 +59,17 @@ class Denial(str, Enum):
 
 class ToolCallDenied(PermissionError):
     """Raised before dispatch when an unapproved tool would be invoked."""
+
+
+class RevisionAlgorithmMismatch(ValueError):
+    """A revision-specific revocation was asked to compare across a digest
+    algorithm boundary it cannot honestly answer.
+
+    Records exist for the tool, but none of them was computed under the
+    algorithm the caller is revoking. Silently returning no descendants
+    would look identical to "this revision genuinely has none" and let a
+    revision-specific revocation report success while removing nothing.
+    """
 
 
 @dataclass(frozen=True)
@@ -116,10 +141,30 @@ class ToolSurface:
 
 
 @dataclass(frozen=True)
+class RuntimeBinding:
+    """The Cloud Run identity an approval was pinned to, alongside its
+    declared MCP surface digest.
+
+    A tool's declared ``tools/list`` schema can stay byte-identical while
+    the code actually running behind it changes; the surface digest alone
+    cannot see that. Binding the revision name and resolved image digest
+    catches exactly that case, at the cost of being infrastructure-specific
+    rather than MCP-protocol-general like the rest of this module.
+    """
+
+    revision_name: str
+    image_digest: str
+
+
+@dataclass(frozen=True)
 class ApprovedTool:
     tool_id: str
     runtime_name: str
     revision: str
+    #: ``None`` means this approval was never bound to a runtime identity,
+    #: so ``admit`` skips the runtime check entirely for it (opt-in, not a
+    #: silently mandatory gate every caller must satisfy).
+    runtime_binding: RuntimeBinding | None = None
 
 
 @dataclass(frozen=True)
@@ -166,12 +211,26 @@ class RevisionCatalog:
 
     _approved: dict[tuple[str, str], ApprovedTool] = field(default_factory=dict)
 
-    def approve(self, *, department: str, surface: ToolSurface) -> None:
+    def approve(
+        self,
+        *,
+        department: str,
+        surface: ToolSurface,
+        runtime_binding: RuntimeBinding | None = None,
+    ) -> None:
         for tool in surface.tools:
-            approved = ApprovedTool(tool.tool_id, tool.runtime_name, tool.revision)
+            approved = ApprovedTool(
+                tool.tool_id, tool.runtime_name, tool.revision, runtime_binding
+            )
             self._approved[(department, tool.tool_id)] = approved
 
-    def admit(self, *, department: str, surface: ToolSurface) -> Admission:
+    def admit(
+        self,
+        *,
+        department: str,
+        surface: ToolSurface,
+        observed_runtime: RuntimeBinding | None = None,
+    ) -> Admission:
         """Compare a live surface with exactly the department's saved pins."""
         observed = {tool.tool_id: tool for tool in surface.tools}
         allowed: list[ApprovedTool] = []
@@ -186,6 +245,13 @@ class RevisionCatalog:
                         tool_id, approved.revision, None, Denial.MISSING
                     )
                 )
+            elif algorithm_of(live.revision) != algorithm_of(approved.revision):
+                denied.append(
+                    AdmissionDenial(
+                        tool_id, approved.revision, live.revision,
+                        Denial.ALGORITHM_SUPERSEDED,
+                    )
+                )
             elif live.revision != approved.revision:
                 denied.append(
                     AdmissionDenial(
@@ -193,16 +259,43 @@ class RevisionCatalog:
                         Denial.REVISION_MISMATCH,
                     )
                 )
+            elif (
+                approved.runtime_binding is not None
+                and approved.runtime_binding != observed_runtime
+            ):
+                denied.append(
+                    AdmissionDenial(
+                        tool_id, approved.revision, live.revision,
+                        Denial.RUNTIME_DRIFT,
+                    )
+                )
             else:
                 allowed.append(approved)
         return Admission(tuple(allowed), tuple(denied))
+
+
+#: Bumped whenever canonicalization changes. A stored revision carries this
+#: tag so a later reader can tell "computed differently" from "changed".
+DIGEST_ALGORITHM = "sha256/2"
 
 
 def _digest(definition: Mapping[str, object]) -> str:
     canonical = json.dumps(
         definition, sort_keys=True, separators=(",", ":"), ensure_ascii=True
     )
-    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+    return f"{DIGEST_ALGORITHM}:{hashlib.sha256(canonical.encode('utf-8')).hexdigest()}"
+
+
+def algorithm_of(revision: str) -> str:
+    """Which algorithm produced this revision string.
+
+    Bare hex predates versioned revisions. It is deliberately reported as
+    ``sha256/legacy`` rather than as any real version: revisions written
+    before and after the ``_meta`` change are both bare hex and cannot be
+    told apart, so neither may be treated as comparable to a current one.
+    """
+    head, separator, rest = revision.partition(":")
+    return head if separator else "sha256/legacy"
 
 
 def mac(
@@ -244,20 +337,53 @@ class SurfaceAttestation:
     signature: str
 
 
+class NonceLedger(Protocol):
+    """Where ``AttestationAuthority`` records which nonces have been spent.
+
+    Structural, not inherited: a durable implementation (Firestore-backed)
+    satisfies this by having the two methods, with no import of this module
+    needed. Split into a read (``seen``) and a write (``mark``), not one
+    atomic "claim" call, so ``verify`` can keep checking the presented
+    digest before ever marking a nonce spent — a token that fails digest
+    verification must not burn its nonce, or a forged nonce could burn a
+    legitimate token before it is ever presented.
+    """
+
+    def seen(self, nonce: str) -> bool: ...
+
+    def mark(self, nonce: str) -> None: ...
+
+
+@dataclass
+class InMemoryNonceLedger:
+    """The default: process-local, exactly the prior behavior.
+
+    Same single-owned-instance scope R1 and S1 already accept for their own
+    ledgers; it does not by itself guarantee replay-safety across more than
+    one live server instance or a restart. A durable ``NonceLedger`` closes
+    that for deployments that need it.
+    """
+
+    _consumed: set[str] = field(default_factory=set)
+
+    def seen(self, nonce: str) -> bool:
+        return nonce in self._consumed
+
+    def mark(self, nonce: str) -> None:
+        self._consumed.add(nonce)
+
+
 @dataclass
 class AttestationAuthority:
     """Mints and verifies ``SurfaceAttestation`` tokens for one MCP server.
 
-    Server-side only: holds the shared secret and the consumed-nonce set, so
-    it must never be constructed by a client. The nonce set is process-local,
-    same single-owned-instance scope R1 and S1 already accept for their own
-    ledgers; it does not by itself guarantee replay-safety across more than
-    one live server instance.
+    Server-side only: holds the shared secret and the nonce ledger, so it
+    must never be constructed by a client.
     """
 
     _secret: bytes
     _ttl_seconds: float = 45.0
-    _consumed: set[str] = field(default_factory=set)
+    _ledger: NonceLedger = field(default_factory=InMemoryNonceLedger)
 
     def mint(self, *, tool: ApprovedTool) -> SurfaceAttestation:
         nonce = secrets.token_hex(16)
@@ -289,6 +415,14 @@ class AttestationAuthority:
         nothing, so its nonce is never marked consumed on that path alone; a
         forged nonce could otherwise be used to burn a legitimate token
         before it is ever presented.
+
+        No algorithm-boundary check is needed here, unlike ``admit`` and
+        ``descendants_for_revision``. Minting and verification both run in
+        this process against this build's ``_digest``, so ``token.revision``
+        and ``live_revision`` are always produced by the same algorithm.
+        Across a redeploy that changed it, the prefixed strings simply
+        differ and this already falls through to ``Denial.DIGEST_MISMATCH``,
+        fail-closed and correct without needing to know why they differ.
         """
         expected = mac(
             self._secret,
@@ -302,9 +436,9 @@ class AttestationAuthority:
             return Denial.SIGNATURE_INVALID
         if time.time() >= token.expires_at:
             return Denial.EXPIRED
-        if token.nonce in self._consumed:
+        if self._ledger.seen(token.nonce):
             return Denial.REPLAYED
         if token.revision != live_revision:
             return Denial.DIGEST_MISMATCH
-        self._consumed.add(token.nonce)
+        self._ledger.mark(token.nonce)
         return None

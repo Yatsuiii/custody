@@ -36,6 +36,7 @@ from dataclasses import dataclass, field
 from typing import Sequence
 
 from custody.origin import CustodyRecord
+from custody.revision import RevisionAlgorithmMismatch, algorithm_of
 
 
 @dataclass(frozen=True)
@@ -108,7 +109,24 @@ class CustodyGraph:
         return self._walk(roots)
 
     def descendants_for_revision(self, *, tool: str, revision: str) -> tuple[str, ...]:
-        """Every record descended from one exact admitted tool definition."""
+        """Every record descended from one exact admitted tool definition.
+
+        Raises if any record for `tool` exists but none was computed under
+        `revision`'s digest algorithm: that is a version boundary, not an
+        empty result, and returning `()` for it would let a revision-specific
+        revocation report success while silently removing nothing.
+        """
+        stored = {
+            r.source_revision
+            for r in self._records.values()
+            if r.source_tool == tool and r.source_revision
+        }
+        if stored and algorithm_of(revision) not in {algorithm_of(s) for s in stored}:
+            raise RevisionAlgorithmMismatch(
+                f"cannot compare revisions for {tool!r}: requested revision "
+                f"uses algorithm {algorithm_of(revision)!r}, but stored "
+                f"records use {sorted({algorithm_of(s) for s in stored})!r}"
+            )
         roots = {
             r.id
             for r in self._records.values()

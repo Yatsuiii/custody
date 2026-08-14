@@ -15,6 +15,7 @@ import unittest
 
 from custody.graph import CustodyGraph
 from custody.origin import CustodyRecord, Origin, ToolTrust, Trust, digest, take_custody
+from custody.revision import RevisionAlgorithmMismatch
 from tests.test_origin import FakeContent, FakeEvent, FakePart, FakeResponse
 
 
@@ -137,6 +138,47 @@ class RevisionRevocationIsPrecise(unittest.TestCase):
         self.assertEqual(
             {record.id for record in graph.records()}, {"new-root", "unrelated"}
         )
+
+
+class RevisionRevocationFailsLoudAcrossAnAlgorithmBoundary(unittest.TestCase):
+    """The fail-open bug: a canonicalization change makes every stored
+    `source_revision` an unrecognized string. Silently finding no roots for
+    it looks identical to "this revision has no descendants" and lets a
+    revision-specific revocation report success while removing nothing."""
+
+    def test_asking_under_an_older_algorithm_than_what_is_stored_raises(self):
+        graph = CustodyGraph()
+        tool = "vendor-knowledge/fetch_page"
+        graph.add(record("root", source_tool=tool, source_revision="sha256/2:abc"))
+
+        with self.assertRaises(RevisionAlgorithmMismatch):
+            graph.revoke_revision(
+                tool=tool, revision="bare-legacy-hex", revocation_id="rev-1"
+            )
+        self.assertEqual(len(graph), 1)
+
+    def test_a_genuinely_empty_revision_under_the_matching_algorithm_does_not_raise(self):
+        graph = CustodyGraph()
+        tool = "vendor-knowledge/fetch_page"
+        graph.add(record("root", source_tool=tool, source_revision="sha256/2:abc"))
+
+        revocation = graph.revoke_revision(
+            tool=tool, revision="sha256/2:never-admitted", revocation_id="rev-1"
+        )
+        self.assertEqual(revocation.removed, ())
+        self.assertEqual(len(graph), 1)
+
+    def test_no_records_for_the_tool_at_all_does_not_raise(self):
+        graph = CustodyGraph()
+        graph.add(record("unrelated", source_tool="crm/lookup", source_revision="x"))
+
+        revocation = graph.revoke_revision(
+            tool="vendor-knowledge/fetch_page",
+            revision="sha256/2:abc",
+            revocation_id="rev-1",
+        )
+        self.assertEqual(revocation.removed, ())
+        self.assertEqual(len(graph), 1)
 
 
 class ResolveFindsARecordByItsContent(unittest.TestCase):

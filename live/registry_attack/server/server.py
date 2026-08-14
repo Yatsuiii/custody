@@ -24,10 +24,13 @@ from mcp.types import ToolAnnotations
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
+from custody.nonce_ledger import FirestoreNonceLedger
 from custody.revision import (
     ApprovedTool,
     AttestationAuthority,
     Denial,
+    InMemoryNonceLedger,
+    NonceLedger,
     SurfaceAttestation,
     ToolSurface,
 )
@@ -84,6 +87,20 @@ def _configured_attestation_ttl_seconds() -> float:
     return float(raw) if raw else 45.0
 
 
+def _configured_nonce_ledger() -> NonceLedger:
+    """Firestore-backed when a project is configured, so replay protection
+    survives a restart and is shared across every instance sharing that
+    project; pure in-process otherwise, so offline tests and a bare `python
+    server.py` need no cloud account. Same env-var-gated pattern
+    `custody/control_plane.py::_default_plane()` already uses."""
+    project = os.environ.get("CUSTODY_FIRESTORE_PROJECT", "").strip()
+    if not project:
+        return InMemoryNonceLedger()
+    from google.cloud import firestore
+
+    return FirestoreNonceLedger(firestore.Client(project=project))
+
+
 class DispatchLedger:
     """Owns the process-local evidence needed to prove pre-dispatch blocking."""
 
@@ -120,7 +137,9 @@ class DispatchLedger:
 REVISION = _configured_revision()
 LEDGER = DispatchLedger(revision=REVISION)
 ATTESTATION = AttestationAuthority(
-    _configured_attestation_secret(), _configured_attestation_ttl_seconds()
+    _configured_attestation_secret(),
+    _configured_attestation_ttl_seconds(),
+    _ledger=_configured_nonce_ledger(),
 )
 mcp = FastMCP("Custody Export MCP")
 

@@ -149,6 +149,21 @@ def valid_evidence() -> dict:
                 },
             },
         },
+        "runtime_binding": {
+            "approved": {"revision_name": "service-00001", "image_digest": "sha256:aaa"},
+            "observed_on_identical_declared_surface": {
+                "revision_name": "service-00002",
+                "image_digest": "sha256:bbb",
+            },
+            "denied": True,
+            "expected_denial": "runtime_drift",
+            "selected_denial": {
+                "tool_id": "custody-export-mcp/lookup_customer",
+                "expected_revision": old_revision,
+                "observed_revision": old_revision,
+                "reason": "runtime_drift",
+            },
+        },
     }
 
 

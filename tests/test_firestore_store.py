@@ -18,10 +18,22 @@ from custody.firestore_store import (
     FirestoreAuditorLog,
     FirestoreCustodyGraph,
     FirestoreDemotionLog,
+    FirestoreRevisionCatalog,
 )
 from custody.origin import CustodyRecord, Origin, Trust
+from custody.revision import Denial, RuntimeBinding, ToolSurface
 
 _EPOCH = datetime(2026, 8, 13, tzinfo=UTC)
+
+
+def _deep_merge(base: dict, incoming: dict) -> dict:
+    merged = dict(base)
+    for key, value in incoming.items():
+        if isinstance(value, dict) and isinstance(merged.get(key), dict):
+            merged[key] = _deep_merge(merged[key], value)
+        else:
+            merged[key] = value
+    return merged
 
 
 class _FakeSnapshot:
@@ -46,6 +58,18 @@ class _FakeDocument:
             dict(data),
             self._collection.client.tick(),
         )
+
+    def set(self, data: dict, merge: bool = False) -> None:
+        """Enough of real Firestore's ``set`` for ``FirestoreRevisionCatalog``:
+        a plain overwrite, or a merge that recursively merges nested maps
+        rather than replacing them, matching the real service's documented
+        merge behavior for map fields."""
+        existing = self._collection.docs.get(self.id)
+        if not merge or existing is None:
+            self._collection.docs[self.id] = (dict(data), self._collection.client.tick())
+            return
+        merged = _deep_merge(dict(existing[0]), data)
+        self._collection.docs[self.id] = (merged, self._collection.client.tick())
 
     def get(self) -> _FakeSnapshot:
         entry = self._collection.docs.get(self.id)
@@ -298,6 +322,95 @@ class FirestoreDemotionLogTests(unittest.TestCase):
 
         self.assertEqual(len(second.all()), 1)
         self.assertEqual(second.all()[0].tool, "crm_lookup")
+
+
+def _surface(tool_id: str = "crm_lookup", schema: str = "a") -> ToolSurface:
+    payload = {
+        "result": {
+            "tools": [
+                {
+                    "name": tool_id,
+                    "description": schema,
+                    "inputSchema": {"type": "object"},
+                }
+            ]
+        }
+    }
+    return ToolSurface.from_tools_list(server="crm", payload=payload)
+
+
+class FirestoreRevisionCatalogTests(unittest.TestCase):
+    """Durability proven the same way FirestoreCustodyGraph's own docstring
+    proves it: construct a second instance against the same fake client and
+    confirm it sees what the first wrote, with no shared in-memory state."""
+
+    def test_a_pin_approved_through_one_instance_is_seen_by_a_second(self) -> None:
+        client = FakeFirestoreClient()
+        first = FirestoreRevisionCatalog(client)
+        first.approve(department="sales", surface=_surface())
+
+        second = FirestoreRevisionCatalog(client)
+        admission = second.admit(department="sales", surface=_surface())
+
+        self.assertTrue(admission.allows("crm_lookup"))
+        self.assertEqual(admission.denied, ())
+
+    def test_a_changed_live_surface_still_denies_through_the_durable_backend(self) -> None:
+        client = FakeFirestoreClient()
+        FirestoreRevisionCatalog(client).approve(department="sales", surface=_surface())
+
+        admission = FirestoreRevisionCatalog(client).admit(
+            department="sales", surface=_surface(schema="changed")
+        )
+
+        self.assertFalse(admission.allows("crm_lookup"))
+        self.assertEqual(admission.denied[0].reason, Denial.REVISION_MISMATCH)
+
+    def test_approving_one_tool_does_not_clobber_a_sibling_tools_pin(self) -> None:
+        """The merge semantics that matter: two approve() calls for the same
+        department, different tools, must not overwrite each other."""
+        client = FakeFirestoreClient()
+        catalog = FirestoreRevisionCatalog(client)
+        catalog.approve(department="sales", surface=_surface(tool_id="crm_lookup"))
+        catalog.approve(department="sales", surface=_surface(tool_id="billing_lookup"))
+
+        admission = catalog.admit(
+            department="sales", surface=_surface(tool_id="crm_lookup")
+        )
+        self.assertTrue(admission.allows("crm_lookup"))
+
+        billing_admission = FirestoreRevisionCatalog(client).admit(
+            department="sales", surface=_surface(tool_id="billing_lookup")
+        )
+        self.assertTrue(billing_admission.allows("billing_lookup"))
+
+    def test_a_runtime_binding_survives_the_round_trip(self) -> None:
+        client = FakeFirestoreClient()
+        binding = RuntimeBinding("rev-a", "sha256:aaa")
+        FirestoreRevisionCatalog(client).approve(
+            department="sales", surface=_surface(), runtime_binding=binding
+        )
+
+        matching = FirestoreRevisionCatalog(client).admit(
+            department="sales", surface=_surface(), observed_runtime=binding
+        )
+        self.assertTrue(matching.allows("crm_lookup"))
+
+        drifted = FirestoreRevisionCatalog(client).admit(
+            department="sales",
+            surface=_surface(),
+            observed_runtime=RuntimeBinding("rev-b", "sha256:bbb"),
+        )
+        self.assertEqual(drifted.denied[0].reason, Denial.RUNTIME_DRIFT)
+
+    def test_no_pins_for_a_department_denies_as_missing_not_a_crash(self) -> None:
+        client = FakeFirestoreClient()
+        catalog = FirestoreRevisionCatalog(client)
+
+        admission = catalog.admit(department="unknown", surface=_surface())
+
+        self.assertEqual(admission.allowed, ())
+        self.assertEqual(admission.denied, ())
 
     def test_different_tools_are_kept_as_distinct_demotions(self) -> None:
         client = FakeFirestoreClient()

@@ -42,7 +42,7 @@ if str(REPO_ROOT) not in sys.path:
 
 from fastmcp import Client  # noqa: E402
 
-from custody.revision import Denial, SurfaceAttestation  # noqa: E402
+from custody.revision import DIGEST_ALGORITHM, Denial, SurfaceAttestation  # noqa: E402
 
 OUT = REPO_ROOT / "proof-out" / "live-revision-binding.json"
 FAILURE = REPO_ROOT / "proof-out" / "live-revision-binding.failure.json"
@@ -52,7 +52,7 @@ SERVER_SOURCE = REPO_ROOT / "live" / "registry_attack" / "server"
 #: context (this directory, not the repo root) before every build, and
 #: removed afterward so the working tree never carries a build artifact.
 VENDORED_CUSTODY = SERVER_SOURCE / "custody"
-VENDORED_FILES = ("__init__.py", "origin.py", "revision.py")
+VENDORED_FILES = ("__init__.py", "origin.py", "revision.py", "nonce_ledger.py")
 SERVICE = "custody-export-mcp"
 DISPLAY_NAME = "Custody Export MCP"
 TOOL_NAME = "lookup_customer"
@@ -66,10 +66,11 @@ CLAIM_BOUNDARY = (
     "Proves a tools/call dispatch is refused by the owned MCP server itself, "
     "at the instant of execution, when the presented token was minted "
     "against a tools/list read that no longer matches the server's live "
-    "digest, and that a structurally valid token cannot be replayed. It does "
-    "not detect a behavior-only change under an identical tools/list, and "
-    "its replay ledger is process-local, the same single-instance scope R1 "
-    "and S1 already require."
+    "digest, that a structurally valid token cannot be replayed within one "
+    "process, and (when nonce_ledger_backend is 'firestore') that a token "
+    "consumed by one process is still refused by a genuinely fresh process "
+    "serving the same digest afterward. It does not detect a behavior-only "
+    "change under an identical tools/list."
 )
 
 
@@ -115,6 +116,19 @@ def _configured_project(config: Path) -> str:
     return project
 
 
+def _git_revision() -> str:
+    """The git SHA of HEAD at capture time, so a later reader can tell a
+    stored digest apart from a code-version boundary instead of guessing."""
+    completed = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        check=True,
+        capture_output=True,
+        text=True,
+        cwd=REPO_ROOT,
+    )
+    return completed.stdout.strip()
+
+
 def _json_get(url: str) -> dict[str, Any]:
     with urllib.request.urlopen(url, timeout=30) as response:  # noqa: S310
         return json.loads(response.read())
@@ -147,15 +161,21 @@ def _remove_vendored_custody() -> None:
 
 
 def _deploy(
-    cloud: Cloud, *, image: str, revision: str, secret: str
+    cloud: Cloud,
+    *,
+    image: str,
+    revision: str,
+    secret: str,
+    firestore_project: str | None = None,
 ) -> dict[str, Any]:
-    env_vars = ",".join(
-        (
-            f"CUSTODY_MCP_REVISION={revision}",
-            f"CUSTODY_ATTESTATION_SECRET={secret}",
-            f"CUSTODY_ATTESTATION_TTL_SECONDS={PROOF_TTL_SECONDS}",
-        )
-    )
+    parts = [
+        f"CUSTODY_MCP_REVISION={revision}",
+        f"CUSTODY_ATTESTATION_SECRET={secret}",
+        f"CUSTODY_ATTESTATION_TTL_SECONDS={PROOF_TTL_SECONDS}",
+    ]
+    if firestore_project:
+        parts.append(f"CUSTODY_FIRESTORE_PROJECT={firestore_project}")
+    env_vars = ",".join(parts)
     cloud.run(
         "run",
         "deploy",
@@ -287,8 +307,9 @@ async def _prove() -> dict[str, Any]:
         f"custody-export-mcp:{proof_id[:12]}"
     )
     customer_id = f"cust-{proof_id[:12]}"
+    firestore_project = os.environ.get("CUSTODY_FIRESTORE_PROJECT", "").strip() or None
 
-    print("[1/6] Vendoring custody/revision.py and building the MCP image...", flush=True)
+    print("[1/7] Vendoring custody/revision.py and building the MCP image...", flush=True)
     cloud.run("services", "enable", "run.googleapis.com")
     _vendor_custody()
     try:
@@ -298,8 +319,10 @@ async def _prove() -> dict[str, Any]:
     finally:
         _remove_vendored_custody()
 
-    print("[2/6] Deploying v1 and minting a real dispatch token...", flush=True)
-    v1_service = _deploy(cloud, image=image, revision="v1", secret=secret)
+    print("[2/7] Deploying v1 and minting a real dispatch token...", flush=True)
+    v1_service = _deploy(
+        cloud, image=image, revision="v1", secret=secret, firestore_project=firestore_project
+    )
     v1_status = v1_service["status"]
     url = v1_status["url"]
     v1_revision_name = v1_status["latestReadyRevisionName"]
@@ -307,13 +330,22 @@ async def _prove() -> dict[str, Any]:
     endpoint = f"{url}/mcp"
     v1_tokens = await _tools_list_with_attestation(endpoint)
     v1_token = v1_tokens[TOOL_NAME]
+    # A second, distinct v1 token, never dispatched, reserved for the digest
+    # mismatch control below. With a durable ledger, a nonce already spent
+    # by v1_token (positive_control) would be refused as REPLAYED by any
+    # process sharing that ledger, v2 included, before the digest is ever
+    # compared -- correctly stronger, but it means the same already-spent
+    # token can no longer isolate DIGEST_MISMATCH specifically. A token
+    # that was minted but never presented anywhere keeps that isolation.
+    v1_mismatch_tokens = await _tools_list_with_attestation(endpoint)
+    v1_mismatch_token = v1_mismatch_tokens[TOOL_NAME]
 
-    print("[3/6] Positive control: dispatching once with the fresh v1 token...", flush=True)
+    print("[3/7] Positive control: dispatching once with the fresh v1 token...", flush=True)
     before_positive = await asyncio.to_thread(_json_get, f"{url}/evidence")
     positive = await _call_with_token(endpoint, v1_token, customer_id=customer_id)
     after_positive = await asyncio.to_thread(_json_get, f"{url}/evidence")
 
-    print("[4/6] Replay control: reusing the same token a second time...", flush=True)
+    print("[4/7] Replay control: reusing the same token a second time...", flush=True)
     replay = await _call_with_token(endpoint, v1_token, customer_id=customer_id)
     replay_denial = await asyncio.to_thread(
         _poll_for_denial,
@@ -324,42 +356,77 @@ async def _prove() -> dict[str, Any]:
     )
     after_replay = await asyncio.to_thread(_json_get, f"{url}/evidence")
 
-    print("[5/6] Redeploying to v2 on the same URL and secret...", flush=True)
-    v2_service = _deploy(cloud, image=image, revision="v2", secret=secret)
+    print("[5/7] Redeploying to v2 on the same URL and secret...", flush=True)
+    v2_service = _deploy(
+        cloud, image=image, revision="v2", secret=secret, firestore_project=firestore_project
+    )
     v2_status = v2_service["status"]
     if v2_status["url"] != url:
         raise RuntimeError("Cloud Run URL changed between revisions")
     v2_revision_name = v2_status["latestReadyRevisionName"]
     await asyncio.to_thread(_wait_for_revision, url, "v2")
     before_mismatch = await asyncio.to_thread(_json_get, f"{url}/evidence")
-    mismatch = await _call_with_token(endpoint, v1_token, customer_id=customer_id)
+    mismatch = await _call_with_token(endpoint, v1_mismatch_token, customer_id=customer_id)
     mismatch_denial = await asyncio.to_thread(
         _poll_for_denial,
         cloud,
         revision_name=v2_revision_name,
-        nonce=v1_token.nonce,
+        nonce=v1_mismatch_token.nonce,
         reason=Denial.DIGEST_MISMATCH,
     )
     after_mismatch = await asyncio.to_thread(_json_get, f"{url}/evidence")
 
-    print("[6/6] Positive control on v2: a fresh token dispatches normally...", flush=True)
+    print("[6/7] Positive control on v2: a fresh token dispatches normally...", flush=True)
     v2_tokens = await _tools_list_with_attestation(endpoint)
     v2_token = v2_tokens[TOOL_NAME]
     v2_positive = await _call_with_token(endpoint, v2_token, customer_id=customer_id)
     after_v2_positive = await asyncio.to_thread(_json_get, f"{url}/evidence")
 
+    print(
+        "[7/7] Redeploying v1 again (fresh process, unchanged digest) and "
+        "replaying the original v1 token...",
+        flush=True,
+    )
+    v1_restart_service = _deploy(
+        cloud, image=image, revision="v1", secret=secret, firestore_project=firestore_project
+    )
+    v1_restart_status = v1_restart_service["status"]
+    if v1_restart_status["url"] != url:
+        raise RuntimeError("Cloud Run URL changed between revisions")
+    v1_restart_revision_name = v1_restart_status["latestReadyRevisionName"]
+    if v1_restart_revision_name == v1_revision_name:
+        raise RuntimeError(
+            "redeploying v1 again did not yield a new Cloud Run revision; "
+            "the restart-durability proof needs a genuinely fresh process"
+        )
+    await asyncio.to_thread(_wait_for_revision, url, "v1")
+    before_restart_replay = await asyncio.to_thread(_json_get, f"{url}/evidence")
+    restart_replay = await _call_with_token(endpoint, v1_token, customer_id=customer_id)
+    restart_replay_denial = await asyncio.to_thread(
+        _poll_for_denial,
+        cloud,
+        revision_name=v1_restart_revision_name,
+        nonce=v1_token.nonce,
+        reason=Denial.REPLAYED,
+    )
+    after_restart_replay = await asyncio.to_thread(_json_get, f"{url}/evidence")
+
     return {
         "schema_version": 1,
         "proof_id": proof_id,
         "captured_at": datetime.now(UTC).isoformat(),
+        "code_revision": _git_revision(),
+        "digest_algorithm": DIGEST_ALGORITHM,
         "project": project,
         "claim_boundary": CLAIM_BOUNDARY,
+        "nonce_ledger_backend": "firestore" if firestore_project else "in_memory",
         "cloud_run": {
             "service": SERVICE,
             "url": url,
             "image": image,
             "v1_revision": v1_revision_name,
             "v2_revision": v2_revision_name,
+            "v1_restart_revision": v1_restart_revision_name,
         },
         "v1_token": asdict(v1_token),
         "v2_token": asdict(v2_token),
@@ -389,6 +456,15 @@ async def _prove() -> dict[str, Any]:
             "result": v2_positive,
             "dispatch_count_before": after_mismatch["dispatch_count"],
             "dispatch_count_after": after_v2_positive["dispatch_count"],
+        },
+        "restart_replay_control": {
+            "result": restart_replay,
+            "denied": restart_replay["is_error"],
+            "denial_log": restart_replay_denial,
+            "dispatch_count_before": before_restart_replay["dispatch_count"],
+            "dispatch_count_after": after_restart_replay["dispatch_count"],
+            "instance_id_before": before_restart_replay["instance_id"],
+            "instance_id_after": after_restart_replay["instance_id"],
         },
     }
 

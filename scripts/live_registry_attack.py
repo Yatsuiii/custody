@@ -14,6 +14,7 @@ from __future__ import annotations
 import asyncio
 import json
 import os
+import shutil
 import subprocess
 import sys
 import time
@@ -34,8 +35,11 @@ from fastmcp import Client  # noqa: E402
 from custody.graph import CustodyGraph  # noqa: E402
 from custody.origin import CustodyRecord, Origin, Trust, digest  # noqa: E402
 from custody.revision import (  # noqa: E402
+    DIGEST_ALGORITHM,
     Denial,
     RevisionCatalog,
+    RuntimeBinding,
+    SurfaceAttestation,
     ToolCallDenied,
     ToolSurface,
 )
@@ -43,10 +47,21 @@ from custody.revision import (  # noqa: E402
 OUT = REPO_ROOT / "proof-out" / "live-registry-attack.json"
 FAILURE = REPO_ROOT / "proof-out" / "live-registry-attack.failure.json"
 SERVER_SOURCE = REPO_ROOT / "live" / "registry_attack" / "server"
+#: The custody package server.py imports; vendored into the Cloud Build
+#: context (this directory, not the repo root) before every build, and
+#: removed afterward so the working tree never carries a build artifact.
+#: Same vendoring live_revision_binding.py needs, for the same reason: R2
+#: made server.py import custody.revision for its own dispatch attestation.
+VENDORED_CUSTODY = SERVER_SOURCE / "custody"
+VENDORED_FILES = ("__init__.py", "origin.py", "revision.py", "nonce_ledger.py")
 SERVICE = "custody-export-mcp"
 DISPLAY_NAME = "Custody Export MCP"
 DEPARTMENT = "sales"
 TOOL_NAME = "lookup_customer"
+#: R2 made the owned server refuse any tools/call without a signed token
+#: minted from a recent tools/list, unconditionally. Every direct call this
+#: producer makes, governed or not, must present one.
+ATTESTATION_META_KEY = "custody_attestation"
 
 
 @dataclass(frozen=True)
@@ -91,6 +106,32 @@ def _configured_project(config: Path) -> str:
     return project
 
 
+def _vendor_custody() -> None:
+    """Copy the pure, dependency-free custody modules server.py imports
+    into the Cloud Build context, since that context is this directory, not
+    the repo root (see the Dockerfile's own comment on this)."""
+    VENDORED_CUSTODY.mkdir(exist_ok=True)
+    for name in VENDORED_FILES:
+        shutil.copy2(REPO_ROOT / "custody" / name, VENDORED_CUSTODY / name)
+
+
+def _remove_vendored_custody() -> None:
+    shutil.rmtree(VENDORED_CUSTODY, ignore_errors=True)
+
+
+def _git_revision() -> str:
+    """The git SHA of HEAD at capture time, so a later reader can tell a
+    stored digest apart from a code-version boundary instead of guessing."""
+    completed = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        check=True,
+        capture_output=True,
+        text=True,
+        cwd=REPO_ROOT,
+    )
+    return completed.stdout.strip()
+
+
 def _json_get(url: str) -> dict[str, Any]:
     with urllib.request.urlopen(url, timeout=30) as response:  # noqa: S310
         return json.loads(response.read())
@@ -122,9 +163,36 @@ async def _tools_list(url: str) -> dict[str, Any]:
     }
 
 
-async def _call_tool(url: str, arguments: dict[str, str]) -> dict[str, Any]:
+async def _fresh_attestation(url: str) -> SurfaceAttestation:
+    """Mint a dispatch token for ``TOOL_NAME`` from a ``tools/list`` read
+    taken immediately before use. A token minted this close to its call
+    always matches the server's live revision, so server-side attestation
+    passes trivially regardless of which revision is deployed; only
+    Custody's own client-side ``RevisionCatalog.admit`` compares against a
+    stale *approved* pin, which is the mechanism this proof demonstrates."""
     async with Client(url) as client:
-        result = await client.call_tool(TOOL_NAME, arguments)
+        tools = await client.list_tools()
+    (tool,) = (t for t in tools if t.name == TOOL_NAME)
+    raw = (tool.meta or {}).get(ATTESTATION_META_KEY)
+    if not isinstance(raw, dict):
+        raise RuntimeError(f"server did not attest {TOOL_NAME} in tools/list")
+    return SurfaceAttestation(
+        tool_id=str(raw["tool_id"]),
+        revision=str(raw["revision"]),
+        nonce=str(raw["nonce"]),
+        issued_at=float(raw["issued_at"]),
+        expires_at=float(raw["expires_at"]),
+        signature=str(raw["signature"]),
+    )
+
+
+async def _call_tool(
+    url: str, arguments: dict[str, str], *, token: SurfaceAttestation
+) -> dict[str, Any]:
+    async with Client(url) as client:
+        result = await client.call_tool(
+            TOOL_NAME, arguments, meta={ATTESTATION_META_KEY: asdict(token)}
+        )
     dumped = {
         "content": [
             item.model_dump(mode="json", by_alias=True, exclude_none=True)
@@ -215,7 +283,12 @@ def _wait_for_projection(cloud: Cloud, registry_resource: str) -> dict[str, Any]
     raise RuntimeError(f"Registry MCP projection was not readable: {last_error}")
 
 
-def _deploy(cloud: Cloud, *, image: str, revision: str) -> dict[str, Any]:
+def _deploy(
+    cloud: Cloud, *, image: str, revision: str, firestore_project: str | None = None
+) -> dict[str, Any]:
+    env_vars = f"CUSTODY_MCP_REVISION={revision}"
+    if firestore_project:
+        env_vars += f",CUSTODY_FIRESTORE_PROJECT={firestore_project}"
     cloud.run(
         "run",
         "deploy",
@@ -224,7 +297,7 @@ def _deploy(cloud: Cloud, *, image: str, revision: str) -> dict[str, Any]:
         f"--region={cloud.region}",
         "--allow-unauthenticated",
         "--max-instances=1",
-        f"--set-env-vars=CUSTODY_MCP_REVISION={revision}",
+        f"--set-env-vars={env_vars}",
         "--labels=custody-proof=stale-registry",
     )
     return cloud.json(
@@ -234,6 +307,39 @@ def _deploy(cloud: Cloud, *, image: str, revision: str) -> dict[str, Any]:
         SERVICE,
         f"--region={cloud.region}",
     )
+
+
+def _resolved_image_digest(cloud: Cloud, revision_name: str) -> str:
+    """The image digest Cloud Run actually pinned this revision to, not the
+    build tag that requested it: proves what code is genuinely running,
+    which a tag alone cannot (a tag can be repointed after the fact).
+
+    Cloud Run resolves a tag-based ``--image`` to a digest at deploy time
+    and records the resolved ``name@sha256:...`` reference directly in the
+    revision's own ``spec.containers[0].image`` (Knative Revision schema;
+    there is no separate ``status.containerStatuses`` field here, unlike
+    the Pod-style status some other Kubernetes-flavored APIs expose).
+    """
+    revision = cloud.json(
+        "run",
+        "revisions",
+        "describe",
+        revision_name,
+        f"--region={cloud.region}",
+    )
+    try:
+        image_reference = revision["spec"]["containers"][0]["image"]
+    except (KeyError, IndexError) as error:
+        raise RuntimeError(
+            f"could not read spec.containers[0].image from revision "
+            f"{revision_name}: {error}"
+        ) from error
+    if "@sha256:" not in image_reference:
+        raise RuntimeError(
+            f"revision {revision_name}'s image {image_reference!r} was not "
+            f"resolved to a digest by Cloud Run"
+        )
+    return image_reference.rsplit("@", 1)[1]
 
 
 def _record(
@@ -346,6 +452,15 @@ async def _prove() -> dict[str, Any]:
     region = os.environ.get("CUSTODY_REGISTRY_REGION", "us-central1")
     repository = os.environ.get("CUSTODY_ARTIFACT_REPOSITORY", "custody")
     cloud = Cloud(project, region, repository, config)
+    firestore_project = os.environ.get("CUSTODY_FIRESTORE_PROJECT", "").strip() or None
+    if firestore_project:
+        from google.cloud import firestore
+
+        from custody.firestore_store import FirestoreRevisionCatalog
+
+        catalog = FirestoreRevisionCatalog(firestore.Client(project=firestore_project))
+    else:
+        catalog = RevisionCatalog()
     image = os.environ.get("CUSTODY_REGISTRY_ATTACK_IMAGE") or (
         f"{region}-docker.pkg.dev/{project}/{repository}/"
         f"custody-export-mcp:{proof_id[:12]}"
@@ -356,20 +471,30 @@ async def _prove() -> dict[str, Any]:
     if os.environ.get("CUSTODY_REGISTRY_ATTACK_IMAGE"):
         print(f"      reusing verified image {image}", flush=True)
     else:
-        cloud.run(
-            "builds",
-            "submit",
-            str(SERVER_SOURCE),
-            f"--tag={image}",
-            f"--region={region}",
-        )
+        _vendor_custody()
+        try:
+            cloud.run(
+                "builds",
+                "submit",
+                str(SERVER_SOURCE),
+                f"--tag={image}",
+                f"--region={region}",
+            )
+        finally:
+            _remove_vendored_custody()
 
     print("[2/8] Deploying v1 and reading its real tools/list...", flush=True)
-    v1_service = _deploy(cloud, image=image, revision="v1")
+    v1_service = _deploy(
+        cloud, image=image, revision="v1", firestore_project=firestore_project
+    )
     v1_status = v1_service["status"]
     url = v1_status["url"]
     v1_revision_name = v1_status["latestReadyRevisionName"]
     v1_health = await asyncio.to_thread(_wait_for_revision, url, "v1")
+    v1_image_digest = await asyncio.to_thread(
+        _resolved_image_digest, cloud, v1_revision_name
+    )
+    v1_binding = RuntimeBinding(v1_revision_name, v1_image_digest)
     endpoint = f"{url}/mcp"
     live_v1_payload = await _tools_list(endpoint)
     live_v1 = ToolSurface.from_tools_list(server=SERVICE, payload=live_v1_payload)
@@ -388,29 +513,53 @@ async def _prove() -> dict[str, Any]:
     )
     approved_payload = _registry_content(registry_before)
     approved = ToolSurface.from_tools_list(server=SERVICE, payload=approved_payload)
-    catalog = RevisionCatalog()
-    catalog.approve(department=DEPARTMENT, surface=approved)
-    admitted_v1 = catalog.admit(department=DEPARTMENT, surface=live_v1)
+    catalog.approve(department=DEPARTMENT, surface=approved, runtime_binding=v1_binding)
+    admitted_v1 = catalog.admit(
+        department=DEPARTMENT, surface=live_v1, observed_runtime=v1_binding
+    )
     admitted_v1.require(TOOL_NAME)
     registry_endpoint = registry_before["interfaces"][0]["url"]
     if registry_endpoint != endpoint:
         raise RuntimeError("Agent Registry changed the registered MCP endpoint")
     customer_id = f"cust-{proof_id[:12]}"
     before_v1_call = await asyncio.to_thread(_json_get, f"{url}/evidence")
+    v1_token = await _fresh_attestation(registry_endpoint)
     registered_v1_call = await _call_tool(
-        registry_endpoint, {"customer_id": customer_id}
+        registry_endpoint, {"customer_id": customer_id}, token=v1_token
     )
     after_v1_call = await asyncio.to_thread(_json_get, f"{url}/evidence")
 
     print("[4/8] Deploying v2 to the same URL without updating Registry...", flush=True)
-    v2_service = _deploy(cloud, image=image, revision="v2")
+    v2_service = _deploy(
+        cloud, image=image, revision="v2", firestore_project=firestore_project
+    )
     v2_status = v2_service["status"]
     if v2_status["url"] != url:
         raise RuntimeError("Cloud Run URL changed between revisions")
     v2_revision_name = v2_status["latestReadyRevisionName"]
     v2_health = await asyncio.to_thread(_wait_for_revision, url, "v2")
+    v2_image_digest = await asyncio.to_thread(
+        _resolved_image_digest, cloud, v2_revision_name
+    )
+    v2_binding = RuntimeBinding(v2_revision_name, v2_image_digest)
     live_v2_payload = await _tools_list(registry_endpoint)
     live_v2 = ToolSurface.from_tools_list(server=SERVICE, payload=live_v2_payload)
+
+    # A same-schema, different-image swap: the declared surface (live_v1)
+    # is unchanged, but the runtime binding observed is v2's. Proves
+    # RUNTIME_DRIFT catches the class of drift a surface digest alone
+    # cannot see, using real GCP-sourced revision/image data end to end.
+    runtime_only_admission = catalog.admit(
+        department=DEPARTMENT, surface=live_v1, observed_runtime=v2_binding
+    )
+    runtime_only_denial = next(
+        (
+            item
+            for item in runtime_only_admission.denied
+            if item.tool_id == approved.tools[0].tool_id
+        ),
+        None,
+    )
 
     print("[5/8] Proving the durable Registry snapshot stayed on v1...", flush=True)
     registry_after = await asyncio.to_thread(_service, cloud)
@@ -420,20 +569,26 @@ async def _prove() -> dict[str, Any]:
     print("[6/8] Running the ungoverned negative control...", flush=True)
     forward_to = "external-audit@example.invalid"
     before_control = await asyncio.to_thread(_json_get, f"{url}/evidence")
+    negative_token = await _fresh_attestation(registry_endpoint)
     negative = await _call_tool(
         registry_endpoint,
         {"customer_id": customer_id, "forward_to": forward_to},
+        token=negative_token,
     )
     after_control = await asyncio.to_thread(_json_get, f"{url}/evidence")
 
     print("[7/8] Applying deterministic Custody admission before dispatch...", flush=True)
-    governed = catalog.admit(department=DEPARTMENT, surface=live_v2)
+    governed = catalog.admit(
+        department=DEPARTMENT, surface=live_v2, observed_runtime=v2_binding
+    )
     governed_blocked = False
     try:
         governed.require(TOOL_NAME)
+        governed_token = await _fresh_attestation(registry_endpoint)
         await _call_tool(
             registry_endpoint,
             {"customer_id": customer_id, "forward_to": forward_to},
+            token=governed_token,
         )
     except ToolCallDenied:
         governed_blocked = True
@@ -463,20 +618,29 @@ async def _prove() -> dict[str, Any]:
         "schema_version": 1,
         "proof_id": proof_id,
         "captured_at": datetime.now(UTC).isoformat(),
+        "code_revision": _git_revision(),
+        "digest_algorithm": DIGEST_ALGORITHM,
         "project": project,
         "registry_region": region,
         "claim_boundary": (
-            "Detects declared MCP tool-surface drift. It does not detect a "
-            "behavior-only change whose tools/list definition is identical. "
-            "The mismatch path blocks before dispatch, but an allowed call is "
-            "not cryptographically atomic with the preceding surface read."
+            "Detects declared MCP tool-surface drift, and now also detects a "
+            "same-schema, different-image swap via a Cloud Run revision name "
+            "and resolved image digest bound into the approval alongside the "
+            "surface digest. It does not cryptographically attest the "
+            "running code itself; that remains Binary Authorization "
+            "territory. The mismatch path blocks before dispatch, but an "
+            "allowed call is not cryptographically atomic with the "
+            "preceding surface read."
         ),
+        "revision_catalog_backend": "firestore" if firestore_project else "in_memory",
         "cloud_run": {
             "service": SERVICE,
             "url": url,
             "image": image,
             "v1_revision": v1_revision_name,
             "v2_revision": v2_revision_name,
+            "v1_image_digest": v1_image_digest,
+            "v2_image_digest": v2_image_digest,
             "same_url": v2_status["url"] == url,
             "v1_health": v1_health,
             "v2_health": v2_health,
@@ -539,6 +703,21 @@ async def _prove() -> dict[str, Any]:
             ],
         },
         "revocation": revocation,
+        "runtime_binding": {
+            "approved": {
+                "revision_name": v1_binding.revision_name,
+                "image_digest": v1_binding.image_digest,
+            },
+            "observed_on_identical_declared_surface": {
+                "revision_name": v2_binding.revision_name,
+                "image_digest": v2_binding.image_digest,
+            },
+            "denied": runtime_only_denial is not None,
+            "expected_denial": Denial.RUNTIME_DRIFT.value,
+            "selected_denial": (
+                asdict(runtime_only_denial) if runtime_only_denial else None
+            ),
+        },
     }
 
 

@@ -1,2 +1,4 @@
 # Google Cloud's remote MCP tutorial pin, kept exact for a reproducible image.
 fastmcp==2.13.1
+# Same pin as the repo root's requirements.txt, for the durable nonce ledger.
+google-cloud-firestore>=2.28,<3

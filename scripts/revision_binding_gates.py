@@ -82,7 +82,32 @@ def judge(evidence: dict, *, now: datetime | None = None) -> dict[str, bool]:
         "claim_boundary_states_the_behavior_only_gap": (
             "behavior-only" in evidence.get("claim_boundary", "")
         ),
+        "replay_survives_process_restart": _replay_survives_process_restart(
+            evidence, cloud=cloud
+        ),
     }
+
+
+def _replay_survives_process_restart(evidence: dict, *, cloud: dict) -> bool:
+    """The durable-ledger proof: old evidence captured before this control
+    existed fails this gate rather than crashing the judge, same discipline
+    as ``registry_gates.py``'s ``runtime_binding_also_blocked``. A run with
+    ``nonce_ledger_backend`` still ``in_memory`` genuinely should fail this
+    too — that is the pre-fix state, not a malformed artifact."""
+    restart = evidence.get("restart_replay_control")
+    restart_revision = cloud.get("v1_restart_revision")
+    if not restart or not restart_revision:
+        return False
+    return bool(
+        evidence.get("nonce_ledger_backend") == "firestore"
+        and restart_revision != cloud.get("v1_revision")
+        and restart["denied"] is True
+        and restart["dispatch_count_after"] == restart["dispatch_count_before"]
+        and restart["instance_id_before"] == restart["instance_id_after"]
+        and restart["denial_log"]["jsonPayload"]["reason"] == "replayed"
+        and restart["denial_log"]["jsonPayload"]["revision"] == "v1"
+        and restart["denial_log"]["jsonPayload"].get("tool_name") == "lookup_customer"
+    )
 
 
 def _gcloud_json(*arguments: str) -> Any:
@@ -108,10 +133,14 @@ def live_reread(evidence: dict) -> dict[str, bool]:
     cloud = evidence["cloud_run"]
     results: dict[str, bool] = {}
 
-    for label, control in (
+    controls = [
         ("replay", evidence["replay_control"]),
         ("digest_mismatch", evidence["digest_mismatch_control"]),
-    ):
+    ]
+    if evidence.get("restart_replay_control"):
+        controls.append(("restart_replay", evidence["restart_replay_control"]))
+
+    for label, control in controls:
         insert_id = control["denial_log"].get("insertId")
         query = " AND ".join(
             (
@@ -132,10 +161,14 @@ def live_reread(evidence: dict) -> dict[str, bool]:
             and reread[0].get("jsonPayload") == control["denial_log"].get("jsonPayload")
         )
 
-    for label, revision_name in (
+    revisions = [
         ("v1", cloud["v1_revision"]),
         ("v2", cloud["v2_revision"]),
-    ):
+    ]
+    if cloud.get("v1_restart_revision"):
+        revisions.append(("v1_restart", cloud["v1_restart_revision"]))
+
+    for label, revision_name in revisions:
         try:
             described = _gcloud_json(
                 "run",

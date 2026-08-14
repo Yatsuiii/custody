@@ -18,8 +18,11 @@ from custody.revision import (
     ApprovedTool,
     AttestationAuthority,
     Denial,
+    InMemoryNonceLedger,
     RevisionCatalog,
+    RuntimeBinding,
     ToolCallDenied,
+    ToolDefinition,
     ToolSurface,
     ToolSurfaceError,
     mac,
@@ -75,6 +78,37 @@ class StaleRegistryMetadataIsReproducible(unittest.TestCase):
             surface(payload)
 
 
+class TheDigestAlgorithmIsPinned(unittest.TestCase):
+    """A digest is a stored fact, so its algorithm is a wire contract.
+
+    Changing canonicalization silently redefines every revision already
+    written to the graph, to Firestore, to Agent Registry, and to every
+    captured artifact. This test exists so that change cannot be made
+    accidentally: it must be made together with a version bump. The
+    fixture is inline, not read from ``proof-out/``, which is gitignored
+    and would let this test silently skip on a fresh clone.
+    """
+
+    def test_a_known_definition_digests_to_a_known_value(self):
+        definition = {
+            "name": "fetch_page",
+            "description": "Fetch a supplier knowledge page.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {"url": {"type": "string"}},
+                "required": ["url"],
+            },
+        }
+        tool = ToolDefinition("vendor-knowledge", "fetch_page", definition)
+        self.assertEqual(
+            tool.revision,
+            "sha256/2:e4f57e5b8647a7faa6d5c7c114ca9e1e0ae3b6fe17e384253398c17dd150bcfa",
+            "the digest algorithm changed underneath a stored fact; bump "
+            "the version and update every stored revision's consumer, "
+            "do not just update this expected value",
+        )
+
+
 class RevisionMismatchBlocksBindingBeforeInvocation(unittest.TestCase):
     def setUp(self):
         self.catalog = RevisionCatalog()
@@ -96,6 +130,71 @@ class RevisionMismatchBlocksBindingBeforeInvocation(unittest.TestCase):
         self.assertEqual(invoked, [])
         self.assertFalse(admission.allows("fetch_page"))
         self.assertEqual(admission.denied[0].reason, Denial.REVISION_MISMATCH)
+
+    def test_an_algorithm_boundary_denies_under_its_own_reason_not_revision_mismatch(self):
+        """A tooling change on Custody's own side must never read like a
+        security event: an operator hunting REVISION_MISMATCH here would be
+        chasing a compromise that never happened."""
+        catalog = RevisionCatalog()
+        approved_tool = surface(APPROVED).tools[0]
+        catalog.approve(department="sales", surface=surface(APPROVED))
+        # Simulate a pin approved before the digest was versioned: bare hex,
+        # no algorithm prefix, same tool_id.
+        catalog._approved[("sales", approved_tool.tool_id)] = ApprovedTool(
+            approved_tool.tool_id, approved_tool.runtime_name, "bare-legacy-hex"
+        )
+
+        admission = catalog.admit(department="sales", surface=surface(APPROVED))
+
+        self.assertEqual(len(admission.denied), 1)
+        self.assertEqual(admission.denied[0].reason, Denial.ALGORITHM_SUPERSEDED)
+        self.assertNotEqual(admission.denied[0].reason, Denial.REVISION_MISMATCH)
+
+    def test_a_same_schema_different_image_swap_denies_under_runtime_drift(self):
+        """The gap R1's declared-surface check cannot see by itself: an
+        identical tools/list schema, backed by different running code."""
+        catalog = RevisionCatalog()
+        catalog.approve(
+            department="sales",
+            surface=surface(APPROVED),
+            runtime_binding=RuntimeBinding("rev-a", "sha256:aaa"),
+        )
+
+        admission = catalog.admit(
+            department="sales",
+            surface=surface(APPROVED),
+            observed_runtime=RuntimeBinding("rev-b", "sha256:bbb"),
+        )
+
+        self.assertEqual(len(admission.denied), 1)
+        self.assertEqual(admission.denied[0].reason, Denial.RUNTIME_DRIFT)
+        self.assertNotEqual(admission.denied[0].reason, Denial.REVISION_MISMATCH)
+
+    def test_a_matching_runtime_binding_admits_normally(self):
+        catalog = RevisionCatalog()
+        binding = RuntimeBinding("rev-a", "sha256:aaa")
+        catalog.approve(
+            department="sales", surface=surface(APPROVED), runtime_binding=binding
+        )
+
+        admission = catalog.admit(
+            department="sales", surface=surface(APPROVED), observed_runtime=binding
+        )
+
+        self.assertTrue(admission.allows("fetch_page"))
+        self.assertEqual(admission.denied, ())
+
+    def test_no_runtime_binding_on_the_approval_skips_the_check_entirely(self):
+        """Opt-in: an approval that never pinned a runtime identity must not
+        be silently held to one, or every existing caller breaks."""
+        admission = self.catalog.admit(
+            department="sales",
+            surface=surface(APPROVED),
+            observed_runtime=RuntimeBinding("whatever", "sha256:anything"),
+        )
+
+        self.assertTrue(admission.allows("fetch_page"))
+        self.assertEqual(admission.denied, ())
 
     def test_admitted_tool_output_is_bound_to_server_qualified_revision(self):
         admission = self.catalog.admit(department="sales", surface=surface(APPROVED))
@@ -134,6 +233,39 @@ class DispatchIsBoundToTheSurfaceThatAuthorizedIt(unittest.TestCase):
         self.assertIsNone(self.authority.verify(token, live_revision="rev-a"))
         replay = self.authority.verify(token, live_revision="rev-a")
         self.assertEqual(replay, Denial.REPLAYED)
+
+    def test_a_shared_ledger_catches_a_replay_across_two_authority_instances(self):
+        """The pluggability point a durable ledger needs: two
+        ``AttestationAuthority`` instances (standing in for two Cloud Run
+        processes, or one process before and after a restart) sharing one
+        ``NonceLedger`` must agree a nonce is spent, even though neither
+        holds the other's in-process state."""
+        ledger = InMemoryNonceLedger()
+        first_process = AttestationAuthority(b"server-only-secret", _ledger=ledger)
+        second_process = AttestationAuthority(b"server-only-secret", _ledger=ledger)
+
+        token = first_process.mint(tool=self.tool)
+        self.assertIsNone(first_process.verify(token, live_revision="rev-a"))
+
+        replay = second_process.verify(token, live_revision="rev-a")
+
+        self.assertEqual(replay, Denial.REPLAYED)
+
+    def test_two_unshared_ledgers_do_not_see_each_others_consumption(self):
+        """The negative control: without a shared ledger, a second process
+        has no way to know the nonce was already spent. This is the exact
+        gap a process-local ``InMemoryNonceLedger`` cannot close by itself
+        — proving the durability property has to come from the ledger
+        implementation, not from ``AttestationAuthority`` itself."""
+        first_process = AttestationAuthority(b"server-only-secret")
+        second_process = AttestationAuthority(b"server-only-secret")
+
+        token = first_process.mint(tool=self.tool)
+        self.assertIsNone(first_process.verify(token, live_revision="rev-a"))
+
+        replayed_on_a_fresh_process = second_process.verify(token, live_revision="rev-a")
+
+        self.assertIsNone(replayed_on_a_fresh_process)
 
     def test_an_expired_token_is_refused_even_with_a_matching_digest(self):
         authority = AttestationAuthority(b"server-only-secret", _ttl_seconds=-1)
