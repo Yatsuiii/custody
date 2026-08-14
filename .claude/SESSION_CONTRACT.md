@@ -157,7 +157,7 @@ predecessor died of five invented roles in a pipeline; that shape is banned here
 | --- | --- |
 | **N department worker agents** | The governed population is the fleet. Real ADK agents doing departmental work. They are the subject of governance, not scaffolding, and they make "scalable network of institutional agents" literally true. |
 | **Provenance Auditor** | Re-examines trust and drives revocation across the graph, deterministically, on the deployed Cloud Scheduler's own daily clock rather than the demoter's request. **Real, live-proven 2026-08-14**: `/demote` withdraws a grant durably; `/auditor`'s sweep is the only thing that ever calls `CustodyGraph.revoke` on a demotion's behalf. `make live-auditor` / `make auditor-gates`, 9/9 PASS. See the sub-build section below. |
-| **Custody Reviewer** | Explains what a quarantined memory attempted and drafts a verdict. Changes what a human reads: a summary rather than raw traces. |
+| **Custody Reviewer** | Explains what a quarantined memory attempted and drafts a verdict. Changes what a human reads: a summary rather than raw traces. **Real, live-proven 2026-08-14**: `custody/review.py`'s `draft_verdict` takes one `Quarantined` item and a real Gemini call through Vertex AI, returns a `Verdict` with no trust/origin field. `make live-review` / `make review-gates`, 9/9 PASS. See the sub-build section below. |
 
 ### Data model
 
@@ -194,7 +194,7 @@ predecessor shipped a GEAP table describing an integration that did not exist.
 | Security and governance | **Agent Gateway** | IAP-enforced allow/deny boundary before owned MCP dispatch | **LIVE**, `make live-gateway` |
 | Security and governance | **Model Armor** | screens content; complements origin, does not replace it | **LIVE**, `make live-model-armor` |
 | Telemetry | **Agent Observability** | traces carrying the custody digest, so a quarantine is reproducible | **LIVE**, `make live-observability` |
-| mandatory | **Gemini 3.5+ via Vertex** | explains quarantined memories; never labels | **LIVE**, Gemini 3.5 Flash |
+| mandatory | **Gemini 3.5+ via Vertex** | explains quarantined memories; never labels | **LIVE**, `make live-review`, real verdict on a quarantined item (`scripts/live_review.py`), not the earlier connectivity echo |
 | mandatory | **ADK** | the seam; `BaseMemoryService` is the port | **LIVE**, real Runner callback in G1 |
 | mandatory | **Cloud Run** | control plane and reviewer | **LIVE**, control plane revision `00001-hz6` |
 | supporting | **Firestore** | the graph, quarantine, audit | PARTIAL: `custody`/`revocations`/`auditor` collections LIVE behind `FirestoreCustodyGraph`/`FirestoreAuditorLog` (G5); `quarantine`/`departments`/`grants` remain in-memory, PLANNED |
@@ -961,6 +961,126 @@ exists, replay-on-construction), the same split G5 already uses between its
 live seed-record proof and its offline Firestore replay tests. No LLM
 anywhere in this path — trust re-examination stayed deterministic, per the
 project's own "no model decides a fact" rule.
+
+Status: complete, superseded by the file-level status below
+
+## Sub-build: real Custody Reviewer (opened 2026-08-14)
+
+Objective: close finding 3 above. Build `custody/review.py`: a pure module
+that takes one `Quarantined` item (`custody/service.py`) and an injected
+`explain` callable, and drafts a `Verdict` — a summary of what the
+quarantined content attempted, for a human to read. Structurally barred
+from setting trust or labelling origin: `Verdict` carries no trust/origin
+field, `draft_verdict` never imports or calls into `custody/catalog.py` or
+`custody/graph.py`, and calling it does not mutate any catalog or graph
+state, so a Gemini call has no path to becoming a fact, only an
+explanation. Wire a live proof: `scripts/live_review.py` poisons a session
+the same deterministic way `make demo`/G2 already do offline (an
+ungranted tool's response lands in quarantine, no model involved in that
+step), then makes a real Gemini call through Vertex AI (`google.genai`,
+same client pattern `scripts/live_g1.py`'s `_gemini_proof` already uses) to
+draft a verdict on that specific quarantined item's text, proving the call
+actually reads the content rather than echoing a fixed string.
+
+Branch: feat/memory-provenance
+Parent: f9e19cd
+
+Allowed files: `custody/review.py` (new), `scripts/live_review.py` (new),
+`scripts/review_gates.py` (new), `tests/test_review.py` (new), `Makefile`,
+`README.md` (the Gemini product-mapping row and a new Custody Reviewer
+section), `HANDOFF.md`, `.claude/SESSION_CONTRACT.md`, `proof-out/*`,
+`DECISIONS.md` if a real design tradeoff surfaces mid-build. No changes to
+`custody/service.py`, `custody/origin.py`, `custody/catalog.py`,
+`custody/graph.py`, or `custody/control_plane.py` — the Reviewer only
+reads a `Quarantined` item already produced by existing, already-proven
+poisoning logic (G2/`make demo`, `ControlPlane.ingest`); it does not need a
+new HTTP endpoint or a Cloud Run redeploy, since the live claim here is the
+Gemini call, not new control-plane plumbing.
+
+Non-goals:
+
+- No trust or origin decision anywhere in this module. `draft_verdict`
+  returns a summary string plus the item's already-known department and
+  source tool; it never sets `Trust`, `Origin`, or calls `revoke`/`demote`/
+  `vouch`. If a future console wants a human to act on a verdict, that
+  action goes through the existing `/demote` or `/revoke` endpoints,
+  driven by the human, not by this module.
+- No Cloud Run redeploy and no new control-plane endpoint. The quarantine
+  item is produced in-process by the same deterministic `ControlPlane.
+  ingest` logic G2 already proves offline; only the Gemini leg needs to be
+  live.
+- No content classification or verdict scoring rubric. A verdict is a
+  drafted explanation for a human, not a pass/fail judgement — consistent
+  with the project's "no model decides a fact" rule and Model Armor
+  already owning content screening.
+- Do not leave the Gemini product-mapping row in `README.md` claiming
+  "LIVE" for something the fleet review already found is only a
+  connectivity echo — correct it once this sub-build's own live proof
+  lands, cite the new evidence, not the old echo.
+
+Baseline: `make check` 310/310 passing offline (confirmed against
+`f9e19cd`). `make gates` reports G1/G2/G3/G4 PASS, G5 BLOCKED. `make
+auditor-gates` 9/9 PASS (unaffected by this work).
+
+Acceptance gates:
+
+1. `draft_verdict` is pure and structurally incapable of setting a fact:
+   offline test constructs a `Quarantined` item, calls `draft_verdict` with
+   a fake `explain`, and asserts the returned `Verdict` has no trust/origin
+   field and that no `TrustCatalog`/`CustodyGraph` passed alongside it (if
+   any) changed state.
+2. Live proof: an ungranted tool's response is quarantined (deterministic,
+   offline-shape, same as G2); a real Gemini call through Vertex AI is
+   given that exact quarantined text and asked to draft a verdict; the
+   verdict text provably reflects the specific content read, not a fixed
+   echo — proven by a per-run random marker embedded in the synthetic
+   quarantined content that only a call which actually read it could
+   reproduce, appearing in the model's response.
+3. The claim in `README.md`'s Gemini product-mapping row is corrected to
+   cite this live evidence (`proof-out/live-review.json`) instead of the
+   old connectivity-echo claim, and the fleet table's Custody Reviewer row
+   in this file is updated to match.
+4. `HANDOFF.md`'s "Custody Reviewer — not started" line is corrected once
+   this closes.
+
+Verification: `make check`, a new `make live-review` writing
+`proof-out/live-review.json`, and `make review-gates` judging it — offline
+structural checks (freshness, marker echoed in the verdict, no trust/
+origin key present anywhere in the proof JSON) plus one independently
+issued, separate live Gemini call (not reusing the producer's response) to
+confirm Vertex AI is reachable under the project's own credentials at
+judge time too, the same "do not just trust the producer" discipline every
+other gate script in this project already applies. Manual: read
+`proof-out/live-review.json`'s verdict text and confirm it reads as an
+explanation, not a trust label.
+
+**Closed 2026-08-14, all four gates passed live, proof `22d187b18ff54ccd809c7eeff52e6394`.**
+`custody/review.py`'s `Verdict` dataclass has exactly four fields
+(`department`, `source_tool`, `summary`, `drafted_at`) and `draft_verdict`
+imports neither `custody.catalog` nor `custody.graph`, checked both by an
+offline unit test and by an AST-parse test that fails if a future edit ever
+adds either import (`tests/test_review.py`, 5/5 passing, 315/315 offline
+total). `make live-review` quarantined one ungranted tool's response
+in-process, through the same `ControlPlane.ingest` logic G2 already proves
+offline (`quarantined: 1`, `admitted: 0`), then called `gemini-3.5-flash`
+through Vertex AI with that item's exact text. The verdict correctly
+explained "an attempt to export customer records using the tool
+`review_probe_tool_22d187b1`" and reproduced the per-run marker
+(`proof-marker-22d187b18ff5`) embedded in the quarantined text, proving the
+call read the specific content rather than echoing a fixed string, closing
+the fleet-review finding that the only live Gemini call in the repo was a
+connectivity echo. `make review-gates` reported 9/9 PASS: 8 offline
+structural checks (freshness, quarantine count, marker present in both the
+source text and the verdict, verdict schema exactly matching `Verdict`'s
+four fields with no trust/origin/label key, department/tool consistency,
+Vertex AI used) plus one independently issued, separate Gemini call under
+the project's own credentials at judge time, confirming Vertex AI is
+reachable now rather than only trusting the producer's response — there is
+no durable Cloud resource to reread here, so the independent check re-makes
+the live call instead of re-reading one, the same substitution O1 made for
+Cloud Trace storage. No Cloud Run redeploy, no new control-plane endpoint,
+matching the stated non-goals. No LLM anywhere near a trust or origin
+decision — the Gemini call only ever produces a `summary` string.
 
 Status: complete, superseded by the file-level status below
 

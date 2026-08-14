@@ -469,6 +469,40 @@ exists, replay-on-construction) is proven offline instead, the same split
 G5 already uses between its live seed-record proof and its offline
 Firestore replay tests.
 
+### The Custody Reviewer: Gemini reads a quarantined item, drafts a verdict
+
+Until 2026-08-14, the only live Gemini call in the repo was a connectivity
+echo (`scripts/live_g1.py`'s `_gemini_proof`, asked to return a fixed
+string) — no code path ever showed Gemini a quarantined item, even though
+the fleet table marked this row LIVE. `custody/review.py` closes that gap:
+`draft_verdict` takes one `Quarantined` item (already produced by the
+existing, already-proven poisoning logic G2 proves offline) and an injected
+`explain` callable, and returns a `Verdict` — a summary of what the content
+attempted, for a human to read. `Verdict` carries no trust or origin field,
+and `draft_verdict` imports neither `custody.catalog` nor `custody.graph`,
+checked by both a unit test and an AST-parse test that fails a future edit
+which adds either import — there is no code path from a Gemini response to
+a stored fact, the same "no model decides a fact" discipline every other
+deterministic component in this project already holds itself to.
+
+Live proof (`make live-review`, proof `22d187b18ff54ccd809c7eeff52e6394`):
+an ungranted tool's response, carrying a per-run random marker, is
+quarantined in-process by the same `ControlPlane.ingest` logic G2 already
+proves offline; `gemini-3.5-flash` through Vertex AI is then given that
+exact text and asked to draft a verdict. The response correctly explained
+the attempted export and reproduced the marker, proving the call read the
+specific quarantined content rather than echoing a fixed string. `make
+review-gates` reports 9/9 PASS: offline structural checks (marker echoed,
+verdict schema exactly matching `Verdict`'s four fields, no trust/origin/
+label key present) plus one independently issued, separate Gemini call
+under the project's own credentials at judge time — there is no durable
+Cloud resource to reread here, so the independent check re-makes the live
+call instead, the same substitution O1 made for Cloud Trace storage.
+Non-goal: no console or human-facing review queue exists yet; a verdict is
+read from `proof-out/live-review.json` today, and any resulting demotion or
+revocation still goes through the existing `/demote`/`/revoke` endpoints,
+driven by a human.
+
 ### Live Agent Observability proof
 
 ```bash

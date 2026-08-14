@@ -1,4 +1,4 @@
-# Custody recovery handoff, 2026-08-14 (fleet review: real Provenance Auditor landed, Custody Reviewer next)
+# Custody recovery handoff, 2026-08-14 (fleet review: Provenance Auditor and Custody Reviewer both landed, N agents next)
 
 This is a live handoff document for Claude or another coding agent. Continue
 from the current repository state. Do not restart the project, redesign the
@@ -16,28 +16,12 @@ found (`.claude/SESSION_CONTRACT.md`, "Fleet review, 2026-08-14" section);
 user's stated order: **Auditor, then Reviewer, then N agents (deferred,
 size not yet chosen).**
 
-1. **Provenance Auditor — closed this session**, live-proven. See below.
-2. **Custody Reviewer (Gemini reads a quarantined memory, drafts a verdict)
-   — not started.** This is the next piece. Today the only live Gemini call
-   in the repo is a connectivity echo in `scripts/live_g1.py`
-   (`_gemini_proof`); no code path ever shows Gemini a quarantined item.
-   Scope it the same way the Auditor sub-build was scoped: a new dated
-   section in `.claude/SESSION_CONTRACT.md` with Objective/Branch
-   (`feat/memory-provenance`)/Parent (this commit)/Allowed files/Non-goals/
-   Baseline/Acceptance gates/Verification, **before** touching code. Likely
-   shape: a `custody.review` module that takes one `Quarantined` item
-   (already modeled in `custody/service.py`) and calls Gemini through
-   Vertex AI (same `google.genai` client `scripts/live_g1.py` already uses)
-   to summarize what the quarantined content attempted and draft a verdict
-   for a human — structurally barred from setting trust or labelling
-   origin itself, per the project's "no model decides a fact" rule (see
-   `custody/origin.py`'s `take_custody`, which is the only place trust is
-   decided, deterministically). A live proof needs a real quarantined item
-   (poison a session live, same shape `make demo`/G2 already use offline)
-   and a real Gemini call that reads it, not an echo.
+1. **Provenance Auditor — closed 2026-08-14**, live-proven. See below.
+2. **Custody Reviewer — closed 2026-08-14**, live-proven. See below.
 3. **N department worker agents** — deferred, not scoped. Only one live
    ADK agent has ever run, one department per invocation. Ask the user for
-   a size (3 was recommended, declined for now) before scoping.
+   a size (3 was recommended, declined for now) before scoping. This is
+   the only remaining item from the fleet review's three findings.
 
 ## Provenance Auditor: closed 2026-08-14, live-proven
 
@@ -74,6 +58,43 @@ regenerated too (`make live-g1`), since G1's own evidence had recorded the
 now-superseded Cloud Run revision. `make gates` reports G1 PASS against
 the fresh evidence, revision `custody-control-plane-00004-ttb`. No other
 G1 behavior changed.
+
+## Custody Reviewer: closed 2026-08-14, live-proven
+
+`custody/review.py` (new module) closes the fleet-review finding that the
+only live Gemini call in the repo was a connectivity echo
+(`scripts/live_g1.py`'s `_gemini_proof`, asked to return a fixed string).
+`draft_verdict` takes one `Quarantined` item (`custody/service.py`) and an
+injected `explain` callable, returning a `Verdict` (`department`,
+`source_tool`, `summary`, `drafted_at`) — no trust or origin field, and the
+module imports neither `custody.catalog` nor `custody.graph`, checked by
+both a unit test and an AST-parse test in `tests/test_review.py` (5 new
+tests, 315/315 offline total) so a future edit that wires either import
+back in fails the suite rather than silently opening a fact-deciding path.
+
+No control-plane or Cloud Run change was needed: the quarantine item is
+produced in-process by the same `ControlPlane.ingest` logic G2 already
+proves offline, so the only new live surface is the Gemini call itself.
+`make live-review` (proof `22d187b18ff54ccd809c7eeff52e6394`,
+`proof-out/live-review.json`): an ungranted tool's response carrying a
+per-run random marker is quarantined, then `gemini-3.5-flash` through
+Vertex AI is given that exact text and asked to draft a verdict. The
+response correctly explained the attempted export and reproduced the
+marker, proving the call read the specific quarantined content rather than
+echoing a fixed string. `make review-gates` reports 9/9 PASS: 8 offline
+structural checks plus one independently issued, separate Gemini call
+under the project's own credentials at judge time (there is no durable
+Cloud resource to reread here, so the independent check re-makes the live
+call instead of re-reading one, the same substitution O1 made for Cloud
+Trace storage). Full write-up in `.claude/SESSION_CONTRACT.md`'s
+"Sub-build: real Custody Reviewer" section and `README.md`'s new "The
+Custody Reviewer" section.
+
+**Non-goal, stated in the artifact and every write-up:** no console or
+human-facing review queue exists yet. A verdict is read from
+`proof-out/live-review.json`; any resulting demotion or revocation still
+goes through the existing `/demote`/`/revoke` endpoints, driven by a
+human.
 
 ## Lane and artifact
 
@@ -126,10 +147,17 @@ text; do not restate any of it from memory, read them.
 - Branch: `feat/memory-provenance`
 - Commits landed: `df334f1` (S1 fix + accumulated G1/R1 work), `94bcad4`
   (M1), `68f1b88` (G5 persistence/Scheduler start), `9c4174b` (O1),
-  `7f7ea00` (**R2 + D2, this session**).
-- Working tree is clean as of this handoff. Confirm with `git status` before
-  assuming otherwise — do not trust this line if time has passed.
-- None of these commits are pushed. Do not push without explicit
+  `7f7ea00` (R2 + D2), `0b4a816` (G1 migration onto D2's write path),
+  `f9e19cd` (Provenance Auditor).
+- **Working tree carries uncommitted Custody Reviewer work as of this
+  handoff**: `custody/review.py`, `tests/test_review.py`,
+  `scripts/live_review.py`, `scripts/review_gates.py`, `Makefile`,
+  `README.md`, `.claude/SESSION_CONTRACT.md`, `HANDOFF.md`, and
+  `proof-out/live-review.json`. Not yet committed — commit only on
+  explicit user authorization, same rule as every other checkpoint here.
+  Confirm with `git status` before assuming otherwise; do not trust this
+  line if time has passed.
+- None of the landed commits are pushed. Do not push without explicit
   authorization.
 
 ```sh
@@ -140,7 +168,8 @@ git log -8 --oneline --decorate
 
 ## Previously proven state, do not redo
 
-- G1, R1, S1, M1, O1, R2, D2 as above.
+- G1, R1, S1, M1, O1, R2, D2, the Provenance Auditor, and the Custody
+  Reviewer as above.
 - Structural TOOL roots and MODEL/DERIVED descendants are already enforced.
 - Offline G2, G3, G4 pass; `make gates` reports 4 PASS, 0 FAIL, 1 BLOCKED (G5,
   correctly BLOCKED — its elapsed-time requirement is real, not a bug).
@@ -412,15 +441,23 @@ check). Neither is fixable by code today; both need calendar time.
 
 ## Next capability
 
-With R2, D2, the G1 migration, and G5's clock all landed, remaining scoped
-work:
+With R2, D2, the G1 migration, the Provenance Auditor, the Custody
+Reviewer, and G5's clock all landed, remaining scoped work:
 
 1. **Confirm G5's natural Scheduler fire** (`2026-08-14T06:00:02Z` UTC, see
    above) — a quick log check, not a build task. Do this first if it's now
    past that time.
-2. `scripts/scheduler_gates.py`, once there is a real multi-day span to
+2. **N department worker agents** — the last of the fleet review's three
+   findings, deferred and not yet scoped. Only one live ADK agent has ever
+   run, one department per invocation. Ask the user for a size (3 was
+   recommended, declined for now) before scoping the same way the Auditor
+   and Reviewer sub-builds were scoped: a new dated section in
+   `.claude/SESSION_CONTRACT.md` before touching code.
+3. `scripts/scheduler_gates.py`, once there is a real multi-day span to
    judge — not yet, would have nothing to check.
-3. Revoke the G5 seed record near filming, via the existing `/revoke`
+4. Revoke the G5 seed record near filming, via the existing `/revoke`
    endpoint, once enough real elapsed time has passed.
-4. Regenerate `proof-out/g1.json` before filming — G1 evidence expires
+5. Regenerate `proof-out/g1.json` before filming — G1 evidence expires
    after 24 hours, same discipline as every other live gate here.
+6. `proof-out/live-review.json` also expires after 24 hours, same
+   discipline — regenerate with `make live-review` before filming.
