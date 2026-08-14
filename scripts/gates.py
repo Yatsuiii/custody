@@ -27,6 +27,7 @@ if str(REPO_ROOT) not in sys.path:
 
 from custody.action import Export, ExportGateway  # noqa: E402
 from custody.catalog import TrustCatalog, Vouch  # noqa: E402
+from custody.memory_bank import memory_id_for  # noqa: E402
 from custody.service import CustodyMemoryService, InMemoryQuarantine  # noqa: E402
 
 from scripts.demo import (  # noqa: E402
@@ -210,28 +211,72 @@ def _g1_adk_run_errors(memory: dict, *, proof_id: str) -> list[str]:
 def _g1_memory_bank_errors(
     memory: dict, *, expected_scope: str, project: str
 ) -> list[str]:
+    """Migrated 2026-08-14 to D2's `write_record` path (`HANDOFF.md` "G1
+    migration"): one `memories.create` per admitted record instead of one
+    `ingest_events` call per session, so a written memory now carries an id
+    a later revocation can target. Checks below match that shape and add the
+    selective-deletion proof `ingest_events` could never offer.
+    """
     errors: list[str] = []
     split = memory.get("custody_split", {})
     scope = memory.get("scope", {})
-    operation_names = memory.get("memory_operation_names", [])
+    if memory.get("write_path") != "write_record":
+        errors.append("G1 is not on the write_record path")
     if scope.get("user_id") != expected_scope or scope.get("app_name") != "custody-g1":
         errors.append("Memory Bank scope is not unique to this proof")
-    if memory.get("memory_write_count") != 1 or len(operation_names) != 1:
-        errors.append("the ADK callback did not produce exactly one Memory Bank write")
-    if not operation_names or operation_names[0] == "completed-without-name":
-        errors.append("Memory Bank ingestion operation has no resource name")
-    if memory.get("written_event_count", 0) < 2:
+    if memory.get("conversational_memory_write_count", 0) < 2:
         errors.append("Memory Bank did not receive both user and model events")
     if split.get("total", 0) < 2 or split.get("withheld") != 0 or split.get("refused") != 0:
         errors.append("Custody did not admit the complete clean ADK session")
     if memory.get("retrieved_memory_count", 0) < 1:
         errors.append("Memory Bank returned no memory")
-    if not memory.get("retrieved_memory_names"):
-        errors.append("retrieved Memory Bank resource name is absent")
-    if not _expected_memory(memory.get("retrieved_fact")):
+    if not any(_expected_memory(fact) for fact in memory.get("retrieved_facts", [])):
         errors.append("retrieved memory does not preserve the submitted invariant")
     if project not in str(memory.get("agent_engine", "")):
         errors.append("Agent Engine belongs to another project")
+    errors.extend(_g1_written_memory_id_errors(memory))
+    errors.extend(_g1_revocation_errors(memory.get("revocation_proof", {})))
+    return errors
+
+
+def _g1_written_memory_id_errors(memory: dict) -> list[str]:
+    """Every written id must both look like `memory_id_for`'s own output and
+    include the independently recomputed id for the record the revocation
+    proof below claims to have written and later deleted.
+    """
+    errors: list[str] = []
+    written_ids = memory.get("written_memory_ids", [])
+    if memory.get("memory_write_count") != len(written_ids) or not written_ids:
+        errors.append("write_record call count does not match written memory ids")
+    if any(not str(name).startswith("cr-") for name in written_ids):
+        errors.append("a written memory id does not match memory_id_for's own mapping")
+    tool_record_id = memory.get("revocation_proof", {}).get("tool_record_id")
+    if tool_record_id and memory_id_for(tool_record_id) not in written_ids:
+        errors.append(
+            "the tool record's independently recomputed memory_id was never written"
+        )
+    return errors
+
+
+def _g1_revocation_errors(revocation: dict) -> list[str]:
+    """G1's own selective-deletion proof: a tool-origin record this run
+    wrote is confirmed retrievable, then confirmed gone after its tool is
+    revoked, while the conversational memories (no source_tool) survive.
+    """
+    errors: list[str] = []
+    tool_fact = revocation.get("tool_fact")
+    before = revocation.get("before_revoke_facts", [])
+    after = revocation.get("after_revoke_facts", [])
+    if not str(revocation.get("tool_memory_id", "")).startswith("cr-"):
+        errors.append("revoked memory id does not match memory_id_for's own mapping")
+    if not tool_fact or tool_fact not in before:
+        errors.append("the tool-origin memory was not retrievable before revocation")
+    if tool_fact and tool_fact in after:
+        errors.append("the tool-origin memory is still retrievable after revocation")
+    if not any(_expected_memory(fact) for fact in after):
+        errors.append("revocation removed the untooled conversational memory too")
+    if not revocation.get("revocation_id"):
+        errors.append("revocation produced no revocation id")
     return errors
 
 

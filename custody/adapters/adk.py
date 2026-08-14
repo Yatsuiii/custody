@@ -21,6 +21,7 @@ from google.adk.memory import BaseMemoryService
 from google.adk.memory.base_memory_service import SearchMemoryResponse
 from google.adk.sessions import Session
 
+from custody.graph import CustodyGraph
 from custody.origin import ToolTrust
 from custody.service import (
     CustodyMemoryService,
@@ -67,6 +68,15 @@ class CustodyMemoryBank(BaseMemoryService):
         """Events withheld against events seen. The number G4 asks for."""
         return self._guard.recall_cost()
 
+    def graph(self) -> CustodyGraph:
+        """The derivation graph this bank's admissions were added to.
+
+        Exposed so a caller can wrap it in `RevokingMemoryBankGraph`
+        (`custody/adapters/memory_bank.py`) and revoke a tool this bank
+        admitted, the same way D2 proved for a standalone session.
+        """
+        return self._guard.graph
+
 
 @dataclass
 class _SessionRebuilding:
@@ -79,6 +89,15 @@ class _SessionRebuilding:
     """
 
     inner: BaseMemoryService
+
+    def __post_init__(self) -> None:
+        # Proxy `write_record` only when the wrapped downstream offers it, so
+        # `CustodyMemoryService`'s own `getattr(downstream, "write_record",
+        # None)` capability check still sees the inner downstream's real
+        # capability through this wrapper rather than always seeing None.
+        writer = getattr(self.inner, "write_record", None)
+        if writer is not None:
+            self.write_record = writer
 
     async def add_session_to_memory(self, session) -> None:
         await self.inner.add_session_to_memory(

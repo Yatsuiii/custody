@@ -132,6 +132,48 @@ and remain outside what this mechanism can delete. Migrating G1 onto this
 path, if ever wanted, is a separate decision with its own risk, not implied
 by this one.
 
+**Migrated 2026-08-14, on request, with a real integration bug found and
+fixed first.** `custody/adapters/adk.py`'s `_SessionRebuilding` (the
+wrapper `CustodyMemoryBank` puts between `CustodyMemoryService` and any
+downstream, needed to hand ADK a real `Session` instead of the core's
+SDK-free stand-in) proxied only `add_session_to_memory` and
+`search_memory`. `CustodyMemoryService.add_session_to_memory` detects the
+`write_record` path via `getattr(self.downstream, "write_record", None)`,
+and `self.downstream` there is always `_SessionRebuilding`, so a real ADK
+`Runner` going through `CustodyMemoryBank` could never reach `write_record`
+even when the wrapped downstream offered it — G1's live proof could not
+have used D2's mechanism until this was fixed, regardless of which
+downstream it was given. Fixed additively: `_SessionRebuilding.__post_init__`
+now sets `self.write_record = inner.write_record` only when the wrapped
+downstream offers it, so the capability-detection contract is preserved
+through the wrapper rather than always reading as absent. Confirmed safe by
+usage: only `scripts/live_memory_bank.py` and tests using
+`InMemoryMemoryService` (which never offers `write_record`) construct
+`CustodyMemoryBank`, so no other caller's behavior changes.
+
+`scripts/live_memory_bank.py`'s `prove_adk_memory_bank` now builds its
+downstream from `AgentEngineMemoryBank` instead of the old
+`ingest_events`-based `BlockingAgentPlatformMemoryBank` (removed). The real
+Runner/Gemini/conversational leg is unchanged in shape; a second, direct
+write adds one real ADK event carrying a trusted tool's
+`function_response` through the same `CustodyMemoryBank` instance, because
+the conversational turn's records have no `source_tool` and so cannot be
+targeted by `revoke(tool=...)` — the tool write is what makes selective
+deletion demonstrable through G1's actual wiring, the same shape D2 already
+proved standalone. Live-proven end to end against Agent Engine
+`6936011268348182528`, `make live-g1` then `make gates`: the tool-origin
+memory is retrievable before revocation and gone after, while the
+conversational memories are untouched. Retrieval quality checked live, not
+assumed: the pre-migration baseline (`ingest_events`, `proof-out/g1.json`
+before this change) returned one Memory-Bank-synthesized fact merging both
+admitted events' content; the post-migration path (`write_record`) returned
+two separate, unmerged, raw per-event facts. This is the tradeoff already
+named above made concrete: Custody stops relying on Memory Bank's own
+session-level consolidation and instead gets one raw fact per admitted
+record, with the loss (no synthesis across events) and the gain
+(per-record, deterministic deletability) both real and now measured rather
+than only reasoned about.
+
 ---
 
 ## 3. Split before the write, not filter on read

@@ -1,10 +1,23 @@
-"""Run a real ADK agent through Custody into live Memory Bank.
+"""Run a real ADK agent through Custody into live Memory Bank, on D2's
+`write_record` path rather than `ingest_events`.
 
-The proof needs a blocking downstream because ADK's stock Memory Bank service
-queues ingestion and returns before memory generation. This adapter keeps that
-latency policy behind the ``BaseMemoryService`` interface: when
-``add_session_to_memory`` returns, the managed ingestion operation is complete.
-The ADK Runner still sees only ``CustodyMemoryBank``.
+Migrated 2026-08-14 (see `HANDOFF.md` "G1 migration", `DECISIONS.md` #2):
+G1 previously wrote through ADK's stock `ingest_events` flow, which has no
+reliable id, so nothing it wrote could be selectively deleted. `custody/
+adapters/memory_bank.py`'s `AgentEngineMemoryBank` (D2) writes one
+`memory_id`-pinned memory per admitted record instead, which is deletable
+by id alone. `custody/adapters/adk.py`'s `_SessionRebuilding` now proxies
+`write_record` when the wrapped downstream offers it, so `CustodyMemoryBank`
+(the ADK-facing shell the real `Runner` sees) takes this path automatically;
+no change to `custody/service.py`'s existing capability-detection branch.
+
+The conversational leg below is unchanged from the prior `ingest_events`
+proof: same agent, same prompt, same Gemini call, same
+`after_agent_callback` shape. A second, tool-origin write proves selective
+deletion the way D2 proved it standalone (`scripts/live_memory_deletion.py`),
+but through `CustodyMemoryBank` this time, which is the integration gap this
+migration closes: revoking that tool removes exactly its memory while the
+conversational memory, which has no `source_tool`, is untouched.
 """
 
 from __future__ import annotations
@@ -14,7 +27,6 @@ import os
 import sys
 import time
 import uuid
-from dataclasses import dataclass, field
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -23,109 +35,65 @@ if str(REPO_ROOT) not in sys.path:
 
 from agentplatform import Client  # noqa: E402
 from google.adk.agents import Agent, Context  # noqa: E402
-from google.adk.memory import BaseMemoryService  # noqa: E402
-from google.adk.memory.base_memory_service import (  # noqa: E402
-    SearchMemoryResponse,
-)
-from google.adk.memory.memory_entry import MemoryEntry  # noqa: E402
+from google.adk.events import Event as AdkEvent  # noqa: E402
 from google.adk.models import Gemini  # noqa: E402
 from google.adk.runners import Runner  # noqa: E402
 from google.adk.sessions import InMemorySessionService, Session  # noqa: E402
 from google.genai import types  # noqa: E402
 
 from custody.adapters.adk import CustodyMemoryBank  # noqa: E402
+from custody.adapters.memory_bank import (  # noqa: E402
+    AgentEngineMemoryBank,
+    RevokingMemoryBankGraph,
+)
+from custody.memory_bank import memory_id_for  # noqa: E402
+from custody.origin import ToolTrust  # noqa: E402
 
 APP_NAME = "custody-g1"
 MODEL = "gemini-3.5-flash"
 FACT = "Sales exports require a signed approval."
 QUERY = "What approval do sales exports require?"
+#: Trusted so a second, tool-origin write exists to revoke and prove
+#: selective deletion against, the way `live_memory_deletion.py` proves it
+#: for a standalone session, here through `CustodyMemoryBank` instead.
+TOOL_NAME = "sales_export_audit_tool"
 
 
-@dataclass
-class BlockingAgentPlatformMemoryBank(BaseMemoryService):
-    """A Memory Bank port whose write completes only after the ingestion LRO."""
+class RecordWritingMemoryBank:
+    """The `RecordWriter` downstream G1's live proof now writes through.
 
-    project: str
-    location: str
-    agent_engine_id: str
-    operation_names: list[str] = field(default_factory=list)
-    written_event_count: int = 0
-    retrieved_memory_names: list[str] = field(default_factory=list)
+    Thin composition over D2's `AgentEngineMemoryBank`, plus the bookkeeping
+    this proof's evidence needs: which `memory_id`s were actually written,
+    and what a search returned, both otherwise invisible outside the client.
+    """
 
-    @property
-    def engine_name(self) -> str:
-        return (
-            f"projects/{self.project}/locations/{self.location}/reasoningEngines/"
-            f"{self.agent_engine_id}"
+    def __init__(self, *, project: str, location: str, agent_engine_id: str) -> None:
+        self.engine_name = (
+            f"projects/{project}/locations/{location}/reasoningEngines/"
+            f"{agent_engine_id}"
         )
-
-    def _client(self) -> Client:
-        return Client(project=self.project, location=self.location)
-
-    async def add_session_to_memory(self, session: Session) -> None:
-        events = [event for event in session.events if _has_content(event)]
-        if not events:
-            return
-
-        operation = await self._client().aio.agent_engines.memories.ingest_events(
-            name=self.engine_name,
-            scope={"app_name": session.app_name, "user_id": session.user_id},
-            stream_id=session.id,
-            direct_contents_source={
-                "events": [
-                    {
-                        "content": event.content,
-                        "event_id": event.id or f"{session.id}-{index}",
-                    }
-                    for index, event in enumerate(events)
-                ]
-            },
-            config={"force_flush": True, "wait_for_completion": True},
+        client = Client(project=project, location=location)
+        self.memories = client.aio.agent_engines.memories
+        self._writer = AgentEngineMemoryBank(
+            memories=self.memories, engine_name=self.engine_name
         )
-        self.written_event_count += len(events)
-        self.operation_names.append(operation.name or "completed-without-name")
+        self.written_memory_ids: list[str] = []
+        self.last_search_facts: list[str] = []
+
+    async def write_record(self, *, app_name: str, user_id: str, admitted) -> None:
+        await self._writer.write_record(
+            app_name=app_name, user_id=user_id, admitted=admitted
+        )
+        self.written_memory_ids.append(memory_id_for(admitted.record.id))
 
     async def search_memory(
         self, *, app_name: str, user_id: str, query: str
-    ) -> SearchMemoryResponse:
-        pager = await self._client().aio.agent_engines.memories.retrieve(
-            name=self.engine_name,
-            scope={"app_name": app_name, "user_id": user_id},
-            similarity_search_params={"search_query": query, "top_k": 10},
+    ) -> list[str]:
+        facts = await self._writer.search_memory(
+            app_name=app_name, user_id=user_id, query=query
         )
-        entries: list[MemoryEntry] = []
-        self.retrieved_memory_names.clear()
-        async for retrieved in pager:
-            memory = retrieved.memory
-            if memory is None or not memory.fact:
-                continue
-            self.retrieved_memory_names.append(memory.name or "unnamed-memory")
-            entries.append(
-                MemoryEntry(
-                    author="user",
-                    content=types.Content(
-                        role="user", parts=[types.Part(text=memory.fact)]
-                    ),
-                    timestamp=(
-                        memory.update_time.isoformat() if memory.update_time else None
-                    ),
-                )
-            )
-        return SearchMemoryResponse(memories=entries)
-
-
-def _has_content(event) -> bool:
-    content = getattr(event, "content", None)
-    return bool(content and content.parts)
-
-
-def _texts(response: SearchMemoryResponse) -> list[str]:
-    return [
-        part.text
-        for memory in response.memories
-        for part in memory.content.parts
-        if part.text
-    ]
+        self.last_search_facts = facts
+        return facts
 
 
 def _matches_expected_fact(fact: str) -> bool:
@@ -134,18 +102,141 @@ def _matches_expected_fact(fact: str) -> bool:
     return "sales export" in normalized and "signed approval" in normalized
 
 
+async def _poll_search(
+    custody: CustodyMemoryBank, *, user_id: str, contains: str, deadline: float
+) -> list[str]:
+    facts: list[str] = []
+    while time.monotonic() < deadline:
+        facts = await custody.search_memory(
+            app_name=APP_NAME, user_id=user_id, query=QUERY
+        )
+        if any(contains in fact for fact in facts):
+            return facts
+        await asyncio.sleep(3)
+    return facts
+
+
+async def _prove_selective_deletion(
+    custody: CustodyMemoryBank,
+    downstream: RecordWritingMemoryBank,
+    *,
+    session_id: str,
+    user_id: str,
+    agent_name: str,
+    proof_id: str,
+) -> dict[str, object]:
+    """One real ADK event carrying a trusted tool's function_response,
+    admitted through the same `CustodyMemoryBank` instance as the
+    conversational turn. That turn has no `source_tool` and so cannot be
+    revoked by tool; this record can, which is what proves selective
+    deletion works through G1's actual wiring, not just D2's standalone one.
+    """
+    tool_fact = f"Sales export audit control TOOL-{proof_id[:8]} requires dual sign-off."
+    tool_invocation = f"g1-tool-{proof_id[:12]}"
+    tool_event = AdkEvent(
+        invocation_id=tool_invocation,
+        author=agent_name,
+        content=types.Content(
+            role="model",
+            parts=[
+                types.Part(
+                    function_response=types.FunctionResponse(
+                        id=tool_invocation,
+                        name=TOOL_NAME,
+                        response={"result": tool_fact},
+                    )
+                )
+            ],
+        ),
+    )
+    tool_session = Session(
+        id=f"{session_id}-tool",
+        app_name=APP_NAME,
+        user_id=user_id,
+        events=[tool_event],
+    )
+    splits_before = len(custody.splits())
+    await custody.add_session_to_memory(tool_session)
+    # `CustodyMemoryBank.add_session_to_memory` matches ADK's `-> None`
+    # port and discards the `Split` `CustodyMemoryService` returns; read it
+    # back from `splits()` instead, the same accessor the conversational
+    # leg above already uses.
+    tool_split = custody.splits()[splits_before]
+    if len(tool_split.trusted) != 1:
+        raise RuntimeError(
+            f"expected one trusted tool-origin record, got {len(tool_split.trusted)}"
+        )
+    tool_record = tool_split.trusted[0].record
+
+    before_revoke = await _poll_search(
+        custody, user_id=user_id, contains=tool_fact, deadline=time.monotonic() + 90
+    )
+    if tool_fact not in before_revoke:
+        raise RuntimeError(
+            "the tool-origin write completed but was not retrievable within "
+            "90 seconds"
+        )
+
+    revoking_graph = RevokingMemoryBankGraph(
+        graph=custody.graph(),
+        memories=downstream.memories,
+        engine_name=downstream.engine_name,
+    )
+    revocation = await revoking_graph.revoke(
+        tool=TOOL_NAME, revocation_id=f"g1-revoke-{proof_id}"
+    )
+
+    deadline = time.monotonic() + 90
+    after_revoke = before_revoke
+    while time.monotonic() < deadline:
+        after_revoke = await custody.search_memory(
+            app_name=APP_NAME, user_id=user_id, query=QUERY
+        )
+        if tool_fact not in after_revoke and any(
+            _matches_expected_fact(f) for f in after_revoke
+        ):
+            break
+        await asyncio.sleep(3)
+    if tool_fact in after_revoke:
+        raise RuntimeError(
+            "revoking the tool did not remove its memory within 90 seconds"
+        )
+    if not any(_matches_expected_fact(f) for f in after_revoke):
+        raise RuntimeError(
+            "revoking the tool also removed the untooled conversational "
+            "memory, which should be untouched"
+        )
+
+    return {
+        "tool": TOOL_NAME,
+        "tool_record_id": tool_record.id,
+        "tool_memory_id": memory_id_for(tool_record.id),
+        "tool_fact": tool_fact,
+        "before_revoke_facts": before_revoke,
+        "after_revoke_facts": after_revoke,
+        "revocation_id": revocation.id,
+        "removed": list(revocation.removed),
+    }
+
+
 async def prove_adk_memory_bank(
     *, project: str, location: str, agent_engine_id: str, proof_id: str
 ) -> dict[str, object]:
-    """Return evidence from one unique-scope ADK Runner invocation."""
+    """Return evidence from one unique-scope ADK Runner invocation.
+
+    Two writes happen in this one scope: the real Runner's conversational
+    turn (unchanged from before the migration), and one direct, tool-origin
+    write proving the same `CustodyMemoryBank` instance can also admit and
+    later revoke a tool's output, which the conversational turn alone
+    cannot exercise (it carries no `source_tool`).
+    """
     user_id = f"g1-{proof_id}"
     session_id = f"g1-{proof_id}"
-    downstream = BlockingAgentPlatformMemoryBank(
-        project=project,
-        location=location,
-        agent_engine_id=agent_engine_id,
+    downstream = RecordWritingMemoryBank(
+        project=project, location=location, agent_engine_id=agent_engine_id
     )
-    custody = CustodyMemoryBank(downstream=downstream)
+    tools = ToolTrust(trusted=frozenset({TOOL_NAME}))
+    custody = CustodyMemoryBank(downstream=downstream, tools=tools)
 
     async def persist_session(callback_context: Context) -> None:
         await callback_context.add_session_to_memory()
@@ -198,33 +289,35 @@ async def prove_adk_memory_bank(
         await runner.close()
 
     deadline = time.monotonic() + 90
-    found_facts: list[str] = []
-    matched: str | None = None
-    while time.monotonic() < deadline:
-        found = await custody.search_memory(
-            app_name=APP_NAME, user_id=user_id, query=QUERY
-        )
-        found_facts = _texts(found)
-        matched = next(
-            (fact for fact in found_facts if _matches_expected_fact(fact)), None
-        )
-        if matched:
-            break
-        await asyncio.sleep(3)
-    if matched is None:
+    found_facts = await _poll_search(
+        custody, user_id=user_id, contains="signed approval", deadline=deadline
+    )
+    matched = [f for f in found_facts if _matches_expected_fact(f)]
+    if not matched:
         raise RuntimeError(
             "the ADK callback completed, but its unique Memory Bank scope did not "
             "return the submitted fact within 90 seconds"
         )
 
-    splits = custody.splits()
-    if len(splits) != 1 or len(downstream.operation_names) != 1:
+    conversational_splits = custody.splits()
+    if len(conversational_splits) != 1:
         raise RuntimeError(
-            "expected one ADK callback and one governed Memory Bank write, got "
-            f"{len(splits)} split(s) and {len(downstream.operation_names)} write(s)"
+            "expected exactly one ADK callback split from the conversational "
+            f"turn, got {len(conversational_splits)}"
         )
-    split = splits[0]
+    conversational_split = conversational_splits[0]
+
+    revocation_proof = await _prove_selective_deletion(
+        custody,
+        downstream,
+        session_id=session_id,
+        user_id=user_id,
+        agent_name=agent.name,
+        proof_id=proof_id,
+    )
+
     return {
+        "write_path": "write_record",
         "framework": "google-adk",
         "agent_name": agent.name,
         "configured_model": MODEL,
@@ -240,22 +333,30 @@ async def prove_adk_memory_bank(
         "agent_engine": downstream.engine_name,
         "scope": {"app_name": APP_NAME, "user_id": user_id},
         "submitted_fact": FACT,
-        "retrieved_fact": matched,
+        "retrieved_facts": matched,
         "retrieved_memory_count": len(found_facts),
-        "retrieved_memory_names": downstream.retrieved_memory_names,
-        "memory_write_count": len(downstream.operation_names),
-        "memory_operation_names": downstream.operation_names,
-        "written_event_count": downstream.written_event_count,
+        "written_memory_ids": downstream.written_memory_ids,
+        "memory_write_count": len(downstream.written_memory_ids),
+        #: The conversational leg alone, one write_record call per trusted
+        #: event, so a judge can tell it apart from the tool leg's one
+        #: additional write below without recomputing the split.
+        "conversational_memory_write_count": len(conversational_split.trusted),
         "custody_split": {
-            "total": split.total,
-            "withheld": split.withheld,
-            "refused": split.refused,
+            "total": conversational_split.total,
+            "withheld": conversational_split.withheld,
+            "refused": conversational_split.refused,
         },
         #: The exact digests of the admitted records this run produced. A
         #: quarantine later needs to name what it is quarantining; this is
         #: that name, and it is what the Observability proof (O1) binds to a
         #: trace, so a later revocation can be traced back to this run.
-        "admitted_digests": [a.record.content_sha256 for a in split.trusted],
+        "admitted_digests": [
+            a.record.content_sha256 for a in conversational_split.trusted
+        ],
+        #: The tool-origin write and its revocation, proving selective
+        #: deletion through G1's own CustodyMemoryBank wiring rather than
+        #: D2's standalone CustodyMemoryService usage.
+        "revocation_proof": revocation_proof,
     }
 
 

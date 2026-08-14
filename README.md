@@ -193,21 +193,39 @@ mixed-trust events has no single origin at all. Splitting before the write also
 sidesteps `search_memory` having no filter parameter.
 
 **Checked live 2026-08-13, not just from docs, and now built:**
-`agent_engines.memories.delete` exists and works, but through G1's governed
-`ingest_events` write path (ADK's own `add_session_to_memory`), nothing
-hands back a name to delete with, and a same-scope, same-topic second write
-was observed overwriting an earlier memory in place. Selective deletion is
-real for a second, additive write path instead:
+`agent_engines.memories.delete` exists and works, but through ADK's stock
+`ingest_events` write path (`add_session_to_memory`), nothing hands back a
+name to delete with, and a same-scope, same-topic second write was observed
+overwriting an earlier memory in place. Selective deletion is real for a
+second, additive write path instead:
 `memories.create(config={"memory_id": memory_id_for(record.id)})` gives a
 deterministic, collision-free mapping, and `custody/adapters/
 memory_bank.py`'s `RevokingMemoryBankGraph` wraps `custody/graph.py`'s own
 `revoke` to delete each removed record's memory by that name. Live-proven
 end to end (`make live-memory-deletion`, `make memory-deletion-gates`, seven
 PASS): revoke a tool, and its memory is gone from `search_memory` while a
-sibling tool's memory is untouched. G1's `ingest_events` path, its Cloud Run
-proof, and anything already written through it are unchanged; only content
-written through the new path is deletable this way. Full evidence in
-`DECISIONS.md` #2.
+sibling tool's memory is untouched.
+
+**Migrated 2026-08-14: G1's own live ADK Runner now writes through this
+path too.** `custody/adapters/adk.py`'s `_SessionRebuilding` previously
+proxied only `add_session_to_memory`/`search_memory`, so `CustodyMemoryBank`
+(the shell the real ADK `Runner` sees) could never reach the `write_record`
+capability even when its downstream offered it; fixed to proxy
+`write_record` when present. G1's live proof (`make live-g1`) now writes
+one `memory_id`-pinned memory per admitted record instead of one
+`ingest_events` call per session, and additionally proves selective
+deletion through this exact wiring: one real ADK tool-response event is
+admitted, confirmed retrievable, then its tool is revoked and its memory
+confirmed gone from `search_memory` while the conversational memory is
+untouched. Retrieval quality changed, checked live rather than assumed:
+`ingest_events` returned one Memory-Bank-synthesized fact merging both
+admitted events (`proof-out/g1.json` before the migration:
+"Sales exports require a signed approval, and the audit identifier is
+b888ba0c..."); `write_record` returns one raw, unmerged fact per admitted
+event (two facts instead of one, neither synthesized) — no consolidation,
+by design, since `write_record` intentionally trades Memory Bank's own
+server-side derivation for a deterministic per-record `memory_id`. Full
+evidence and the correction history in `DECISIONS.md` #2.
 
 ## Status, honestly
 

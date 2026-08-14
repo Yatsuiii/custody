@@ -1,4 +1,4 @@
-# Custody recovery handoff, 2026-08-13 (R2/D2 live and committed, G5 clock running)
+# Custody recovery handoff, 2026-08-14 (G1 migrated onto D2's write path, live and gated)
 
 This is a live handoff document for Claude or another coding agent. Continue
 from the current repository state. Do not restart the project, redesign the
@@ -25,14 +25,28 @@ Six capabilities are complete and independently judged:
   13/13 PASS. Closes R1's own stated gap: an allowed `tools/call` is now
   cryptographically bound, server-side, to the `tools/list` read that
   authorized it.
-- **D2 (selective live Memory Bank deletion, new this session):**
+- **D2 (selective live Memory Bank deletion):**
   `proof-out/live-memory-deletion.json`, `make memory-deletion-gates` 7/7
   PASS. A second, additive, opt-in write path
   (`custody/adapters/memory_bank.py`) makes revoked records genuinely
-  deletable from live Memory Bank. G1's own `ingest_events` write path is
-  unchanged and not covered by this mechanism — see "Known limitations."
+  deletable from live Memory Bank.
+- **G1 migration onto D2's write path (new this session, 2026-08-14):** G1's
+  live ADK Runner now writes through `AgentEngineMemoryBank`/`write_record`
+  instead of `ingest_events`. Found and fixed a real integration gap first:
+  `custody/adapters/adk.py`'s `_SessionRebuilding` never proxied
+  `write_record`, so `CustodyMemoryBank` (what the real `Runner` sees) could
+  not have reached D2's path regardless of downstream, until fixed. Live
+  end to end against Agent Engine `6936011268348182528`:
+  `proof-out/g1.json`, `make gates` reports G1 PASS reading the new shape.
+  Also proves selective deletion through G1's own wiring (a tool-origin
+  write, confirmed retrievable, then confirmed gone after its tool is
+  revoked, sibling conversational memory untouched) and answers the
+  retrieval-quality question live rather than assuming it: `write_record`
+  returns two raw, unmerged per-event facts where `ingest_events` returned
+  one Memory-Bank-synthesized fact. See `DECISIONS.md` #2 and
+  `README.md`'s deletion section for the full write-up.
 
-A seventh, G5's elapsed-time record, is **started and running, structurally
+An eighth, G5's elapsed-time record, is **started and running, structurally
 cannot be "complete" until real calendar time passes** — see below.
 
 README.md and `.claude/SESSION_CONTRACT.md` are authoritative for all claim
@@ -65,15 +79,11 @@ git log -8 --oneline --decorate
 Known limitations that must remain explicit unless new direct evidence changes
 them:
 
-- **G1's `ingest_events` write path still cannot have its memories deleted
-  selectively.** D2 solved this for a *second, additive* write path
-  (`custody/service.py`'s `RecordWriter`, backed by
-  `memories.create(config={"memory_id": memory_id_for(record.id)})`), proven
-  live end to end. G1's live ADK Runner flow, its Cloud Run proof, and every
-  memory it has already written through `ingest_events` are **unchanged** and
-  remain outside what D2's mechanism can delete. This is the one gap in the
-  "fix the gaps" ask below that is real, scoped, and actionable — see "Next
-  capability."
+- **Closed 2026-08-14: G1's live ADK Runner now writes through D2's path
+  and its memories are selectively deletable.** Any memory G1 wrote earlier
+  through the old `ingest_events` path (before this session) remains
+  outside what D2's mechanism can delete — that history does not
+  retroactively become deletable, only writes from this migration onward.
 - Behavior-only drift with identical `tools/list` is outside R2's claim by
   design — would need the server to attest its own running code identity, a
   materially different problem, deliberately not attempted.
@@ -220,10 +230,67 @@ no longer returns it while the sibling tool's memory is untouched.
 `scripts/memory_deletion_gates.py` independently recomputes `memory_id_for`
 for both records rather than trusting the producer's claim.
 
-**Non-goal, stated in every artifact:** G1's `ingest_events` flow, its Cloud
-Run proof, and anything already written through it are unchanged and remain
-outside what this mechanism can delete. Migrating G1 onto this path was
-explicitly scoped out — see "Next capability."
+**Non-goal, as originally scoped:** at the time D2 was built, migrating G1
+onto this path was explicitly deferred. **Done in the next session,
+2026-08-14** — see "G1 migration" below. Content G1 wrote before that
+migration, through the old `ingest_events` path, remains outside what this
+mechanism can delete.
+
+## G1 migration: G1's own writes are now selectively deletable
+
+Scope: close the one gap D2 deliberately left open — G1's live ADK Runner
+still wrote through `ingest_events`, so nothing it wrote could be
+selectively deleted, even though D2's mechanism existed.
+
+**A real integration bug was found and fixed first, not assumed away.**
+`custody/adapters/adk.py`'s `_SessionRebuilding` — the wrapper
+`CustodyMemoryBank` (the ADK-facing shell a real `Runner` requires) puts
+between `CustodyMemoryService` and any downstream — proxied only
+`add_session_to_memory` and `search_memory`. `CustodyMemoryService`'s own
+capability detection (`getattr(self.downstream, "write_record", None)`)
+runs against `self.downstream`, which for `CustodyMemoryBank` is always a
+`_SessionRebuilding` instance, so a real ADK `Runner` could never have
+reached `write_record` regardless of which downstream `CustodyMemoryBank`
+was given. Fixed additively: `_SessionRebuilding.__post_init__` now sets
+`self.write_record = inner.write_record` only when the wrapped downstream
+offers it. Confirmed safe by usage: only `scripts/live_memory_bank.py` and
+tests using `InMemoryMemoryService` (which never offers `write_record`)
+construct `CustodyMemoryBank`.
+
+`scripts/live_memory_bank.py`'s `prove_adk_memory_bank` now builds its
+downstream from `AgentEngineMemoryBank` instead of the removed
+`ingest_events`-based `BlockingAgentPlatformMemoryBank`. The real
+Runner/Gemini/conversational leg is unchanged in shape and behavior. A
+second, direct write — one real ADK event carrying a trusted tool's
+`function_response`, admitted through the same `CustodyMemoryBank`
+instance — proves selective deletion through G1's actual wiring: the
+conversational turn's records carry no `source_tool` and so cannot be
+targeted by `revoke(tool=...)`, so this tool-origin write is what makes the
+claim demonstrable, the same shape D2 already proved standalone.
+
+Live proof (`make live-g1`, evidence in `proof-out/g1.json`): the tool-origin
+memory is retrievable via `search_memory` before its tool is revoked, and
+gone afterward, while the untooled conversational memories stay untouched.
+`make gates`'s G1 judge (`scripts/gates.py`) was updated to match the new
+evidence shape and now also independently recomputes `memory_id_for` for
+the revoked record rather than trusting the producer's claim, plus checks
+the before/after `search_memory` results directly — the same discipline
+`memory_deletion_gates.py` already used for D2. Reported PASS against this
+session's live evidence.
+
+**Retrieval quality, decided and documented live, not assumed:** the
+pre-migration baseline (`ingest_events`) returned one Memory-Bank-synthesized
+fact merging both admitted events' content ("Sales exports require a
+signed approval, and the audit identifier is b888ba0c..."). The
+post-migration path (`write_record`) returns two separate, unmerged, raw
+per-event facts instead — no cross-event synthesis, by design, since
+`write_record` trades Memory Bank's own server-side consolidation for a
+deterministic per-record `memory_id`. This is the exact tradeoff
+`DECISIONS.md` #2 named before it was made: real, and now measured.
+
+**Non-goal, stated in every artifact:** memories G1 wrote before this
+migration, through the old `ingest_events` path, are unchanged and remain
+outside what this mechanism can delete.
 
 ## G5: what was built, and why it can't be "done" yet
 
@@ -264,7 +331,9 @@ check). Neither is fixable by code today; both need calendar time.
 - R2's independently-verified claim is two Cloud Logging denial entries plus
   two Cloud Run revision descriptions, not a claim about IAP or the Gateway.
 - D2's independently-verified claim covers only records written through the
-  new `write_record` path. Do not imply G1's own memories became deletable.
+  new `write_record` path. As of the 2026-08-14 G1 migration, G1's live
+  Runner is one of those writers too — do not imply memories G1 wrote
+  *before* that migration became retroactively deletable; they did not.
 - Cloud Run and the control plane are public because they are synthetic proof
   services. Do not generalize that posture to production customer data.
 - All synthetic IDs and `example.invalid` addresses are controls. Do not use
@@ -274,49 +343,15 @@ check). Neither is fixable by code today; both need calendar time.
 
 ## Next capability
 
-With R2, D2, and G5's clock all landed, remaining scoped work:
+With R2, D2, the G1 migration, and G5's clock all landed, remaining scoped
+work:
 
 1. **Confirm G5's natural Scheduler fire** (`2026-08-14T06:00:02Z` UTC, see
    above) — a quick log check, not a build task. Do this first if it's now
    past that time.
-2. **Migrate G1 onto the D2 write path** (the one real, deferred gap):
-   rework G1's live ADK Runner flow (`scripts/live_memory_bank.py`,
-   `custody/adapters/adk.py`) to use `AgentEngineMemoryBank`/`RecordWriter`
-   instead of `ingest_events`, so G1's own memories become selectively
-   deletable too. This was explicitly scoped out of the D2 session because
-   it reworks a deadline-critical, already-passing live gate — it needs its
-   own session contract, its own live re-proof of G1 end to end (Cloud Run +
-   Gemini + ADK Runner + the new write path), and a clear-eyed check of
-   whether losing Memory Bank's own server-side derivation (one summarized
-   memory per session, replaced by one raw fact per admitted record) changes
-   retrieval quality in a way worth documenting either way.
-3. `scripts/scheduler_gates.py`, once there is a real multi-day span to
+2. `scripts/scheduler_gates.py`, once there is a real multi-day span to
    judge — not yet, would have nothing to check.
-4. Revoke the G5 seed record near filming, via the existing `/revoke`
+3. Revoke the G5 seed record near filming, via the existing `/revoke`
    endpoint, once enough real elapsed time has passed.
-
-Before starting #2 as a fresh session, update `.claude/SESSION_CONTRACT.md`
-with a contract scoped to that specific piece, per the global evidence-gated
-protocol — do not reuse D2's already-closed D1/D2 gates for a scope this
-different.
-
-### Ready-to-use prompt for #2 (G1 migration)
-
-> Migrate G1's live write path from `ingest_events` to the D2 write path
-> (`custody/adapters/memory_bank.py`'s `AgentEngineMemoryBank`/
-> `RecordWriter`), so memories G1's own ADK Runner writes become selectively
-> deletable, the same way D2 already proved for a standalone session. Read
-> `HANDOFF.md`'s "D2: what was built" and "Next capability" sections first,
-> and `DECISIONS.md` #2 for the full live history of what was tried and
-> rejected before D2's path was found to work. Scope this with a session
-> contract in `.claude/SESSION_CONTRACT.md` first (objective + 2-4
-> acceptance gates: G1 still runs live end to end on the new path; a
-> revoked G1-written record's memory is verifiably gone from
-> `search_memory`; no regression to G1's existing admitted/withheld counts
-> or Gemini/Cloud Run behavior). Decide and document, live-verified not
-> assumed, whether losing Memory Bank's own session-level derivation (one
-> summarized memory per session under `ingest_events`, versus one raw fact
-> per admitted record under `write_record`) changes retrieval quality, and
-> say so either way rather than silently absorbing the change. Confirm with
-> the user before the first live Cloud Run redeploy, same discipline as
-> every other live gate in this project.
+4. Regenerate `proof-out/g1.json` before filming — G1 evidence expires
+   after 24 hours, same discipline as every other live gate here.

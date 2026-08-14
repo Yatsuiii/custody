@@ -733,6 +733,102 @@ half-building everything.
   Google models (0.2 each, max 0.6). Claim Gemma honestly for triage. Do not
   invent a Veo use; a forced integration reads worse than an absent one.
 
+## G1 migration to the D2 write path (scoped session, opened 2026-08-14)
+
+Objective: Migrate G1's live write path from `ingest_events`
+(`BlockingAgentPlatformMemoryBank` in `scripts/live_memory_bank.py`) to D2's
+`AgentEngineMemoryBank`/`RecordWriter` path
+(`custody/adapters/memory_bank.py`), so memories G1's own ADK Runner writes
+become selectively deletable via `RevokingMemoryBankGraph`, the same
+mechanism D2 already proved for a standalone session. `CustodyMemoryService.
+add_session_to_memory` (`custody/service.py:225`) already auto-detects a
+`write_record`-capable downstream, so no core code changes; this is a
+downstream-swap plus new live proof/gates scripts.
+
+Branch: feat/memory-provenance
+Parent: 6d22ff8
+
+Allowed files: `scripts/live_memory_bank.py`, `scripts/live_g1.py`, a new
+`scripts/g1_migration_gates.py` (or equivalent gates script name), `README.md`
+limitations section, `DECISIONS.md`, `HANDOFF.md`, `proof-out/*`. No changes
+to `custody/service.py`, `custody/adapters/memory_bank.py`, or
+`custody/adapters/adk.py` unless a live check finds the existing D2
+primitives insufficient (if so, stop and report before editing them, since
+those are D2's already-closed, independently-gated surface).
+
+Non-goals:
+
+- No Cloud Run redeploy. G1's Cloud Run leg (`_cloud_run_proof` in
+  `scripts/live_g1.py`) hits the already-deployed control plane's
+  `/sessions` and `/health` endpoints unchanged; only the ADK/Memory-Bank
+  leg (`prove_adk_memory_bank`) changes downstream.
+- No change to `custody/service.py`, D2's `RecordWriter` protocol, or
+  `AgentEngineMemoryBank`/`RevokingMemoryBankGraph` — those are D2's
+  already-proven, already-gated surface (`make memory-deletion-gates`,
+  7/7 PASS). Reuse them; do not reopen them.
+- Do not silently keep G1's old `ingest_events` proof claim once the new
+  path is proven live — `HANDOFF.md`'s "Known limitations" line about
+  G1's memories being undeletable must be corrected or explicitly
+  superseded, not left stale.
+- Do not round up an offline/unit-test pass to a live claim. Every gate
+  below needs a live re-read from Google Cloud, same discipline as every
+  other gate in this project.
+
+Baseline: `make live-g1` currently passes against the `ingest_events` path
+(`proof-out/g1.json`, evidence expires 24h and is already stale as of this
+session — regenerate before trusting it as a pre-change baseline). `make
+memory-deletion-gates` passes 7/7 against D2's standalone proof
+(unaffected by this work).
+
+Acceptance gates:
+
+1. G1's ADK Runner flow runs live end to end on the new `write_record` path
+   against real Agent Engine `6936011268348182528` — same Cloud Run health
+   check, same Gemini 3.5 call, same ADK `Runner`/`after_agent_callback`
+   shape as today's `live_g1.py`, only the Memory Bank downstream changed.
+2. A record G1's own Runner wrote is verifiably revocable: after revoking
+   its tool, a subsequent `search_memory` in that scope no longer returns
+   it. Independently rereadable, not just producer-claimed.
+3. No regression to G1's existing admitted/withheld counts, refused count,
+   or the Gemini/Cloud Run legs of `live_g1.py` — same shape as
+   `custody_split` and the `cloud_run`/`gemini` blocks in `proof-out/g1.json`
+   today.
+4. The retrieval-quality question is decided and documented either way:
+   whether losing Memory Bank's own session-level derivation (one
+   summarized memory per session under `ingest_events`) for one raw
+   `admitted.text` fact per record under `write_record` changes what
+   `search_memory` returns, checked live against the same `QUERY` this
+   proof already uses, not assumed from the D2 write-up.
+
+Verification: a new `make g1-migration-gates`-equivalent script
+independently rereads the live artifact the same way
+`scripts/memory_deletion_gates.py` and `scripts/registry_gates.py` do
+(recompute `memory_id_for`, reread Cloud Logging/Agent Engine by
+server-issued identifiers, reject a coherent forged JSON document). Manual:
+confirm `search_memory` no longer returns the revoked fact and does return
+the surviving one.
+
+**Closed 2026-08-14, all four gates passed live.** No new gates script was
+needed: `scripts/gates.py`'s existing `judge_g1` already rereads
+`proof-out/g1.json` the same way (independently recomputing `memory_id_for`
+for the revoked record, checking the raw before/after `search_memory`
+results) and now covers this migration's shape directly, so a separate
+script would have duplicated it. Found and fixed a real integration gap
+first (`custody/adapters/adk.py`'s `_SessionRebuilding` never proxied
+`write_record`, so `CustodyMemoryBank` could not have reached the D2 path
+regardless of downstream). `make live-g1` ran live against Agent Engine
+`6936011268348182528`: gate 1 (Runner + Gemini + Cloud Run unchanged, now
+on `write_record`), gate 2 (a tool-origin record written through this run
+is retrievable, then confirmed gone after its tool is revoked, sibling
+conversational memories untouched), gate 3 (`make gates` reports G1 PASS,
+same Cloud Run/Gemini legs), gate 4 (decided live: `write_record` returns
+two raw, unmerged per-event facts where `ingest_events` returned one
+Memory-Bank-synthesized fact — documented in `README.md`, `DECISIONS.md`
+#2, `HANDOFF.md`). No Cloud Run redeploy occurred, matching the stated
+non-goal.
+
+Status: complete, superseded by the file-level status below
+
 ## Prior work disclosure
 
 Submission period opened 2026-08-04; this repository was created 2026-08-09, so
