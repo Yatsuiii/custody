@@ -503,6 +503,43 @@ read from `proof-out/live-review.json` today, and any resulting demotion or
 revocation still goes through the existing `/demote`/`/revoke` endpoints,
 driven by a human.
 
+### The fleet at N=5: a tool shared across departments, revoked once
+
+Until 2026-08-14, only one live ADK agent had ever run, once per proof
+script, one department per invocation. That structurally could not exercise
+the fleet's own central claim — a compromised tool is "identified and
+pulled ... across every department, agent and session since." Checked in
+code before scoping this, not assumed: `CustodyGraph.revoke`
+(`custody/graph.py`) matches descendants by tool name alone, and
+`CustodyRecord` carries no department field at all — by design, matching
+the claim above, but never exercised at N>1.
+
+`scripts/live_fleet.py` runs five live department worker agents (`sales`,
+`legal`, `hr`, `finance`, `engineering`), each a real ADK `Runner`/
+`gemini-3.5-flash` conversational turn plus one tool-origin write, through
+the exact wiring G1 already proved, all five sharing one `CustodyMemoryBank`
+instance — one process-wide derivation graph, mirroring production, not
+five isolated ones — against the one already-owned Agent Engine. No new
+Cloud Run services or Agent Engine identities: Memory Bank's own
+`{app_name, user_id}` scoping is what separates five departments, not five
+deployments. `sales` and `finance` independently trust and invoke a tool
+with the *same name*; `legal`, `hr`, and `engineering` each use a distinct
+one.
+
+Live proof (`make live-fleet`, proof `2f5461ce99ba46aebe7f43ac72595612`):
+one revocation of the shared tool removes exactly `sales` and `finance`'s
+tool-origin memories, while `legal`, `hr`, and `engineering`'s own memories
+stay retrievable, untouched. `make fleet-gates` reports 15/15 PASS: 10
+offline structural checks plus 5 independent live Memory Bank rereads
+(`memories.get` by a `memory_id_for`-recomputed name, not the producer's
+claim) — 2 confirming the shared-tool memories are actually gone, 3
+confirming the unrelated departments' memories actually still exist.
+Non-goal, stated in the artifact's own claim boundary: this does not test
+`TrustCatalog`'s per-department grant boundary (a department cannot
+vouch/demote another's tool) — that is already proven offline and live,
+unchanged, by the Provenance Auditor above; this proves the derivation
+graph's cross-department revocation reach instead.
+
 ### Live Agent Observability proof
 
 ```bash

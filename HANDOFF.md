@@ -1,4 +1,4 @@
-# Custody recovery handoff, 2026-08-14 (fleet review: Provenance Auditor and Custody Reviewer both landed, N agents next)
+# Custody recovery handoff, 2026-08-14 (fleet review closed: Provenance Auditor, Custody Reviewer, and N=5 department agents all landed)
 
 This is a live handoff document for Claude or another coding agent. Continue
 from the current repository state. Do not restart the project, redesign the
@@ -13,15 +13,13 @@ product-mapping table against actual code, then build the gaps found for
 real, one at a time, each closed with its own live proof and its own
 handoff so work can continue in a fresh Claude session. Three gaps were
 found (`.claude/SESSION_CONTRACT.md`, "Fleet review, 2026-08-14" section);
-user's stated order: **Auditor, then Reviewer, then N agents (deferred,
-size not yet chosen).**
+user's stated order: **Auditor, then Reviewer, then N agents.** All three
+are now closed; the user chose N=5 for the third.
 
 1. **Provenance Auditor — closed 2026-08-14**, live-proven. See below.
 2. **Custody Reviewer — closed 2026-08-14**, live-proven. See below.
-3. **N department worker agents** — deferred, not scoped. Only one live
-   ADK agent has ever run, one department per invocation. Ask the user for
-   a size (3 was recommended, declined for now) before scoping. This is
-   the only remaining item from the fleet review's three findings.
+3. **N department worker agents — closed 2026-08-14**, live-proven, N=5.
+   See below. All three fleet-review findings are now closed.
 
 ## Provenance Auditor: closed 2026-08-14, live-proven
 
@@ -96,6 +94,56 @@ human-facing review queue exists yet. A verdict is read from
 goes through the existing `/demote`/`/revoke` endpoints, driven by a
 human.
 
+## N department worker agents: closed 2026-08-14, live-proven, N=5
+
+Only one live ADK agent had ever run before this, once per proof script,
+one department per invocation — the fleet's own claim, that a compromised
+tool is "identified and pulled ... across every department, agent and
+session," had never been exercised at N>1. Checked in code before
+scoping, not assumed: `CustodyGraph.revoke` (`custody/graph.py`) matches
+descendants by tool name alone, and `CustodyRecord` carries no department
+field at all — intended, matching the claim above, but untested at scale.
+
+`scripts/live_fleet.py` (new) runs five live department worker agents
+(`sales`, `legal`, `hr`, `finance`, `engineering`), each a real ADK
+`Runner`/`gemini-3.5-flash` conversational turn plus one tool-origin
+write, through the exact `CustodyMemoryBank` -> `AgentEngineMemoryBank`/
+`write_record` wiring G1 already proved. All five share one
+`CustodyMemoryBank` instance (one process-wide `CustodyGraph`, mirroring
+production, not five isolated ones) against the one already-owned Agent
+Engine `6936011268348182528` — no new Cloud Run services or Agent Engine
+identities; Memory Bank's own `{app_name, user_id}` scoping is what
+separates the five departments. `sales` and `finance` independently trust
+and invoke a tool with the *same name*, `cross_dept_export_tool`; `legal`,
+`hr`, and `engineering` each use a distinct tool name. No changes to
+`custody/graph.py`, `custody/catalog.py`, `custody/origin.py`,
+`custody/control_plane.py`, or any `custody/adapters/*` file — this is a
+proof-at-scale build over already-correct, already-tested mechanisms, not
+a new one.
+
+Live proof (`make live-fleet`, proof
+`2f5461ce99ba46aebe7f43ac72595612`, `proof-out/live-fleet.json`): all five
+departments' tool-origin facts are written and independently retrievable;
+one revocation of the shared tool (`RevokingMemoryBankGraph.revoke`)
+removes exactly `sales` and `finance`'s tool-origin memories from both
+departments, while `legal`, `hr`, and `engineering`'s own memories stay
+retrievable, untouched. `make fleet-gates` (new,
+`scripts/fleet_gates.py`) reports 15/15 PASS: 10 offline structural
+checks plus 5 independent live Memory Bank rereads (`memories.get` by a
+`memory_id_for`-recomputed name, not the producer's claim — 2 confirming
+deletion, 3 confirming survival). `make check` 315/315 offline, unaffected.
+`make gates` reports the same baseline as before this sub-build (G1/G2/G3/G4
+PASS, G5 correctly BLOCKED). Full write-up in `.claude/SESSION_CONTRACT.md`'s
+"Sub-build: N department worker agents" section and `README.md`'s new "The
+fleet at N=5" section.
+
+**Non-goal, stated in the artifact and every write-up:** this does not test
+`TrustCatalog`'s per-department grant boundary (a department cannot
+vouch/demote another's tool) — that is already proven offline and live,
+unchanged, by the Provenance Auditor sub-build above. This build proves the
+derivation graph's cross-department revocation *reach* instead, a
+different, previously-unproven property.
+
 ## Lane and artifact
 
 Lane: agentic security infrastructure, built as an evidence-gated systems
@@ -148,12 +196,11 @@ text; do not restate any of it from memory, read them.
 - Commits landed: `df334f1` (S1 fix + accumulated G1/R1 work), `94bcad4`
   (M1), `68f1b88` (G5 persistence/Scheduler start), `9c4174b` (O1),
   `7f7ea00` (R2 + D2), `0b4a816` (G1 migration onto D2's write path),
-  `f9e19cd` (Provenance Auditor).
-- **Working tree carries uncommitted Custody Reviewer work as of this
-  handoff**: `custody/review.py`, `tests/test_review.py`,
-  `scripts/live_review.py`, `scripts/review_gates.py`, `Makefile`,
-  `README.md`, `.claude/SESSION_CONTRACT.md`, `HANDOFF.md`, and
-  `proof-out/live-review.json`. Not yet committed — commit only on
+  `f9e19cd` (Provenance Auditor), `ce54bad` (Custody Reviewer).
+- **Working tree carries uncommitted N-agent fleet work as of this
+  handoff**: `scripts/live_fleet.py`, `scripts/fleet_gates.py`,
+  `Makefile`, `README.md`, `.claude/SESSION_CONTRACT.md`, `HANDOFF.md`,
+  and `proof-out/live-fleet.json`. Not yet committed — commit only on
   explicit user authorization, same rule as every other checkpoint here.
   Confirm with `git status` before assuming otherwise; do not trust this
   line if time has passed.
@@ -168,8 +215,8 @@ git log -8 --oneline --decorate
 
 ## Previously proven state, do not redo
 
-- G1, R1, S1, M1, O1, R2, D2, the Provenance Auditor, and the Custody
-  Reviewer as above.
+- G1, R1, S1, M1, O1, R2, D2, the Provenance Auditor, the Custody
+  Reviewer, and the N=5 department fleet, as above.
 - Structural TOOL roots and MODEL/DERIVED descendants are already enforced.
 - Offline G2, G3, G4 pass; `make gates` reports 4 PASS, 0 FAIL, 1 BLOCKED (G5,
   correctly BLOCKED — its elapsed-time requirement is real, not a bug).
@@ -442,22 +489,18 @@ check). Neither is fixable by code today; both need calendar time.
 ## Next capability
 
 With R2, D2, the G1 migration, the Provenance Auditor, the Custody
-Reviewer, and G5's clock all landed, remaining scoped work:
+Reviewer, the N=5 fleet, and G5's clock all landed, all three fleet-review
+findings are closed. Remaining scoped work:
 
 1. **Confirm G5's natural Scheduler fire** (`2026-08-14T06:00:02Z` UTC, see
    above) — a quick log check, not a build task. Do this first if it's now
    past that time.
-2. **N department worker agents** — the last of the fleet review's three
-   findings, deferred and not yet scoped. Only one live ADK agent has ever
-   run, one department per invocation. Ask the user for a size (3 was
-   recommended, declined for now) before scoping the same way the Auditor
-   and Reviewer sub-builds were scoped: a new dated section in
-   `.claude/SESSION_CONTRACT.md` before touching code.
-3. `scripts/scheduler_gates.py`, once there is a real multi-day span to
+2. `scripts/scheduler_gates.py`, once there is a real multi-day span to
    judge — not yet, would have nothing to check.
-4. Revoke the G5 seed record near filming, via the existing `/revoke`
+3. Revoke the G5 seed record near filming, via the existing `/revoke`
    endpoint, once enough real elapsed time has passed.
-5. Regenerate `proof-out/g1.json` before filming — G1 evidence expires
+4. Regenerate `proof-out/g1.json` before filming — G1 evidence expires
    after 24 hours, same discipline as every other live gate here.
-6. `proof-out/live-review.json` also expires after 24 hours, same
-   discipline — regenerate with `make live-review` before filming.
+5. `proof-out/live-review.json` and `proof-out/live-fleet.json` also expire
+   after 24 hours, same discipline — regenerate with `make live-review` and
+   `make live-fleet` before filming.

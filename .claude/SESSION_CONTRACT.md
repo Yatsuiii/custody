@@ -838,6 +838,10 @@ findings:
 1. **N department worker agents**: only one live ADK agent has ever run, once
    per proof script, one department per invocation. Never proven at N>1.
    Explicitly deferred again this pass, at the user's direction.
+   **Closed 2026-08-14** — see "Sub-build: N department worker agents"
+   below; five departments now run live, and the property N=1 could never
+   exercise (a tool shared across departments, revoked once, pulled from
+   both) is proven, not just five isolated invocations.
 2. **Provenance Auditor**: the table claims it "re-examines admitted memories
    when trust changes and drives revocation across the graph." The actual
    `/auditor` handler (`custody/control_plane.py`) only seeds one fixed
@@ -1081,6 +1085,131 @@ the live call instead of re-reading one, the same substitution O1 made for
 Cloud Trace storage. No Cloud Run redeploy, no new control-plane endpoint,
 matching the stated non-goals. No LLM anywhere near a trust or origin
 decision — the Gemini call only ever produces a `summary` string.
+
+Status: complete, superseded by the file-level status below
+
+## Sub-build: N department worker agents (opened 2026-08-14)
+
+Objective: close finding 1 above. Only one live ADK Runner has ever run,
+once per proof script, one department per invocation — the fleet's central
+claim, revocation reaching every memory descended from a compromised tool
+"across every department, agent and session," has never been exercised at
+N>1. User-chosen size: **N=5** departments.
+
+Checked in code before scoping, not assumed: `CustodyGraph.revoke`
+(`custody/graph.py:131`) matches descendants by `tool` name alone —
+`CustodyRecord` (`custody/origin.py`) carries no `department` field at all.
+This is not a bug to fix; it is exactly what the product's own one-sentence
+claim requires (a compromised tool is pulled everywhere it was used, not
+just where it was first reported). But it means the one property this
+sub-build must prove live, which N=1 structurally could never exercise, is:
+**a tool shared by two departments, revoked once, is pulled from both** —
+not merely "5 agents ran."
+
+Branch: feat/memory-provenance
+Parent: ce54bad
+
+Allowed files: a new `scripts/live_fleet.py` and `scripts/fleet_gates.py`,
+`scripts/live_memory_bank.py` (parametrize `prove_adk_memory_bank` by
+department/`user_id` instead of the hardcoded `APP_NAME`/`user_id`
+constants; no behavior change to the existing `make live-g1` call site),
+`Makefile`, `README.md` (fleet/product-mapping sections only), `HANDOFF.md`,
+`.claude/SESSION_CONTRACT.md`, `proof-out/*`. No changes to
+`custody/graph.py`, `custody/catalog.py`, `custody/origin.py`,
+`custody/control_plane.py`, or `custody/adapters/*` — the revocation,
+trust-catalog, and Memory Bank write/delete mechanisms this sub-build
+exercises are already correct and already covered offline (Auditor,
+D2, G1 migration sub-builds); this is a proof-at-scale build, not a new
+mechanism.
+
+Non-goals:
+
+- No new Cloud Run services or Agent Engine identities per department.
+  Memory Bank already scopes by `{app_name, user_id}` per write/search
+  call (`custody/adapters/memory_bank.py`); five departments are five
+  `user_id` values against the one already-owned Agent Engine
+  (`6936011268348182528`), not five deployments. Standing up N runtimes
+  would prove infra replication, not the fleet claim.
+- No department-scoped revocation. `CustodyGraph.revoke`'s global-by-tool
+  matching is the intended semantics (see above), not something this
+  sub-build narrows. If the user later wants revocation scoped to one
+  department even when a tool name collides across departments, that is a
+  different, explicitly-scoped change to `custody/graph.py`, not this one.
+- No UI or dashboard visualizing the fleet. Evidence is the same
+  artifact-plus-independent-gates shape every other live gate here uses.
+- No new trust/catalog logic. Departmental grant isolation
+  (`TrustCatalog.request`/`demote` refusing cross-department writes) is
+  already proven offline (`tests/test_catalog.py`) and live (Auditor
+  sub-build); this build reuses it, does not re-test it.
+
+Baseline: `make check` 315/315 passing offline (confirmed 2026-08-14, after
+the Custody Reviewer commit). `make gates` reports G1/G2/G3/G4 PASS, G5
+BLOCKED (calendar-gated, unaffected).
+
+Acceptance gates:
+
+1. Five live department worker agents (`sales`, `legal`, `hr`, `finance`,
+   `engineering`, or equivalent distinct `user_id`s), each a real ADK
+   `Runner`/Gemini conversational turn plus one tool-origin write, through
+   the same `CustodyMemoryBank`/`write_record` wiring G1 already proved —
+   not five copies of a mock. Each department's tool-origin fact is
+   independently retrievable via `search_memory` scoped to its own
+   `user_id`.
+2. The fleet claim, proven for the first time at N>1: two of the five
+   departments independently trust and invoke a tool with the *same name*
+   (a shared, cross-department tool). Revoking that tool once (`/demote` +
+   the existing `/auditor` sweep, same mechanism the Auditor sub-build
+   proved) removes the tool-origin memory from *both* departments'
+   `search_memory` results, not just the reporting department's — the
+   derivation graph's own stated claim, exercised live instead of assumed.
+3. A sibling check that the same revocation leaves the other three,
+   unrelated departments' memories untouched — the revocation is
+   tool-scoped, not blast-radius-unbounded.
+4. Live proof, same discipline as every other gate here: the producer
+   script (`scripts/live_fleet.py`) writes `proof-out/live-fleet.json`;
+   `scripts/fleet_gates.py` independently rereads live Memory Bank per
+   department (recomputing `memory_id_for` itself, not trusting the
+   producer's claim) rather than trusting the artifact.
+
+Verification: `make check`, a new `make live-fleet` writing
+`proof-out/live-fleet.json`, and `make fleet-gates` judging it
+independently. Manual: confirm the fleet review's finding 1 in
+`.claude/SESSION_CONTRACT.md`'s "Fleet review" section and `HANDOFF.md` are
+corrected to cite this live evidence instead of "never proven at N>1."
+
+**Closed 2026-08-14, all gates passed live, proof `2f5461ce99ba46aebe7f43ac72595612`.**
+Five live department worker agents (`sales`, `legal`, `hr`, `finance`,
+`engineering`) each ran a real ADK `Runner`/`gemini-3.5-flash` conversational
+turn plus one tool-origin write, through the exact `CustodyMemoryBank` ->
+`AgentEngineMemoryBank`/`write_record` wiring G1 already proved, all five
+sharing one `CustodyMemoryBank` instance (one process-wide `CustodyGraph`,
+not five isolated ones) against Agent Engine `6936011268348182528`. `sales`
+and `finance` independently trusted and invoked the same tool name,
+`cross_dept_export_tool`; `legal`, `hr`, and `engineering` each used a
+distinct tool name. One `/demote`-style revocation
+(`RevokingMemoryBankGraph.revoke(tool="cross_dept_export_tool", ...)`)
+removed exactly `sales` and `finance`'s tool-origin records
+(`revocation.removed` held both, no others) and their Memory Bank entries;
+`legal`, `hr`, and `engineering`'s own tool-origin memories were confirmed
+still present, both in the producer's own before/after `search_memory`
+reads and in `fleet_gates.py`'s independent `memories.get` reread by a
+`memory_id_for`-recomputed name, not the producer's claim. `make fleet-gates`
+reported 15/15 PASS: 10 offline structural checks plus 5 independent live
+Memory Bank rereads (2 confirming deletion, 3 confirming survival). `make
+check` 315/315 offline, unaffected. `make gates` reports the same baseline
+as before this sub-build (G1/G2/G3/G4 PASS, G5 correctly BLOCKED on
+elapsed time) — no core module changed (`custody/graph.py`,
+`custody/catalog.py`, `custody/origin.py`, `custody/control_plane.py`, and
+every `custody/adapters/*` file are untouched by this sub-build, exactly as
+scoped). No new Cloud Run services or Agent Engine identities: five
+departments are five `user_id` values against the one already-owned
+engine, Memory Bank's own `{app_name, user_id}` scoping is what separates
+them. **Non-goal, stated in the artifact's own `claim_boundary`:** this does
+not test `TrustCatalog`'s per-department grant boundary (a department
+cannot vouch/demote another's tool) — that is already proven offline and
+live, unchanged, by the Auditor sub-build; this build proves the
+derivation graph's cross-department revocation reach instead, which is a
+different property N=1 could never exercise.
 
 Status: complete, superseded by the file-level status below
 

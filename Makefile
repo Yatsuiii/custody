@@ -14,7 +14,7 @@ PYTHON ?= $(shell \
 		command -v python3; \
 	fi)
 
-.PHONY: help lint test check serve image gates cost demo revoke isolate revision-spike live-memory-bank live-memory-deletion memory-deletion-gates live-auditor auditor-gates live-review review-gates live-g1 live-registry-attack registry-gates live-revision-binding revision-binding-gates setup-gateway deploy-gateway-probe live-gateway gateway-gates live-model-armor model-armor-gates live-observability observability-gates clean
+.PHONY: help lint test check serve image gates cost demo revoke isolate revision-spike live-memory-bank live-memory-deletion memory-deletion-gates live-auditor auditor-gates live-review review-gates live-fleet fleet-gates live-g1 live-registry-attack registry-gates live-revision-binding revision-binding-gates setup-gateway deploy-gateway-probe live-gateway gateway-gates live-model-armor model-armor-gates live-observability observability-gates clean
 
 help:
 	@echo "make lint    ruff over the tree"
@@ -35,6 +35,8 @@ help:
 	@echo "make auditor-gates independently judge the live Auditor artifact"
 	@echo "make live-review prove the real Custody Reviewer: Gemini reads a quarantined item, drafts a verdict"
 	@echo "make review-gates independently judge the live Reviewer artifact"
+	@echo "make live-fleet prove the fleet claim at N=5: a tool shared by two departments, revoked once, pulled from both"
+	@echo "make fleet-gates independently judge the live fleet artifact"
 	@echo "make live-g1 Cloud Run + Gemini 3.5 + ADK/Memory Bank evidence"
 	@echo "make live-registry-attack deploy v1/v2 and prove stale Registry blocking"
 	@echo "make registry-gates independently judge the live Registry artifact"
@@ -101,6 +103,12 @@ live-review:
 
 review-gates:
 	@$(PYTHON) scripts/review_gates.py
+
+live-fleet:
+	@$(PYTHON) scripts/live_fleet.py
+
+fleet-gates:
+	@$(PYTHON) scripts/fleet_gates.py
 
 live-g1:
 	@$(PYTHON) scripts/live_g1.py
