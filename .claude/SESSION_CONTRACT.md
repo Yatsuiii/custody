@@ -156,7 +156,7 @@ predecessor died of five invented roles in a pipeline; that shape is banned here
 | Agent | Why it is not ceremony |
 | --- | --- |
 | **N department worker agents** | The governed population is the fleet. Real ADK agents doing departmental work. They are the subject of governance, not scaffolding, and they make "scalable network of institutional agents" literally true. |
-| **Provenance Auditor** | Re-examines admitted memories when trust changes and drives revocation across the graph. Genuinely long-running and asynchronous, which is the "weeks of operations" clause made concrete. |
+| **Provenance Auditor** | Re-examines trust and drives revocation across the graph, deterministically, on the deployed Cloud Scheduler's own daily clock rather than the demoter's request. **Real, live-proven 2026-08-14**: `/demote` withdraws a grant durably; `/auditor`'s sweep is the only thing that ever calls `CustodyGraph.revoke` on a demotion's behalf. `make live-auditor` / `make auditor-gates`, 9/9 PASS. See the sub-build section below. |
 | **Custody Reviewer** | Explains what a quarantined memory attempted and drafts a verdict. Changes what a human reads: a summary rather than raw traces. |
 
 ### Data model
@@ -826,6 +826,141 @@ two raw, unmerged per-event facts where `ingest_events` returned one
 Memory-Bank-synthesized fact — documented in `README.md`, `DECISIONS.md`
 #2, `HANDOFF.md`). No Cloud Run redeploy occurred, matching the stated
 non-goal.
+
+Status: complete, superseded by the file-level status below
+
+## Fleet review, 2026-08-14: the Provenance Auditor and Custody Reviewer rows
+were named, not built
+
+Reviewed on request against actual code, not the table's own prose. Three
+findings:
+
+1. **N department worker agents**: only one live ADK agent has ever run, once
+   per proof script, one department per invocation. Never proven at N>1.
+   Explicitly deferred again this pass, at the user's direction.
+2. **Provenance Auditor**: the table claims it "re-examines admitted memories
+   when trust changes and drives revocation across the graph." The actual
+   `/auditor` handler (`custody/control_plane.py`) only seeds one fixed
+   synthetic record on first-ever call and no-ops after — G5's elapsed-time
+   heartbeat, not trust re-examination. There is no code path today where a
+   trust change (a demotion) automatically produces a revocation; `/vouch`
+   only grants, never demotes, and `/revoke` is a separate, directly-called
+   endpoint with no link to catalog state at all.
+3. **Custody Reviewer / Gemini row**, marked **LIVE** in the product-mapping
+   table: the only live Gemini call in the repo (`scripts/live_g1.py`,
+   `_gemini_proof`) is a connectivity echo ("return exactly
+   CUSTODY_G1_OK:<id>"). No code path ever shows Gemini a quarantined memory
+   or drafts a verdict. This is the most likely claim to be challenged live.
+
+User's direction: build all three for real, one at a time, sequenced 2
+(Auditor) then 3 (Reviewer) then 1 (N agents, deferred for now — no session
+size chosen yet). Each sub-build gets its own scoped section below, closed
+independently, with a handoff written at the end so work can continue in a
+separate session.
+
+## Sub-build: real Provenance Auditor (opened 2026-08-14)
+
+Objective: close finding 2 above. `/vouch` gains a symmetric `/demote`
+endpoint so trust can actually be withdrawn, not just granted; `/auditor`'s
+existing daily Cloud Scheduler heartbeat (already live, G5) sweeps
+outstanding demotions and drives `CustodyGraph.revoke` itself, so a
+demotion recorded now and a revocation applied later, asynchronously, on
+the Scheduler's own clock, is a real property rather than something a
+script does on the demoter's behalf in the same call.
+
+Branch: feat/memory-provenance
+Parent: 0b4a816
+
+Allowed files: `custody/catalog.py`, `custody/control_plane.py`,
+`custody/firestore_store.py`, `tests/test_catalog.py`,
+`tests/test_control_plane.py`, a new `scripts/live_auditor.py` and
+`scripts/auditor_gates.py`, `Makefile`, `README.md` (fleet/product-mapping
+sections only), `HANDOFF.md`, `.claude/SESSION_CONTRACT.md`,
+`proof-out/*`. No changes to `custody/graph.py`, `custody/origin.py`, or
+`custody/service.py` — `CustodyGraph.revoke`'s idempotency-on-`revocation_id`
+contract is already correct and sufficient; the Auditor is a caller of it,
+not a reason to reopen it.
+
+Non-goals:
+
+- No LLM in the Auditor. Trust re-examination stays deterministic, same
+  discipline as revision admission and origin labelling — "no model decides
+  a fact" is a project-wide rule, not something this sub-build gets to
+  relax just because the table calls it an "agent."
+- No full Firestore migration of `departments`/`grants`. Those remain
+  documented PLANNED/in-memory except for the one new durable log this
+  sub-build needs (demotions) to make the sweep survive a cold start —
+  narrower than migrating the whole `TrustCatalog`.
+- No change to G5's existing seed-record/heartbeat behavior. The sweep is
+  additive inside the same `/auditor` handler, not a replacement.
+- No N>1 worker agents in this sub-build (separate, deferred item).
+- No Cloud Scheduler reconfiguration; the existing daily job
+  (`custody-g5-auditor`, `0 6 * * *` UTC) is the trigger, unchanged.
+
+Baseline: `make check` 296/296 passing offline (confirmed 2026-08-14, before
+this sub-build). `make gates` reports G1/G2/G3/G4 PASS, G5 BLOCKED
+(unaffected by this work — G5's own gate is calendar-time-gated, not
+logic-gated).
+
+Acceptance gates:
+
+1. `TrustCatalog.demote` refuses a cross-department demotion by the same
+   rule `request`/vouch already enforces (offline test) — a department
+   cannot un-trust another department's tool any more than it can trust one.
+2. A demotion is durably logged and survives a forced Firestore reread,
+   same discipline G5 already proved for the seed record's `admitted_at`.
+3. `/auditor`'s sweep is idempotent by construction, reusing
+   `CustodyGraph.revoke`'s existing `revocation_id` dedup (the demotion's
+   own deterministic id, not a fresh uuid) rather than a second
+   bookkeeping table: two sweeps after one demotion produce exactly one
+   revocation; a third sweep with no new demotions changes nothing.
+4. Live proof, mirroring every other live gate's discipline (producer
+   writes an artifact, an independent script rereads Google Cloud rather
+   than trusting the artifact): demote a tool live through the deployed
+   control plane; confirm the graph has *not* removed its records yet
+   (proving the demotion and the revocation are genuinely decoupled, not
+   silently synchronous); trigger `/auditor`; confirm via `GET
+   /custody/{id}` or an equivalent durable read that the descendants are
+   now gone. `scripts/auditor_gates.py` independently rereads Firestore/Cloud
+   Logging by server-issued identifiers, same as `memory_deletion_gates.py`.
+
+Verification: `make check`, a new `make live-auditor` writing
+`proof-out/live-auditor.json`, and `make auditor-gates` judging it
+independently. Manual: confirm the fleet table's Provenance Auditor row and
+`HANDOFF.md` are corrected to cite this live evidence instead of the old
+heartbeat-only description.
+
+**Closed 2026-08-14, all four gates passed live, proof `668ad6bb08384da889c76a008e6a218d`.**
+`TrustCatalog.demote` (`custody/catalog.py`) mirrors `request`'s
+cross-department refusal exactly (offline tests in `tests/test_catalog.py`).
+`FirestoreDemotionLog` (`custody/firestore_store.py`) is durable,
+create-fails-if-exists per demotion id, replay-on-construction, covered
+offline in `tests/test_firestore_store.py::FirestoreDemotionLogTests`
+(cold-start replay included). `/auditor`'s sweep reuses
+`CustodyGraph.revoke`'s existing idempotency on the demotion's own
+deterministic id, no second bookkeeping table, covered in
+`tests/test_control_plane.py::TheAuditorSweepsDemotionsAsynchronously`
+(310/310 offline total). Redeployed `custody-control-plane` to Cloud Run
+revision `custody-control-plane-00004-ttb` (same service, same env,
+`--max-instances=1`, `--allow-unauthenticated`, same posture as before — a
+prerequisite the original acceptance gates did not anticipate needing,
+authorized live during the session). `make live-auditor` against the
+deployed service: a tool is vouched and used, a demotion is recorded
+(`/demote`, allowed), a live reread of `/custody/{id}` immediately after
+confirms **no** revocation yet (the decoupling is real, not simulated),
+`/auditor`'s sweep then applies exactly one revocation keyed by the
+demotion's own deterministic id, and a second, independent live reread of
+`/custody/{id}` (by `scripts/auditor_gates.py`, using its own
+`gcloud`-derived URL, not the producer's) confirms the record now carries
+that revocation. `make auditor-gates` reported 9/9 PASS: 8 offline
+structural checks plus one independent live Google Cloud reread. Non-goal,
+stated in the artifact's own `claim_boundary`: this does not independently
+prove cross-cold-start durability of the demotion log within the live
+script itself; that mechanism is proven offline instead (create-fails-if-
+exists, replay-on-construction), the same split G5 already uses between its
+live seed-record proof and its offline Firestore replay tests. No LLM
+anywhere in this path — trust re-examination stayed deterministic, per the
+project's own "no model decides a fact" rule.
 
 Status: complete, superseded by the file-level status below
 

@@ -45,6 +45,16 @@ def vouch(department: str, tool: str, actor: str | None = None) -> dict:
     }
 
 
+def demote(department: str, tool: str, actor: str | None = None) -> dict:
+    return {
+        "actor_department": actor or department,
+        "department": department,
+        "tool": tool,
+        "demoted_by": f"{department}-admin",
+        "demoted_at": "2026-08-14T00:00:00Z",
+    }
+
+
 class IngestAppliesTheSameRulesAsTheCore(unittest.TestCase):
     def test_an_unvouched_tool_and_its_restatement_are_both_quarantined(self):
         plane = ControlPlane()
@@ -160,6 +170,70 @@ class RecordLookupServesTheDurableView(unittest.TestCase):
         result = plane.auditor({})
         plane.revoke({"tool": G5_SEED_TOOL, "revocation_id": "rev-g5"})
         self.assertIsNone(plane.record(result["seeded_record_id"]))
+
+
+class TheAuditorSweepsDemotionsAsynchronously(unittest.TestCase):
+    def _plane_past_its_first_heartbeat(self) -> ControlPlane:
+        """A plane whose one-time G5 seed has already fired, so record
+        counts below are about demotion sweeping alone, not conflated with
+        the unrelated first-run seed `auditor` also performs.
+        """
+        plane = ControlPlane()
+        plane.auditor({})
+        return plane
+
+    def test_demoting_a_tool_does_not_touch_the_graph_by_itself(self):
+        """The gap between /demote and the next /auditor tick is the point:
+        a demotion is recorded, but nothing is removed until the Auditor's
+        own sweep runs, on its own clock.
+        """
+        plane = self._plane_past_its_first_heartbeat()
+        plane.vouch(vouch("sales", "crm_lookup"))
+        plane.ingest(session("sales", [tool_turn("crm_lookup", "Acme owes 500")]))
+        before = len(plane.graph)
+
+        decision = plane.demote(demote("sales", "crm_lookup"))
+        self.assertTrue(decision["allowed"])
+        self.assertEqual(len(plane.graph), before)
+
+    def test_the_next_auditor_tick_revokes_the_demoted_tools_descendants(self):
+        plane = self._plane_past_its_first_heartbeat()
+        plane.vouch(vouch("sales", "crm_lookup"))
+        plane.ingest(session("sales", [tool_turn("crm_lookup", "Acme owes 500")]))
+        plane.demote(demote("sales", "crm_lookup"))
+        seed_only = len(plane.graph)
+
+        result = plane.auditor({})
+        self.assertEqual(len(result["swept_revocations"]), 1)
+        self.assertEqual(len(plane.graph), seed_only - 1)
+
+    def test_a_second_sweep_leaves_exactly_one_revocation_record(self):
+        plane = self._plane_past_its_first_heartbeat()
+        plane.vouch(vouch("sales", "crm_lookup"))
+        plane.ingest(session("sales", [tool_turn("crm_lookup", "Acme owes 500")]))
+        plane.demote(demote("sales", "crm_lookup"))
+
+        first = plane.auditor({})
+        second = plane.auditor({})
+        # `revoke` is idempotent on the demotion's own id, so replaying the
+        # sweep reports the same already-applied revocation again rather
+        # than silently dropping it; what must not happen is a duplicate
+        # revocation record.
+        self.assertEqual(second["swept_revocations"], first["swept_revocations"])
+        self.assertEqual(len(plane.graph.revocations()), 1)
+
+    def test_a_cross_department_demotion_is_refused_and_never_swept(self):
+        plane = self._plane_past_its_first_heartbeat()
+        plane.vouch(vouch("support", "helpdesk_tool"))
+        plane.ingest(
+            session("support", [tool_turn("helpdesk_tool", "ticket resolved")])
+        )
+        decision = plane.demote(demote("support", "helpdesk_tool", actor="sales"))
+        self.assertFalse(decision["allowed"])
+        before = len(plane.graph)
+
+        plane.auditor({})
+        self.assertEqual(len(plane.graph), before)
 
 
 class TheServiceNeverInventsState(unittest.TestCase):

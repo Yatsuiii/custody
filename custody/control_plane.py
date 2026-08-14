@@ -27,7 +27,7 @@ from datetime import UTC, datetime
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from typing import Any
 
-from custody.catalog import Grant, TrustCatalog, Vouch
+from custody.catalog import Demotion, Grant, TrustCatalog, Vouch
 from custody.graph import CustodyGraph
 from custody.origin import CustodyRecord, Origin, Trust, digest, take_custody
 from custody.service import InMemoryQuarantine, Quarantined
@@ -59,6 +59,21 @@ class InMemoryAuditorLog:
 
 
 @dataclass
+class InMemoryDemotionLog:
+    """Offline/local stand-in for `FirestoreDemotionLog`: no persistence, no
+    cross-restart claim, same limitation `InMemoryAuditorLog` already states.
+    """
+
+    _demotions: dict[str, Demotion] = field(default_factory=dict)
+
+    def record(self, demotion: Demotion) -> None:
+        self._demotions.setdefault(demotion.id(), demotion)
+
+    def all(self) -> tuple[Demotion, ...]:
+        return tuple(self._demotions.values())
+
+
+@dataclass
 class ControlPlane:
     """Fleet state, and the four questions the service answers about it.
 
@@ -69,6 +84,7 @@ class ControlPlane:
     catalog: TrustCatalog = field(default_factory=TrustCatalog)
     quarantine: InMemoryQuarantine = field(default_factory=InMemoryQuarantine)
     auditor_log: InMemoryAuditorLog = field(default_factory=InMemoryAuditorLog)
+    demotion_log: InMemoryDemotionLog = field(default_factory=InMemoryDemotionLog)
     runs: dict[str, dict] = field(default_factory=dict)
 
     def ingest(self, payload: dict) -> dict:
@@ -127,6 +143,27 @@ class ControlPlane:
         )
         return {"allowed": decision.allowed, "reason": decision.reason()}
 
+    def demote(self, payload: dict) -> dict:
+        """Withdraw a department's trust for a tool.
+
+        Deliberately does not touch the graph itself. The demotion becomes a
+        revocation only when the Auditor's sweep (`auditor`, below) next
+        runs, on the Cloud Scheduler's own clock — the asynchronous gap is
+        the point, not a defect to close here.
+        """
+        decision = self.catalog.demote(
+            Demotion(
+                actor_department=payload["actor_department"],
+                department=payload["department"],
+                tool=payload["tool"],
+                demoted_by=payload.get("demoted_by", "unknown"),
+                demoted_at=payload.get("demoted_at", ""),
+            )
+        )
+        if decision.allowed:
+            self.demotion_log.record(decision.demotion)
+        return {"allowed": decision.allowed, "reason": decision.reason()}
+
     def revoke(self, payload: dict) -> dict:
         revocation = self.graph.revoke(
             tool=payload["tool"],
@@ -140,13 +177,24 @@ class ControlPlane:
         }
 
     def auditor(self, payload: dict) -> dict:
-        """The daily heartbeat Cloud Scheduler calls (G5).
+        """The daily Cloud Scheduler tick (G5's heartbeat, and the
+        Provenance Auditor's revocation sweep).
 
-        Idempotent per UTC day: a retried Scheduler invocation on the same
-        day is a no-op. On the very first invocation ever, seeds one fixed
-        synthetic custody record, so there is a single record whose admission
-        can be read back and, later, compared against its eventual
-        revocation timestamp to prove genuine elapsed time.
+        Heartbeat half is idempotent per UTC day: a retried Scheduler
+        invocation on the same day is a no-op. On the very first invocation
+        ever, seeds one fixed synthetic custody record, so there is a single
+        record whose admission can be read back and, later, compared against
+        its eventual revocation timestamp to prove genuine elapsed time.
+
+        Sweep half runs every tick, not just the first: every demotion the
+        durable log holds is replayed through `CustodyGraph.revoke`, keyed
+        by the demotion's own deterministic id. `revoke` is already
+        idempotent on that id, so a demotion already applied on a prior
+        sweep costs nothing extra here — no second "already applied" table.
+        This is the deterministic trust re-examination the fleet's
+        Provenance Auditor role names: no model decides anything, a
+        withdrawn grant is walked to every descendant and removed, same
+        traversal G3 already proves offline.
         """
         del payload
         today = datetime.now(UTC).date().isoformat()
@@ -167,7 +215,18 @@ class ControlPlane:
             )
             self.graph.add(seed)
             seeded_record_id = seed.id
-        return {"day": today, "first_run": first, "seeded_record_id": seeded_record_id}
+        revoked = [
+            self.graph.revoke(
+                tool=demotion.tool, revocation_id=demotion.id()
+            ).id
+            for demotion in self.demotion_log.all()
+        ]
+        return {
+            "day": today,
+            "first_run": first,
+            "seeded_record_id": seeded_record_id,
+            "swept_revocations": revoked,
+        }
 
     def record(self, record_id: str) -> dict | None:
         """Durable view of one record: its admission, and revocation if any."""
@@ -288,6 +347,7 @@ class _Handler(BaseHTTPRequestHandler):
         routes = {
             "/sessions": self.plane.ingest,
             "/vouch": self.plane.vouch,
+            "/demote": self.plane.demote,
             "/revoke": self.plane.revoke,
             "/auditor": self.plane.auditor,
         }
@@ -325,12 +385,17 @@ def _default_plane() -> ControlPlane:
         return ControlPlane()
     from google.cloud import firestore
 
-    from custody.firestore_store import FirestoreAuditorLog, FirestoreCustodyGraph
+    from custody.firestore_store import (
+        FirestoreAuditorLog,
+        FirestoreCustodyGraph,
+        FirestoreDemotionLog,
+    )
 
     client = firestore.Client(project=project)
     return ControlPlane(
         graph=FirestoreCustodyGraph(client),
         auditor_log=FirestoreAuditorLog(client),
+        demotion_log=FirestoreDemotionLog(client),
     )
 
 

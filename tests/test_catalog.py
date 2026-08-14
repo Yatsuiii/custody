@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import unittest
 
-from custody.catalog import Denial, Grant, TrustCatalog, Vouch
+from custody.catalog import Demotion, Denial, Grant, TrustCatalog, Vouch
 from custody.origin import Trust
 
 
@@ -20,6 +20,16 @@ def grant(department: str, tool: str, *, by: str = "admin") -> Grant:
         tool=tool,
         vouched_by=by,
         vouched_at="2026-08-10T00:00:00Z",
+    )
+
+
+def demotion(department: str, tool: str, *, by: str = "admin") -> Demotion:
+    return Demotion(
+        actor_department=department,
+        department=department,
+        tool=tool,
+        demoted_by=by,
+        demoted_at="2026-08-14T00:00:00Z",
     )
 
 
@@ -82,6 +92,67 @@ class TrustDoesNotLeakBetweenDepartments(unittest.TestCase):
         self.assertIs(catalog.trust_for("sales").of("crm_lookup"), Trust.UNTRUSTED)
         catalog.request(Vouch("sales", grant("sales", "crm_lookup")))
         self.assertIs(catalog.trust_for("sales").of("crm_lookup"), Trust.TRUSTED)
+
+
+class ADepartmentDemotesItsOwnTools(unittest.TestCase):
+    def test_an_own_department_demotion_is_allowed_and_withdraws_trust(self):
+        catalog = TrustCatalog()
+        catalog.request(Vouch("sales", grant("sales", "crm_lookup")))
+        decision = catalog.demote(demotion("sales", "crm_lookup"))
+        self.assertTrue(decision.allowed)
+        self.assertIs(catalog.trust_for("sales").of("crm_lookup"), Trust.UNTRUSTED)
+
+    def test_a_demotion_is_visible_in_outstanding_demotions(self):
+        catalog = TrustCatalog()
+        catalog.demote(demotion("sales", "crm_lookup"))
+        outstanding = [d.demotion for d in catalog.demotion_decisions if d.allowed]
+        self.assertEqual([d.tool for d in outstanding], ["crm_lookup"])
+
+
+class ADepartmentCannotDemoteAnothers(unittest.TestCase):
+    def test_a_cross_department_demotion_is_refused(self):
+        catalog = TrustCatalog()
+        catalog.request(Vouch("support", grant("support", "helpdesk_tool")))
+        decision = catalog.demote(
+            Demotion(
+                actor_department="sales",
+                department="support",
+                tool="helpdesk_tool",
+                demoted_by="sales-admin",
+                demoted_at="2026-08-14T00:00:00Z",
+            )
+        )
+        self.assertFalse(decision.allowed)
+        self.assertIs(decision.denial, Denial.WRONG_DEPARTMENT)
+
+    def test_a_refused_demotion_leaves_trust_intact(self):
+        catalog = TrustCatalog()
+        catalog.request(Vouch("support", grant("support", "helpdesk_tool")))
+        catalog.demote(
+            Demotion(
+                actor_department="sales",
+                department="support",
+                tool="helpdesk_tool",
+                demoted_by="sales-admin",
+                demoted_at="2026-08-14T00:00:00Z",
+            )
+        )
+        self.assertIs(
+            catalog.trust_for("support").of("helpdesk_tool"), Trust.TRUSTED
+        )
+
+
+class ADemotionsIdIsDeterministic(unittest.TestCase):
+    def test_the_same_demotion_recorded_twice_has_the_same_id(self):
+        first = demotion("sales", "crm_lookup")
+        second = demotion("sales", "crm_lookup")
+        self.assertEqual(first.id(), second.id())
+
+    def test_a_different_tool_has_a_different_id(self):
+        self.assertNotEqual(
+            demotion("sales", "crm_lookup").id(),
+            demotion("sales", "other_tool").id(),
+        )
 
 
 if __name__ == "__main__":

@@ -1,10 +1,79 @@
-# Custody recovery handoff, 2026-08-14 (G1 migrated onto D2's write path, live and gated)
+# Custody recovery handoff, 2026-08-14 (fleet review: real Provenance Auditor landed, Custody Reviewer next)
 
 This is a live handoff document for Claude or another coding agent. Continue
 from the current repository state. Do not restart the project, redesign the
 product, revert the dirty tree, or redo passing work. Read this file, then read
 `.claude/SESSION_CONTRACT.md`, `README.md`, `DECISIONS.md`, and the current
 diffs before editing.
+
+## Start here if you are the next session
+
+The user asked, on request, to review the "fleet" section of the hackathon
+product-mapping table against actual code, then build the gaps found for
+real, one at a time, each closed with its own live proof and its own
+handoff so work can continue in a fresh Claude session. Three gaps were
+found (`.claude/SESSION_CONTRACT.md`, "Fleet review, 2026-08-14" section);
+user's stated order: **Auditor, then Reviewer, then N agents (deferred,
+size not yet chosen).**
+
+1. **Provenance Auditor — closed this session**, live-proven. See below.
+2. **Custody Reviewer (Gemini reads a quarantined memory, drafts a verdict)
+   — not started.** This is the next piece. Today the only live Gemini call
+   in the repo is a connectivity echo in `scripts/live_g1.py`
+   (`_gemini_proof`); no code path ever shows Gemini a quarantined item.
+   Scope it the same way the Auditor sub-build was scoped: a new dated
+   section in `.claude/SESSION_CONTRACT.md` with Objective/Branch
+   (`feat/memory-provenance`)/Parent (this commit)/Allowed files/Non-goals/
+   Baseline/Acceptance gates/Verification, **before** touching code. Likely
+   shape: a `custody.review` module that takes one `Quarantined` item
+   (already modeled in `custody/service.py`) and calls Gemini through
+   Vertex AI (same `google.genai` client `scripts/live_g1.py` already uses)
+   to summarize what the quarantined content attempted and draft a verdict
+   for a human — structurally barred from setting trust or labelling
+   origin itself, per the project's "no model decides a fact" rule (see
+   `custody/origin.py`'s `take_custody`, which is the only place trust is
+   decided, deterministically). A live proof needs a real quarantined item
+   (poison a session live, same shape `make demo`/G2 already use offline)
+   and a real Gemini call that reads it, not an echo.
+3. **N department worker agents** — deferred, not scoped. Only one live
+   ADK agent has ever run, one department per invocation. Ask the user for
+   a size (3 was recommended, declined for now) before scoping.
+
+## Provenance Auditor: closed 2026-08-14, live-proven
+
+`/vouch` grants trust; `/demote` (new) withdraws it, with the same
+cross-department refusal rule (`custody/catalog.py`'s `TrustCatalog.demote`,
+mirroring `request`). Demotions are durably logged
+(`custody.firestore_store.FirestoreDemotionLog`, create-fails-if-exists,
+replay-on-construction, same pattern as `FirestoreAuditorLog`). The
+existing daily Cloud Scheduler `/auditor` tick (G5's heartbeat) now also
+sweeps every outstanding demotion through `CustodyGraph.revoke`,
+deterministically — no LLM anywhere in this path, consistent with the
+project's own "no model decides a fact" rule. `CustodyGraph.revoke`'s
+existing idempotency (keyed on the demotion's own deterministic id) meant
+no second bookkeeping table was needed.
+
+Redeployed `custody-control-plane` to Cloud Run revision
+`custody-control-plane-00004-ttb` (same service, same env, same posture,
+user-authorized live during the session — the original scoping did not
+anticipate needing a redeploy). Live proof (`make live-auditor`, proof
+`668ad6bb08384da889c76a008e6a218d`, `proof-out/live-auditor.json`): demote
+a live tool, confirm via an immediate `GET /custody/{id}` reread that
+*nothing* is revoked yet (the async gap is real, not simulated), trigger
+`/auditor`, confirm via a second, independent live reread
+(`scripts/auditor_gates.py`, its own `gcloud`-derived URL, not the
+producer's) that the record now carries the swept revocation.
+`make auditor-gates` reports 9/9 PASS. 310/310 offline tests pass
+(`tests/test_catalog.py`, `tests/test_control_plane.py`,
+`tests/test_firestore_store.py` all extended). Full write-up in
+`.claude/SESSION_CONTRACT.md`'s "Sub-build: real Provenance Auditor"
+section and `README.md`'s new "The Provenance Auditor" section.
+
+**Side effect worth knowing:** the redeploy meant `proof-out/g1.json` was
+regenerated too (`make live-g1`), since G1's own evidence had recorded the
+now-superseded Cloud Run revision. `make gates` reports G1 PASS against
+the fresh evidence, revision `custody-control-plane-00004-ttb`. No other
+G1 behavior changed.
 
 ## Lane and artifact
 

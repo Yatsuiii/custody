@@ -439,6 +439,36 @@ filming and `scripts/scheduler_gates.py` (not yet written; building a judge
 before there is a multi-day span to judge would have nothing real to check)
 independently proves the whole span.
 
+### The Provenance Auditor: real trust re-examination, not just a heartbeat
+
+`POST /auditor` does two jobs on the same daily tick. The first, above, is
+G5's elapsed-time heartbeat. The second is the fleet's Provenance Auditor
+role made real: `POST /demote` lets a department withdraw its own trust for
+a tool (the same cross-department refusal `/vouch` already enforces, now in
+both directions), durably logged in Firestore
+(`custody.firestore_store.FirestoreDemotionLog`) so it survives a cold
+start. Nothing removes anything at that moment. Only the next `/auditor`
+tick walks every outstanding demotion through `CustodyGraph.revoke`,
+deterministically, no model involved — the same graph traversal G3 already
+proves offline. `CustodyGraph.revoke`'s existing idempotency on the
+demotion's own deterministic id means a repeated sweep costs nothing extra;
+no second "already applied" table was needed.
+
+Live proof (`make live-auditor`, proof `668ad6bb08384da889c76a008e6a218d`):
+a tool is vouched, used, and admitted into the live, Firestore-backed
+graph; a demotion is recorded; an immediate reread of `GET /custody/{id}`
+shows the record still carries no revocation, proving the gap between
+demotion and revocation is real rather than simulated; the Auditor's sweep
+then applies exactly one revocation; a second, independent live reread (by
+`scripts/auditor_gates.py`, using its own Cloud-Run-derived URL rather than
+the producer's) confirms the record now carries it. `make auditor-gates`
+reports 9/9 PASS. Non-goal, stated in the artifact's own claim boundary:
+this does not itself prove the demotion log survives a cold start between
+`/demote` and the next Scheduler tick — that mechanism (create-fails-if-
+exists, replay-on-construction) is proven offline instead, the same split
+G5 already uses between its live seed-record proof and its offline
+Firestore replay tests.
+
 ### Live Agent Observability proof
 
 ```bash

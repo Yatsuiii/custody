@@ -1,4 +1,5 @@
-"""Firestore-backed durability for the derivation graph (G5).
+"""Firestore-backed durability for the derivation graph (G5) and the
+Provenance Auditor's demotion sweep.
 
 Mirrors `custody.store.SqliteCustodyGraph`: every mutation is persisted to
 Firestore as it happens, and the wrapped in-memory `CustodyGraph` is rebuilt
@@ -23,12 +24,14 @@ from datetime import datetime
 from google.api_core.exceptions import AlreadyExists
 from google.cloud import firestore
 
+from custody.catalog import Demotion
 from custody.graph import CustodyGraph, Revocation
 from custody.origin import CustodyRecord, Origin, Trust
 
 CUSTODY_COLLECTION = "custody"
 REVOCATIONS_COLLECTION = "revocations"
 AUDITOR_COLLECTION = "auditor"
+DEMOTIONS_COLLECTION = "demotions"
 
 
 def _dump_record(record: CustodyRecord) -> dict:
@@ -200,3 +203,45 @@ class FirestoreAuditorLog:
         except AlreadyExists:
             pass
         return first
+
+
+class FirestoreDemotionLog:
+    """The durable record of every applied demotion, behind the Auditor's
+    sweep.
+
+    `TrustCatalog` stays in-memory (it is `departments/grants`, deliberately
+    still PLANNED); this collection exists only so a demotion survives a
+    cold start between the `/demote` call that recorded it and the later
+    Cloud Scheduler tick that sweeps it, the same "genuinely elapsed time"
+    property G5 already proved for the seed record. One document per
+    demotion, keyed by `Demotion.id()` (deterministic), so a retried
+    `/demote` call is a no-op rather than a second entry.
+    """
+
+    def __init__(self, client: firestore.Client):
+        self._collection = client.collection(DEMOTIONS_COLLECTION)
+
+    def record(self, demotion: Demotion) -> None:
+        try:
+            self._collection.document(demotion.id()).create(
+                {
+                    "department": demotion.department,
+                    "tool": demotion.tool,
+                    "demoted_by": demotion.demoted_by,
+                    "demoted_at": demotion.demoted_at,
+                }
+            )
+        except AlreadyExists:
+            pass
+
+    def all(self) -> tuple[Demotion, ...]:
+        return tuple(
+            Demotion(
+                actor_department=data["department"],
+                department=data["department"],
+                tool=data["tool"],
+                demoted_by=data["demoted_by"],
+                demoted_at=data["demoted_at"],
+            )
+            for data in (doc.to_dict() for doc in self._collection.stream())
+        )

@@ -13,7 +13,12 @@ from datetime import UTC, datetime, timedelta
 
 from google.api_core.exceptions import AlreadyExists
 
-from custody.firestore_store import FirestoreAuditorLog, FirestoreCustodyGraph
+from custody.catalog import Demotion
+from custody.firestore_store import (
+    FirestoreAuditorLog,
+    FirestoreCustodyGraph,
+    FirestoreDemotionLog,
+)
 from custody.origin import CustodyRecord, Origin, Trust
 
 _EPOCH = datetime(2026, 8, 13, tzinfo=UTC)
@@ -253,6 +258,57 @@ class FirestoreAuditorLogTests(unittest.TestCase):
         second = FirestoreAuditorLog(client)
 
         self.assertFalse(second.heartbeat("2026-08-14"))
+
+
+def _demotion(*, department: str = "sales", tool: str = "crm_lookup") -> Demotion:
+    return Demotion(
+        actor_department=department,
+        department=department,
+        tool=tool,
+        demoted_by=f"{department}-admin",
+        demoted_at="2026-08-14T00:00:00Z",
+    )
+
+
+class FirestoreDemotionLogTests(unittest.TestCase):
+    def test_a_recorded_demotion_is_returned_by_all(self) -> None:
+        client = FakeFirestoreClient()
+        log = FirestoreDemotionLog(client)
+
+        log.record(_demotion())
+
+        self.assertEqual(len(log.all()), 1)
+        self.assertEqual(log.all()[0].tool, "crm_lookup")
+
+    def test_a_retried_record_is_a_no_op_not_a_duplicate(self) -> None:
+        client = FakeFirestoreClient()
+        log = FirestoreDemotionLog(client)
+
+        log.record(_demotion())
+        log.record(_demotion())
+
+        self.assertEqual(len(client.collection("demotions").docs), 1)
+        self.assertEqual(len(log.all()), 1)
+
+    def test_a_cold_start_replays_prior_demotions(self) -> None:
+        client = FakeFirestoreClient()
+        FirestoreDemotionLog(client).record(_demotion())
+
+        second = FirestoreDemotionLog(client)
+
+        self.assertEqual(len(second.all()), 1)
+        self.assertEqual(second.all()[0].tool, "crm_lookup")
+
+    def test_different_tools_are_kept_as_distinct_demotions(self) -> None:
+        client = FakeFirestoreClient()
+        log = FirestoreDemotionLog(client)
+
+        log.record(_demotion(tool="crm_lookup"))
+        log.record(_demotion(tool="other_tool"))
+
+        self.assertEqual(
+            {d.tool for d in log.all()}, {"crm_lookup", "other_tool"}
+        )
 
 
 if __name__ == "__main__":

@@ -18,7 +18,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import Enum
 
-from custody.origin import ToolTrust
+from custody.origin import ToolTrust, digest
 
 
 @dataclass(frozen=True)
@@ -69,6 +69,49 @@ class VouchDecision:
         )
 
 
+@dataclass(frozen=True)
+class Demotion:
+    """A request to withdraw one department's trust for one tool.
+
+    Same actor/boundary split as `Vouch`: `actor_department` is who is
+    asking, `department`/`tool` is the boundary being changed. They only
+    match when a department demotes its own trust, the same refusal rule
+    `TrustCatalog.request` already enforces for grants.
+    """
+
+    actor_department: str
+    department: str
+    tool: str
+    demoted_by: str
+    #: Caller-supplied, not `datetime.now()` — same discipline as
+    #: `Grant.vouched_at`.
+    demoted_at: str
+
+    def id(self) -> str:
+        """Deterministic, not a fresh uuid: the same demotion recorded twice
+        (a retried request, or a durable log replayed after a cold start) is
+        the same event, so it can double as the `CustodyGraph.revoke`
+        `revocation_id` the Auditor sweep reuses, with no second
+        already-applied bookkeeping table needed.
+        """
+        return digest(f"{self.department}:{self.tool}:{self.demoted_at}")
+
+
+@dataclass(frozen=True)
+class DemotionDecision:
+    demotion: Demotion
+    allowed: bool
+    denial: Denial | None = None
+
+    def reason(self) -> str:
+        if self.allowed:
+            return f"{self.demotion.actor_department} demoted {self.demotion.tool}"
+        return (
+            f"{self.demotion.actor_department} cannot demote "
+            f"{self.demotion.department}'s tools"
+        )
+
+
 @dataclass
 class TrustCatalog:
     """Departmental tool grants. Every decision is retained, allowed and
@@ -78,6 +121,7 @@ class TrustCatalog:
 
     _grants: dict[tuple[str, str], Grant] = field(default_factory=dict)
     decisions: list[VouchDecision] = field(default_factory=list)
+    demotion_decisions: list[DemotionDecision] = field(default_factory=list)
 
     def request(self, vouch: Vouch) -> VouchDecision:
         if vouch.actor_department != vouch.grant.department:
@@ -88,6 +132,21 @@ class TrustCatalog:
             self._grants[(vouch.grant.department, vouch.grant.tool)] = vouch.grant
             decision = VouchDecision(vouch=vouch, allowed=True)
         self.decisions.append(decision)
+        return decision
+
+    def demote(self, demotion: Demotion) -> DemotionDecision:
+        """Withdraw a grant. Same cross-department refusal `request` already
+        enforces: a department can no more un-trust another's tool than it
+        can trust one on its behalf (G4's boundary, both directions).
+        """
+        if demotion.actor_department != demotion.department:
+            decision = DemotionDecision(
+                demotion=demotion, allowed=False, denial=Denial.WRONG_DEPARTMENT
+            )
+        else:
+            self._grants.pop((demotion.department, demotion.tool), None)
+            decision = DemotionDecision(demotion=demotion, allowed=True)
+        self.demotion_decisions.append(decision)
         return decision
 
     def denials(self) -> tuple[VouchDecision, ...]:
