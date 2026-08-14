@@ -1294,3 +1294,947 @@ and carry no disclosure burden, but must be listed if any code is lifted.
 `~/datahub-causality-agent`, `~/priorto`, Throughline, or Chronicle.
 
 Status: active
+
+## Presentation pass: one judge-facing incident narrative (opened 2026-08-14)
+
+Objective: the project's whole product surface was the README plus five
+separate terminal demos (`make demo`, `make cost`, `make revoke`, `make
+isolate`, plus live scripts); nothing told the single incident story a judge
+needs in one place. No web frontend exists anywhere in this repo — checked
+by inspection (`find` for `.html`/`.tsx`/`.jsx`, `package.json`) before
+editing, and confirmed `custody/control_plane.py` is a pure JSON HTTP API
+with no template/console. Given that, the "product surface" this pass
+targets is the terminal, consistent with the project's existing style
+(README's own `$ make demo` blocks), not a new GUI invented under budget
+pressure.
+
+Branch: feat/memory-provenance
+Parent: 7b53ff3
+
+Allowed files: `scripts/incident.py` (new), `Makefile`, `README.md` (hero
+section only, above "## The gap this fills"). No changes to `custody/*`,
+`custody/adapters/*`, or any other script — this is presentation over
+already-built, already-gated capability, not new backend work.
+
+Non-goals:
+
+- No web console. No new backend capability. `scripts/incident.py` composes
+  `scripts/cost.py`'s existing fixture (`build()`, same `vendor_portal`
+  compromise, same 5-department/8-tool fleet) with
+  `custody.service.CustodyMemoryService` + `custody.catalog.TrustCatalog`
+  (both already built and tested) to narrate one shared `CustodyGraph`
+  rather than inventing new mechanics.
+- No fabricated metrics. Every number `scripts/incident.py` prints
+  (affected memories, departments touched, unrelated preserved) is computed
+  by that run against real graph traversal (`CustodyGraph.descendants`,
+  `.revoke`), asserted against in the script itself (`assert record_id in
+  descendants`), not hand-typed. No "agents" count is printed because the
+  fixture does not model per-agent identity, only departments — printing
+  one would be inventing a number the data does not support.
+- No "live" claim. This is an offline scripted narrative, same discipline
+  as `make demo`/`make cost`/`make revoke` (none of which claim liveness).
+  `make live-auditor` remains the actual live proof of the asynchronous
+  demote-then-sweep path; `scripts/incident.py`'s docstring says so
+  explicitly and points there.
+- Timestamps (`VOUCHED_AT`, `DEMOTED_AT`) are caller-supplied constants,
+  same pattern as `revoke.py`'s `revocation_id="rev-2026-08-N"` — a demo
+  fixture, not a claim about wall-clock time.
+
+Baseline: `make check` 319/319 passing before this pass (confirmed
+2026-08-14). No regression: same count after (`ruff check` clean,
+`python -m unittest discover` 319/319).
+
+Acceptance gates:
+
+1. `make incident` runs and exits 0, printing, in order: an active trust
+   incident header (source, status, reason, trust-then-compromise gap),
+   blast radius (affected/departments/unrelated, all computed), a traced
+   lineage chain with explicit `derived_from` edges across three
+   departments, the surgical revoke call plus an idempotent replay, and an
+   evidence block naming the trust transition, derivation path, and
+   revocation id.
+2. The script's own internal assertions hold (computed blast radius exactly
+   equals the traced chain's six record ids, revoked count equals blast
+   radius, replay removes zero further and produces exactly one revocation
+   record) — verified by `main()`'s exit code, not eyeballed.
+3. `make check` still passes at the same count, unmodified.
+4. README's hero section leads with the incident narrative and states
+   plainly that its numbers come from the run, with an explicit pointer to
+   `make live-auditor` for the live version of the same claim, so nothing
+   here reads as a stronger claim than what is proven.
+
+Verification: `make incident` (manual read of the printed narrative against
+the acceptance gates above), `make check` (regression), `ruff check
+scripts/incident.py`.
+
+**Closed 2026-08-14, all four gates passed.** `make incident` exits 0;
+32 affected memories, 3 of 5 departments touched, 575 unrelated preserved
+(fixture is seeded/deterministic, so these numbers are stable run to run,
+same as `make cost`'s already-documented 40/560/93% figures). `make check`
+unchanged at 319/319. README's hero block replaced the old cold-open with
+the incident narrative and an explicit "computed by the run, not typed in"
+line plus a pointer to `make live-auditor`; the prior `make demo` cold-open
+(supplier-page instruction) moved below it, framed as one property among
+several the rest of the README walks apart. Known gap: this is a terminal
+narrative, not a graphical judge-facing screen — correct given no frontend
+existed to redesign and building one from scratch was out of this pass's
+budget, but if judges specifically expect a GUI, that is a real gap to
+name, not to paper over.
+
+Status: complete
+
+## GUI pass: first judge-facing screen, hackathon-scoped (opened 2026-08-14)
+
+Objective: the user wants a real startup eventually, and named this
+explicitly as the first GUI version, hackathon-focused. Terminal narrative
+alone (previous section) was judged insufficient once a GUI was requested.
+Built a static, dependency-free HTML page rather than a framework app: no
+`npm install`, no new runtime, nothing that needs `make check`'s "no clone,
+install dependencies" default relaxed. Chosen deliberately so the same data
+contract (`scripts/incident.py`'s `compute()` dict) can later back a real
+live console without a rewrite — this is explicitly framed as pass one of
+a product surface, not a throwaway demo page.
+
+Branch: feat/memory-provenance
+Parent: (this session, on top of the terminal-incident close above)
+
+Allowed files: `scripts/incident.py` (refactor `run()`'s body into
+`compute()` + `render()`, same terminal output, no behavior change — verified
+by rerunning `make incident`), `scripts/render_gui.py` (new), `web/`
+(new, generated), `Makefile`, `README.md` (hero section only).
+
+Non-goals:
+
+- No JS framework, bundler, or CDN dependency. Vanilla HTML/CSS/JS in one
+  file, self-contained, opens without a build step — hackathon judges get
+  zero setup friction, and it costs nothing to keep working the same way
+  once this becomes a real product's first screen.
+- No new backend, no live wiring to the Cloud Run control plane. The page
+  renders one offline run's data, same discipline as `make incident`; it is
+  not a claim that the deployed system serves this page.
+- No generic-AI visual language: no robot/brain/shield icons, no gradients,
+  no "AI-powered" badges, no chat bubbles. Dark, dense, monospace,
+  security/incident-response register, matching the terminal narrative's
+  own tone rather than introducing a second brand.
+- The "Revoke descendants" button is a client-side phase toggle over
+  already-computed before/after data (both real, both from the same run),
+  not a live mutation — the page does not call any service.
+
+Baseline: `make check` 319/319 (unchanged from the terminal-incident close).
+
+Acceptance gates:
+
+1. `make gui` runs, writes `web/incident.html` and `proof-out/incident.json`
+   from the same `compute()` the terminal command uses — no hand-typed
+   numbers in the template.
+2. The page renders the same hierarchy as the terminal narrative: trust
+   incident header, blast-radius stat row, influence lineage with visible
+   `derived_from` edges and a distinct compromised-root marker, a surgical
+   action control, and an evidence panel — verified visually via
+   `claude-in-chrome` against a local `python -m http.server`, not just
+   read from the generated HTML source.
+3. Clicking "Revoke descendants" transitions the lineage to a visibly
+   struck-through/dimmed state and reveals the after-revocation numbers
+   (removed/survives/replay), all pulled from the same embedded JSON —
+   verified live in-browser, screenshotted before and after the click.
+4. `scripts/incident.py`'s terminal output is byte-for-byte unchanged after
+   the `compute()`/`render()` refactor (`make incident` reruns clean,
+   `make check` still 319/319).
+
+Verification: `make gui`, `make incident`, `make check`, a live in-browser
+click-through via `claude-in-chrome` (before/after screenshots).
+
+**Closed 2026-08-14, all four gates passed.** `make gui` wrote
+`web/incident.html` (256 lines) and `proof-out/incident.json` (55 lines,
+gitignored, same as every other `proof-out/*` artifact). Verified live in
+Chrome via a local `http.server`: the before-state screenshot shows the
+trust incident header, three blast-radius tiles (32 / 3 of 5 / 575), and
+the four-hop lineage with the compromised root in red and descendants in
+amber; clicking "Revoke descendants" struck through the three descendant
+rows, flipped the button to "Descendants revoked", and populated the
+removed/survives/replay tiles (32 / 575 / 0) plus the evidence panel
+(trust transition, derivation path, `removed set matches computed blast
+radius: true`, audit record count) — all screenshotted. `make incident`
+and `make check` (319/319) confirmed unchanged after the `compute()`/
+`render()` refactor. README's hero section gained a paragraph pointing at
+`make gui`, framed as pass one toward a real console rather than a demo
+artifact. Known gap, stated rather than hidden: this is a local static
+file, not a deployed, shareable URL — the natural next step if this
+becomes the actual startup product surface is serving it from the existing
+Cloud Run control plane once `/custody`-shaped read endpoints back it with
+live data instead of one offline fixture run.
+
+Status: complete
+
+## GUI polish pass: visual design quality raised for the multimodal-UX category (opened 2026-08-14)
+
+Objective: the user flagged a hackathon multimodal-UX award category and asked
+for the GUI to be "extremely beautiful & working," on top of the already-shipped
+functional pass above. Same file, no new scope beyond visual/interaction
+quality: `scripts/incident.py`'s `compute()` gained real per-hop
+`content_sha256` (read off each `CustodyRecord` before revocation, via
+`CustodyGraph.record`, not fabricated) so the evidence claim about content
+hashes is backed by data instead of asserted in prose; `scripts/render_gui.py`
+was rewritten for depth (staggered entrance animations, an animated derivation
+timeline for the trust-to-compromise gap, a connected vertical lineage graph
+with department chips and truncated hash chips, count-up stat animations, a
+toast confirmation on revoke, a keyboard shortcut (`r`) alongside the button,
+and responsive/accessible markup — `aria-live` regions, `:focus-visible`).
+
+Allowed files: `scripts/incident.py` (add `content_sha256` per lineage hop
+only — no other logic change), `scripts/render_gui.py`.
+
+Found and fixed one real bug during live verification: `.timeline-label`
+had no `left` position, so both the day-1 and compromise-date labels
+collapsed onto the same spot instead of anchoring to the track's ends —
+caught by screenshotting in Chrome, not by reading the CSS.
+
+Verification: `make gui`, then live in-browser via `claude-in-chrome`
+against a local `python -m http.server` — full-page screenshot of the
+before state, the timeline bug found and fixed, a re-screenshot confirming
+the fix, then triggering revoke via the `r` keyboard shortcut (a stray
+coordinate click briefly hung the tab's script-injection channel for
+unclear reasons — recovered by opening a fresh tab rather than chasing it,
+and the keyboard path worked cleanly) and screenshotting the after state:
+struck-through descendants, dimmed opacity, the toast reading "revocation
+rev-vendor-portal-2026-08-14 applied — 32 record(s) removed, 575 survive",
+and the revoke-result stat tiles (32 / 575 / 0). `make check` still
+319/319, `ruff check .` clean.
+
+Status: complete
+
+## GUI direction settled: "evidence ledger," style A retired (opened 2026-08-14)
+
+Objective: two comparison mockups (style A, single-column report; style B,
+sidebar console) were published as Artifacts for the user to pick between.
+User picked B, then called the result "generic AI slop" on a second look —
+correctly: the amber-on-near-black, rounded-lg, shadow-lifted-card shape is
+exactly the templated AI-dashboard look the original product brief warned
+against, it had just been dressed in security-tool colors. Also corrected:
+the demo's elapsed-time claim (21 days) overstated what the project can
+actually prove before submission; the user expects closer to 15.
+
+Branch: feat/memory-provenance
+Parent: (this session, on top of the style-A/B comparison pass)
+
+Allowed files: `scripts/incident.py` (only `VOUCHED_AT`/`ELAPSED_DAYS`),
+`scripts/render_gui.py` (full rewrite, becomes canonical, style B's sidebar
+skeleton kept, everything visual reworked), deletes `scripts/render_gui_v2.py`
+and `web/incident_v2.html` (style A retired per the user's pick — exactly
+one surviving version, as the original comparison note promised).
+
+Design direction, not a generic dashboard reskin: "evidence ledger." The
+product's actual claim is a literal chain of custody, so the page borrows
+from case files and physical evidence tags instead of SaaS-dashboard
+chrome — warm ink-toned dark palette (not blue-black), a serif for
+narrative copy paired with monospace for every data/id/hash (two
+deliberate voices: the record vs. the write-up), a stamped rotated status
+badge instead of a rounded pill, grommet-holed tag chips instead of pill
+badges, hairline-divided flat panels instead of shadow-lifted rounded
+cards, and — the centerpiece — a caution-tape "REVOKED" sweep that clips
+across a descendant row on revoke instead of a plain strikethrough/fade.
+
+Found and fixed a real correctness gap during this pass, not just a style
+change: the compromised root record (the tool-origin record itself,
+`source_tool == vendor_portal`) is genuinely part of `CustodyGraph`'s
+removed set on revoke, same as its three descendants, but the redaction
+sweep was scoped to `.hop.descendant` only, so the root row visually never
+showed as revoked even though the 32-removed count included it. Fixed by
+extending the sweep selector to `.hop.root, .hop.descendant` — caught by
+looking at the live revoke screenshot next to the removed count, not by
+reading the CSS.
+
+Verification: `make gui`, live in-browser via `claude-in-chrome` against a
+local `python -m http.server` (before state, revoke via the `r` shortcut,
+confirmed all four lineage rows — root and three descendants — show the
+tape sweep, matching the 32-record removed count), `make check` (319/319),
+`ruff check .` clean. The style-A/B comparison Artifact for B was
+republished in place at the same URL with the redesigned page so the user
+can review without needing local file access again.
+
+Status: complete
+
+## GUI rebuilt against a user-supplied reference (opened 2026-08-14)
+
+Objective: the user shared four real product-mockup screenshots and picked
+a direction explicitly, with two constraints: not pure black ("ai slop
+color"), not pure white ("too light on eyes"). The chosen reference was a
+three-column incident-console layout — left source-history timeline,
+center identity strip + chain-of-custody flow diagram + evidence-ledger
+table, right incident-summary + actions rail — on a warm light (not white)
+ground. Per the design skill's own precedence rule ("the user's own words
+always win"), this session followed that structure closely rather than
+defaulting back to a from-scratch "avoid templates" pass.
+
+Branch: feat/memory-provenance
+Parent: (this session, on top of the evidence-ledger dark-theme pass)
+
+Allowed files: `scripts/render_gui.py` (full rewrite).
+
+Non-goals, held even though the reference mockup showed them:
+
+- No fabricated fields. The reference's identity card showed "Owner:
+  Vendor Success", "Source Type: Web Content", "Severity: High" — none of
+  that exists in `compute()`'s data, so none of it was added. The identity
+  strip only shows fields backed by real data (source, first trusted,
+  compromised, detection gap).
+- No fabricated "agents touched" count — same reasoning as the dark-theme
+  pass: the fixture models departments, not per-agent identity, so no
+  agent count is invented to fill a stat slot the reference had.
+- No fabricated second "trusted" lineage chain. The reference showed two
+  full parallel chains (one revoked, one trusted) with invented tool/memory
+  names. This project only has one real traced chain
+  (`vendor_portal`'s); the "unrelated" side is represented as one honest
+  aggregate node ("other tools, other departments, N preserved") rather
+  than inventing a second fake derivation chain to visually match.
+- No fabricated ticket-style incident ID ("INC-2025-0517-0017"). The
+  crumb uses the real revocation id and date instead of a fake ticketing
+  scheme implying a system that doesn't exist.
+- The flow diagram represents the real graph shape: this project's traced
+  lineage is a single sequential chain (source -> sales -> support ->
+  finance, each hop a real `derived_from` edge), not the reference's
+  parallel three-way fan-out — the reference's shape does not match this
+  incident's actual data, so it was not copied.
+
+One real feature added beyond the reference: a working "Copy evidence as
+JSON" button (`navigator.clipboard.writeText` on the same embedded data
+object), replacing the reference's "Export impact report" button, which
+would have implied a backend export capability that does not exist. This
+is honestly implementable client-side, so it was, rather than left as a
+dead button or invented as fake reachable backend behavior.
+
+Found and fixed two real bugs during live verification, not just style
+changes:
+
+1. Three JS string literals used `\\2192`/`\\22EF` (a Python-source
+   backslash sequence) intending Unicode escapes, but without the `u`
+   these are invalid octal escapes in strict-mode JS — the whole inline
+   `<script>` threw a `SyntaxError` at parse time and silently left every
+   data-bound field on the page blank. Caught by reading the console after
+   the first screenshot showed an empty page, not by inspection. Fixed to
+   `\\u2192`/`\\u22EF` (the CSS `content: "\\2192"` on line 154 was correct
+   as-is; CSS hex escapes don't take the `u`).
+2. The revocable pill said "revoked" even in the pre-action "before" state,
+   which is backwards — a control that already claims the outcome before
+   the user acts on it. Fixed via a CSS `::before` swap driven by
+   `[data-phase]` instead of static text: "targeted" before, "revoked"
+   after, verified with a zoomed screenshot of both states.
+
+Verification: `make gui`, live in-browser via `claude-in-chrome` (full page
+before state, zoomed flow-diagram crop confirming "targeted" pills and the
+flex-glued arrow/node wrap behavior, `r`-key revoke, zoomed after-state
+crop confirming all pills flipped to "revoked"), `make check` (319/319),
+`ruff check .` clean. Republished to the same Artifact URL as the prior
+dark-theme pass (`d49826ea-...`) so the user can review without local file
+access, per the recurring "i can't open them" constraint from earlier in
+this session.
+
+Status: complete
+
+## GUI rebuilt again: "Dependency Cartography" (opened 2026-08-14)
+
+Objective: the user rejected the ledger-console direction after all and
+picked, explicitly and exclusively ("use this one only"), the fourth
+reference screenshot — a node-graph "Dependency Cartography" view: multi-
+column source-to-department graph with SVG-connected nodes, a top stat
+strip, and a right-hand selected-node detail panel. Instructed to use only
+this reference, on a white-but-not-pure-white ground (their own earlier
+"white is too light on eyes" constraint, self-applied here since the
+reference itself is white).
+
+Branch: feat/memory-provenance
+Parent: (this session, on top of the reference-matched ledger console)
+
+Allowed files: `scripts/render_gui.py` (full rewrite, imports `TOOLS`,
+`DEPARTMENTS` from `scripts/cost.py` — no new data-producing code, reuses
+already-real fixture constants).
+
+Non-goals, again held against a reference that showed them:
+
+- No fabricated "Agents" column/count. The reference's pipeline is
+  Sources -> Tools -> Model Derivations -> Memories -> Agents ->
+  Departments; this project's fixture models departments only, not
+  per-agent identity, so the graph here is five columns (Sources, Tool
+  Result, Model-Derived Fact, Memories, Departments), not six, and the top
+  stat strip has three numbers, not four.
+- No fabricated multi-page app shell. The reference's left nav listed
+  Overview/Sources/Agents/Datasets/Integrations/etc., none of which exist
+  as pages. The nav here has exactly two real links (Dependency Map,
+  Evidence Ledger, both in-page anchors) plus inert, non-clickable labels
+  for context, never claiming a page that isn't there.
+- No fabricated minimap or zoom controls (the reference shows both); a
+  non-functional zoom/pan affordance would be a fake control, so it was
+  left out entirely rather than added and disabled.
+- The "Sources" column lists all 8 real tools from `scripts/cost.py`'s
+  `TOOLS` fixture (not invented names); the "Departments" column lists all
+  5 real `DEPARTMENTS`. Connector lines are computed from live
+  `getBoundingClientRect()` positions of the actual rendered nodes at
+  draw time, not hand-authored SVG path coordinates, so the graph cannot
+  silently drift out of sync with its own layout.
+
+One real feature beyond the reference: clicking any lineage node updates
+the right panel with that node's actual provenance chain, reconstructed by
+walking `derived_from` edges in the embedded data (not the reference's
+static single pre-selected memory) — "Highlight this path" pulses exactly
+those nodes.
+
+Verification: `make gui`, live in-browser via `claude-in-chrome` (initial
+render confirmed no console errors after one pass — the connector-drawing
+and node-click logic worked correctly the first time; clicked a memory
+node and confirmed the detail panel's reconstructed provenance path
+matched the real `derived_from` chain; clicked "Revoke exact descendants"
+and confirmed all pills flipped to "revoked" and the connector paths
+switched from the dashed contaminated style to the dimmed/settled style).
+`make check` 319/319, `ruff check .` clean. Republished to the same
+Artifact URL, title changed to "Dependency Cartography" to match the new
+direction.
+
+Status: complete
+
+## Secondary architecture/evidence page (opened 2026-08-14)
+
+Objective: the user asked, correctly, whether the incident page covers the
+rest of the project (R1, R2, S1, G1-G5, M1, O1, D1/D2, the N=5 fleet, the
+Auditor, the Reviewer) — it does not, and never did; that split was the
+original design brief's own intent ("architecture belongs in a secondary
+evidence view"), but the secondary view was never built. Closed that gap
+with a second static page rather than folding everything into the incident
+page.
+
+Branch: feat/memory-provenance
+Parent: (this session, on top of the Dependency Cartography rebuild)
+
+Allowed files: `scripts/render_architecture.py` (new), `scripts/render_gui.py`
+(nav-link edit only, three lines), `Makefile`, `web/architecture.html` (new,
+generated).
+
+Non-goals:
+
+- No live re-verification at render time. `scripts/gates.py` is offline and
+  fast (confirmed: regenerates G2-G4's demo fixtures deterministically,
+  reads G1/G5 back from disk, no network), so its real stdout is captured
+  and parsed. The nine `scripts/*_gates.py` live judges were each tried
+  directly first (`registry_gates.py`, `model_armor_gates.py`,
+  `observability_gates.py`, `memory_deletion_gates.py`, `auditor_gates.py`,
+  `review_gates.py` ran but several of their own "live_*"-named checks
+  failed for lack of credentials/network in this environment;
+  `gateway_gates.py`, `revision_binding_gates.py`, and `fleet_gates.py`
+  hung past a 10s timeout) — confirming they mix offline structural checks
+  with live Cloud calls in one script and are unsafe to invoke from a
+  static-page build step. Decided instead to read each `proof-out/live-
+  *.json` artifact's own self-reported `proof_id`, `captured_at`, and
+  `claim_boundary` directly, labeled as a captured-evidence snapshot with
+  a computed age, never as a freshly-reverified PASS.
+- No fabricated rows. Nine `LiveProof` entries map exactly to nine files
+  that exist on disk (`live-registry-attack.json` through
+  `live-fleet.json`); a tenth, missing, or malformed file would render as
+  "missing"/"malformed" status, not be silently dropped or faked green.
+- No new backend capability, no redeploy, no cloud calls of any kind from
+  this script.
+
+Verification: `make gui` now writes both `web/incident.html` and
+`web/architecture.html`. Live in-browser via `claude-in-chrome`: confirmed
+no console errors, all five G1-G5 rows rendered with real PASS/BLOCKED
+detail text, all nine live-proof cards rendered grouped into their real
+four+one categories with real proof ids/ages/claim-boundary text, and the
+`← Dependency map` / `Architecture & Evidence` nav links round-tripped
+correctly in both directions. `make check` 319/319, `ruff check .` clean.
+Republished both Artifacts (dependency-cartography page unchanged content,
+re-synced for the new nav link; a second Artifact would need its own
+fragment extraction if the user wants the architecture page previewable
+the same way — not done yet, offered on request).
+
+Status: complete
+
+## Architecture page: show, not tell (opened 2026-08-14)
+
+Objective: the user's fair pushback on the page above — "why would this
+exist in a website ffs? its a demo, it should show capability not tell or
+write" — the first version was nine paragraphs of `claim_boundary` prose
+plus a proof id, which is documentation, not a demo. Replaced the dominant
+content of each of the nine live-proof cards with a small widget built from
+that artifact's own real nested evidence, and demoted `claim_boundary` to a
+secondary "Scope" caption.
+
+Branch: feat/memory-provenance
+Parent: (this session, on top of the first architecture-page pass)
+
+Allowed files: `scripts/render_architecture.py` only.
+
+What each widget actually shows, pulled from real nested fields already in
+the corresponding `proof-out/live-*.json` (none invented):
+
+- R1: Registry-approved digest vs the observed live digest, plus the real
+  dispatch counter that held steady.
+- R2: three-step timeline — an accepted dispatch, then a real
+  `digest_mismatch` denial, then a real `replayed` denial.
+- S1: the real allow call (200, trace id) beside the real deny call (403,
+  trace id).
+- M1: the actual jailbreak/PI prompt text next to the actual clean prompt,
+  each with its real Model Armor `filterMatchState`.
+- O1: the real `trace_id`/`span_id`/`custody_digest` as chips.
+- D1/D2: the real two-fact list before revoke next to the real one-fact
+  list after, with the removed fact struck through.
+- Auditor: the same record's real `revocation_id`/`revoked_at` fields at
+  three real timestamps (before demotion, after demotion but before the
+  sweep, after the sweep) — the decoupling claim shown as state, not
+  argued in prose.
+- Reviewer: the real quarantined text next to Gemini's real drafted
+  verdict text.
+- Fleet N=5: the real revoked departments next to the real untouched ones.
+
+Non-goals:
+
+- No widget fabricates a field the artifact doesn't have; a proof whose
+  expected sub-structure is missing renders "no replay available" rather
+  than a placeholder that looks like real data.
+- No change to which nine proofs are covered or how they're loaded — same
+  offline-only read of `proof-out/*.json`, same refusal to re-run the live
+  `*_gates.py` scripts from this page.
+
+Verification: `make gui`, live in-browser via `claude-in-chrome` (no
+console errors, scrolled the full page, confirmed all nine widgets render
+with real values — the R1 digest pair, the M1 prompt pair with real
+`MATCH_FOUND`/`NO_MATCH_FOUND` states, the D1/D2 struck-through fact, the
+Auditor three-step timeline, the Reviewer text pair, the Fleet department
+split). `make check` 319/319, `ruff check .` clean. Republished the
+Architecture & Evidence Artifact in place.
+
+Status: complete
+
+## Standing enforcement, folded into the one canonical artifact (opened 2026-08-14)
+
+Objective: the user asked, correctly, whether the product does anything
+besides the incident-response story, then directed that all further work
+land on the Dependency Cartography artifact itself ("bcz tht one is
+final"), not as another separate page. `custody/service.py`'s write-time
+split and `custody/action.py`'s export gateway run on every session,
+independent of any later revocation — that was true before this session
+but invisible in the GUI. Added a compact "Standing enforcement" panel to
+`web/incident.html` itself, positioned above the incident graph.
+
+Branch: feat/memory-provenance
+Parent: (this session, on top of the "show don't tell" architecture-page fix)
+
+Allowed files: `scripts/incident.py` (new `compute_standing()` function),
+`scripts/render_gui.py` (new panel + data wiring).
+
+Non-goals:
+
+- No second invented scenario. `compute_standing()` reuses
+  `scripts/demo.py`'s own `week_one()`/`texts()`/`instruction_carrying()`
+  fixture and mirrors its `without_custody()`/`with_custody()` split
+  exactly (verified: `seen=3, admitted=1, withheld=2,
+  retrieved_into_context=1, carrying_instruction=0`, byte-identical to
+  `make demo`'s terminal numbers) — so this panel and `make demo` cannot
+  report different numbers for the same claim.
+- No separate page. Everything lands on the one artifact the user named
+  final; the Architecture & Evidence page is untouched by this pass.
+
+Verification: computed `compute_standing()` directly and diffed against a
+fresh `make demo` run (identical). `make gui`, live in-browser via
+`claude-in-chrome`: no console errors, the panel renders both branches
+("Without Custody... export ALLOWED" vs "With Custody... export REFUSED:
+cited content came from untrusted source(s): fetch_page") directly above
+the incident graph. `make check` 319/319, `ruff check .` clean.
+Republished the Dependency Cartography Artifact in place at the same URL.
+
+Status: complete
+
+## Standing enforcement panel removed on request (2026-08-14)
+
+User's call: "naah remove it." Reverted cleanly — removed the panel HTML,
+its CSS block, the `standing-data` script tag and JS wiring from
+`scripts/render_gui.py`, and deleted `compute_standing()` and its
+now-unused imports (`Export`, `ExportGateway`, `CustodyRecord`, `Origin`,
+`Trust`, `ToolTrust`, `ATTACKER`, `PAYLOAD`, `instruction_carrying`,
+`texts`, `week_one`) from `scripts/incident.py` rather than leaving dead
+code behind. `make gui`, live in-browser: page matches the pre-panel state
+exactly, no console errors. `make check` 319/319, `ruff check .` clean.
+Republished the Artifact in place.
+
+Status: complete
+
+## Deployed publicly to Vercel (2026-08-14)
+
+Objective: user asked to put the GUI live on the web, not just as a private
+Claude Artifact. Deployed `web/incident.html` (as `index.html`) and
+`web/architecture.html` as a static two-page site, no build step, via
+`deploy_to_vercel` (target production, project `custody-incident`).
+
+Before deploying, fixed two links that only worked inside the repo tree:
+`../README.md`/`../docs/architecture.md`/`../DECISIONS.md` in both
+templates' footers now point at
+`https://github.com/Yatsuiii/custody/blob/main/...` (a real, confirmed
+`origin` remote) instead of relative paths that would 404 once only `web/`
+is deployed standalone.
+
+Live URLs:
+- https://custody-incident-cave2.vercel.app/ (dependency map)
+- https://custody-incident-cave2.vercel.app/architecture.html
+
+Non-goals: no `.vercel/project.json` linked into the repo (deploy was
+files-only, no git integration); no custom domain; no redeploy-on-push
+wiring. Regenerating the GUI (`make gui`) does not automatically redeploy
+— that's a manual follow-up step if the underlying data changes.
+
+Verification: live in-browser via `claude-in-chrome` against the deployed
+URL — dependency map renders correctly, nav link to Architecture & Evidence
+works, architecture page renders all five gates and nine live-proof
+widgets. `make check` 319/319, `ruff check .` clean before deploying.
+
+Status: complete
+
+## Sub-build: F1, a genuine live cross-department derivation chain (opened 2026-08-14)
+
+Objective: close the real proof gap identified in `HANDOFF.md` — no live
+proof anywhere in this repo had ever exercised a genuine cross-department
+`derived_from` edge. `scripts/incident.py` dramatizes the product's own
+one-sentence claim (a tool-origin fact hopping sales -> support -> finance,
+each hop a `derived_from` edge earned by a `load_memory` content-hash
+match) but is 100% offline. `scripts/live_fleet.py` (N=5) proves something
+narrower: N departments each independently write once, two happen to trust
+a tool with the same name, and revoking it reaches both — no department in
+that script ever retrieves another department's memory.
+
+Checked in code before building: the edge is earned in `custody/origin.py`'s
+`_attribute` when a session event's `function_response.name` is
+`load_memory` and its response text content-hashes (`resolve`) to a record
+already in the shared `CustodyGraph` — the same mechanism
+`incident.py`'s offline `support_session()`/`finance_session()` exercise.
+Reproducing this live means retrieving the *exact* text `search_memory`
+hands back, not typing the fact twice.
+
+Branch: feat/memory-provenance
+Parent: 5d377fe (N=5 fleet)
+
+Allowed files: new `scripts/live_chain.py` and `scripts/chain_gates.py`,
+`Makefile`, `README.md` (a new F1 section only),
+`scripts/render_architecture.py` (a new `F1` `LiveProof` entry and
+`widget_chain`), `HANDOFF.md`, `.claude/SESSION_CONTRACT.md`, `proof-out/*`.
+No changes to `custody/graph.py`, `custody/origin.py`, `custody/service.py`,
+or any `custody/adapters/*` file — the derivation and resolution mechanism
+this proves is already correct and already covered offline; this is a live
+proof over an already-correct mechanism, reusing `scripts/live_fleet.py`'s
+`RecordWritingMemoryBank` rather than duplicating it.
+
+Non-goals:
+
+- No new Cloud Run services or Agent Engine identities. One shared
+  `CustodyMemoryBank` instance against the one already-owned Agent Engine
+  (`6936011268348182528`), same posture `live_fleet.py` already accepts.
+- No department-scoped revocation semantics change.
+- No UI beyond the one new `F1` widget on the existing architecture page.
+
+Acceptance gates:
+
+1. A real ADK Runner/Gemini turn for sales, plus a real tool-origin write
+   whose own model restatement earns a `derived_from` edge into the tool
+   root, in the same invocation.
+2. A real Gemini turn for support whose reply is spliced together with a
+   manually-constructed `load_memory` citation event carrying the *exact*
+   text `search_memory` retrieved for sales's restatement — earning a live
+   content-hash-matched `derived_from` edge, not an asserted one. Same
+   pattern for finance, citing support's restatement.
+3. One independent tool-origin write for a sibling department
+   (`engineering`), the live negative control.
+4. Revoking the chain tool removes all six chain-hop records from live
+   Memory Bank; each department's own unrelated conversational memory and
+   engineering's independent memory are confirmed, via live reread,
+   untouched.
+5. `scripts/chain_gates.py` independently rereads live Memory Bank
+   (`memories.get` by a `memory_id_for`-recomputed name, not the producer's
+   claim) rather than trusting the artifact.
+
+**Closed 2026-08-14, all gates passed live on the first run, proof
+`a7bf097fcbce430c821ca655daa6cb07`.** `scripts/live_chain.py`: sales ran a
+real ADK `Runner`/`gemini-3.5-flash` conversational turn, then a
+manually-constructed tool-origin write (`vendor_audit_export_tool`) plus its
+own model restatement in one invocation, earning `derived_from` into the
+tool root. Support ran a real Gemini reply; a `load_memory` citation event
+carrying the exact text live `search_memory` returned for sales's
+restatement was spliced ahead of that reply, sharing its invocation id, and
+both were fed through the shared `CustodyMemoryBank` together — the
+resulting citation record's `derived_from` matched sales's restatement
+record id exactly, a genuine content-hash match against live Memory Bank
+text, and the reply record's `derived_from` matched its own citation.
+Finance repeated the pattern citing support's restatement. Engineering
+wrote one independent, unrelated tool-origin record.
+`RevokingMemoryBankGraph.revoke(tool="vendor_audit_export_tool", ...)`
+removed exactly the six expected chain-hop record ids (sales's tool root
+and restatement, support's citation and restatement, finance's citation and
+restatement) — verified both by the producer's own before/after
+`search_memory` reads and by `chain_gates.py`'s independent
+`memories.get` reread of all six by a `memory_id_for`-recomputed name.
+Each department's own unrelated conversational memory (written earlier in
+the same run) and engineering's independent tool-origin memory were
+confirmed, live, still retrievable and untouched. `make chain-gates`
+reported 20/20 PASS: 14 offline structural checks (each hop's
+`derived_from` matches the exact expected upstream id, the removed set is
+exactly the six expected records, both negative controls held) plus 6 live
+Memory Bank rereads. `make check` 319/319 offline, unaffected. `make gates`
+reports the same baseline as before this sub-build (G1/G2/G3/G4 PASS, G5
+correctly BLOCKED) — no core module changed. Added as a new `F1` entry in
+`scripts/render_architecture.py`'s `LIVE_PROOFS` (its own widget, distinct
+from `Fleet N=5`'s, since it proves a different property) and a new README
+section. `make gui` regenerated and verified to render the new row with
+real captured data, and redeployed to Vercel the same session (see
+`HANDOFF.md`'s redeploy write-up for the full account: the
+`deploy_to_vercel` MCP tool corrupted `architecture.html`'s inline script
+via a transcription error, caught by `read_console_messages` and fixed by
+switching to a straight-from-disk `vercel` CLI deploy; a separately
+discovered `ssoProtection` gate on the project was also disabled, with
+explicit user authorization, to keep the site public). Verified live,
+in-browser, both pages, no console errors, F1 widget rendering real data.
+
+**Non-goal, stated in the artifact's own `claim_boundary`:** same scope
+`live_fleet.py` already accepts — this does not test `TrustCatalog`'s
+per-department grant boundary, and it does not stand up separate Cloud
+Run/Agent Engine identities per department.
+
+Status: complete
+
+## Sub-build: Reviewer narration, for the Best Multimodal UX award (opened 2026-08-14)
+
+Objective: Close `HANDOFF.md` section 4 (Best Multimodal UX award, $5,000,
+2 winners — flagged open, not yet acted on). No Devpost page defines a
+rubric for this award beyond its name and prize amount, checked live
+against the hackathon's main page and rules page rather than assumed. The
+GUI built this session is single-modality (HTML/SVG, text and graph
+visuals only). Rather than a cosmetic polish pass, which would not change
+that, or skipping the award, the user chose to scope a genuine second
+modality: narrate the Custody Reviewer's real, already-live Gemini-drafted
+verdict (`custody/review.py`'s `draft_verdict`, already proven via `make
+live-review`) as speech via Google Cloud Text-to-Speech, embedded in the
+Architecture & Evidence page next to the existing Reviewer widget. This
+follows the project's own explicit rule against forcing an unrelated
+Google AI product in ("Do not invent a Veo use; a forced integration reads
+worse than an absent one") by narrating content that already exists and is
+already real, rather than fabricating a new use for image/video
+generation.
+
+Branch: feat/memory-provenance
+Parent: 5d377fe
+
+Allowed files: `scripts/live_narration.py` (new), `scripts/
+narration_gates.py` (new), `scripts/render_architecture.py`, `Makefile`,
+`README.md` (new section only), `HANDOFF.md`, `.claude/
+SESSION_CONTRACT.md`, `proof-out/*`. No changes to `custody/review.py`,
+`custody/graph.py`, `custody/catalog.py`, `custody/control_plane.py`, or
+`web/incident.html`.
+
+Non-goals:
+
+- No image or video generation. Audio narration of already-real Gemini
+  text is the scoped addition, not a second forced integration.
+- No change to `custody/review.py`'s structural contract: `draft_verdict`
+  still never imports `custody.catalog`/`custody.graph`; narration only
+  ever reads `Verdict.summary`, a plain string produced by the existing,
+  unchanged live call.
+- No change to any other live-proven gate (G1-G5, R1, R2, S1, M1, O1, D1,
+  D2, Auditor, Reviewer, Fleet, F1). This is additive only.
+- No autoplay audio; the modality is user-initiated via `<audio
+  controls>`, and the verdict text stays visible as the accessible
+  fallback — a text+audio pairing, not audio replacing text.
+- If the step-0 viability check (below) fails in a way that is not a
+  quick fix, stop and document the non-viability, mirroring D1's own
+  write-up discipline, rather than forcing it.
+
+Baseline: `make check` 319/319 passing offline (unchanged from F1's
+close-out, confirmed before this sub-build). `make gates` reports
+G1/G2/G3/G4 PASS, G5 correctly BLOCKED. `make live-review`/`make
+review-gates` already pass (9/9), unaffected by this work — narration
+reuses the same `draft_verdict` call shape but runs its own independent
+live invocation, not a read of `live-review.json`.
+
+Acceptance gates:
+
+1. **Step-0 viability, checked live before any code is written**:
+   `google-cloud-texttospeech` is installable, `texttospeech.
+   googleapis.com` is enabled (or enablable via a plain `gcloud services
+   enable` call) on `project-988bc9fe-092c-4b32-90c`, and one throwaway
+   `synthesize_speech` call returns non-trivial audio bytes with a valid
+   MP3 header.
+2. `scripts/live_narration.py` runs a real quarantine + `draft_verdict`
+   flow (own proof marker) and a real Cloud Text-to-Speech call, writing
+   `proof-out/live-narration.json` (evidence, mirroring `live-review.
+   json`'s shape) and `proof-out/live-narration.mp3` (the real audio
+   bytes).
+3. `scripts/narration_gates.py` independently verifies the claim: offline
+   structural checks (freshness, `Verdict` schema match, the same
+   disallowed-key check `review_gates.py` already uses, a recomputed
+   `audio_sha256` matching the recorded digest, an MP3-header sanity
+   check) plus one independent live re-call of Cloud Text-to-Speech
+   itself, not just a reread of the producer's JSON — same discipline
+   `review_gates.py`'s live Gemini re-call already uses for the same
+   reason (there is no durable Cloud resource to reread here).
+4. The GUI surfaces it live: a new `widget_narration` in `scripts/
+   render_architecture.py`, a new `"audio"` widget type in the page's
+   client JS, `web/architecture.html` regenerated and redeployed to the
+   existing Vercel project, verified in-browser with no console errors
+   and the audio actually playing real narrated speech matching the
+   on-screen verdict text.
+
+Verification: `make check`, `make live-narration`, `make narration-gates`,
+`make gates` (must be unaffected), `make gui`, then a `vercel` CLI
+redeploy per `HANDOFF.md`'s documented preferred method (not
+`deploy_to_vercel`, which previously corrupted this same file's inline
+script). Manual: reload both live Vercel URLs, confirm no console errors,
+confirm the narration widget renders and plays.
+
+**Closed 2026-08-14, all four gates passed live on the first run, proof
+`26f576c3ffe74958938b383b57755aee`.** Step 0's viability check passed
+cleanly: `google-cloud-texttospeech` installed with no dependency
+conflicts, `texttospeech.googleapis.com` was not yet enabled on
+`project-988bc9fe-092c-4b32-90c` and was enabled live via a plain `gcloud
+services enable` call (under the project-owning account,
+`yoursturuly@gmail.com` — the default gcloud CLI config was authenticated
+as a different account/project entirely, `redlotusthepotus@gmail.com`
+against `project-02b2181a-204b-4470-9cc`, so every gcloud call in this
+sub-build used explicit `--account`/`--project` flags rather than the
+ambient config), and one throwaway `synthesize_speech` call returned
+13,344 bytes of valid MP3 audio. `scripts/live_narration.py` then ran its
+own independent quarantine + `draft_verdict` flow (marker
+`proof-marker-26f576c3ffe7`, correctly reproduced in the drafted verdict)
+and a real Cloud Text-to-Speech call, producing 86,304 bytes of MP3 audio
+(`sha256 ad3536b7...`). `scripts/narration_gates.py` reported 14/14 PASS
+on the first run: 13 offline structural checks (freshness, marker
+presence, `Verdict` schema/disallowed-key checks mirroring
+`review_gates.py`, a recomputed `audio_sha256` matching the recorded
+digest, an MP3-header sanity check, non-trivial byte count) plus one
+independent live re-call of Cloud Text-to-Speech itself, which returned
+fresh, valid, non-trivial audio under the project's own credentials.
+`make check` remained 319/319 offline; `make gates` unaffected (G1-G4
+PASS, G5 correctly BLOCKED). `scripts/render_architecture.py` gained a
+new `Narration` entry in `LIVE_PROOFS`, `widget_narration` (reads the
+verdict text and base64-encodes the sibling `.mp3` at render time into a
+`data:audio/mpeg;base64,...` URI, never stored encoded on disk), and a new
+`"audio"` widget type in the page's client JS (`<audio controls>`, no
+autoplay, verdict text stays visible as the accessible fallback).
+Regenerated (`make gui`) and verified locally in-browser first (Chrome via
+`claude-in-chrome`, served over a local HTTP server since `file://` URLs
+are not navigable): widget rendered, audio decoded and played (button
+toggled to the pause state), no console errors. Redeployed to the existing
+`custody-incident` Vercel project via the `vercel` CLI from a scratch
+deploy directory (`web/incident.html` copied to `index.html`,
+`web/architecture.html` copied to `architecture.html`, its back-link
+rewritten from `incident.html` to `index.html` to match the deployed
+copy's filenames, mirroring the pattern documented in `HANDOFF.md`'s F1
+redeploy write-up) — deploying to production was confirmed with the user
+first, since it is a visible, hard-to-reverse action affecting a public
+URL. Verified live in-browser at both
+`custody-incident-cave2.vercel.app/architecture.html` and the root page:
+no console errors, the Narration widget renders with real captured data,
+audio confirmed playable. `README.md` gained a new "Reviewer narration"
+section; `HANDOFF.md` section 4 and its "Next capability" list were
+updated to reflect this as closed rather than open.
+
+**Non-goal, stated in the artifact's own `claim_boundary`:** no console or
+human-facing review queue; no image or video generation is involved; this
+does not change `custody/review.py`'s structural contract or any other
+live-proven gate.
+
+Status: complete
+
+## Sub-build: fleet scale-up, N=5 to N=25 (opened 2026-08-14)
+
+Objective: pick up `HANDOFF.md` section 3, explicitly optional/secondary
+and only after the multimodal pass (now closed above). Scale
+`scripts/live_fleet.py` from N=5 to N=25 department worker agents, per the
+user's own earlier-stated target of ~20-30 when asked directly what would
+read as credible. This is a single reported number for the demo, not a
+GUI feature — the existing Fleet widget's shape does not change, only its
+department list and count.
+
+Branch: feat/memory-provenance
+Parent: (this session's HEAD after the Narration sub-build)
+
+Allowed files: `scripts/live_fleet.py`, `scripts/fleet_gates.py`,
+`scripts/render_architecture.py` (the `Fleet N=5` entry only),
+`README.md` ("The fleet at N=5" section only), `HANDOFF.md`, `.claude/
+SESSION_CONTRACT.md`, `proof-out/*`.
+
+Non-goals, per `HANDOFF.md`'s own scoping for this item:
+
+- Do not touch `custody/graph.py`, `custody/catalog.py`,
+  `custody/control_plane.py`, G1, the Auditor, or the Reviewer proofs.
+- Do not fabricate or hand-type any numbers before a real run produces
+  them.
+- Do not let this grow into an expanded GUI section — surface the number
+  in prose/stats via the existing widget shape, not new UI competing for
+  demo-video time.
+- Department and tool names reuse the existing naming style
+  (`legal_review_tool`, `hr_disclosure_tool`), not `dept_1`/`dept_2`
+  placeholders.
+- `scripts/fleet_gates.py`'s hardcoded `== 5`/`== 2`/`== 3` checks are
+  replaced with checks that independently recompute the expected
+  department/shared/untouched sets from `live_fleet.py`'s own
+  `DEPARTMENT_TOOLS`/`SHARED_TOOL_DEPARTMENTS` constants (the source of
+  truth), not a second hand-typed magic number and not blind trust of the
+  producer's own JSON.
+
+Baseline: `make check` 319/319 offline, `make gates` G1-G4 PASS/G5
+BLOCKED, `make fleet-gates` 15/15 PASS against the existing N=5 evidence
+(all confirmed before this sub-build, unaffected by the Narration
+sub-build above).
+
+Acceptance gates:
+
+1. `scripts/live_fleet.py`'s `DEPARTMENT_TOOLS` carries 25 real,
+   non-repetitive department/tool name pairs, two of them (`sales`,
+   `finance`, unchanged) sharing `SHARED_TOOL`.
+2. `make live-fleet` runs live end to end against the same already-owned
+   Agent Engine, all 25 departments' tool-origin facts written and
+   independently retrievable, one revocation of the shared tool removing
+   exactly the two sharing departments' records while the other 23 stay
+   untouched.
+3. `scripts/fleet_gates.py` independently verifies this: offline
+   structural checks recomputing expected sets from `live_fleet.py`'s own
+   constants (not a hand-typed count), plus the existing live Memory Bank
+   reread loop (already scales to any N without modification).
+4. `README.md`'s fleet section and `render_architecture.py`'s `Fleet N=5`
+   `LiveProof` entry are updated to reflect the real N, only if the GUI's
+   widget shape stays the same (groups of revoked/untouched names) — no
+   new widget type.
+
+Verification: `make check`, `make live-fleet`, `make fleet-gates`,
+`make gates` (must be unaffected). `make gui` + redeploy only if the GUI
+actually changed. Manual: confirm the live Vercel page still renders with
+no console errors if redeployed.
+
+**Closed 2026-08-14, all gates passed live on the first run, proof
+`5617b30b169840928abfff93f08a0145`.** `DEPARTMENT_TOOLS` in
+`scripts/live_fleet.py` was extended from 5 to 25 real, non-repetitive
+department/tool pairs (sales and finance still sharing
+`cross_dept_export_tool`; the other 23 each use a distinct, plausibly
+named tool, e.g. `procurement_vendor_tool`, `compliance_audit_tool`,
+`treasury_reconciliation_tool` — the same naming style as the original
+five, no `dept_N` placeholders). `make live-fleet` ran sequentially
+against the same already-owned Agent Engine (`6936011268348182528`); all
+25 departments' real ADK Runner/Gemini turns plus tool-origin writes
+succeeded, one revocation of the shared tool removed exactly `sales` and
+`finance`'s records, the other 23 stayed untouched. `scripts/
+fleet_gates.py`'s three previously hardcoded checks (`== 5`, `== 2`,
+`== 3`) were replaced with checks that import `DEPARTMENT_TOOLS` and
+`SHARED_TOOL_DEPARTMENTS` from `live_fleet.py` and independently
+recompute the expected department/shared/untouched sets from that source
+of truth, rather than a second hand-typed magic number — this means the
+gate script now scales to any future N without further hand-editing.
+`make fleet-gates` reported 35/35 PASS: 10 offline structural checks plus
+25 independent live Memory Bank rereads (2 confirming deletion, 23
+confirming survival), the same reread loop from the N=5 build, unmodified
+since it already iterated over `shared`/`untouched` generically. `make
+check` remained 319/319 offline; `make gates` unaffected (G1-G4 PASS, G5
+correctly BLOCKED) — no core module touched, matching the non-goals
+above. `README.md`'s fleet section and `scripts/render_architecture.py`'s
+`Fleet N=5` → `Fleet N=25` `LiveProof` entry were updated; the widget's
+shape is unchanged (the same `groups` type, now listing 23 untouched
+names instead of 3) — confirmed in-browser, locally and after redeploy,
+that this reads as a longer list inside the existing widget, not a new
+UI section. Regenerated (`make gui`) and redeployed to the same Vercel
+project via the `vercel` CLI (confirmed with the user first, since
+production deploys are a visible, hard-to-reverse action); verified live
+at `custody-incident-cave2.vercel.app/architecture.html`, no console
+errors, `Fleet N=25` widget rendering real captured data.
+
+Status: complete

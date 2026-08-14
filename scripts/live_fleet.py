@@ -1,5 +1,5 @@
-"""Prove the fleet claim at N>1: five live department worker agents, and the
-one property N=1 could never exercise.
+"""Prove the fleet claim at N>1: twenty-five live department worker agents,
+and the one property N=1 could never exercise.
 
 Every prior live proof ran one ADK Runner, once, one department per
 invocation. The product's own one-sentence claim is that a compromised
@@ -12,16 +12,19 @@ there has never been more than one. Checked in code before this was built:
 oversight (see `custody/graph.py`'s own docstring). This script is what
 turns that design claim into live evidence.
 
-Five departments (sales, legal, hr, finance, engineering) each run a real
-ADK Runner/Gemini conversational turn plus one tool-origin write, through
-the exact wiring G1 already proved (`CustodyMemoryBank` ->
+N=5 first proved the mechanism; N=25 (2026-08-14, at the user's own stated
+target when asked directly what would read as credible for a "Fleet"
+track) is the same mechanism at a scale meant to read as a governed
+population, not a toy. Twenty-five departments each run a real ADK
+Runner/Gemini conversational turn plus one tool-origin write, through the
+exact wiring G1 already proved (`CustodyMemoryBank` ->
 `AgentEngineMemoryBank` via `write_record`), against one already-owned
-Agent Engine. Two of the five (sales, finance) trust and invoke a tool with
-the *same name*. All five write through one shared `CustodyMemoryBank`
-instance -- one process-wide graph, mirroring production, not five
-isolated ones -- so revoking the shared tool once is a single call that
-must reach both departments' memories while leaving the other three
-untouched.
+Agent Engine. Two of the twenty-five (sales, finance) trust and invoke a
+tool with the *same name*. All twenty-five write through one shared
+`CustodyMemoryBank` instance -- one process-wide graph, mirroring
+production, not twenty-five isolated ones -- so revoking the shared tool
+once is a single call that must reach both departments' memories while
+leaving the other twenty-three untouched.
 
     make live-fleet
 """
@@ -75,6 +78,26 @@ DEPARTMENT_TOOLS = {
     "legal": "legal_review_tool",
     "hr": "hr_disclosure_tool",
     "engineering": "engineering_deploy_tool",
+    "procurement": "procurement_vendor_tool",
+    "marketing": "marketing_campaign_tool",
+    "support": "support_ticket_tool",
+    "compliance": "compliance_audit_tool",
+    "security": "security_incident_tool",
+    "product": "product_roadmap_tool",
+    "design": "design_asset_tool",
+    "data": "data_pipeline_tool",
+    "infrastructure": "infrastructure_provision_tool",
+    "research": "research_experiment_tool",
+    "customer_success": "customer_success_tool",
+    "billing": "billing_invoice_tool",
+    "payroll": "payroll_disbursement_tool",
+    "recruiting": "recruiting_candidate_tool",
+    "facilities": "facilities_access_tool",
+    "logistics": "logistics_shipment_tool",
+    "partnerships": "partnerships_agreement_tool",
+    "privacy": "privacy_consent_tool",
+    "risk": "risk_assessment_tool",
+    "treasury": "treasury_reconciliation_tool",
 }
 
 CLAIM_BOUNDARY = (

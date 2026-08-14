@@ -14,7 +14,7 @@ PYTHON ?= $(shell \
 		command -v python3; \
 	fi)
 
-.PHONY: help lint test check serve image gates cost demo revoke isolate revision-spike live-memory-bank live-memory-deletion memory-deletion-gates live-auditor auditor-gates live-review review-gates live-fleet fleet-gates live-g1 live-registry-attack registry-gates live-revision-binding revision-binding-gates setup-gateway deploy-gateway-probe live-gateway gateway-gates live-model-armor model-armor-gates live-observability observability-gates clean
+.PHONY: help lint test check serve image gates incident gui cost demo revoke isolate revision-spike live-memory-bank live-memory-deletion memory-deletion-gates live-auditor auditor-gates live-review review-gates live-narration narration-gates live-fleet fleet-gates live-chain chain-gates live-g1 live-registry-attack registry-gates live-revision-binding revision-binding-gates setup-gateway deploy-gateway-probe live-gateway gateway-gates live-model-armor model-armor-gates live-observability observability-gates clean
 
 help:
 	@echo "make lint    ruff over the tree"
@@ -23,6 +23,8 @@ help:
 	@echo "make serve   the control plane locally on :8080"
 	@echo "make image   build the Cloud Run container and check the pins hold"
 	@echo "make gates   PASS/FAIL per gate, judged from proof-out/"
+	@echo "make incident  the judge-facing narrative: trust incident, blast radius, lineage, revoke, evidence"
+	@echo "make gui       renders web/incident.html, same data as make incident, open in a browser"
 	@echo "make cost    what a compromised tool costs, with the graph and without"
 	@echo "make demo    the poisoning scenario, with Custody and without"
 	@echo "make revoke  G3 offline: revoke a compromised tool across the graph"
@@ -35,8 +37,12 @@ help:
 	@echo "make auditor-gates independently judge the live Auditor artifact"
 	@echo "make live-review prove the real Custody Reviewer: Gemini reads a quarantined item, drafts a verdict"
 	@echo "make review-gates independently judge the live Reviewer artifact"
+	@echo "make live-narration prove a second modality: the Reviewer's verdict, spoken via Cloud Text-to-Speech"
+	@echo "make narration-gates independently judge the live Narration artifact"
 	@echo "make live-fleet prove the fleet claim at N=5: a tool shared by two departments, revoked once, pulled from both"
 	@echo "make fleet-gates independently judge the live fleet artifact"
+	@echo "make live-chain prove a genuine live cross-department derived_from chain, sales -> support -> finance"
+	@echo "make chain-gates independently judge the live chain artifact"
 	@echo "make live-g1 Cloud Run + Gemini 3.5 + ADK/Memory Bank evidence"
 	@echo "make live-registry-attack deploy v1/v2 and prove stale Registry blocking"
 	@echo "make registry-gates independently judge the live Registry artifact"
@@ -67,6 +73,13 @@ image:
 
 gates:
 	@$(PYTHON) scripts/gates.py
+
+incident:
+	@$(PYTHON) scripts/incident.py
+
+gui:
+	@$(PYTHON) scripts/render_gui.py
+	@$(PYTHON) scripts/render_architecture.py
 
 cost:
 	@$(PYTHON) scripts/cost.py
@@ -104,11 +117,23 @@ live-review:
 review-gates:
 	@$(PYTHON) scripts/review_gates.py
 
+live-narration:
+	@$(PYTHON) scripts/live_narration.py
+
+narration-gates:
+	@$(PYTHON) scripts/narration_gates.py
+
 live-fleet:
 	@$(PYTHON) scripts/live_fleet.py
 
 fleet-gates:
 	@$(PYTHON) scripts/fleet_gates.py
+
+live-chain:
+	@$(PYTHON) scripts/live_chain.py
+
+chain-gates:
+	@$(PYTHON) scripts/chain_gates.py
 
 live-g1:
 	@$(PYTHON) scripts/live_g1.py

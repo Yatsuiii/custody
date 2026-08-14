@@ -1,4 +1,319 @@
-# Custody recovery handoff, 2026-08-14 (fleet review closed: Provenance Auditor, Custody Reviewer, and N=5 department agents all landed)
+# Custody recovery handoff, 2026-08-14 (GUI shipped, live on Vercel, redeployed with F1's data, Reviewer narration, and the N=25 fleet; F1 live cross-department chain proof closed; Best Multimodal UX pass closed via a real Cloud Text-to-Speech modality; fleet scale-up closed at N=25)
+
+## Start here if you are picking this up next
+
+This session built a judge-facing GUI (two static pages: a "Dependency
+Cartography" incident view and an "Architecture & Evidence" page) and
+deployed it live on Vercel. It also worked through the right next move for
+the live fleet proof, through three corrections in a row:
+
+1. A first attempt at just scaling N=5 to N=12 was rejected by the user as
+   padding ("dont wanna increase the fleet just for the sake of it"),
+   reverted cleanly.
+2. Replaced with a two-part plan: prove a genuine live cross-department
+   derivation chain (a real proof gap, not a bigger number), *then* scale
+   the existing parallel fleet proof as a paired stress-test. User
+   confirmed this direction, then separately asked whether scale itself
+   was still too low for a "Fleet" track and picked ~20-30 departments
+   when asked directly.
+3. **Then the actual hackathon page was read** (was not read before this
+   point in the session) —
+   https://allthingsagentichackathon.devpost.com/ and its `/resources`
+   page. Real judging weights: **Innovation & Operational Utility 40%**
+   ("how much real-world friction the agent removes autonomously"),
+   **Architectural Discipline & Tech Stack 30%** (decoupling, state
+   management, security, failure handling), **Demo & Production
+   Readiness 30%** (video clarity, repo quality, architecture docs, proof
+   of GCP deployment). The Fortified Enterprise Fleet track description
+   says "multi-agent orchestration at scale" but states **no numeric
+   agent count anywhere**, on either page. There is also a separate
+   **Best Multimodal UX award ($5,000, 2 winners)** the GUI work already
+   done this session is a real candidate for.
+   **Conclusion, agreed with the user:** the live-chain proof is what
+   actually moves the score (hits the 40% and 30% criteria directly); a
+   bigger N moves nothing in the rubric and risks working *against* the
+   30% demo-clarity criterion in a ~4-minute video. The scale-up is now
+   explicitly demoted to secondary — cheap to do, but as a single
+   reported number, not a UI feature competing for video time.
+
+**Update, 2026-08-14: the chain proof (section 2 below) is now closed,
+live-proven on the first run, and redeployed to Vercel.** `scripts/
+live_chain.py` / `scripts/chain_gates.py`, proof
+`a7bf097fcbce430c821ca655daa6cb07`, `make chain-gates` 20/20 PASS. Added as
+a new `F1` entry in `scripts/render_architecture.py`'s `LIVE_PROOFS` and a
+new README section. Full write-up in `.claude/SESSION_CONTRACT.md`'s
+"Sub-build: F1, a genuine live cross-department derivation chain" section.
+
+**Redeployed to Vercel and verified live, with one real snag found and
+fixed along the way.** The `deploy_to_vercel` MCP tool (used for every
+prior redeploy) silently corrupted `architecture.html`'s inline `<script>`
+when the huge file content was passed as a JSON tool parameter — a manual
+quote-escaping error broke `renderWidget`'s first line with a `SyntaxError:
+Unexpected string`, which left every gate row and proof card blank on the
+live page (caught via `read_console_messages`, not visually obvious at
+first glance from a plain screenshot). Switched to deploying straight from
+disk with the authenticated `vercel` CLI (`vercel link --project
+custody-incident` then `vercel deploy --prod`) instead of retyping file
+contents into a tool parameter — eliminates the transcription risk
+entirely; **prefer this method for future redeploys of these two files**
+over `deploy_to_vercel`. That CLI deploy also surfaced a separate,
+unrelated finding: the project's `ssoProtection` was set to
+`all_except_custom_domains` (Vercel Authentication gating every
+`*.vercel.app` URL, including the production alias), which the earlier
+`deploy_to_vercel`-based deploys had apparently never triggered — so the
+site started returning a login redirect instead of the page. Disabled via
+the Vercel API with explicit user authorization (`ssoProtection: null`);
+confirmed public again (`200`, no console errors, F1 widget renders with
+real data) at both `custody-incident-cave2.vercel.app/` and
+`/architecture.html`. If a future redeploy is done via `deploy_to_vercel`
+again, check console errors after, not just that the deploy call
+succeeded.
+
+The scale-up (section 3) remains optional/secondary, not started. The Best
+Multimodal UX pass (section 4) remains open, not started — a distinct,
+currently-unaddressed opportunity.
+
+### 1. GUI: built, verified, deployed live — closed
+
+- `scripts/incident.py` — `compute()` computes the vendor_portal incident
+  narrative (blast radius, lineage, revocation) from real code, no
+  hand-typed numbers. (An earlier `compute_standing()` for a "runs on every
+  write" panel was added then explicitly removed on user request — don't
+  re-add it without being asked again.)
+- `scripts/render_gui.py` — renders `web/incident.html`, a "Dependency
+  Cartography" node-graph page (5 real columns: sources, tool result,
+  derived statement, memories, departments; SVG connectors computed from
+  live DOM positions; click-to-inspect right panel; working
+  "Revoke exact descendants" interaction).
+- `scripts/render_architecture.py` — renders `web/architecture.html`, a
+  secondary page reading real `proof-out/*.json` artifacts (G1-G5 from
+  `scripts/gates.py`'s actual stdout, plus 9 live-proof widgets — R1, R2,
+  S1, M1, O1, D1/D2, Auditor, Reviewer, Fleet — each showing the artifact's
+  own real captured data, e.g. the actual jailbreak prompt text, the
+  actual before/after fact list, not prose describing them). This went
+  through two design iterations before landing here: an initial
+  prose-heavy version was rejected ("show capability, don't tell"), a
+  full 4-reference comparison was done against real security-startup
+  homepages before the current direction was picked.
+- `make gui` runs both renderers.
+- **Deployed live to Vercel** (files-only deploy, no git integration, no
+  `.vercel/project.json` in the repo): project `custody-incident`.
+  - https://custody-incident-cave2.vercel.app/ (dependency map, served as
+    `index.html`)
+  - https://custody-incident-cave2.vercel.app/architecture.html
+  - Footer links in both templates point at the real GitHub remote
+    (`https://github.com/Yatsuiii/custody/blob/main/...`) instead of
+    relative repo paths, because only `web/`'s two files are deployed
+    standalone — relative `../README.md` links would 404 on Vercel.
+  - **Redeploying is manual.** `make gui` regenerates the local HTML but
+    does NOT redeploy. If you change the GUI or regenerate data (e.g.
+    after the fleet scale-up below), redeploy by calling the `deploy_to_vercel`
+    MCP tool again with target `production`, name `custody-incident`, and
+    the two files' contents (read `web/incident.html` as `index.html` and
+    `web/architecture.html` as `architecture.html` — keep the
+    `architecture.html` back-link as `href="index.html"` for the deployed
+    copy, matching what's live now).
+  - Verified live in-browser (Chrome via `claude-in-chrome`): both pages
+    render, nav between them works, revoke interaction works, no console
+    errors.
+
+### 2. Live cross-department derivation chain: closed 2026-08-14, live-proven as F1
+
+**This replaces an earlier, abandoned plan.** This session first tried
+"scale the fleet from N=5 to N=12" in response to the user worrying that
+low idle GCP/Vercel cost reads as "the project is small." That reasoning
+was corrected (cost and scale are not the same thing; low idle cost is
+serverless architecture working correctly), but the user then separately
+said, unprompted: **don't grow N just for the sake of a bigger number —
+it has to be a meaningful update.** The N=12 edit to
+`scripts/live_fleet.py` was reverted with `git checkout --`; that file is
+back to its original N=5 state, unmodified from before this session.
+Nothing live was ever run for the N=12 attempt.
+
+**The actual gap, found by comparing what's proven where:**
+
+- `scripts/incident.py` (offline, powers `make incident` and the deployed
+  GUI) dramatizes the product's real headline claim: a tool-origin fact
+  hops sales -> support -> finance, each hop a `derived_from` edge earned
+  by a genuine content-hash match through a `load_memory` retrieval
+  (`custody/graph.py`'s `resolve`). This is the whole "identified and
+  pulled ... across every department, agent and session since" story. It
+  is 100% synthetic/offline — `PlainMemory`, not live Memory Bank.
+- `scripts/live_fleet.py` (live, N=5) proves something different and
+  narrower: N departments each independently write once, two of them
+  happen to trust a tool with the *same name*, and revoking that tool
+  reaches both. No department in that script ever retrieves another
+  department's memory. There is no live cross-department `derived_from`
+  edge anywhere in this codebase's live proofs.
+- **So the dramatic story the GUI tells is unproven live.** Nobody has
+  shown, against real Vertex Memory Bank, that Custody's core mechanism —
+  a derivation edge earned through a real cross-department retrieval,
+  followed by a revocation that walks that live edge and removes every
+  hop — actually holds outside the pure offline graph. That is a real,
+  meaningful gap tied directly to the product's own one-sentence claim,
+  not a vanity metric.
+
+**Proposed next step, NOT yet built:** a new script,
+`scripts/live_chain.py` (name not final), structured like
+`scripts/live_fleet.py` (same `CustodyMemoryBank` / `AgentEngineMemoryBank`
+/ `RevokingMemoryBankGraph` wiring, same env vars) but proving a genuine
+live chain instead of parallel independent writes:
+
+1. Sales agent: one real ADK Runner/Gemini turn, one tool-origin write
+   (a live analog of `scripts/incident.py`'s `sales_session()`).
+2. Support agent: a real Gemini turn whose session event is constructed
+   as a `load_memory` function response carrying the *exact* text
+   `custody.search_memory` just retrieved for Sales's fact — this is what
+   earns a genuine `derived_from` edge live, the same content-hash match
+   `custody/graph.py`'s `resolve` already does offline, exercised here
+   against the real Agent Engine.
+3. Finance agent: same pattern, citing Support's restatement.
+4. One sibling department (e.g. `engineering`) writes something
+   unrelated, as the live "does revocation touch things it shouldn't"
+   negative control, same role `untouched_departments` plays in the
+   existing fleet proof.
+5. Revoke Sales's tool. Confirm live, via `search_memory`, that all three
+   real Agent Engine memories (sales, support, finance) are gone and the
+   sibling department's memory is untouched.
+
+This is more work than the N=12 edit was (it needs the `load_memory`
+event-construction pattern from `scripts/incident.py`'s
+`support_session()`/`finance_session()` adapted to real ADK
+`Runner`/Gemini turns, not just more dict entries), but it closes a real
+proof gap instead of inflating a number that's already proven at N=5.
+
+**User confirmed this direction ("thts a great direction"). Built and closed
+2026-08-14.** `scripts/live_chain.py` (new) implements exactly this shape:
+sales gets a real ADK Runner/Gemini turn plus a manually-constructed
+tool-origin write and its own restatement in one invocation; support and
+finance each get a real Gemini reply spliced with a manually-constructed
+`load_memory` citation event carrying the exact text live `search_memory`
+returned for the upstream department's restatement, earning a genuine
+content-hash-matched `derived_from` edge each hop; engineering is the
+independent negative control. `scripts/chain_gates.py` (new) mirrors
+`fleet_gates.py`'s discipline exactly: offline structural checks
+independently re-deriving the expected removed/untouched sets from the
+producer's own JSON, plus 6 independent live Memory Bank rereads by a
+`memory_id_for`-recomputed name. Proof `a7bf097fcbce430c821ca655daa6cb07`,
+`proof-out/live-chain.json`, `make chain-gates` 20/20 PASS on the first
+run. Landed as its own numbered proof, `F1`, in `scripts/
+render_architecture.py`'s `LIVE_PROOFS` list (own widget, `widget_chain`)
+and a new README section, rather than folding into the existing "Fleet
+N=5" row, since it proves a different property than that row does. Full
+write-up: `.claude/SESSION_CONTRACT.md`'s "Sub-build: F1, a genuine live
+cross-department derivation chain" section.
+
+### 3. Fleet scale-up: demoted to optional/secondary after reading the real rubric
+
+The user raised the N=12 idea again after seeing the live-chain direction,
+reasoning that "Fleet" track judging might score visible scale of the
+governed population separately from mechanism correctness, and picked
+~20-30 departments when asked directly what would read as credible. **That
+reasoning was then checked against the actual hackathon page** (see the
+top of this file) rather than assumed. Finding: the real judging weights
+(Innovation & Operational Utility 40%, Architectural Discipline & Tech
+Stack 30%, Demo & Production Readiness 30%) and the Fortified Enterprise
+Fleet track description mention "at scale" but state **no numeric agent
+count anywhere**. The user agreed with this reading. Consequence: this
+scale-up is no longer treated as something the score depends on. It only
+went from "reconsidered, paired with #2" to "optional, lightweight" — it
+was not cancelled outright, since it's still cheap and the user hasn't
+said to drop it.
+
+**If this is picked up:** do it only after #2 (the live chain) exists, and
+keep it minimal enough that it doesn't cost video time in the ~4-minute
+demo — a single reported number ("proven at N=25, not just N=5"), not a
+UI feature, not a wall of rendered department cards competing with the
+30%-weighted demo-clarity criterion. Concretely, if built:
+- Pick a real target in the 20-30 range and a plausible, non-repetitive
+  set of department names — reuse the existing naming style
+  (`legal_review_tool`, `hr_disclosure_tool`, etc.), not `dept_1`,
+  `dept_2` placeholders.
+- Update `scripts/fleet_gates.py`'s hardcoded `== 5`/`== 2`/`== 3` checks
+  (lines ~46-48) to match whatever the final chosen N/shared/untouched
+  split actually is — read this from the real run's JSON, don't hand-type.
+- Update README's "### The fleet at N=5" section and
+  `render_architecture.py`'s `LiveProof("Fleet N=5", ...)` entry only if
+  built — surface the number in prose/stats, not as an expanded GUI
+  section.
+- Regenerate (`make gui`) and redeploy to the same Vercel project
+  (`custody-incident`) per section 1's instructions above, only if the
+  GUI actually changed.
+
+**Non-goals:** do not also touch G1, the Auditor, or the Reviewer proofs.
+Do not fabricate or hand-type any numbers before a real run produces them.
+Do not scale N before the live-chain proof (#2) exists. Do not let this
+scale-up grow into a GUI feature that takes attention away from the
+demo-video clarity the rubric actually scores.
+
+**Closed 2026-08-14, picked up after the multimodal pass, exactly as
+scoped above.** `DEPARTMENT_TOOLS` in `scripts/live_fleet.py` extended
+5 → 25 (sales/finance still share `cross_dept_export_tool`; 23 distinct
+plausibly-named tools, no `dept_N` placeholders). `make live-fleet` ran
+live end to end on the first attempt, proof
+`5617b30b169840928abfff93f08a0145`: all 25 departments' real ADK/Gemini
+turns and tool-origin writes succeeded, one revocation removed exactly
+the 2 sharing departments' records, the other 23 stayed untouched.
+`scripts/fleet_gates.py`'s three hardcoded checks were replaced with
+checks that independently recompute the expected sets from
+`live_fleet.py`'s own constants rather than a second hand-typed number.
+`make fleet-gates` reported 35/35 PASS (10 offline + 25 independent live
+Memory Bank rereads). `make check` 319/319, `make gates` unaffected.
+README's fleet section and `render_architecture.py`'s `LiveProof` entry
+(`Fleet N=5` → `Fleet N=25`) updated; the widget's shape is unchanged, it
+now just lists 23 untouched names instead of 3 — confirmed in-browser
+this reads as a longer list, not a new UI section. Regenerated and
+redeployed to the same Vercel project via the `vercel` CLI (confirmed
+with the user first). Verified live at
+`custody-incident-cave2.vercel.app/architecture.html`, no console errors.
+Full write-up in `.claude/SESSION_CONTRACT.md`'s "Sub-build: fleet
+scale-up, N=5 to N=25" section.
+
+### 4. Best Multimodal UX award ($5,000, 2 winners) — real opportunity, not yet acted on
+
+Found while reading the hackathon page for section 3 above, not previously
+tracked anywhere in this project's planning docs. This is a specialty
+award separate from the Fortified Enterprise Fleet track prize, and the
+GUI built and deployed this session (Dependency Cartography +
+Architecture & Evidence, live at the Vercel URLs in section 1) is a real,
+already-built candidate for it. Nothing has been done specifically to
+target this award — no polish pass framed around it, and it isn't
+mentioned in the README or any submission-prep material yet. Worth a
+deliberate look before submission: is the GUI good enough as-is to enter
+for this award, or does it need a targeted pass (this is a separate
+question from whether it works for the main track's Demo & Production
+Readiness criterion, which it already satisfies).
+
+**Closed 2026-08-14.** Checked live first, rather than assumed: neither
+the hackathon's main page nor its rules page define a rubric for this
+award beyond its name and prize ($5,000, 2 winners). Given that, and given
+that the GUI as built was single-modality (HTML/SVG, text and graph
+visuals only), the user chose to scope a genuine second modality rather
+than a cosmetic polish pass or skipping the award. Built: the Custody
+Reviewer's real, already-live Gemini-drafted verdict is now narrated as
+speech through a real Google Cloud Text-to-Speech call
+(`scripts/live_narration.py`), a second, genuine audio modality tied to
+content that already exists, not a forced use of an unrelated Google AI
+product (the project's own contract already warns against inventing a Veo
+use). Live proof `26f576c3ffe74958938b383b57755aee`, `make live-narration`
+first-run success, `make narration-gates` 14/14 PASS (offline structural
+checks plus one independent live Cloud Text-to-Speech re-call). Surfaced
+in the GUI as a new "Narration" widget in `scripts/render_architecture.py`
+(`web/architecture.html`, next to the existing Reviewer widget): the
+verdict text plus a user-initiated `<audio controls>` player, the audio
+embedded as a `data:audio/mpeg;base64,...` URI encoded at render time, no
+autoplay. `make check` still 319/319 offline; `make gates` unaffected
+(G1-G4 PASS, G5 correctly BLOCKED). Regenerated (`make gui`) and
+redeployed to the same Vercel project (`custody-incident`) via the
+`vercel` CLI, per this file's own documented preferred method; verified
+live in-browser at both `custody-incident-cave2.vercel.app/architecture.
+html` and the root page, no console errors, the audio widget renders and
+plays real narrated speech matching the on-screen verdict text. Full
+write-up in `.claude/SESSION_CONTRACT.md`'s "Sub-build: Reviewer
+narration" section and `README.md`'s new "Reviewer narration" section.
+
+---
+
 
 This is a live handoff document for Claude or another coding agent. Continue
 from the current repository state. Do not restart the project, redesign the
@@ -228,6 +543,11 @@ Six capabilities are complete and independently judged:
 
 An eighth, G5's elapsed-time record, is **started and running, structurally
 cannot be "complete" until real calendar time passes** — see below.
+
+This list predates the Provenance Auditor, Custody Reviewer, N=5 fleet, and
+F1 chain sub-builds recorded further down this file and in
+`.claude/SESSION_CONTRACT.md` — treat those, not this stale list, as
+authoritative for anything built after G1's migration.
 
 README.md and `.claude/SESSION_CONTRACT.md` are authoritative for all claim
 text; do not restate any of it from memory, read them.
@@ -538,16 +858,31 @@ check). Neither is fixable by code today; both need calendar time.
 ## Next capability
 
 With R2, D2, the G1 migration, the Provenance Auditor, the Custody
-Reviewer, the N=5 fleet, and G5's clock all landed, all three fleet-review
-findings are closed, and G5's natural first scheduled fire is confirmed
-(above). Remaining scoped work:
+Reviewer, the N=5 fleet, F1 (the live cross-department derivation chain),
+and G5's clock all landed, all three fleet-review findings plus the
+GUI-vs-live proof gap are closed, and G5's natural first scheduled fire is
+confirmed (above). Remaining scoped work, in the order the top of this file
+names:
 
-1. `scripts/scheduler_gates.py`, once there is a real multi-day span to
+1. **Done, 2026-08-14: GUI redeployed to Vercel with F1's data**, via the
+   `vercel` CLI (see the redeploy write-up above — prefer this method over
+   `deploy_to_vercel` for these two files going forward). Verified live,
+   both pages, no console errors, `ssoProtection` confirmed disabled so the
+   site stays public.
+2. **Done, 2026-08-14: Best Multimodal UX award pass (section 4)** —
+   Reviewer narration (real Cloud Text-to-Speech, GUI widget, redeployed).
+3. **Done, 2026-08-14: fleet scale-up (section 3)** — N=5 → N=25,
+   live-proven, gates and GUI updated, redeployed.
+4. `scripts/scheduler_gates.py`, once there is a real multi-day span to
    judge — not yet, would have nothing to check.
-2. Revoke the G5 seed record near filming, via the existing `/revoke`
+5. Revoke the G5 seed record near filming, via the existing `/revoke`
    endpoint, once enough real elapsed time has passed.
-3. Regenerate `proof-out/g1.json` before filming — G1 evidence expires
+6. Regenerate `proof-out/g1.json` before filming — G1 evidence expires
    after 24 hours, same discipline as every other live gate here.
-4. `proof-out/live-review.json` and `proof-out/live-fleet.json` also expire
-   after 24 hours, same discipline — regenerate with `make live-review` and
-   `make live-fleet` before filming.
+7. `proof-out/live-review.json`, `proof-out/live-fleet.json`, and
+   `proof-out/live-chain.json` also expire after 24 hours, same
+   discipline — regenerate with `make live-review`, `make live-fleet`, and
+   `make live-chain` before filming.
+8. `proof-out/live-narration.json` and `proof-out/live-narration.mp3`
+   also expire after 24 hours (evidence freshness), same discipline —
+   regenerate with `make live-narration` before filming.

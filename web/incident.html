@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Custody — dependency cartography</title>
+<style>
+  :root {
+    --bg: #f4f3ee;
+    --panel: #fdfcf9;
+    --panel-2: #f8f6f0;
+    --line: #e0ddd2;
+    --line-soft: #ecebe3;
+    --ink: #1e1c17;
+    --ink-dim: #6b6858;
+    --ink-faint: #9b9786;
+    --accent: #3f6e52;
+    --accent-dim: rgba(63, 110, 82, 0.1);
+    --danger: #b5432e;
+    --danger-dim: rgba(181, 67, 46, 0.09);
+    --danger-line: #c95d3f;
+    --sans: -apple-system, "Segoe UI", Roboto, system-ui, sans-serif;
+    --mono: "IBM Plex Mono", "SF Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--sans); font-size: 13px; line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: var(--mono); }
+  a { color: var(--accent); }
+  button { font-family: inherit; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+  @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes dash { to { stroke-dashoffset: -24; } }
+  @keyframes pulse-ring { 0% { box-shadow: 0 0 0 0 var(--danger-dim); } 100% { box-shadow: 0 0 0 8px rgba(181,67,46,0); } }
+
+  .shell { display: grid; grid-template-columns: 190px 1fr 300px; min-height: 100vh; }
+
+  nav.rail { border-right: 1px solid var(--line); padding: 20px 16px; background: var(--panel); }
+  nav.rail .brand { font-weight: 700; font-size: 14px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 7px; }
+  nav.rail .brand .dot { width: 8px; height: 8px; border-radius: 2px; background: var(--danger); flex: none; }
+  nav.rail .links { margin-top: 26px; display: flex; flex-direction: column; gap: 1px; }
+  nav.rail .links a {
+    font-size: 12px; color: var(--ink-dim); padding: 7px 9px; border-radius: 5px;
+    transition: background 0.15s, color 0.15s;
+  }
+  nav.rail .links a.active { background: var(--danger-dim); color: var(--danger); font-weight: 600; }
+  nav.rail .links a:not(.active):hover { background: var(--line-soft); color: var(--ink); }
+  nav.rail .links .inert { font-size: 11px; color: var(--ink-faint); padding: 6px 9px; cursor: default; }
+  nav.rail .legend { margin-top: 30px; padding-top: 16px; border-top: 1px solid var(--line-soft); }
+  nav.rail .legend h3 { font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-faint); margin: 0 0 10px; }
+  nav.rail .legend .row { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--ink-dim); margin-bottom: 8px; }
+  nav.rail .legend .swatch { width: 16px; height: 2px; flex: none; }
+  nav.rail .legend .swatch.contaminated { background: var(--danger-line); }
+  nav.rail .legend .swatch.unaffected { background: var(--ink-faint); }
+  nav.rail .legend .dotline { border-top: 2px dashed var(--ink-faint); background: none; }
+
+  main { padding: 22px 26px 90px; }
+
+  .topbar { display: flex; align-items: center; gap: 14px; margin-bottom: 6px; flex-wrap: wrap; }
+  .topbar h1 { font-size: 19px; margin: 0; font-weight: 700; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px;
+    background: var(--danger-dim); color: var(--danger); border: 1px solid rgba(181,67,46,0.3);
+    padding: 4px 10px; border-radius: 999px;
+  }
+  .topbar .sub { color: var(--ink-faint); font-size: 12px; }
+
+  .stat-strip { display: flex; gap: 26px; margin: 16px 0 22px; flex-wrap: wrap; }
+  .stat-strip .s { display: flex; flex-direction: column; }
+  .stat-strip .s .n { font-family: var(--mono); font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .stat-strip .s.affected .n { color: var(--danger); }
+  .stat-strip .s.preserved .n { color: var(--accent); }
+  .stat-strip .s .l { font-size: 10.5px; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 2px; }
+
+  section.block { margin-bottom: 26px; }
+  section.block h2 {
+    font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-faint);
+    margin: 0 0 12px; font-weight: 600;
+  }
+
+  .graph-panel {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 22px 26px 26px;
+    overflow-x: auto;
+  }
+  .graph-wrap { position: relative; min-width: 900px; }
+  svg.connectors { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+  svg.connectors path { fill: none; stroke-width: 1.6; }
+  svg.connectors path.contaminated { stroke: var(--danger-line); stroke-dasharray: 5 4; animation: dash 1.2s linear infinite; }
+  svg.connectors path.dim { stroke: var(--line); stroke-width: 1.2; }
+  [data-phase="after"] svg.connectors path.contaminated { stroke: var(--ink-faint); animation: none; stroke-dasharray: none; }
+
+  .graph-cols { display: grid; grid-template-columns: repeat(5, minmax(150px, 1fr)); gap: 56px; position: relative; z-index: 1; }
+  .graph-col-head {
+    font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-faint);
+    margin-bottom: 12px; display: flex; justify-content: space-between;
+  }
+  .graph-col-head .count { font-family: var(--mono); color: var(--ink-dim); }
+  .graph-col { display: flex; flex-direction: column; gap: 10px; }
+
+  .gnode {
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 5px; padding: 9px 11px;
+    font-size: 11.5px; cursor: pointer; transition: border-color 0.15s, background 0.15s, transform 0.15s;
+    animation: rise 0.4s var(--ease) both;
+  }
+  .gnode:hover { transform: translateY(-1px); border-color: var(--ink-faint); }
+  .gnode.selected { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  .gnode .id { font-family: var(--mono); font-weight: 700; }
+  .gnode .id.compromised { color: var(--danger); }
+  .gnode.dim { opacity: 0.55; }
+  .gnode.touched .id { color: var(--danger); }
+  .gnode .meta { color: var(--ink-faint); font-size: 10px; margin-top: 3px; }
+  .gnode .pill {
+    display: inline-block; margin-top: 6px; font-size: 9px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.04em; padding: 2px 6px; border-radius: 2px; background: var(--danger-dim); color: var(--danger);
+  }
+  .gnode.contaminated-pill .pill::before { content: "targeted"; }
+  [data-phase="after"] .gnode.contaminated-pill .pill { background: var(--line-soft); color: var(--ink-faint); }
+  [data-phase="after"] .gnode.contaminated-pill .pill::before { content: "revoked"; }
+  .gnode.safe .pill { background: var(--accent-dim); color: var(--accent); }
+  .gnode.safe .pill::before { content: "trusted"; }
+
+  .ledger-panel { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 20px 24px; }
+  table.ledger { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+  table.ledger th {
+    text-align: left; font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-faint);
+    padding: 0 12px 8px 0; border-bottom: 1px solid var(--line);
+  }
+  table.ledger td { padding: 9px 12px 9px 0; border-bottom: 1px solid var(--line-soft); font-family: var(--mono); }
+  table.ledger tr:last-child td { border-bottom: none; }
+  table.ledger td.pass { color: var(--accent); }
+
+  .action-row { display: flex; align-items: center; gap: 16px; margin-top: 16px; flex-wrap: wrap; }
+  button#revoke-btn {
+    background: var(--danger); color: #fff; border: none; padding: 11px 20px; border-radius: 5px;
+    font-weight: 700; font-size: 12px; letter-spacing: 0.02em; cursor: pointer; transition: filter 0.15s;
+  }
+  button#revoke-btn:hover { filter: brightness(1.08); }
+  [data-phase="after"] button#revoke-btn { background: var(--line-soft); color: var(--ink-faint); cursor: default; }
+  .action-note { color: var(--ink-dim); font-size: 12px; }
+  .toast {
+    margin-top: 14px; padding: 10px 14px; border-radius: 5px; font-family: var(--mono); font-size: 11.5px;
+    background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(63,110,82,0.3); display: none;
+  }
+  [data-phase="after"] .toast { display: block; animation: rise 0.4s var(--ease) both; }
+
+  /* --- right panel --- */
+  aside.detail { border-left: 1px solid var(--line); padding: 20px 20px; background: var(--panel); }
+  aside.detail h2 { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-faint); margin: 0 0 10px; }
+  .d-id { font-family: var(--mono); font-weight: 700; font-size: 13px; }
+  .d-status { display: inline-block; margin-top: 6px; font-family: var(--mono); font-size: 9.5px; font-weight: 700;
+    text-transform: uppercase; padding: 2px 7px; border-radius: 2px; background: var(--danger-dim); color: var(--danger); }
+  .d-section { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line-soft); }
+  .d-section .k { font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-faint); margin-bottom: 5px; }
+  .d-section .v { font-size: 12px; color: var(--ink); line-height: 1.5; }
+  .d-path { display: flex; flex-direction: column; gap: 8px; }
+  .d-path .hop { display: flex; align-items: baseline; gap: 8px; font-family: var(--mono); font-size: 10.5px; }
+  .d-path .hop .h-id { color: var(--ink); font-weight: 600; }
+  .d-path .hop .h-id.hot { color: var(--danger); }
+  .d-impact { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 8px; }
+  .d-impact .n { font-family: var(--mono); font-weight: 700; font-size: 15px; }
+  .d-impact .l { font-size: 9px; color: var(--ink-faint); text-transform: uppercase; }
+  button#investigate-btn {
+    width: 100%; margin-top: 16px; background: transparent; border: 1px solid var(--danger); color: var(--danger);
+    padding: 9px 12px; border-radius: 5px; font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.03em; cursor: pointer;
+  }
+  button#investigate-btn:hover { background: var(--danger-dim); }
+  .investigate-hit { animation: pulse-ring 0.6s var(--ease) 2; }
+
+  footer { margin-top: 8px; color: var(--ink-faint); font-size: 11px; }
+  footer a { color: var(--ink-faint); text-decoration: underline; }
+  footer a:hover { color: var(--accent); }
+
+  @media (max-width: 1100px) {
+    .shell { grid-template-columns: 1fr; }
+    nav.rail { display: none; }
+    aside.detail { border-left: none; border-top: 1px solid var(--line); }
+    .graph-cols { grid-template-columns: repeat(5, 220px); }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="rail">
+    <div class="brand"><span class="dot"></span>Custody</div>
+    <div class="links">
+      <a href="#graph" class="active">Dependency Map</a>
+      <a href="#ledger">Evidence Ledger</a>
+      <a href="architecture.html">Architecture &amp; Evidence</a>
+    </div>
+    <div class="legend">
+      <h3>Legend</h3>
+      <div class="row"><span class="swatch contaminated"></span>Contaminated path</div>
+      <div class="row"><span class="swatch unaffected"></span>Unaffected / no edge</div>
+      <div class="row"><span class="swatch dotline"></span>Department boundary</div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="topbar">
+      <h1>Dependency cartography</h1>
+      <span class="chip" id="chip-source"></span>
+      <span class="sub" id="chip-detected"></span>
+    </div>
+    <div class="stat-strip">
+      <div class="s affected"><span class="n" id="s-affected">0</span><span class="l">affected descendants</span></div>
+      <div class="s"><span class="n" id="s-departments">0</span><span class="l">departments touched</span></div>
+      <div class="s preserved"><span class="n" id="s-preserved">0</span><span class="l">unrelated preserved</span></div>
+    </div>
+
+    <section class="block" id="graph">
+      <h2>Chain of custody &mdash; blast radius: <span id="graph-src"></span></h2>
+      <div class="graph-panel">
+        <div class="graph-wrap" id="graph-wrap">
+          <svg class="connectors" id="connectors"></svg>
+          <div class="graph-cols" id="graph-cols"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="ledger">
+      <h2>Evidence ledger</h2>
+      <div class="ledger-panel">
+        <table class="ledger">
+          <thead><tr><th>Item</th><th>Value</th></tr></thead>
+          <tbody id="ledger-body"></tbody>
+        </table>
+        <div class="action-row">
+          <button id="revoke-btn">Revoke exact descendants</button>
+          <span class="action-note" id="action-note"></span>
+        </div>
+        <div class="toast" id="toast"></div>
+      </div>
+    </section>
+
+    <footer>
+      Memory Bank is the persistence substrate; Custody adds chain-of-custody and influence lineage on top of it, through <code class="mono">BaseMemoryService</code>, without modifying anything. See <a href="https://github.com/Yatsuiii/custody/blob/main/README.md">README.md</a> and <a href="https://github.com/Yatsuiii/custody/blob/main/docs/architecture.md">docs/architecture.md</a>. Offline replay, not a live claim &mdash; generated by scripts/render_gui.py, same run as make incident.
+    </footer>
+  </main>
+
+  <aside class="detail" id="detail"></aside>
+</div>
+
+<script id="incident-data" type="application/json">{"source": "vendor_portal", "status": "TRUST REVOKED", "reason": "source compromised after prior trusted use", "vouched_at": "2026-07-30T09:00:00+00:00", "demoted_at": "2026-08-14T14:00:00+00:00", "elapsed_days": 15, "blast_radius": {"affected": 32, "departments_touched": 3, "departments_total": 5, "unrelated_preserved": 575, "total_before": 607}, "lineage": [{"id": "sales-chain:1:0", "label": "tool result: vendor_portal", "derived_from": null, "marker": "compromised_root", "department": "sales", "content_sha256": "74b972d239a8f7f3e11850fb38fdaa04b164613f9b0182535dffcb1f8232a512"}, {"id": "sales-chain:2:0", "label": "derived model statement (sales)", "derived_from": "sales-chain:1:0", "marker": "affected_descendant", "department": "sales", "content_sha256": "2e6823144fd42da146d9885518972d962bc0d771dee11e59e3e6b5a9c95535b0"}, {"id": "support-chain:1:0", "label": "support memory, retrieved via load_memory", "derived_from": "sales-chain:2:0", "marker": "affected_descendant", "department": "support", "content_sha256": "bb291f1d780a0421c335c3aa0b2ce443af2244cd8efd78fd6c01fd29b3252916"}, {"id": "finance-chain:1:0", "label": "finance memory, retrieved via load_memory", "derived_from": "support-chain:1:0", "marker": "affected_descendant", "department": "finance", "content_sha256": "2b957190dd4b688d9a32313880195aaefd84dac64a12fc75ff0185bdf6ffcc3f"}], "revocation": {"id": "rev-vendor-portal-2026-08-14", "removed": 32, "survives": 575, "replay_removed_further": 0, "revocations_total": 1}, "evidence": {"trust_transition": "vendor_portal vouched 2026-07-30T09:00:00+00:00 -> demoted 2026-08-14T14:00:00+00:00", "derivation_path": "vendor_portal -> sales -> support -> finance, 3 hops, 1 department boundary crossed twice", "removed_matches_blast_radius": true, "audit_records": 1}, "ok": true}</script>
+<script id="fixture-data" type="application/json">{"tools": ["crm_lookup", "ticket_search", "invoice_api", "repo_index", "vendor_portal", "calendar", "docs_search", "expense_api"], "departments": ["sales", "support", "finance", "engineering", "procurement"]}</script>
+<script>
+(function () {
+  "use strict";
+  const data = JSON.parse(document.getElementById("incident-data").textContent);
+  const fixture = JSON.parse(document.getElementById("fixture-data").textContent);
+  const $ = (id) => document.getElementById(id);
+  const svgNS = "http://www.w3.org/2000/svg";
+  const shortHash = (h) => h ? h.slice(0, 16) + "\u2026" : "n/a";
+
+  const br = data.blast_radius;
+  const rv = data.revocation;
+  const ev = data.evidence;
+  const lineage = data.lineage;
+  const byId = {};
+  lineage.forEach((h) => { byId[h.id] = h; });
+
+  function countUp(el, target, ms) {
+    const start = performance.now();
+    function tick(now) {
+      const t = Math.min(1, (now - start) / ms);
+      const eased = 1 - Math.pow(1 - t, 3);
+      el.textContent = Math.round(target * eased);
+      if (t < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  $("chip-source").textContent = data.source + " \u2014 " + data.status;
+  $("chip-detected").textContent = "compromised " + data.demoted_at.slice(0, 10) + ", " + data.elapsed_days + " days after trust";
+  $("graph-src").textContent = data.source;
+  countUp($("s-affected"), br.affected, 800);
+  $("s-departments").textContent = br.departments_touched + " / " + br.departments_total;
+  countUp($("s-preserved"), br.unrelated_preserved, 1000);
+
+  // --- build the five real columns ---
+  const cols = $("graph-cols");
+  const colDefs = [
+    { key: "sources", label: "SOURCES", count: fixture.tools.length },
+    { key: "tool_result", label: "TOOL RESULT", count: 1 },
+    { key: "derived", label: "MODEL-DERIVED FACT", count: 1 },
+    { key: "memories", label: "MEMORIES", count: 2 },
+    { key: "departments", label: "DEPARTMENTS", count: fixture.departments.length },
+  ];
+  const nodeIndex = {};
+
+  function makeNode(id, opts) {
+    const el = document.createElement("div");
+    el.className = "gnode " + (opts.cls || "");
+    el.dataset.id = id;
+    el.style.animationDelay = (opts.delay || 0) + "s";
+    el.innerHTML =
+      '<div class="id ' + (opts.idClass || "") + '">' + (opts.title || id) + "</div>" +
+      (opts.meta ? '<div class="meta">' + opts.meta + "</div>" : "") +
+      (opts.pill ? '<span class="pill"></span>' : "");
+    nodeIndex[id] = el;
+    return el;
+  }
+
+  colDefs.forEach((def, ci) => {
+    const colWrap = document.createElement("div");
+    const head = document.createElement("div");
+    head.className = "graph-col-head";
+    head.innerHTML = "<span>" + def.label + "</span><span class=\"count\">" + def.count + "</span>";
+    colWrap.appendChild(head);
+    const col = document.createElement("div");
+    col.className = "graph-col";
+    col.id = "col-" + def.key;
+    colWrap.appendChild(col);
+    cols.appendChild(colWrap);
+  });
+
+  // sources column: every real tool in the fixture, vendor_portal highlighted
+  const sourcesCol = $("col-sources");
+  fixture.tools.forEach((tool, i) => {
+    const hot = tool === data.source;
+    sourcesCol.appendChild(makeNode("src:" + tool, {
+      title: tool, idClass: hot ? "compromised" : "", cls: hot ? "" : "dim",
+      meta: hot ? "compromised, day 1 trusted" : "trusted, unaffected",
+      delay: i * 0.03,
+    }));
+  });
+
+  // tool-result / derived columns: the one real hop each
+  const toolResultHop = lineage[0];
+  const derivedHop = lineage[1];
+  const memoryHops = lineage.slice(2);
+
+  $("col-tool_result").appendChild(makeNode(toolResultHop.id, {
+    title: toolResultHop.id, cls: "touched contaminated-pill", pill: true,
+    meta: toolResultHop.label + " \u00b7 " + toolResultHop.department,
+  }));
+  $("col-derived").appendChild(makeNode(derivedHop.id, {
+    title: derivedHop.id, cls: "touched contaminated-pill", pill: true,
+    meta: derivedHop.label + " \u00b7 " + derivedHop.department,
+  }));
+  memoryHops.forEach((h, i) => {
+    $("col-memories").appendChild(makeNode(h.id, {
+      title: h.id, cls: "touched contaminated-pill", pill: true,
+      meta: h.label + " \u00b7 " + h.department, delay: i * 0.04,
+    }));
+  });
+
+  // departments column: every real department, touched ones highlighted
+  const touchedDepts = new Set(lineage.map((h) => h.department));
+  const fullPathIds = ["src:" + data.source, ...lineage.map((h) => h.id),
+    ...Array.from(touchedDepts, (d) => "dept:" + d)];
+  const deptCol = $("col-departments");
+  fixture.departments.forEach((dept, i) => {
+    const hot = touchedDepts.has(dept);
+    deptCol.appendChild(makeNode("dept:" + dept, {
+      title: dept, idClass: hot ? "compromised" : "", cls: hot ? "touched contaminated-pill" : "dim safe",
+      pill: hot, meta: hot ? "touched by this incident" : "no derivation edge",
+      delay: i * 0.03,
+    }));
+  });
+
+  // --- connectors, computed from real DOM positions, not hand-authored paths ---
+  const svg = $("connectors");
+  const wrap = $("graph-wrap");
+
+  function edge(fromId, toId, cls) {
+    const a = nodeIndex[fromId], b = nodeIndex[toId];
+    if (!a || !b) return;
+    const wr = wrap.getBoundingClientRect();
+    const ar = a.getBoundingClientRect(), br2 = b.getBoundingClientRect();
+    const x1 = ar.right - wr.left, y1 = ar.top - wr.top + ar.height / 2;
+    const x2 = br2.left - wr.left, y2 = br2.top - wr.top + br2.height / 2;
+    const dx = Math.max(24, (x2 - x1) / 2);
+    const d = "M " + x1 + " " + y1 + " C " + (x1 + dx) + " " + y1 + ", " + (x2 - dx) + " " + y2 + ", " + x2 + " " + y2;
+    const path = document.createElementNS(svgNS, "path");
+    path.setAttribute("d", d);
+    path.setAttribute("class", cls);
+    svg.appendChild(path);
+  }
+
+  function drawGraph() {
+    svg.innerHTML = "";
+    svg.setAttribute("width", wrap.scrollWidth);
+    svg.setAttribute("height", wrap.scrollHeight);
+    const phase = document.body.dataset.phase === "after" ? "dim" : "contaminated";
+    edge("src:" + data.source, toolResultHop.id, phase);
+    edge(toolResultHop.id, derivedHop.id, phase);
+    let prev = derivedHop.id;
+    memoryHops.forEach((h) => { edge(prev, h.id, phase); prev = h.id; });
+    edge(derivedHop.id, "dept:" + derivedHop.department, phase);
+    memoryHops.forEach((h) => edge(h.id, "dept:" + h.department, phase));
+  }
+  requestAnimationFrame(drawGraph);
+  window.addEventListener("resize", drawGraph);
+
+  // --- evidence ledger ---
+  const ledgerRows = [
+    ["Source", data.source],
+    ["Trust transition", ev.trust_transition],
+    ["Derivation path", ev.derivation_path],
+    ["Revocation id", rv.id],
+    ["Enforcement result", "removed set matches computed blast radius: " + ev.removed_matches_blast_radius],
+    ["Audit records", ev.audit_records + " revocation(s) logged, replay verified idempotent"],
+  ];
+  const ledgerBody = $("ledger-body");
+  ledgerRows.forEach(([k, v]) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = "<td>" + k + "</td><td>" + v + "</td>";
+    ledgerBody.appendChild(tr);
+  });
+  $("action-note").textContent = "Removes " + br.affected + " descendant record(s) across " + br.departments_touched +
+    " department(s). " + br.unrelated_preserved + " unrelated records are not touched.";
+
+  // --- right detail panel ---
+  function renderDetail(id) {
+    Object.values(nodeIndex).forEach((el) => el.classList.remove("selected"));
+    if (nodeIndex[id]) nodeIndex[id].classList.add("selected");
+
+    const hop = byId[id];
+    const detail = $("detail");
+    if (!hop) {
+      const isSource = id === "src:" + data.source;
+      const isDept = id.startsWith("dept:");
+      const label = isSource ? data.source : id.replace("dept:", "").replace("src:", "");
+      detail.innerHTML =
+        '<h2>Selected node</h2><div class="d-id">' + label + "</div>" +
+        '<div class="d-status" style="' + (isSource ? "" : "background:var(--accent-dim);color:var(--accent)") + '">' +
+        (isSource ? data.status : "not part of this incident") + "</div>" +
+        '<div class="d-section"><div class="k">Why is it shown here?</div><div class="v">' +
+        (isSource
+          ? "This is the trust boundary that changed. Every node in the graph is reachable from here."
+          : isDept
+            ? "No traced record in this run derives from " + data.source + " for this department."
+            : "This tool is trusted and unaffected by this incident.") +
+        "</div></div>" +
+        '<div class="d-section"><div class="k">Blast radius (this incident)</div><div class="d-impact">' +
+        '<div><div class="n" style="color:var(--danger)">' + br.affected + '</div><div class="l">affected</div></div>' +
+        '<div><div class="n">' + br.departments_touched + "/" + br.departments_total + '</div><div class="l">depts</div></div>' +
+        '<div><div class="n" style="color:var(--accent)">' + br.unrelated_preserved + '</div><div class="l">preserved</div></div>' +
+        "</div></div>" +
+        '<button id="investigate-btn">Highlight full path</button>';
+      $("investigate-btn").addEventListener("click", () => highlightPath(fullPathIds));
+      return;
+    }
+
+    const path = [];
+    let cursor = hop;
+    while (cursor) {
+      path.unshift(cursor);
+      cursor = cursor.derived_from ? byId[cursor.derived_from] : null;
+    }
+    detail.innerHTML =
+      '<h2>Selected memory</h2><div class="d-id">' + hop.id + "</div>" +
+      '<div class="d-status">' + (hop.marker === "compromised_root" ? "compromised root" : "affected descendant") + "</div>" +
+      '<div class="d-section"><div class="k">Overview</div><div class="v">' + hop.label +
+      " &mdash; department: " + hop.department + "</div></div>" +
+      '<div class="d-section"><div class="k">Why does this memory exist?</div><div class="v">' +
+      (hop.derived_from
+        ? "Derived from <b class=\"mono\">" + hop.derived_from + "</b>, a real derived_from edge earned by a content-hash match, not asserted."
+        : "This is the root: the tool response " + data.source + " produced, admitted trusted at write time.") +
+      "</div></div>" +
+      '<div class="d-section"><div class="k">Content hash</div><div class="v mono">' + shortHash(hop.content_sha256) + "</div></div>" +
+      '<div class="d-section"><div class="k">Provenance (exact path)</div><div class="d-path">' +
+      path.map((p, i) => '<div class="hop"><span class="h-id ' + (i === 0 ? "hot" : "") + '">' + p.id + "</span>" +
+        (i < path.length - 1 ? "\u2192" : "") + "</div>").join("") +
+      "</div></div>" +
+      '<div class="d-section"><div class="k">Blast radius impact</div><div class="d-impact">' +
+      '<div><div class="n" style="color:var(--danger)">' + br.affected + '</div><div class="l">affected</div></div>' +
+      '<div><div class="n">' + br.departments_touched + "/" + br.departments_total + '</div><div class="l">depts</div></div>' +
+      '<div><div class="n" style="color:var(--accent)">' + br.unrelated_preserved + '</div><div class="l">preserved</div></div>' +
+      "</div></div>" +
+      '<button id="investigate-btn">Highlight this path</button>';
+    $("investigate-btn").addEventListener("click", () => highlightPath(path.map((p) => p.id)));
+  }
+
+  function highlightPath(ids) {
+    ids.forEach((id) => {
+      const el = nodeIndex[id];
+      if (el) { el.classList.add("investigate-hit"); setTimeout(() => el.classList.remove("investigate-hit"), 1300); }
+    });
+  }
+
+  document.getElementById("graph-cols").addEventListener("click", (e) => {
+    const node = e.target.closest(".gnode");
+    if (node) renderDetail(node.dataset.id);
+  });
+
+  renderDetail("src:" + data.source);
+
+  // --- surgical action, wired to both the ledger and the graph above ---
+  function revoke() {
+    if (document.body.dataset.phase === "after") return;
+    document.body.dataset.phase = "after";
+    $("revoke-btn").textContent = "Descendants revoked";
+    $("toast").textContent = "revocation " + rv.id + " applied \u2014 " + rv.removed + " removed, " + rv.survives + " survive, " +
+      rv.replay_removed_further + " further on replay";
+    drawGraph();
+  }
+  $("revoke-btn").addEventListener("click", revoke);
+  window.addEventListener("keydown", (e) => { if (e.key === "r" && !e.metaKey && !e.ctrlKey) revoke(); });
+})();
+</script>
+</body>
+</html>

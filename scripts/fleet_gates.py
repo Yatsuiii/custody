@@ -25,6 +25,7 @@ from agentplatform import Client  # noqa: E402
 from google.genai.errors import ClientError  # noqa: E402
 
 from custody.memory_bank import memory_id_for  # noqa: E402
+from scripts.live_fleet import DEPARTMENT_TOOLS, SHARED_TOOL_DEPARTMENTS  # noqa: E402
 
 OUT = REPO_ROOT / "proof-out" / "live-fleet.json"
 
@@ -41,11 +42,15 @@ def judge_offline(evidence: dict, *, now: datetime | None = None) -> dict[str, b
 
     expected_removed_ids = sorted(departments[d]["tool_record_id"] for d in shared)
 
+    expected_untouched = set(DEPARTMENT_TOOLS) - set(SHARED_TOOL_DEPARTMENTS)
+
     return {
         "fresh_live_evidence": fresh,
-        "five_departments_ran": len(departments) == 5,
-        "shared_tool_used_by_exactly_two_departments": len(shared) == 2,
-        "three_departments_left_untouched": len(untouched) == 3,
+        "every_expected_department_ran": set(departments) == set(DEPARTMENT_TOOLS),
+        "shared_tool_used_by_exactly_the_expected_departments": (
+            set(shared) == set(SHARED_TOOL_DEPARTMENTS)
+        ),
+        "remaining_departments_left_untouched": set(untouched) == expected_untouched,
         "every_department_wrote_and_retrieved_its_own_tool_fact": all(
             d["tool_fact"] in d["before_revoke_facts"] for d in departments.values()
         ),
