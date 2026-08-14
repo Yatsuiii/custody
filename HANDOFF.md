@@ -196,11 +196,12 @@ text; do not restate any of it from memory, read them.
 - Commits landed: `df334f1` (S1 fix + accumulated G1/R1 work), `94bcad4`
   (M1), `68f1b88` (G5 persistence/Scheduler start), `9c4174b` (O1),
   `7f7ea00` (R2 + D2), `0b4a816` (G1 migration onto D2's write path),
-  `f9e19cd` (Provenance Auditor), `ce54bad` (Custody Reviewer).
-- **Working tree carries uncommitted N-agent fleet work as of this
-  handoff**: `scripts/live_fleet.py`, `scripts/fleet_gates.py`,
-  `Makefile`, `README.md`, `.claude/SESSION_CONTRACT.md`, `HANDOFF.md`,
-  and `proof-out/live-fleet.json`. Not yet committed — commit only on
+  `f9e19cd` (Provenance Auditor), `ce54bad` (Custody Reviewer), `5d377fe`
+  (N=5 fleet).
+- **Working tree carries an uncommitted `HANDOFF.md` update as of this
+  handoff**: confirming G5's natural Scheduler fire and correcting this
+  file's earlier wrong instruction about the `custody-cold-start-check`
+  label (see "G5" section below). Not yet committed — commit only on
   explicit user authorization, same rule as every other checkpoint here.
   Confirm with `git status` before assuming otherwise; do not trust this
   line if time has passed.
@@ -443,23 +444,29 @@ Started 2026-08-13. Firestore (Native mode, `us-central1`) backs the
 derivation graph (`custody/firestore_store.py`). Cloud Scheduler job
 `custody-g5-auditor` (daily, `0 6 * * *` UTC, `POST /auditor`) is `ENABLED`.
 
-**Checked this session:** the job's one manual "run now" trigger from the
-prior session did succeed — logged at `2026-08-13T12:00:44Z`, HTTP 200,
-`insertId 6a7db1ed00084c8dae8758ee`. Its **natural first scheduled fire is
-`2026-08-14T06:00:02Z`** (per `gcloud scheduler jobs describe`); actual UTC
-at the time of this handoff is `2026-08-13T18:54Z`, so that fire has **not
-yet happened** — this is not a bug, it is real elapsed time not having
-passed yet. Re-check after that time with:
+**Confirmed 2026-08-14, natural first scheduled fire happened.** The job's
+one manual "run now" trigger from the prior session succeeded — logged at
+`2026-08-13T12:00:44Z`, HTTP 200, `insertId 6a7db1ed00084c8dae8758ee`. Its
+natural first scheduled fire, `2026-08-14T06:00:02Z` UTC, has now also
+happened: `gcloud scheduler jobs describe custody-g5-auditor` reports
+`lastAttemptTime: 2026-08-14T06:00:03.016110Z` and `scheduleTime` has
+already advanced to tomorrow (`2026-08-15T06:00:02Z`) — the authoritative,
+Scheduler-reported confirmation, independent of log interpretation. The
+matching Cloud Logging entry (`insertId 6a7eaee5000d85ead04c20df`, HTTP
+200, revision `custody-control-plane-00004-ttb`) confirms the same instant
+from the Cloud Run side.
 
-```sh
-CLOUDSDK_CONFIG="$PWD/.gcloud" gcloud logging read \
-  'resource.type="cloud_run_revision" AND resource.labels.service_name="custody-control-plane" AND httpRequest.userAgent="Google-Cloud-Scheduler"' \
-  --project=project-988bc9fe-092c-4b32-90c --freshness=2d --order=desc --limit=5 --format=json
-```
-
-Look for a second entry, timestamp near `2026-08-14T06:00Z`, without the
-`custody-cold-start-check` label (that label marks the earlier manual
-trigger only).
+**Correction to a prior instruction in this file:** the earlier version of
+this section said to look for a log entry "without the
+`custody-cold-start-check` label," reasoning that label marked only the
+manual trigger. Checked live and found wrong: `gcloud run services
+describe custody-control-plane` shows `custody-cold-start-check=1` is a
+static label on the Cloud Run **service and revision themselves** (set
+during an earlier session's redeploy), not a per-request marker — it
+appears on every request log line, scheduled or manual, and cannot
+distinguish them. Use timestamp and `gcloud scheduler jobs describe`'s own
+`lastAttemptTime`/`scheduleTime` instead, as above; do not filter Cloud
+Logging queries by this label.
 
 Deliberately not built yet: revoking the seed record (must happen near
 filming, not now) and `scripts/scheduler_gates.py` (a judge for a
@@ -490,17 +497,15 @@ check). Neither is fixable by code today; both need calendar time.
 
 With R2, D2, the G1 migration, the Provenance Auditor, the Custody
 Reviewer, the N=5 fleet, and G5's clock all landed, all three fleet-review
-findings are closed. Remaining scoped work:
+findings are closed, and G5's natural first scheduled fire is confirmed
+(above). Remaining scoped work:
 
-1. **Confirm G5's natural Scheduler fire** (`2026-08-14T06:00:02Z` UTC, see
-   above) — a quick log check, not a build task. Do this first if it's now
-   past that time.
-2. `scripts/scheduler_gates.py`, once there is a real multi-day span to
+1. `scripts/scheduler_gates.py`, once there is a real multi-day span to
    judge — not yet, would have nothing to check.
-3. Revoke the G5 seed record near filming, via the existing `/revoke`
+2. Revoke the G5 seed record near filming, via the existing `/revoke`
    endpoint, once enough real elapsed time has passed.
-4. Regenerate `proof-out/g1.json` before filming — G1 evidence expires
+3. Regenerate `proof-out/g1.json` before filming — G1 evidence expires
    after 24 hours, same discipline as every other live gate here.
-5. `proof-out/live-review.json` and `proof-out/live-fleet.json` also expire
+4. `proof-out/live-review.json` and `proof-out/live-fleet.json` also expire
    after 24 hours, same discipline — regenerate with `make live-review` and
    `make live-fleet` before filming.
