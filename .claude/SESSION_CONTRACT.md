@@ -1213,6 +1213,78 @@ different property N=1 could never exercise.
 
 Status: complete, superseded by the file-level status below
 
+## Sub-build: legible daily heartbeat (opened 2026-08-14)
+
+Objective: the daily `/auditor` heartbeat's Cloud Logging trail is currently
+just generic Cloud Run access-log entries (method, URL, timestamp) — a judge
+would have to manually diff timestamps across days to see elapsed time.
+Add `elapsed_days_since_seed` to the heartbeat's own response, computed from
+the seed record's durably-stamped `admitted_at` (never a client clock claim
+about itself, same discipline every other timestamp in this project
+follows), and write it into a new structured Cloud Logging entry
+(`custody-auditor` log, mirroring O1's `custody-observability` pattern) so
+each day's entry is self-explanatory without cross-referencing.
+
+Branch: feat/memory-provenance
+Parent: b61827b
+
+Allowed files: `custody/control_plane.py`, `requirements.txt`,
+`tests/test_control_plane.py`, `HANDOFF.md`, `.claude/SESSION_CONTRACT.md`.
+
+Non-goals:
+
+- No change to the heartbeat's idempotency, the demotion sweep, or any
+  gate/proof already passing. Purely additive.
+- No new live proof script. This is legibility for the *existing*,
+  still-accumulating G5 span, not a new capability with its own gate — the
+  eventual `scripts/scheduler_gates.py` will read this field once a real
+  span exists, not before.
+- No redeploy required by this change alone in isolation, but since the
+  live control plane needs the code to actually take effect, a redeploy is
+  expected as part of closing this out.
+
+Acceptance gates:
+
+1. `elapsed_days_since_seed` is `None` offline (no durable `admitted_at` to
+   compute from) and a real integer once a durable, Firestore-backed seed
+   exists — covered by an offline test asserting the `None` case, since the
+   integer case needs real elapsed days to differ meaningfully from 0.
+2. The structured log write only happens when the control plane is
+   constructed with a live log client; offline/local runs and every
+   existing test are unaffected (no `google.cloud.logging` import error
+   without credentials).
+3. `make check` still 315/315, `make gates` still G1-G4 PASS.
+
+Verification: `make check`. Manual: after redeploy, one live `/auditor`
+call and a `gcloud logging read` against the new `custody-auditor` log name
+shows the field.
+
+**Closed 2026-08-14.** `ControlPlane.auditor` reads the seed record back
+through the existing `graph.record` port, computes
+`elapsed_days_since_seed` from its durably-stamped `admitted_at` (`None`
+offline, since the pure in-memory graph never stamps one — covered by
+`tests/test_control_plane.py::TheAuditorHeartbeatIsIdempotentAndSeedsOnce
+::test_elapsed_days_since_seed_is_none_without_a_durable_admitted_at`), and
+writes the whole heartbeat payload to a new `custody-auditor` structured
+log only when a `log_client` is configured (offline/local runs stay
+credential-free, covered by
+`test_no_structured_log_write_without_a_log_client`; the write itself is
+covered against a fake logger by
+`TheHeartbeatWritesAStructuredLogWhenConfigured`). 319/319 offline.
+Redeployed to Cloud Run revision `custody-control-plane-00005-s2k`
+(user-authorized live, same as the prior two redeploys this session).
+Verified live: one manual `/auditor` call returned
+`"elapsed_days_since_seed": 0` and the same payload appeared in
+`projects/project-988bc9fe-092c-4b32-90c/logs/custody-auditor`
+(`insertId 1pm8pk5f30azdx`) within seconds. The day's own Cloud-Scheduler-
+triggered fire (`2026-08-14T06:00:03Z`) had already happened a few minutes
+before this redeploy landed, against the prior revision, so it does not
+carry the new field; every fire from tomorrow's `06:00 UTC` onward will.
+`make gates` still reports G1-G4 PASS, G5 correctly BLOCKED (unaffected —
+this is legibility for G5's still-accumulating span, not a new gate).
+
+Status: complete, superseded by the file-level status below
+
 ## Prior work disclosure
 
 Submission period opened 2026-08-04; this repository was created 2026-08-09, so

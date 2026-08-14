@@ -147,6 +147,68 @@ class TheAuditorHeartbeatIsIdempotentAndSeedsOnce(unittest.TestCase):
         self.assertIsNone(second["seeded_record_id"])
         self.assertEqual(len(plane.graph), 1)
 
+    def test_elapsed_days_since_seed_is_none_without_a_durable_admitted_at(self):
+        """The pure in-memory graph never stamps `admitted_at` (only a
+        durable store does), so there is nothing to compute elapsed days
+        from offline. A real integer needs a Firestore-backed seed and real
+        elapsed days, covered live, not here.
+        """
+        plane = ControlPlane()
+        result = plane.auditor({})
+        self.assertIsNone(result["elapsed_days_since_seed"])
+
+    def test_no_structured_log_write_without_a_log_client(self):
+        """Offline/local runs must not need google.cloud.logging credentials
+        just to call /auditor.
+        """
+        plane = ControlPlane()
+        # No log_client configured; if auditor() tried to use one, this
+        # would raise rather than silently succeed.
+        plane.auditor({})
+        self.assertIsNone(plane.log_client)
+
+
+class _FakeLogger:
+    def __init__(self) -> None:
+        self.entries: list[dict] = []
+
+    def log_struct(self, payload: dict, *, severity: str) -> None:
+        self.entries.append({"payload": payload, "severity": severity})
+
+
+class _FakeLogClient:
+    def __init__(self) -> None:
+        self.loggers: dict[str, _FakeLogger] = {}
+
+    def logger(self, name: str) -> _FakeLogger:
+        return self.loggers.setdefault(name, _FakeLogger())
+
+
+class TheHeartbeatWritesAStructuredLogWhenConfigured(unittest.TestCase):
+    def test_a_configured_log_client_receives_the_heartbeat_payload(self):
+        from custody.control_plane import AUDITOR_LOG_NAME
+
+        log_client = _FakeLogClient()
+        plane = ControlPlane(log_client=log_client)
+
+        result = plane.auditor({})
+
+        logger = log_client.loggers[AUDITOR_LOG_NAME]
+        self.assertEqual(len(logger.entries), 1)
+        self.assertEqual(logger.entries[0]["payload"], result)
+        self.assertEqual(logger.entries[0]["severity"], "INFO")
+
+    def test_every_auditor_tick_logs_not_only_the_first(self):
+        from custody.control_plane import AUDITOR_LOG_NAME
+
+        log_client = _FakeLogClient()
+        plane = ControlPlane(log_client=log_client)
+
+        plane.auditor({})
+        plane.auditor({})
+
+        self.assertEqual(len(log_client.loggers[AUDITOR_LOG_NAME].entries), 2)
+
 
 class RecordLookupServesTheDurableView(unittest.TestCase):
     def test_a_live_record_is_returned_without_a_revocation(self):

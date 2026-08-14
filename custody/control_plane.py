@@ -40,6 +40,11 @@ DEFAULT_PORT = 8080
 G5_SEED_RECORD_ID = "g5-elapsed-time-seed"
 G5_SEED_TOOL = "custody_g5_seed"
 
+#: The heartbeat's own structured log, so a day's entry is self-explanatory
+#: (carries `elapsed_days_since_seed`) rather than requiring a reader to diff
+#: generic Cloud Run access-log timestamps across days by hand.
+AUDITOR_LOG_NAME = "custody-auditor"
+
 
 @dataclass
 class InMemoryAuditorLog:
@@ -86,6 +91,10 @@ class ControlPlane:
     auditor_log: InMemoryAuditorLog = field(default_factory=InMemoryAuditorLog)
     demotion_log: InMemoryDemotionLog = field(default_factory=InMemoryDemotionLog)
     runs: dict[str, dict] = field(default_factory=dict)
+    #: A `google.cloud.logging.Client`-shaped object, or None offline/local.
+    #: Only `_default_plane` ever supplies a real one, so every existing test
+    #: and local run is unaffected and needs no credentials.
+    log_client: Any | None = None
 
     def ingest(self, payload: dict) -> dict:
         """Take custody of one session's events and report what was withheld.
@@ -221,12 +230,23 @@ class ControlPlane:
             ).id
             for demotion in self.demotion_log.all()
         ]
-        return {
+        elapsed_days_since_seed = None
+        found = self.graph.record(G5_SEED_RECORD_ID)
+        if found is not None and found[0].admitted_at is not None:
+            admitted = datetime.fromisoformat(found[0].admitted_at)
+            elapsed_days_since_seed = (datetime.now(UTC) - admitted).days
+        result = {
             "day": today,
             "first_run": first,
             "seeded_record_id": seeded_record_id,
             "swept_revocations": revoked,
+            "elapsed_days_since_seed": elapsed_days_since_seed,
         }
+        if self.log_client is not None:
+            self.log_client.logger(AUDITOR_LOG_NAME).log_struct(
+                result, severity="INFO"
+            )
+        return result
 
     def record(self, record_id: str) -> dict | None:
         """Durable view of one record: its admission, and revocation if any."""
@@ -383,7 +403,7 @@ def _default_plane() -> ControlPlane:
     project = os.environ.get("CUSTODY_FIRESTORE_PROJECT")
     if not project:
         return ControlPlane()
-    from google.cloud import firestore
+    from google.cloud import firestore, logging as cloud_logging
 
     from custody.firestore_store import (
         FirestoreAuditorLog,
@@ -396,6 +416,7 @@ def _default_plane() -> ControlPlane:
         graph=FirestoreCustodyGraph(client),
         auditor_log=FirestoreAuditorLog(client),
         demotion_log=FirestoreDemotionLog(client),
+        log_client=cloud_logging.Client(project=project),
     )
 
 

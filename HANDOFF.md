@@ -20,6 +20,11 @@ are now closed; the user chose N=5 for the third.
 2. **Custody Reviewer — closed 2026-08-14**, live-proven. See below.
 3. **N department worker agents — closed 2026-08-14**, live-proven, N=5.
    See below. All three fleet-review findings are now closed.
+4. **Legible daily heartbeat — closed 2026-08-14**, small addition on top
+   of the Auditor. `/auditor`'s response and a new `custody-auditor`
+   structured Cloud Logging entry now carry `elapsed_days_since_seed`, so
+   G5's accumulating span is readable day-by-day without manual timestamp
+   diffing. See below.
 
 ## Provenance Auditor: closed 2026-08-14, live-proven
 
@@ -143,6 +148,43 @@ vouch/demote another's tool) — that is already proven offline and live,
 unchanged, by the Provenance Auditor sub-build above. This build proves the
 derivation graph's cross-department revocation *reach* instead, a
 different, previously-unproven property.
+
+## Legible daily heartbeat: closed 2026-08-14
+
+Raised on request, after the Auditor landed: the daily Scheduler-driven
+`/auditor` tick only ever produced generic Cloud Run access-log entries
+(method, URL, status, timestamp) — a judge would have had to manually diff
+timestamps across days to see G5's elapsed-time claim at all, and every
+day's entry would look identical either way. Small, additive fix, not a
+new gate: `ControlPlane.auditor` (`custody/control_plane.py`) now reads
+the seed record back through the existing `graph.record` port, computes
+`elapsed_days_since_seed` from its durably-stamped `admitted_at`, and
+writes the full heartbeat payload to a new structured log,
+`custody-auditor`, mirroring O1's `custody-observability` pattern. `None`
+offline (the pure in-memory graph never stamps `admitted_at`); a real
+integer once the durable, Firestore-backed seed exists. The structured
+log write only happens when a `log_client` is configured, so no
+offline/local run needs `google.cloud.logging` credentials — 319/319
+offline tests pass, all three new behaviors (the `None` case, the
+opt-in log write, that every tick logs, not just the first) covered in
+`tests/test_control_plane.py`.
+
+Redeployed `custody-control-plane` again, to revision
+`custody-control-plane-00005-s2k` (third redeploy this session, same
+service/env/posture each time, user-authorized live each time). Verified
+live: one manual `/auditor` call returned `"elapsed_days_since_seed": 0`
+and the identical payload landed in
+`projects/project-988bc9fe-092c-4b32-90c/logs/custody-auditor`
+(`insertId 1pm8pk5f30azdx`) within seconds. Today's own Scheduler-triggered
+fire (`2026-08-14T06:00:03Z`) had already happened, against the prior
+revision, a few minutes before this redeploy landed, so it does not carry
+the new field — every fire from tomorrow's `06:00 UTC` onward will. No new
+`make *-gates` script: this is not a new capability with its own
+acceptance gate, it is legibility for G5's still-accumulating span, which
+`scripts/scheduler_gates.py` will read once real days exist. `make gates`
+unaffected (G1-G4 PASS, G5 correctly BLOCKED). Full write-up in
+`.claude/SESSION_CONTRACT.md`'s "Sub-build: legible daily heartbeat"
+section.
 
 ## Lane and artifact
 

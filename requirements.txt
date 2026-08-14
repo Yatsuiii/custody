@@ -13,6 +13,10 @@ fastmcp==2.13.1
 # offline fake for the same Firestore layout described in SESSION_CONTRACT.md.
 google-cloud-firestore>=2.28,<3
 
+# The daily heartbeat's structured log entry (custody-auditor), same client
+# scripts/live_observability.py already uses for O1's trace/digest binding.
+google-cloud-logging>=3,<4
+
 # Pinned deliberately. google-adk requires opentelemetry <=1.42.1 and
 # google-cloud-aiplatform pulls an exporter that wants ~=1.44.0, so an
 # unpinned install produces a set pip itself reports as broken. That failure
