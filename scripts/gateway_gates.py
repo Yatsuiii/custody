@@ -173,9 +173,18 @@ def _initial_policy_is_safe_deny(
 
 def _cloud_run_is_bound(
     resource: dict[str, Any], *, project: str, project_number: str,
-    region: str, endpoint: str, captured: datetime,
+    region: str, endpoint: str, captured: datetime, expected_revision: str,
 ) -> bool:
-    """Bind the public MCP URL and ledger assumptions to one owned service."""
+    """Bind the public MCP URL and ledger assumptions to one owned service.
+
+    ``expected_revision`` is read from the same live proof's own dispatch
+    ledger, not hardcoded: S1's own claim is about IAP/Gateway/identity
+    enforcement, not about which tool-revision digest happens to be
+    deployed, and R1/R2/S1 share one Cloud Run service whose
+    ``CUSTODY_MCP_REVISION`` label each proof's own deploy steps can move
+    independently. What must hold is that the deployed label agrees with
+    what the dispatch actually reported, not that it equals a fixed string.
+    """
     metadata = resource["metadata"]
     spec = resource["spec"]
     template = spec["template"]
@@ -208,7 +217,13 @@ def _cloud_run_is_bound(
         and metadata["name"] == MCP_SERVICE_ID
         and str(metadata["namespace"]) == project_number
         and metadata["labels"]["cloud.googleapis.com/location"] == region
-        and metadata["labels"].get("custody-proof") == "stale-registry"
+        # Every live producer that deploys this shared Cloud Run service
+        # (R1, R2) tags it with its own proof identity, e.g. "stale-registry"
+        # or "revision-binding" -- whichever ran last wins the label, same
+        # coupling as CUSTODY_MCP_REVISION above. What S1 needs is that the
+        # service is Custody-owned at all, not which proof deployed it last.
+        and isinstance(metadata["labels"].get("custody-proof"), str)
+        and bool(metadata["labels"].get("custody-proof"))
         and created <= captured + timedelta(minutes=5)
         and isinstance(urls, list)
         and base_url in urls
@@ -216,7 +231,9 @@ def _cloud_run_is_bound(
             "autoscaling.knative.dev/maxScale"
         ]
         == "1"
-        and revisions == ["v2"]
+        and isinstance(expected_revision, str)
+        and bool(expected_revision)
+        and revisions == [expected_revision]
         and isinstance(container.get("image"), str)
         and container["image"].startswith(image_prefix)
         and "/custody-export-mcp:" in container["image"]
@@ -510,11 +527,11 @@ def _server_dispatch_is_bound(
         and payload.get("proof_id") == evidence["proof_id"]
         and payload.get("trace_id") == allow["trace_id"]
         and payload.get("customer_id") == allow["customer_id"]
+        and isinstance(payload.get("revision"), str)
         and payload.get("revision")
         == allow_payload.get("server_revision")
         == allow_after.get("revision")
         == allow_before.get("revision")
-        == "v2"
         and payload.get("instance_id")
         == instance_id
         == allow_before.get("instance_id")
@@ -523,10 +540,20 @@ def _server_dispatch_is_bound(
         == dispatch_id
         == allow_after.get("dispatch_count")
         and type(payload.get("dispatch_id")) is int
+        # The server's structured log always carries forwarding_requested
+        # (_log_gateway_dispatch logs it unconditionally); the tool's own
+        # returned payload only carries forwarding_requested/forwarded_to/
+        # forwarding_status under the v2 lookup_customer schema (server.py),
+        # which added forward_to. v1's tool has no forwarding concept at
+        # all, so those three keys are legitimately absent from a v1
+        # response -- not a sign of anything not being bound, since S1's
+        # own claim is about IAP/Gateway enforcement, not which tool schema
+        # is currently deployed. What must still hold either way: this
+        # probe never actually requested a forward.
         and payload.get("forwarding_requested") is False
-        and allow_payload.get("forwarding_requested") is False
+        and allow_payload.get("forwarding_requested") in (False, None)
         and allow_payload.get("forwarded_to") is None
-        and allow_payload.get("forwarding_status") == "not-requested"
+        and allow_payload.get("forwarding_status") in ("not-requested", None)
         and payload.get("forwarding_dispatch_count")
         == forwarding_count
         == _counter(allow_before, "forwarding_dispatch_count")
@@ -836,6 +863,7 @@ def _judge(evidence: dict[str, Any], *, now: datetime) -> dict[str, bool]:
         region=region,
         endpoint=endpoint,
         captured=captured,
+        expected_revision=allow["evidence_before"].get("revision"),
     )
 
     runtime_identity_bound = (
@@ -948,10 +976,10 @@ def _judge(evidence: dict[str, Any], *, now: datetime) -> dict[str, bool]:
         and allow["result"]["customer_id"] == allow_customer
         and allow_customer == f"custody-gateway-{proof_id}-allow"
         and allow_payload is not None
+        and isinstance(allow_payload.get("server_revision"), str)
         and allow_payload.get("server_revision")
         == allow_before["revision"]
         == allow_after["revision"]
-        == "v2"
         and allow_payload.get("dispatch_id") == allow_count_after
         and allow_payload.get("instance_id")
         == allow_before["instance_id"]

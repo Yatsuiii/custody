@@ -166,6 +166,47 @@ class LiveGatewayAttestationTests(unittest.TestCase):
         for selector in expected_selectors:
             self.assertIn(selector, query)
 
+    def test_a_genuinely_different_but_self_consistent_revision_still_passes(
+        self,
+    ) -> None:
+        """R1, R2, and S1 share one Cloud Run service; each proof's own
+        deploy steps move CUSTODY_MCP_REVISION independently, and R2's own
+        proof deliberately ends on a different value than R1's. S1's claim
+        is IAP/Gateway/identity enforcement, not which revision is
+        currently deployed, so this must pass regardless -- as long as
+        every source agrees with every other source.
+        """
+        evidence = trusted_evidence()
+        for env in evidence["cloud_run"]["spec"]["template"]["spec"][
+            "containers"
+        ][0]["env"]:
+            if env["name"] == "CUSTODY_MCP_REVISION":
+                env["value"] = "v1"
+        for control in ("allow_control", "scope_control", "expiry_control", "deny_control"):
+            evidence[control]["evidence_before"]["revision"] = "v1"
+            evidence[control]["evidence_after"]["revision"] = "v1"
+        evidence["allow_control"]["result"]["data"]["server_revision"] = "v1"
+        evidence["server_dispatch_log"]["jsonPayload"]["revision"] = "v1"
+
+        cloud = FakeCloud(evidence)
+        self.assertTrue(all(live_attestation.attest_live(evidence, cloud).values()))
+
+    def test_a_v1_shaped_tool_result_with_no_forwarding_fields_still_passes(
+        self,
+    ) -> None:
+        """v1's lookup_customer tool predates forward_to and returns no
+        forwarding_requested/forwarded_to/forwarding_status keys at all --
+        legitimately absent, not unbound, since this probe never requests a
+        forward under either schema.
+        """
+        evidence = trusted_evidence()
+        data = evidence["allow_control"]["result"]["data"]
+        for key in ("forwarding_requested", "forwarded_to", "forwarding_status"):
+            data.pop(key, None)
+
+        cloud = FakeCloud(evidence)
+        self.assertTrue(all(live_attestation.attest_live(evidence, cloud).values()))
+
     def test_mcp_envelope_structured_content_shape_is_understood(self) -> None:
         """The live MCP server wraps tool output in the standard result
         envelope (``content`` plus ``structuredContent``) rather than

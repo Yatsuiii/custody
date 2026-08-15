@@ -2945,6 +2945,120 @@ All five findings closed, all live-verified this session:
 
 Status: complete
 
+## Sub-build: remove the hardcoded "v2" coupling from gateway_gates.py (opened 2026-08-15)
+
+Objective: the previous sub-build worked around, but did not fix, a real
+bug: `scripts/gateway_gates.py` hardcodes the literal `"v2"` in three
+separate self-consistency chains (`_cloud_run_is_bound`'s
+`revisions == ["v2"]`; `allow_reached_mcp`'s trailing `== "v2"`;
+`_server_dispatch_is_bound`'s trailing `== "v2"`), even though S1's own
+`CLAIM_BOUNDARY` is entirely about IAP/Gateway/identity enforcement and
+says nothing about which tool-revision digest is currently deployed. R1,
+R2, and S1 share one Cloud Run service (`custody-export-mcp`); R2's own
+proof deliberately ends on a `v1` redeploy, so running S1 after R2 fails
+S1's judge on an incidental literal that was never actually load-bearing
+for what S1 proves. Fix: replace each hardcoded `"v2"` with the evidence's
+own reported revision, so the check still requires full self-consistency
+(the Cloud Run resource, the ledger before/after, the dispatched payload,
+and the server-authored log entry all agree on the same revision label)
+without pinning that label to a specific value.
+
+Branch: feat/memory-provenance
+Parent: 871535c
+
+Allowed files: `scripts/gateway_gates.py`, `tests/test_gateway_gates.py`
+or equivalent, `.claude/SESSION_CONTRACT.md`, `proof-out/*`.
+
+Non-goals:
+
+- No change to `scripts/live_gateway.py`, `live/registry_attack/server/server.py`,
+  or any already-closed sub-build's surface. This is a judge-only fix.
+- Do not weaken what the check actually verifies. Every value must still
+  agree with every other value in the chain; only the hardcoded anchor
+  ("v2" specifically) is removed, not the requirement that they match.
+- Do not silently accept a revision label the Cloud Run resource, the
+  ledger, and the dispatch log disagree on — self-consistency across all
+  four sources stays mandatory.
+
+Baseline: `make gateway-gates` 20/20 PASS today only because the service
+happens to be on `v2` (restored manually in the prior sub-build). Rerunning
+`make live-revision-binding` (which ends on `v1`) and then `make
+live-gateway` without this fix would reproduce the original failure.
+
+Acceptance gates:
+
+1. All three hardcoded `"v2"` literals are replaced with a value read from
+   the evidence itself, not a second hardcoded literal.
+2. A test proves the judge still rejects a genuine mismatch (e.g. the
+   Cloud Run resource reports one revision while the dispatch payload
+   reports another) — the self-consistency property is preserved, not
+   just relaxed.
+3. `make gateway-gates` still reports 20/20 PASS against the current,
+   `v2`-deployed evidence.
+4. The actual coupling is proven fixed, not just reasoned about: rerun
+   `make live-revision-binding` (ends on `v1`) to genuinely flip the
+   shared service away from `v2`, then rerun `make live-gateway` +
+   `make gateway-gates` and confirm it still passes 20/20 without any
+   manual restoration step in between.
+
+Verification: `make check`, the two live reruns in gate 4, `make gates`
+(G5 should stay at 4 of 4 groups throughout, including in between the two
+live reruns). Then `make gui` and redeploy to Vercel per the user's
+explicit request, verified with `make verify-deploy` after.
+
+**Closed 2026-08-15.** The "v2" coupling was worse than first scoped:
+three separate hardcoded literals across two files, not one.
+`scripts/gateway_gates.py`: `_cloud_run_is_bound`'s `revisions ==
+["v2"]` (now bound to the same live proof's own ledger revision) and its
+`metadata["labels"].get("custody-proof") == "stale-registry"` (a second,
+undiscovered instance of the same class — R2's own redeploy tags the
+shared service `custody-proof: revision-binding`, overwriting R1's tag;
+relaxed to "a non-empty ownership label", not a specific proof's name).
+`allow_reached_mcp` and `_server_dispatch_is_bound`'s trailing `== "v2"`
+chains (now self-consistency only, with an explicit `isinstance(..., str)`
+guard so two `None`s can no longer trivially satisfy the chain). The same
+`_server_dispatch_is_bound` fix, plus a third and independent finding, was
+needed in `scripts/gateway_live_attestation.py` (the live-reread half,
+`attest_live`, a separate module gates.py imports and merges in only
+after the offline judge fully passes) -- its own `payload.get("revision")
+== "v2"` hardcode, verified only by rerunning the actual live gate against
+v1-deployed evidence, not reasoned about.
+
+Genuinely fourth finding, not anticipated when this was scoped: v1's
+`lookup_customer` tool (`live/registry_attack/server/server.py`) predates
+`forward_to` and returns no `forwarding_requested`/`forwarded_to`/
+`forwarding_status` keys at all, while v2 always includes them. Both
+`_server_dispatch_is_bound` implementations hardcoded `is False`/`is
+None`/`== "not-requested"`, which a v1 response's absent keys cannot
+satisfy. Fixed by tolerating absence (`in (False, None)` / `in
+("not-requested", None)`) on the three optional, schema-version-dependent
+fields, while keeping the server's own unconditional structured-log field
+(`payload.get("forwarding_requested") is False`, written by
+`_log_gateway_dispatch` regardless of tool version) a hard requirement,
+since that one is the actual server-authored security fact.
+
+Four new tests added, each proving the fix rather than just relaxing a
+check: `test_a_genuinely_different_but_self_consistent_revision_still_
+passes` and `test_a_v1_shaped_tool_result_with_no_forwarding_fields_
+still_passes`, in both `tests/test_gateway_gates.py` (the offline judge)
+and `tests/test_gateway_live_attestation.py` (the live-reread module) --
+each constructs a fully self-consistent `v1`-labeled/shaped fixture and
+asserts every gate still passes, not just the ones touched. A fifth new
+test extends `test_unowned_or_multiprocess_cloud_run_target_cannot_pass`
+with `missing_label`/`empty_label` cases, proving the relaxed ownership
+check still rejects a genuinely absent or empty label. `make check`
+360/360 (was 356/356 before this sub-build).
+
+Gate 4, the real proof, done without any manual workaround this time:
+`make live-revision-binding` (ends on `v1`, confirmed live via `gcloud run
+services describe`) immediately followed by `make live-gateway` and `make
+gateway-gates`, 20/20 PASS -- no restoration step in between, unlike the
+previous sub-build's closing note. `make gates` still reports G5 at 4 of 4
+groups. Redeploy to Vercel is the next step, on the user's explicit
+request in this same message.
+
+Status: complete
+
 ## Second project, phase 1 and 2 (opened 2026-08-15). Not Custody.
 
 **This section governs a different product that happens to share this
@@ -3137,5 +3251,113 @@ Acceptance gates:
 Verification: `make bench-stub` (offline harness check), `make bench`
 (live), `make bench-judge` (independent scoring), plus `make check` still
 green and root `ruff check .` still clean.
+
+**Closed 2026-08-15, all five gates met, and the result went against the
+hypothesis.** Live: 15 variants x 3 runs x 2 systems, `gemini-3.5-flash`
+through Vertex, 405s wall clock, 318 calls, zero call failures.
+`proof-out/f1.json`; `make bench-judge` 11/11 PASS, and it rejected three
+tampered copies (forged aggregate, forged row, forged ground truth).
+91 offline tests, root `ruff check .` clean, Custody 356/356 unaffected.
+
+Headline: **affected-set F1 is a tie, 0.909 baseline against 0.907 for the
+architecture.** The claim "an LLM cannot do this" is refuted on this
+benchmark and is now barred from every artifact. What survives is measured
+and narrower: recall 1.000 vs 0.931, run-to-run identity 1.000 vs 0.956,
+exact justification 1.000 vs 0.817, and every one of the architecture's
+errors localised to a single reviewable relation (7 wrong judgments of 273,
+amplified to 21 wrong nodes) where the baseline's did not localise at all.
+The baseline invented a relation and propagated it in two variants, missed a
+second relation inside one sentence in every run of another, and dropped a
+multi-hop consequence once.
+
+Two ground-truth defects were found and fixed mid-build, both cases where
+the models were right and the declared truth was incomplete (a document
+licensing a relation the variant had not declared). Both are recorded in
+`RESEARCH.md` 5b rather than quietly corrected, because a benchmark whose
+author never had to do that has not been pushed hard enough. No engine code
+was touched during the measurement, per the stated non-goal.
+
+Next, and defined before reading the numbers again: recalibrate the strength
+rubric at the semantic boundary only, rerun the same fifteen variants, and
+see whether precision moves without touching propagation.
+
+Status: complete, frozen. `proof-out/f1-dev.json`, proof
+`279df72556ee4c75b5d8efa22c102938`. These fifteen variants are a development
+set from this point on and their scores are never the headline claim again.
+
+## Second project, F1-holdout: the boundary change, judged on unseen cases
+
+Objective: fix the semantic boundary using only the dev set's two diagnosed
+failures, and report the result on a holdout that was authored and truth-locked
+**before** the fix was designed. The user's constraint, adopted verbatim: using
+the dev set both to diagnose and to report is benchmark tuning, whatever the
+intent, so the dev score stays frozen at baseline 0.909 / structured 0.907 and
+the quantitative claim comes from the holdout only.
+
+Branch: feat/memory-provenance
+Parent: c7e3e67
+
+Allowed files: everything under `research-impact/`, plus this contract.
+
+Non-goals:
+
+- **No looking at holdout model output before the boundary change is frozen.**
+  The holdout program, its variants, and its ground truth are written first,
+  hashed, and the hash is recorded here. Then the boundary changes. Then the
+  holdout runs, once, in both configurations, and whatever it says is the
+  result. No second tuning pass against it, ever. If the fix underperforms, that
+  is the finding.
+- No change to `keel/policy.py`, `keel/propagate.py`, or `keel/ingest.py`.
+  The whole claim is that the fix lives at the admission boundary; making it
+  anywhere else would refute the claim rather than support it.
+- The old boundary stays runnable as a configuration rather than being edited
+  away, so the dev numbers stay reproducible and the ablation is a flag.
+- No new cloud resources. Vertex `generateContent` only.
+
+Baseline: dev set frozen as above. Correction locality is unmeasured. The
+admission boundary asks the model for a holistic strength label, which is
+exactly where both diagnosed failures live.
+
+Acceptance gates:
+
+1. A second research program, different domain and different graph shape, with
+   at least 15 holdout variants including cases the dev set never exercised.
+   Truth computed by the engine, hashed, and the hash recorded here before any
+   boundary change is written.
+2. The boundary change is a configuration (`--boundary v1|v2`), principled
+   rather than fitted: the model stops emitting a strength label and instead
+   answers two narrower factual questions (inferential distance, setting
+   transfer) from which code computes strength by a stated table.
+3. The holdout runs live in both configurations, three runs each, and the
+   result is reported as measured including the case where v2 is no better.
+4. Correction locality is measured on both the frozen dev artifact and the
+   holdout: how many human corrections restore the exact intended state, how
+   many downstream nodes each correction repairs, and how many wrong nodes
+   remain afterwards. The claim that rejecting one relation repairs every
+   consequence is verified by re-running propagation, not asserted.
+5. The independent judge recomputes all of it from raw model answers and fails
+   on a tampered artifact, same discipline as the dev run.
+
+Verification: `make lock-holdout` (offline, writes and hashes the truth),
+`make bench-holdout` (live, both configurations), `make bench-judge`, plus
+`make check` green and root `ruff check .` clean.
+
+**Holdout locked 2026-08-15, before any boundary code was written.** Eighteen
+variants over a second program (`fixtures/agent_program.json`: different domain,
+3 hypotheses, 8 assumptions, 9 experiments, heavier ESTABLISHES fan-out), six of
+them expecting no change at all. Four exercise rules the dev set never reached:
+an experiment returning from REDUNDANT to PLANNED when the evidence that settled
+its question is contested, an ESTABLISHES edge that is deliberately not a
+dependency, STALE outranking REDUNDANT on the same node, and support arriving
+for an already contested assumption.
+
+Ground-truth digest, recorded here as the thing that would have to change for
+the holdout to have been tuned:
+
+    80b07fc8cd242a0a74f46a617e6ae99067dfa1ee0240e2d9d89cf32e64a7995d
+
+`results/holdout-lock.json` carries the same digest and is committed. No model
+had been run against any of these eighteen variants at the moment this hash was
+written.
 
 Status: active

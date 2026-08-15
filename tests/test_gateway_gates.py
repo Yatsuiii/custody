@@ -985,13 +985,46 @@ class GatewayGateJudgeTests(unittest.TestCase):
         evidence["allow_control"]["result"]["data"]["server_revision"] = "v1"
         self.assertFalse(judge(evidence, now=NOW)["allow_reached_owned_mcp"])
 
+    def test_a_genuinely_different_but_self_consistent_revision_still_passes(self):
+        """S1's own claim is IAP/Gateway/identity enforcement, not which
+        tool-revision digest happens to be deployed. R1, R2, and S1 share
+        one Cloud Run service, and R2's own proof deliberately ends on a
+        different revision than R1's; this proof must not depend on which
+        one is currently live, only that every source agrees with every
+        other source about it.
+        """
+        evidence = valid_evidence()
+        for env in evidence["cloud_run"]["spec"]["template"]["spec"][
+            "containers"
+        ][0]["env"]:
+            if env["name"] == "CUSTODY_MCP_REVISION":
+                env["value"] = "v1"
+        for control in ("allow_control", "scope_control", "expiry_control", "deny_control"):
+            evidence[control]["evidence_before"]["revision"] = "v1"
+            evidence[control]["evidence_after"]["revision"] = "v1"
+        evidence["allow_control"]["result"]["data"]["server_revision"] = "v1"
+        evidence["server_dispatch_log"]["jsonPayload"]["revision"] = "v1"
+        self.assertTrue(all(judge(evidence, now=NOW).values()))
+
+    def test_a_v1_shaped_tool_result_with_no_forwarding_fields_still_passes(self):
+        """v1's lookup_customer tool predates forward_to and returns no
+        forwarding_requested/forwarded_to/forwarding_status keys at all --
+        legitimately absent, not unbound, since this probe never requests a
+        forward under either schema.
+        """
+        evidence = valid_evidence()
+        data = evidence["allow_control"]["result"]["data"]
+        for key in ("forwarding_requested", "forwarded_to", "forwarding_status"):
+            data.pop(key, None)
+        self.assertTrue(all(judge(evidence, now=NOW).values()))
+
     def test_result_from_another_process_cannot_pass(self):
         evidence = valid_evidence()
         evidence["allow_control"]["result"]["data"]["instance_id"] = "other"
         self.assertFalse(judge(evidence, now=NOW)["allow_reached_owned_mcp"])
 
     def test_unowned_or_multiprocess_cloud_run_target_cannot_pass(self):
-        for mutation in ("namespace", "max_scale", "url"):
+        for mutation in ("namespace", "max_scale", "url", "missing_label", "empty_label"):
             with self.subTest(mutation=mutation):
                 evidence = valid_evidence()
                 cloud_run = evidence["cloud_run"]
@@ -1001,6 +1034,10 @@ class GatewayGateJudgeTests(unittest.TestCase):
                     cloud_run["spec"]["template"]["metadata"]["annotations"][
                         "autoscaling.knative.dev/maxScale"
                     ] = "2"
+                elif mutation == "missing_label":
+                    del cloud_run["metadata"]["labels"]["custody-proof"]
+                elif mutation == "empty_label":
+                    cloud_run["metadata"]["labels"]["custody-proof"] = ""
                 else:
                     cloud_run["status"]["url"] = "https://attacker.invalid"
                 self.assertFalse(

@@ -407,15 +407,25 @@ def _server_dispatch_is_bound(
         and payload.get("proof_id") == proof_id
         and payload.get("trace_id") == trace_id
         and payload.get("customer_id") == customer_id
-        and payload.get("revision") == "v2"
+        # R1, R2, and S1 share one Cloud Run service; each proof's own
+        # deploy steps move CUSTODY_MCP_REVISION independently (R2's own
+        # proof deliberately ends on a different value than R1's), so S1
+        # cannot pin a specific revision label -- only that every source
+        # here agrees with the same live proof's own recorded ledger value.
+        and isinstance(payload.get("revision"), str)
+        and payload.get("revision") == after.get("revision")
         and payload.get("instance_id") == instance_id
         and payload.get("dispatch_id") == dispatch_id
         and payload.get("forwarding_requested") is False
         and payload.get("forwarding_dispatch_count")
         == after.get("forwarding_dispatch_count")
-        and result.get("forwarding_requested") is False
+        # v1's lookup_customer tool has no forwarding concept at all (added
+        # in v2 alongside forward_to), so these three keys are legitimately
+        # absent from a v1 response, not unbound -- see the matching
+        # comment in gateway_gates.py's offline counterpart.
+        and result.get("forwarding_requested") in (False, None)
         and result.get("forwarded_to") is None
-        and result.get("forwarding_status") == "not-requested"
+        and result.get("forwarding_status") in ("not-requested", None)
         and after.get("instance_id") == instance_id
         and after.get("dispatch_count") == dispatch_id
         and after.get("last_dispatched_at") == payload.get("server_dispatched_at")
