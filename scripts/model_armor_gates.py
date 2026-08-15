@@ -173,11 +173,17 @@ def _judge(evidence: dict[str, Any], *, now: datetime) -> dict[str, bool]:
         and now - captured <= timedelta(hours=24)
     )
 
+    # templateMetadata is a subset check, not exact equality -- see the
+    # matching comment on live_model_armor.py's _require_owned_template.
+    # Google Cloud added a dataResidencyCompliant field this project never
+    # set; an unrequested field appearing is not the same signal as a
+    # requested one changing or vanishing.
+    metadata = template.get("templateMetadata") or {}
     template_bound = (
         template.get("name") == EXPECTED_TEMPLATE_NAME
         and template.get("filterConfig") == EXPECTED_FILTER_CONFIG
         and template.get("labels") == EXPECTED_LABELS
-        and template.get("templateMetadata") == EXPECTED_TEMPLATE_METADATA
+        and all(metadata.get(key) == value for key, value in EXPECTED_TEMPLATE_METADATA.items())
     )
 
     malicious_prompt = MALICIOUS_PROMPT_TEMPLATE.format(proof_id=proof_id)

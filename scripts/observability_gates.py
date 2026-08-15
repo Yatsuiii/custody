@@ -131,11 +131,20 @@ def _judge(evidence: dict[str, Any], *, now: datetime) -> dict[str, bool]:
         and _SHA256.fullmatch(digest) is not None
     )
 
+    # `memory_write_count` was pinned to exactly 1 back when G1 wrote one
+    # session-level memory via `ingest_events`. G1 migrated to `write_record`
+    # (`HANDOFF.md`, "G1 migration"), which writes one raw memory per
+    # admitted record, so the count is no longer a fixed literal. The
+    # self-consistency invariant `scripts/gates.py`'s own `judge_g1` already
+    # uses post-migration is reused here instead of inventing a second one:
+    # every written id is accounted for, and there is at least one.
+    written_ids = g1.get("written_memory_ids", [])
     g1_reached_memory_bank = (
         g1.get("framework") == "google-adk"
         and g1.get("agent_run_completed") is True
         and proof_id in g1.get("agent_text", "")
-        and g1.get("memory_write_count") == 1
+        and g1.get("memory_write_count") == len(written_ids)
+        and bool(written_ids)
         and g1.get("custody_split", {}).get("withheld") == 0
         and g1.get("custody_split", {}).get("refused") == 0
         and g1.get("retrieved_memory_count", 0) >= 1

@@ -89,11 +89,18 @@ Within 24 hours of judging, run:
 export CLOUDSDK_CONFIG="$PWD/.gcloud"
 export CUSTODY_PROJECT=project-988bc9fe-092c-4b32-90c
 export CUSTODY_AGENT_ENGINE_ID=6936011268348182528
+# Required for R2's fresh-process replay control: without this, the
+# deployed server falls back to an in-process nonce ledger that cannot
+# detect a replay across a redeploy, and make live-revision-binding times
+# out waiting for a denial log that will never be written. Missing this
+# was found and closed 2026-08-15; see .claude/SESSION_CONTRACT.md.
+export CUSTODY_FIRESTORE_PROJECT=project-988bc9fe-092c-4b32-90c
 
 make live-g1 && make live-gateway && make live-model-armor \
   && make live-observability && make live-memory-deletion \
   && make live-auditor && make live-review && make live-narration \
-  && make live-fleet && make live-chain
+  && make live-fleet && make live-chain \
+  && make live-registry-attack && make live-revision-binding
 
 make gates          # expect G5 at 4 of 4 groups, still BLOCKED on elapsed time
 make gui            # then redeploy, item 3

@@ -107,12 +107,22 @@ class Cloud:
 
 
 def _require_owned_template(template: dict[str, Any]) -> None:
-    """Refuse to proceed against a drifted or unowned Template."""
+    """Refuse to proceed against a drifted or unowned Template.
+
+    ``templateMetadata`` is checked as a subset, not exact equality: Google
+    Cloud started including an additional ``dataResidencyCompliant`` field
+    in the description this project never set and does not control, and a
+    field the account did not request appearing is not the same signal as a
+    field the account *did* request being changed or missing. Name, filter
+    config, and labels stay exact matches -- those are exactly what this
+    project owns and configured.
+    """
+    metadata = template.get("templateMetadata") or {}
     if (
         template.get("name") != EXPECTED_TEMPLATE_NAME
         or template.get("filterConfig") != EXPECTED_FILTER_CONFIG
         or template.get("labels") != EXPECTED_LABELS
-        or template.get("templateMetadata") != EXPECTED_TEMPLATE_METADATA
+        or any(metadata.get(key) != value for key, value in EXPECTED_TEMPLATE_METADATA.items())
     ):
         raise RuntimeError("owned Model Armor Template validation failed")
 

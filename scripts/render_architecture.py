@@ -40,8 +40,62 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts import (  # noqa: E402
+    auditor_gates,
+    chain_gates,
+    fleet_gates,
+    gateway_gates,
+    memory_deletion_gates,
+    model_armor_gates,
+    narration_gates,
+    observability_gates,
+    registry_gates,
+    review_gates,
+    revision_binding_gates,
+)
+
 OUT_HTML = REPO_ROOT / "web" / "architecture.html"
 PROOF_OUT = REPO_ROOT / "proof-out"
+
+#: A stored revision string carries an algorithm tag, but a live-proof
+#: artifact does not. So "does this artifact still pass its own claim" is
+#: answered the same way `tests/test_stored_artifacts.py` already answers it
+#: for `make check`: run the artifact's own offline judge, here at render
+#: time instead of test time. Every judge below is pure (evidence dict in,
+#: bool dict out) -- none of the `*_live` siblings that make live calls.
+JUDGE_FN = {
+    "R1": registry_gates.judge,
+    "R2": revision_binding_gates.judge,
+    "S1": gateway_gates.judge,
+    "M1": model_armor_gates.judge,
+    "O1": observability_gates.judge,
+    "D1/D2": memory_deletion_gates.judge,
+    "Auditor": auditor_gates.judge_offline,
+    "Reviewer": review_gates.judge_offline,
+    "Narration": narration_gates.judge_offline,
+    "Fleet N=25": fleet_gates.judge_offline,
+    "F1": chain_gates.judge_offline,
+}
+
+#: A judge reports its own freshness separately from every substantive
+#: gate, because "captured a while ago" and "no longer proves the claim"
+#: are different failures needing different chips. Same set
+#: `tests/test_stored_artifacts.py` exempts from its own pass/fail check.
+FRESHNESS_KEYS = {"fresh_live_evidence", "fresh_bounded_live_evidence"}
+
+
+def evidence_state(judge, data: dict, now: datetime) -> str:
+    """PASS, STALE (only freshness gates fail), or FAILING (something else does)."""
+    try:
+        gates = judge(data, now=now)
+    except (KeyError, TypeError, ValueError):
+        return "failing"
+    failing = {name for name, passed in gates.items() if not passed}
+    if not failing:
+        return "pass"
+    if failing <= FRESHNESS_KEYS:
+        return "stale"
+    return "failing"
 
 GATE_LINE = re.compile(r"^\s*\[(?P<state>PASS|FAIL|BLOCKED)\s*\]\s*(?P<title>.+)$")
 
@@ -306,7 +360,8 @@ def load_live_evidence(now: datetime) -> list[dict]:
         if not path.exists():
             rows.append({
                 "id": proof.id, "title": proof.title, "category": proof.category,
-                "script": proof.script, "status": "missing", "proof_id": None,
+                "script": proof.script, "status": "missing", "has_evidence": False,
+                "proof_id": None,
                 "captured_at": None, "age": None, "claim_boundary": None, "widget": None,
             })
             continue
@@ -315,13 +370,16 @@ def load_live_evidence(now: datetime) -> list[dict]:
         except json.JSONDecodeError:
             rows.append({
                 "id": proof.id, "title": proof.title, "category": proof.category,
-                "script": proof.script, "status": "malformed", "proof_id": None,
+                "script": proof.script, "status": "malformed", "has_evidence": False,
+                "proof_id": None,
                 "captured_at": None, "age": None, "claim_boundary": None, "widget": None,
             })
             continue
         rows.append({
             "id": proof.id, "title": proof.title, "category": proof.category,
-            "script": proof.script, "status": "evidence",
+            "script": proof.script,
+            "status": evidence_state(JUDGE_FN[proof.id], data, now),
+            "has_evidence": True,
             "proof_id": data.get("proof_id"), "captured_at": data.get("captured_at"),
             "age": age_string(data["captured_at"], now) if data.get("captured_at") else None,
             "claim_boundary": data.get("claim_boundary"),
@@ -382,9 +440,11 @@ TEMPLATE = """<!doctype html>
   .proof-scope b { color: var(--ink-dim); font-weight: 600; }
   .proof-script { margin-top: 8px; font-family: var(--mono); font-size: 10.5px; color: var(--ink-faint); }
   .status-tag { font-family: var(--mono); font-size: 9.5px; text-transform: uppercase; padding: 2px 7px; border-radius: 3px; }
-  .status-tag.evidence { background: var(--accent-dim); color: var(--accent); }
+  .status-tag.pass { background: var(--accent-dim); color: var(--accent); }
+  .status-tag.stale { background: var(--warn-dim); color: var(--warn); }
   .status-tag.missing { background: var(--warn-dim); color: var(--warn); }
   .status-tag.malformed { background: var(--danger-dim); color: var(--danger); }
+  .status-tag.failing { background: var(--danger-dim); color: var(--danger); }
 
   /* --- widgets: the actual replay, not a description of it --- */
   .widget { margin-top: 12px; }
@@ -551,14 +611,14 @@ TEMPLATE = """<!doctype html>
     byCategory[cat].forEach((p) => {
       const card = document.createElement("div");
       card.className = "proof-card";
-      const meta = p.status === "evidence"
+      const meta = p.has_evidence
         ? p.proof_id + " &middot; captured " + p.age + " (" + p.captured_at + ")"
         : p.status === "missing" ? "no proof-out artifact on disk" : "artifact could not be parsed";
       card.innerHTML =
         '<div class="proof-head"><div><span class="proof-id">' + p.id + '</span><span class="proof-title">' + p.title + "</span></div>" +
         '<span class="status-tag ' + p.status + '">' + p.status + "</span></div>" +
         '<div class="proof-meta">' + meta + "</div>" +
-        (p.status === "evidence" ? renderWidget(p.widget) : "") +
+        (p.has_evidence ? renderWidget(p.widget) : "") +
         (p.claim_boundary ? '<div class="proof-scope"><b>Scope:</b> ' + esc(p.claim_boundary) + "</div>" : "") +
         '<div class="proof-script">' + p.script + "</div>";
       wrap.appendChild(card);

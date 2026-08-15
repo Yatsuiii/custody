@@ -90,16 +90,32 @@ class _McpWireClient:
             if names != ["lookup_customer"]:
                 raise RuntimeError(f"unexpected live MCP tool surface: {names}")
 
+            call_params: dict[str, Any] = {
+                "name": tool_name,
+                "arguments": {"customer_id": customer_id},
+            }
+            # R2's SurfaceAttestationMiddleware binds a tools/call to the
+            # tools/list read that authorized it: every tool in that read
+            # carries a short-lived signed token in its own _meta, and the
+            # server refuses to dispatch unless the caller presents it back.
+            # This hand-rolled wire client predates R2, which landed on the
+            # same MCP server this probe also calls; without round-tripping
+            # the token every call here now fails with "dispatch attestation
+            # missing" before ever reaching Gateway policy or the ledger.
+            matched = next(
+                (tool for tool in tools if tool.get("name") == tool_name), None
+            )
+            token = (matched or {}).get("_meta", {}).get("custody_attestation")
+            if isinstance(token, dict):
+                call_params["_meta"] = {"custody_attestation": token}
+
             called = await self._post(
                 client,
                 {
                     "jsonrpc": "2.0",
                     "id": 3,
                     "method": "tools/call",
-                    "params": {
-                        "name": tool_name,
-                        "arguments": {"customer_id": customer_id},
-                    },
+                    "params": call_params,
                 },
             )
             result = _sse_json(called).get("result")

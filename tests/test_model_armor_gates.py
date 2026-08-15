@@ -190,6 +190,16 @@ class ModelArmorGateJudgeTests(unittest.TestCase):
                 mutate(evidence["template"])
                 self.assertFalse(judge(evidence, now=NOW)["owned_template_bound"])
 
+    def test_an_unrequested_extra_metadata_field_does_not_break_ownership(self):
+        """Google Cloud started returning `dataResidencyCompliant` in every
+        Template description, a field this project never set and does not
+        control. An unrequested field appearing is not the same signal as a
+        requested one changing or vanishing, so it must not fail the check.
+        """
+        evidence = valid_evidence()
+        evidence["template"]["templateMetadata"]["dataResidencyCompliant"] = True
+        self.assertTrue(judge(evidence, now=NOW)["owned_template_bound"])
+
     def test_unblocked_malicious_control_cannot_pass(self):
         for mutation in ("no_match", "wrong_prompt"):
             with self.subTest(mutation=mutation):

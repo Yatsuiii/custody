@@ -74,6 +74,7 @@ def valid_evidence() -> dict:
             "agent_run_completed": True,
             "agent_text": f"Recorded, audit identifier {PROOF_ID}.",
             "memory_write_count": 1,
+            "written_memory_ids": ["cr-a1b2c3d4"],
             "custody_split": {"total": 2, "withheld": 0, "refused": 0},
             "retrieved_memory_count": 1,
             "admitted_digests": [DIGEST, OTHER_DIGEST],
@@ -125,6 +126,31 @@ class ObservabilityGateJudgeTests(unittest.TestCase):
                 self.assertFalse(
                     judge(evidence, now=NOW)["g1_admission_reached_memory_bank"]
                 )
+
+    def test_multiple_write_record_writes_pass_like_a_single_ingest_events_write_once_did(self):
+        """G1 migrated onto `write_record` (`HANDOFF.md`, "G1 migration"),
+        which writes one raw memory per admitted record instead of one
+        session-level memory. `memory_write_count` is no longer pinned to 1;
+        it must equal the number of ids actually written, whatever that is.
+        """
+        evidence = valid_evidence()
+        evidence["g1_admission"]["memory_write_count"] = 3
+        evidence["g1_admission"]["written_memory_ids"] = [
+            "cr-a1b2c3d4", "cr-e5f60718", "cr-29384756",
+        ]
+        self.assertTrue(judge(evidence, now=NOW)["g1_admission_reached_memory_bank"])
+
+    def test_a_write_count_that_does_not_match_the_written_ids_cannot_pass(self):
+        evidence = valid_evidence()
+        evidence["g1_admission"]["memory_write_count"] = 2
+        # written_memory_ids still lists only one id from valid_evidence().
+        self.assertFalse(judge(evidence, now=NOW)["g1_admission_reached_memory_bank"])
+
+    def test_no_written_memory_ids_at_all_cannot_pass(self):
+        evidence = valid_evidence()
+        evidence["g1_admission"]["memory_write_count"] = 0
+        evidence["g1_admission"]["written_memory_ids"] = []
+        self.assertFalse(judge(evidence, now=NOW)["g1_admission_reached_memory_bank"])
 
     def test_g1_run_not_bound_to_this_proof_id_cannot_pass(self):
         evidence = valid_evidence()
