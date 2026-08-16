@@ -6,7 +6,7 @@ import copy
 import unittest
 from datetime import UTC, datetime, timedelta
 
-from scripts.gates import judge_g1, judge_g5
+from scripts.gates import judge_g1, judge_g5, still_outstanding
 
 NOW = datetime(2026, 8, 13, 3, 0, tzinfo=UTC)
 PROOF_ID = "proof-123"
@@ -131,6 +131,22 @@ class G5NamesTheGroupsItCannotDemonstrate(unittest.TestCase):
     def test_g5_stays_blocked_even_with_every_group_demonstrable(self):
         """Real elapsed time is the one thing no artifact can stand in for."""
         self.assertEqual(judge_g5({}).state, "BLOCKED")
+
+    def test_the_expected_end_state_reads_as_a_sentence(self):
+        """4 of 4 groups is the goal, so it must not print an empty list.
+
+        This shipped: the line read "missing  and a Cloud Scheduler record"
+        the moment the last group started passing.
+        """
+        self.assertEqual(still_outstanding([]),
+                         "missing only a Cloud Scheduler record")
+
+    def test_an_outstanding_group_is_still_named(self):
+        self.assertIn("missing telemetry and", still_outstanding(["telemetry"]))
+
+    def test_no_phrasing_leaves_a_gap_where_a_list_should_be(self):
+        for missing in ([], ["telemetry"], ["telemetry", "execution/state"]):
+            self.assertNotIn("  ", still_outstanding(missing))
 
 
 if __name__ == "__main__":
