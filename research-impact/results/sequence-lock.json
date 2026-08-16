@@ -1,0 +1,1202 @@
+{
+  "adjudication": {
+    "D10xB1": {
+      "label": "NO_RELATION"
+    },
+    "D10xB2": {
+      "label": "NO_RELATION"
+    },
+    "D10xB3": {
+      "label": "NO_RELATION"
+    },
+    "D10xB4": {
+      "label": "NO_RELATION"
+    },
+    "D10xB5": {
+      "label": "NO_RELATION"
+    },
+    "D10xB6": {
+      "label": "NO_RELATION"
+    },
+    "D10xB7": {
+      "label": "NO_RELATION"
+    },
+    "D10xB8": {
+      "label": "NO_RELATION"
+    },
+    "D1xB1": {
+      "label": "NO_RELATION"
+    },
+    "D1xB2": {
+      "label": "NO_RELATION"
+    },
+    "D1xB3": {
+      "label": "NO_RELATION"
+    },
+    "D1xB4": {
+      "label": "RELATION",
+      "relation": "SUPPORTS",
+      "sentence": 1,
+      "strength": "STRONG"
+    },
+    "D1xB5": {
+      "label": "NO_RELATION"
+    },
+    "D1xB6": {
+      "label": "NO_RELATION"
+    },
+    "D1xB7": {
+      "label": "NO_RELATION"
+    },
+    "D1xB8": {
+      "label": "NO_RELATION"
+    },
+    "D2xB1": {
+      "label": "NO_RELATION"
+    },
+    "D2xB2": {
+      "label": "NO_RELATION"
+    },
+    "D2xB3": {
+      "label": "RELATION",
+      "relation": "CONTRADICTS",
+      "sentence": 1,
+      "strength": "WEAK"
+    },
+    "D2xB4": {
+      "label": "NO_RELATION"
+    },
+    "D2xB5": {
+      "label": "NO_RELATION"
+    },
+    "D2xB6": {
+      "label": "NO_RELATION"
+    },
+    "D2xB7": {
+      "label": "NO_RELATION"
+    },
+    "D2xB8": {
+      "label": "NO_RELATION"
+    },
+    "D3xB1": {
+      "label": "NO_RELATION"
+    },
+    "D3xB2": {
+      "label": "NO_RELATION"
+    },
+    "D3xB3": {
+      "label": "NO_RELATION"
+    },
+    "D3xB4": {
+      "label": "RELATION",
+      "relation": "SUPPORTS",
+      "sentence": 1,
+      "strength": "MODERATE"
+    },
+    "D3xB5": {
+      "label": "NO_RELATION"
+    },
+    "D3xB6": {
+      "label": "NO_RELATION"
+    },
+    "D3xB7": {
+      "label": "NO_RELATION"
+    },
+    "D3xB8": {
+      "label": "NO_RELATION"
+    },
+    "D4xB1": {
+      "label": "NO_RELATION"
+    },
+    "D4xB2": {
+      "label": "NO_RELATION"
+    },
+    "D4xB3": {
+      "label": "NO_RELATION"
+    },
+    "D4xB4": {
+      "label": "RELATION",
+      "relation": "CONTRADICTS",
+      "sentence": 1,
+      "strength": "STRONG"
+    },
+    "D4xB5": {
+      "label": "NO_RELATION"
+    },
+    "D4xB6": {
+      "label": "NO_RELATION"
+    },
+    "D4xB7": {
+      "label": "NO_RELATION"
+    },
+    "D4xB8": {
+      "label": "NO_RELATION"
+    },
+    "D5xB1": {
+      "label": "NO_RELATION"
+    },
+    "D5xB2": {
+      "label": "NO_RELATION"
+    },
+    "D5xB3": {
+      "label": "NO_RELATION"
+    },
+    "D5xB4": {
+      "label": "NO_RELATION"
+    },
+    "D5xB5": {
+      "label": "NO_RELATION"
+    },
+    "D5xB6": {
+      "label": "NO_RELATION"
+    },
+    "D5xB7": {
+      "label": "AMBIGUOUS"
+    },
+    "D5xB8": {
+      "label": "NO_RELATION"
+    },
+    "D6xB1": {
+      "label": "NO_RELATION"
+    },
+    "D6xB2": {
+      "label": "NO_RELATION"
+    },
+    "D6xB3": {
+      "label": "NO_RELATION"
+    },
+    "D6xB4": {
+      "label": "NO_RELATION"
+    },
+    "D6xB5": {
+      "label": "RELATION",
+      "relation": "CONTRADICTS",
+      "sentence": 1,
+      "strength": "STRONG"
+    },
+    "D6xB6": {
+      "label": "NO_RELATION"
+    },
+    "D6xB7": {
+      "label": "NO_RELATION"
+    },
+    "D6xB8": {
+      "label": "NO_RELATION"
+    },
+    "D7xB1": {
+      "label": "NO_RELATION"
+    },
+    "D7xB2": {
+      "label": "NO_RELATION"
+    },
+    "D7xB3": {
+      "label": "NO_RELATION"
+    },
+    "D7xB4": {
+      "label": "NO_RELATION"
+    },
+    "D7xB5": {
+      "label": "RELATION",
+      "relation": "SUPPORTS",
+      "sentence": 1,
+      "strength": "STRONG"
+    },
+    "D7xB6": {
+      "label": "NO_RELATION"
+    },
+    "D7xB7": {
+      "label": "NO_RELATION"
+    },
+    "D7xB8": {
+      "label": "NO_RELATION"
+    },
+    "D8xB1": {
+      "label": "RELATION",
+      "relation": "CONTRADICTS",
+      "sentence": 1,
+      "strength": "STRONG"
+    },
+    "D8xB2": {
+      "label": "NO_RELATION"
+    },
+    "D8xB3": {
+      "label": "NO_RELATION"
+    },
+    "D8xB4": {
+      "label": "NO_RELATION"
+    },
+    "D8xB5": {
+      "label": "NO_RELATION"
+    },
+    "D8xB6": {
+      "label": "NO_RELATION"
+    },
+    "D8xB7": {
+      "label": "AMBIGUOUS"
+    },
+    "D8xB8": {
+      "label": "NO_RELATION"
+    },
+    "D9xB1": {
+      "label": "NO_RELATION"
+    },
+    "D9xB2": {
+      "label": "NO_RELATION"
+    },
+    "D9xB3": {
+      "label": "NO_RELATION"
+    },
+    "D9xB4": {
+      "label": "NO_RELATION"
+    },
+    "D9xB5": {
+      "label": "NO_RELATION"
+    },
+    "D9xB6": {
+      "label": "RELATION",
+      "relation": "SUPPORTS",
+      "sentence": 1,
+      "strength": "STRONG"
+    },
+    "D9xB7": {
+      "label": "NO_RELATION"
+    },
+    "D9xB8": {
+      "label": "NO_RELATION"
+    }
+  },
+  "ambiguous_pairs": [
+    [
+      "D5",
+      "B7"
+    ],
+    [
+      "D8",
+      "B7"
+    ]
+  ],
+  "correction": {
+    "after": "D4",
+    "document": "D4",
+    "note": "D4 does not bear on B7. It reports the transcript length that annotation ran on, not evidence about which constraint binds. Human reviewed and rejected this relation.",
+    "target": "B7",
+    "verdict": "rejected"
+  },
+  "digest": "409edd00567b99f141ce15bcb6cb858da4b0eb069c8e15e3482f4b494c69143a",
+  "documents": [
+    {
+      "id": "D1",
+      "sentences": [
+        "Two annotators labelled 300 agent tasks for whether success requires verbatim recall of an earlier tool result, using a written protocol.",
+        "Inter-annotator agreement was 0.81 kappa, and adjudication changed 4% of initial labels."
+      ],
+      "title": "Exact-recall tasks can be labelled reliably"
+    },
+    {
+      "id": "D10",
+      "sentences": [
+        "We compare three formatting conventions for rendering tool results into the agent's prompt: XML tags, markdown fences, and bare text.",
+        "Formatting choice changed downstream task success by less than half a point in every configuration."
+      ],
+      "title": "Prompt formatting conventions for tool results"
+    },
+    {
+      "id": "D2",
+      "sentences": [
+        "We looked at one notebook-editing agent, a different setting from software repair, with a single seed.",
+        "Duplicate tool results accounted for 9% of tokens in that run."
+      ],
+      "title": "Duplicate rates in a notebook-editing agent"
+    },
+    {
+      "id": "D3",
+      "sentences": [
+        "A second group applied the same labelling protocol to a disjoint set of 260 tasks.",
+        "They report 0.78 kappa between annotators, consistent with the original study."
+      ],
+      "title": "Independent replication of the recall-labelling protocol"
+    },
+    {
+      "id": "D4",
+      "sentences": [
+        "We re-annotated the same 300 tasks under a stricter definition of verbatim recall, requiring the exact string to appear in the final patch.",
+        "Agreement fell to 0.28 kappa and the subset shrank by two thirds, so the labels do not identify a stable population.",
+        "Annotation was performed on transcripts of up to 120k tokens."
+      ],
+      "title": "Stricter re-annotation collapses the recall subset"
+    },
+    {
+      "id": "D5",
+      "sentences": [
+        "We measure retrieval latency and accuracy from agent transcripts as a function of transcript length.",
+        "Models attending over 80k-token transcripts answered more slowly but without measurable accuracy loss on our task set."
+      ],
+      "title": "Retrieval from long agent transcripts"
+    },
+    {
+      "id": "D6",
+      "sentences": [
+        "We re-ran 1,200 agent trajectories through the same exit-status grader on identical inputs.",
+        "The same trajectory received different verdicts on 11% of tasks across repeats, driven by timing-dependent test setup."
+      ],
+      "title": "Exit-status graders disagree with themselves"
+    },
+    {
+      "id": "D7",
+      "sentences": [
+        "We repeated the grader-stability protocol across 6,000 trajectories and three independent harness installations.",
+        "Verdicts were identical across all repeats once test setup was pinned to a fixed clock, with no disagreement observed."
+      ],
+      "title": "A larger grader-stability study finds determinism"
+    },
+    {
+      "id": "D8",
+      "sentences": [
+        "We instrument agent runs on the same 600-task suite with a 128k window.",
+        "Only 18% of runs exceeded the context window before a final patch, well under the 40% figure this line of work assumes."
+      ],
+      "title": "Context overflow is rarer than this literature assumes"
+    },
+    {
+      "id": "D9",
+      "sentences": [
+        "We measure wall-clock cost of typed summary generation inside a live agent loop across four model sizes.",
+        "Typed summaries added 150ms per step at the median, inside the 500ms step budget in every configuration."
+      ],
+      "title": "Typed summarisation fits the agent step budget"
+    }
+  ],
+  "label_counts": {
+    "AMBIGUOUS": 2,
+    "NO_RELATION": 70,
+    "RELATION": 8
+  },
+  "locked_at": "2026-08-15T11:24:17.095638+00:00",
+  "orders": {
+    "canonical": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D6",
+      "D7",
+      "D8",
+      "D9",
+      "D10"
+    ],
+    "swap-early": [
+      "D1",
+      "D3",
+      "D2",
+      "D4",
+      "D5",
+      "D6",
+      "D7",
+      "D8",
+      "D9",
+      "D10"
+    ],
+    "swap-late": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D6",
+      "D7",
+      "D9",
+      "D8",
+      "D10"
+    ]
+  },
+  "program": "agent_program.json",
+  "trajectories": {
+    "canonical": [
+      {
+        "document": "D1",
+        "states": {
+          "B1": "SUPPORTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "SUPPORTED",
+          "B5": "SUPPORTED",
+          "B6": "UNKNOWN",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "PLANNED",
+          "F5": "PLANNED",
+          "F6": "REDUNDANT",
+          "F7": "REDUNDANT",
+          "F8": "PLANNED",
+          "F9": "PLANNED",
+          "H3": "ACTIVE",
+          "H4": "ACTIVE",
+          "H5": "ACTIVE"
+        },
+        "step": 0
+      },
+      {
+        "document": "D2",
+        "states": {
+          "B1": "SUPPORTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "SUPPORTED",
+          "B5": "SUPPORTED",
+          "B6": "UNKNOWN",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "PLANNED",
+          "F5": "PLANNED",
+          "F6": "REDUNDANT",
+          "F7": "REDUNDANT",
+          "F8": "PLANNED",
+          "F9": "PLANNED",
+          "H3": "ACTIVE",
+          "H4": "ACTIVE",
+          "H5": "ACTIVE"
+        },
+        "step": 1
+      },
+      {
+        "document": "D3",
+        "states": {
+          "B1": "SUPPORTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "SUPPORTED",
+          "B5": "SUPPORTED",
+          "B6": "UNKNOWN",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "PLANNED",
+          "F5": "PLANNED",
+          "F6": "REDUNDANT",
+          "F7": "REDUNDANT",
+          "F8": "PLANNED",
+          "F9": "PLANNED",
+          "H3": "ACTIVE",
+          "H4": "ACTIVE",
+          "H5": "ACTIVE"
+        },
+        "step": 2
+      },
+      {
+        "document": "D4",
+        "states": {
+          "B1": "SUPPORTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "CONTESTED",
+          "B5": "SUPPORTED",
+          "B6": "UNKNOWN",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "PLANNED",
+          "F5": "PLANNED",
+          "F6": "PLANNED",
+          "F7": "REDUNDANT",
+          "F8": "PLANNED",
+          "F9": "PLANNED",
+          "H3": "ACTIVE",
+          "H4": "ACTIVE",
+          "H5": "REQUIRES_REVIEW"
+        },
+        "step": 3
+      },
+      {
+        "document": "D5",
+        "states": {
+          "B1": "SUPPORTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "CONTESTED",
+          "B5": "SUPPORTED",
+          "B6": "UNKNOWN",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "PLANNED",
+          "F5": "PLANNED",
+          "F6": "PLANNED",
+          "F7": "REDUNDANT",
+          "F8": "PLANNED",
+          "F9": "PLANNED",
+          "H3": "ACTIVE",
+          "H4": "ACTIVE",
+          "H5": "REQUIRES_REVIEW"
+        },
+        "step": 4
+      },
+      {
+        "document": "D6",
+        "states": {
+          "B1": "SUPPORTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "CONTESTED",
+          "B5": "CONTESTED",
+          "B6": "UNKNOWN",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "STALE",
+          "F5": "STALE",
+          "F6": "STALE",
+          "F7": "PLANNED",
+          "F8": "PLANNED",
+          "F9": "PLANNED",
+          "H3": "REQUIRES_REVIEW",
+          "H4": "REQUIRES_REVIEW",
+          "H5": "REQUIRES_REVIEW"
+        },
+        "step": 5
+      },
+      {
+        "document": "D7",
+        "states": {
+          "B1": "SUPPORTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "CONTESTED",
+          "B5": "CONTESTED",
+          "B6": "UNKNOWN",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "STALE",
+          "F5": "STALE",
+          "F6": "STALE",
+          "F7": "PLANNED",
+          "F8": "PLANNED",
+          "F9": "PLANNED",
+          "H3": "REQUIRES_REVIEW",
+          "H4": "REQUIRES_REVIEW",
+          "H5": "REQUIRES_REVIEW"
+        },
+        "step": 6
+      },
+      {
+        "document": "D8",
+        "states": {
+          "B1": "CONTESTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "CONTESTED",
+          "B5": "CONTESTED",
+          "B6": "UNKNOWN",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "STALE",
+          "F5": "STALE",
+          "F6": "STALE",
+          "F7": "PLANNED",
+          "F8": "PLANNED",
+          "F9": "STALE",
+          "H3": "REQUIRES_REVIEW",
+          "H4": "REQUIRES_REVIEW",
+          "H5": "REQUIRES_REVIEW"
+        },
+        "step": 7
+      },
+      {
+        "document": "D9",
+        "states": {
+          "B1": "CONTESTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "CONTESTED",
+          "B5": "CONTESTED",
+          "B6": "SUPPORTED",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "STALE",
+          "F5": "STALE",
+          "F6": "STALE",
+          "F7": "PLANNED",
+          "F8": "REDUNDANT",
+          "F9": "STALE",
+          "H3": "REQUIRES_REVIEW",
+          "H4": "REQUIRES_REVIEW",
+          "H5": "REQUIRES_REVIEW"
+        },
+        "step": 8
+      },
+      {
+        "document": "D10",
+        "states": {
+          "B1": "CONTESTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "CONTESTED",
+          "B5": "CONTESTED",
+          "B6": "SUPPORTED",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "STALE",
+          "F5": "STALE",
+          "F6": "STALE",
+          "F7": "PLANNED",
+          "F8": "REDUNDANT",
+          "F9": "STALE",
+          "H3": "REQUIRES_REVIEW",
+          "H4": "REQUIRES_REVIEW",
+          "H5": "REQUIRES_REVIEW"
+        },
+        "step": 9
+      }
+    ],
+    "swap-early": [
+      {
+        "document": "D1",
+        "states": {
+          "B1": "SUPPORTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "SUPPORTED",
+          "B5": "SUPPORTED",
+          "B6": "UNKNOWN",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "PLANNED",
+          "F5": "PLANNED",
+          "F6": "REDUNDANT",
+          "F7": "REDUNDANT",
+          "F8": "PLANNED",
+          "F9": "PLANNED",
+          "H3": "ACTIVE",
+          "H4": "ACTIVE",
+          "H5": "ACTIVE"
+        },
+        "step": 0
+      },
+      {
+        "document": "D3",
+        "states": {
+          "B1": "SUPPORTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "SUPPORTED",
+          "B5": "SUPPORTED",
+          "B6": "UNKNOWN",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "PLANNED",
+          "F5": "PLANNED",
+          "F6": "REDUNDANT",
+          "F7": "REDUNDANT",
+          "F8": "PLANNED",
+          "F9": "PLANNED",
+          "H3": "ACTIVE",
+          "H4": "ACTIVE",
+          "H5": "ACTIVE"
+        },
+        "step": 1
+      },
+      {
+        "document": "D2",
+        "states": {
+          "B1": "SUPPORTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "SUPPORTED",
+          "B5": "SUPPORTED",
+          "B6": "UNKNOWN",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "PLANNED",
+          "F5": "PLANNED",
+          "F6": "REDUNDANT",
+          "F7": "REDUNDANT",
+          "F8": "PLANNED",
+          "F9": "PLANNED",
+          "H3": "ACTIVE",
+          "H4": "ACTIVE",
+          "H5": "ACTIVE"
+        },
+        "step": 2
+      },
+      {
+        "document": "D4",
+        "states": {
+          "B1": "SUPPORTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "CONTESTED",
+          "B5": "SUPPORTED",
+          "B6": "UNKNOWN",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "PLANNED",
+          "F5": "PLANNED",
+          "F6": "PLANNED",
+          "F7": "REDUNDANT",
+          "F8": "PLANNED",
+          "F9": "PLANNED",
+          "H3": "ACTIVE",
+          "H4": "ACTIVE",
+          "H5": "REQUIRES_REVIEW"
+        },
+        "step": 3
+      },
+      {
+        "document": "D5",
+        "states": {
+          "B1": "SUPPORTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "CONTESTED",
+          "B5": "SUPPORTED",
+          "B6": "UNKNOWN",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "PLANNED",
+          "F5": "PLANNED",
+          "F6": "PLANNED",
+          "F7": "REDUNDANT",
+          "F8": "PLANNED",
+          "F9": "PLANNED",
+          "H3": "ACTIVE",
+          "H4": "ACTIVE",
+          "H5": "REQUIRES_REVIEW"
+        },
+        "step": 4
+      },
+      {
+        "document": "D6",
+        "states": {
+          "B1": "SUPPORTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "CONTESTED",
+          "B5": "CONTESTED",
+          "B6": "UNKNOWN",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "STALE",
+          "F5": "STALE",
+          "F6": "STALE",
+          "F7": "PLANNED",
+          "F8": "PLANNED",
+          "F9": "PLANNED",
+          "H3": "REQUIRES_REVIEW",
+          "H4": "REQUIRES_REVIEW",
+          "H5": "REQUIRES_REVIEW"
+        },
+        "step": 5
+      },
+      {
+        "document": "D7",
+        "states": {
+          "B1": "SUPPORTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "CONTESTED",
+          "B5": "CONTESTED",
+          "B6": "UNKNOWN",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "STALE",
+          "F5": "STALE",
+          "F6": "STALE",
+          "F7": "PLANNED",
+          "F8": "PLANNED",
+          "F9": "PLANNED",
+          "H3": "REQUIRES_REVIEW",
+          "H4": "REQUIRES_REVIEW",
+          "H5": "REQUIRES_REVIEW"
+        },
+        "step": 6
+      },
+      {
+        "document": "D8",
+        "states": {
+          "B1": "CONTESTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "CONTESTED",
+          "B5": "CONTESTED",
+          "B6": "UNKNOWN",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "STALE",
+          "F5": "STALE",
+          "F6": "STALE",
+          "F7": "PLANNED",
+          "F8": "PLANNED",
+          "F9": "STALE",
+          "H3": "REQUIRES_REVIEW",
+          "H4": "REQUIRES_REVIEW",
+          "H5": "REQUIRES_REVIEW"
+        },
+        "step": 7
+      },
+      {
+        "document": "D9",
+        "states": {
+          "B1": "CONTESTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "CONTESTED",
+          "B5": "CONTESTED",
+          "B6": "SUPPORTED",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "STALE",
+          "F5": "STALE",
+          "F6": "STALE",
+          "F7": "PLANNED",
+          "F8": "REDUNDANT",
+          "F9": "STALE",
+          "H3": "REQUIRES_REVIEW",
+          "H4": "REQUIRES_REVIEW",
+          "H5": "REQUIRES_REVIEW"
+        },
+        "step": 8
+      },
+      {
+        "document": "D10",
+        "states": {
+          "B1": "CONTESTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "CONTESTED",
+          "B5": "CONTESTED",
+          "B6": "SUPPORTED",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "STALE",
+          "F5": "STALE",
+          "F6": "STALE",
+          "F7": "PLANNED",
+          "F8": "REDUNDANT",
+          "F9": "STALE",
+          "H3": "REQUIRES_REVIEW",
+          "H4": "REQUIRES_REVIEW",
+          "H5": "REQUIRES_REVIEW"
+        },
+        "step": 9
+      }
+    ],
+    "swap-late": [
+      {
+        "document": "D1",
+        "states": {
+          "B1": "SUPPORTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "SUPPORTED",
+          "B5": "SUPPORTED",
+          "B6": "UNKNOWN",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "PLANNED",
+          "F5": "PLANNED",
+          "F6": "REDUNDANT",
+          "F7": "REDUNDANT",
+          "F8": "PLANNED",
+          "F9": "PLANNED",
+          "H3": "ACTIVE",
+          "H4": "ACTIVE",
+          "H5": "ACTIVE"
+        },
+        "step": 0
+      },
+      {
+        "document": "D2",
+        "states": {
+          "B1": "SUPPORTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "SUPPORTED",
+          "B5": "SUPPORTED",
+          "B6": "UNKNOWN",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "PLANNED",
+          "F5": "PLANNED",
+          "F6": "REDUNDANT",
+          "F7": "REDUNDANT",
+          "F8": "PLANNED",
+          "F9": "PLANNED",
+          "H3": "ACTIVE",
+          "H4": "ACTIVE",
+          "H5": "ACTIVE"
+        },
+        "step": 1
+      },
+      {
+        "document": "D3",
+        "states": {
+          "B1": "SUPPORTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "SUPPORTED",
+          "B5": "SUPPORTED",
+          "B6": "UNKNOWN",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "PLANNED",
+          "F5": "PLANNED",
+          "F6": "REDUNDANT",
+          "F7": "REDUNDANT",
+          "F8": "PLANNED",
+          "F9": "PLANNED",
+          "H3": "ACTIVE",
+          "H4": "ACTIVE",
+          "H5": "ACTIVE"
+        },
+        "step": 2
+      },
+      {
+        "document": "D4",
+        "states": {
+          "B1": "SUPPORTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "CONTESTED",
+          "B5": "SUPPORTED",
+          "B6": "UNKNOWN",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "PLANNED",
+          "F5": "PLANNED",
+          "F6": "PLANNED",
+          "F7": "REDUNDANT",
+          "F8": "PLANNED",
+          "F9": "PLANNED",
+          "H3": "ACTIVE",
+          "H4": "ACTIVE",
+          "H5": "REQUIRES_REVIEW"
+        },
+        "step": 3
+      },
+      {
+        "document": "D5",
+        "states": {
+          "B1": "SUPPORTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "CONTESTED",
+          "B5": "SUPPORTED",
+          "B6": "UNKNOWN",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "PLANNED",
+          "F5": "PLANNED",
+          "F6": "PLANNED",
+          "F7": "REDUNDANT",
+          "F8": "PLANNED",
+          "F9": "PLANNED",
+          "H3": "ACTIVE",
+          "H4": "ACTIVE",
+          "H5": "REQUIRES_REVIEW"
+        },
+        "step": 4
+      },
+      {
+        "document": "D6",
+        "states": {
+          "B1": "SUPPORTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "CONTESTED",
+          "B5": "CONTESTED",
+          "B6": "UNKNOWN",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "STALE",
+          "F5": "STALE",
+          "F6": "STALE",
+          "F7": "PLANNED",
+          "F8": "PLANNED",
+          "F9": "PLANNED",
+          "H3": "REQUIRES_REVIEW",
+          "H4": "REQUIRES_REVIEW",
+          "H5": "REQUIRES_REVIEW"
+        },
+        "step": 5
+      },
+      {
+        "document": "D7",
+        "states": {
+          "B1": "SUPPORTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "CONTESTED",
+          "B5": "CONTESTED",
+          "B6": "UNKNOWN",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "STALE",
+          "F5": "STALE",
+          "F6": "STALE",
+          "F7": "PLANNED",
+          "F8": "PLANNED",
+          "F9": "PLANNED",
+          "H3": "REQUIRES_REVIEW",
+          "H4": "REQUIRES_REVIEW",
+          "H5": "REQUIRES_REVIEW"
+        },
+        "step": 6
+      },
+      {
+        "document": "D9",
+        "states": {
+          "B1": "SUPPORTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "CONTESTED",
+          "B5": "CONTESTED",
+          "B6": "SUPPORTED",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "STALE",
+          "F5": "STALE",
+          "F6": "STALE",
+          "F7": "PLANNED",
+          "F8": "REDUNDANT",
+          "F9": "PLANNED",
+          "H3": "REQUIRES_REVIEW",
+          "H4": "REQUIRES_REVIEW",
+          "H5": "REQUIRES_REVIEW"
+        },
+        "step": 7
+      },
+      {
+        "document": "D8",
+        "states": {
+          "B1": "CONTESTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "CONTESTED",
+          "B5": "CONTESTED",
+          "B6": "SUPPORTED",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "STALE",
+          "F5": "STALE",
+          "F6": "STALE",
+          "F7": "PLANNED",
+          "F8": "REDUNDANT",
+          "F9": "STALE",
+          "H3": "REQUIRES_REVIEW",
+          "H4": "REQUIRES_REVIEW",
+          "H5": "REQUIRES_REVIEW"
+        },
+        "step": 8
+      },
+      {
+        "document": "D10",
+        "states": {
+          "B1": "CONTESTED",
+          "B2": "SUPPORTED",
+          "B3": "SUPPORTED",
+          "B4": "CONTESTED",
+          "B5": "CONTESTED",
+          "B6": "SUPPORTED",
+          "B7": "UNKNOWN",
+          "B8": "UNKNOWN",
+          "F1": "COMPLETED",
+          "F2": "COMPLETED",
+          "F3": "COMPLETED",
+          "F4": "STALE",
+          "F5": "STALE",
+          "F6": "STALE",
+          "F7": "PLANNED",
+          "F8": "REDUNDANT",
+          "F9": "STALE",
+          "H3": "REQUIRES_REVIEW",
+          "H4": "REQUIRES_REVIEW",
+          "H5": "REQUIRES_REVIEW"
+        },
+        "step": 9
+      }
+    ]
+  }
+}

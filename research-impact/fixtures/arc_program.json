@@ -1,0 +1,208 @@
+{
+  "_note": "Synthetic but realistic. The source texts below are written for this fixture, not quoted from real papers, and every excerpt used by a claim occurs verbatim in the source it names. Phase 3 replaces the external paper with a real arXiv document; the internal results stay synthetic because they are this program's own.",
+
+  "questions": [
+    {
+      "id": "RQ1",
+      "text": "Does history-conditioned, coordinate-aware state improve one-step, decision-relevant transition prediction on grid reasoning tasks?"
+    }
+  ],
+
+  "hypotheses": [
+    {
+      "id": "H1",
+      "question": "RQ1",
+      "text": "A model given explicit (row, column) coordinates plus a three-step history of prior grid states predicts the next decision-relevant cell change more accurately than one given the flattened current grid alone."
+    },
+    {
+      "id": "H2",
+      "question": "RQ1",
+      "text": "Most of the gain in H1 comes from history rather than coordinates: with history held fixed, adding coordinate features moves one-step accuracy by less than two points."
+    }
+  ],
+
+  "assumptions": [
+    {
+      "id": "A1",
+      "text": "Tasks in the held-out set contain at least one decision-relevant cell change per step, so one-step accuracy measures something the task actually depends on."
+    },
+    {
+      "id": "A2",
+      "text": "Transformers without explicit coordinate features do not reliably recover absolute grid position from flattened token order at our sequence lengths."
+    },
+    {
+      "id": "A3",
+      "text": "Held-out task families share no generator code with training families, so measured gains are not memorisation."
+    },
+    {
+      "id": "A4",
+      "text": "A three-step history window captures the temporal dependencies these tasks require."
+    },
+    {
+      "id": "A5",
+      "text": "One-step transition accuracy tracks full-task solve rate closely enough to serve as a proxy metric."
+    },
+    {
+      "id": "A6",
+      "text": "Positional coherence over twenty or more rollout steps is achievable without explicit coordinate features."
+    }
+  ],
+
+  "experiments": [
+    {
+      "id": "E1",
+      "lifecycle": "COMPLETED",
+      "cost_days": 2,
+      "text": "Baseline: flat-grid transformer, one-step decision-relevant accuracy over 400 held-out tasks."
+    },
+    {
+      "id": "E2",
+      "lifecycle": "COMPLETED",
+      "cost_days": 4,
+      "text": "Coordinate-feature ablation at fixed three-step history: with and without explicit (row, column) embeddings."
+    },
+    {
+      "id": "E3",
+      "lifecycle": "COMPLETED",
+      "cost_days": 6,
+      "text": "Failed: curriculum pretraining on synthetic grids before fine-tuning. No measurable gain over direct training."
+    },
+    {
+      "id": "E4",
+      "lifecycle": "PLANNED",
+      "cost_days": 12,
+      "text": "Coordinate-embedding sweep: six embedding variants across three history lengths, 12 GPU-days."
+    },
+    {
+      "id": "E5",
+      "lifecycle": "PLANNED",
+      "cost_days": 3,
+      "text": "History-window ablation at one, three and five steps with coordinate features held on."
+    },
+    {
+      "id": "E6",
+      "lifecycle": "PLANNED",
+      "cost_days": 2,
+      "text": "Proxy validation: one-step accuracy against full-task solve rate on 100 tasks."
+    },
+    {
+      "id": "E7",
+      "lifecycle": "PLANNED",
+      "cost_days": 8,
+      "text": "Long-horizon positional coherence probe: twenty-step rollouts without coordinate features, 8 GPU-days."
+    }
+  ],
+
+  "sources": [
+    {
+      "id": "S-R1",
+      "kind": "result",
+      "produced_by": "E1",
+      "title": "E1 run log, 2026-05-04",
+      "text": "Across 400 held-out tasks the baseline changed at least one decision-relevant cell on 397 of them. Three tasks were degenerate and were removed from the evaluation set. Mean one-step decision-relevant accuracy was 0.41."
+    },
+    {
+      "id": "S-R2",
+      "kind": "result",
+      "produced_by": "E2",
+      "title": "E2 ablation report, 2026-06-11",
+      "text": "Removing explicit coordinate embeddings cost 9.3 points of one-step accuracy at fixed three-step history, and error analysis showed the drop concentrated in tasks whose targets sit more than eight cells from the grid edge. Extending history from three to four steps moved accuracy by 0.4 points, within run-to-run variance."
+    },
+    {
+      "id": "S-R3",
+      "kind": "result",
+      "produced_by": "E3",
+      "title": "E3 negative result, 2026-06-29",
+      "text": "Curriculum pretraining produced no gain. One suggestive detail: the two task families that did improve both require reasoning over five or more prior states, which the three-step window cannot represent. The sample is too small to conclude anything."
+    },
+    {
+      "id": "S-N1",
+      "kind": "note",
+      "produced_by": null,
+      "title": "Dataset provenance audit, 2026-04-22",
+      "text": "We traced every held-out family back to its generator. No generator appears in both the training and held-out partitions, and the two near-duplicate families found during the audit were moved into training."
+    }
+  ],
+
+  "claims": [
+    {
+      "ref": "CL-R1",
+      "source": "S-R1",
+      "text": "Nearly all held-out tasks contain a decision-relevant cell change per step.",
+      "excerpt": "the baseline changed at least one decision-relevant cell on 397 of them"
+    },
+    {
+      "ref": "CL-R2",
+      "source": "S-R2",
+      "text": "Without coordinate features the model loses accuracy exactly where absolute position matters, which is what we would expect if it cannot recover position from token order.",
+      "excerpt": "the drop concentrated in tasks whose targets sit more than eight cells from the grid edge"
+    },
+    {
+      "ref": "CL-R2B",
+      "source": "S-R2",
+      "text": "A fourth history step adds nothing measurable, so three steps is enough.",
+      "excerpt": "Extending history from three to four steps moved accuracy by 0.4 points, within run-to-run variance"
+    },
+    {
+      "ref": "CL-R3",
+      "source": "S-R3",
+      "text": "Some task families appear to need more than three prior states.",
+      "excerpt": "require reasoning over five or more prior states, which the three-step window cannot represent"
+    },
+    {
+      "ref": "CL-N1",
+      "source": "S-N1",
+      "text": "Training and held-out partitions share no generator.",
+      "excerpt": "No generator appears in both the training and held-out partitions"
+    }
+  ],
+
+  "edges": [
+    {"relation": "DEPENDS_ON", "source": "H1", "target": "A1"},
+    {"relation": "DEPENDS_ON", "source": "H1", "target": "A2"},
+    {"relation": "DEPENDS_ON", "source": "H1", "target": "A4"},
+    {"relation": "DEPENDS_ON", "source": "H2", "target": "A4"},
+    {"relation": "DEPENDS_ON", "source": "H2", "target": "A5"},
+
+    {"relation": "TESTS", "source": "E1", "target": "H1"},
+    {"relation": "REQUIRES", "source": "E1", "target": "A1"},
+    {"relation": "TESTS", "source": "E2", "target": "H1"},
+    {"relation": "REQUIRES", "source": "E2", "target": "A1"},
+    {"relation": "TESTS", "source": "E3", "target": "H2"},
+    {"relation": "REQUIRES", "source": "E3", "target": "A4"},
+
+    {"relation": "TESTS", "source": "E4", "target": "H1"},
+    {"relation": "REQUIRES", "source": "E4", "target": "A2"},
+    {"relation": "REQUIRES", "source": "E4", "target": "A3"},
+
+    {"relation": "TESTS", "source": "E5", "target": "H2"},
+    {"relation": "REQUIRES", "source": "E5", "target": "A1"},
+    {"relation": "REQUIRES", "source": "E5", "target": "A4"},
+
+    {"relation": "TESTS", "source": "E6", "target": "H1"},
+    {"relation": "REQUIRES", "source": "E6", "target": "A1"},
+    {"relation": "ESTABLISHES", "source": "E6", "target": "A5"},
+
+    {"relation": "TESTS", "source": "E7", "target": "H1"},
+    {"relation": "REQUIRES", "source": "E7", "target": "A3"},
+    {"relation": "ESTABLISHES", "source": "E7", "target": "A6"},
+
+    {"relation": "SUPPORTS", "source": "CL-R1", "target": "A1",
+     "strength": "MODERATE", "confidence": 0.95, "status": "CONFIRMED",
+     "created_by": "human:program-owner", "created_at": "2026-05-04T09:00:00Z"},
+    {"relation": "SUPPORTS", "source": "CL-R2", "target": "A2",
+     "strength": "MODERATE", "confidence": 0.9, "status": "CONFIRMED",
+     "created_by": "human:program-owner", "created_at": "2026-06-11T09:00:00Z"},
+    {"relation": "SUPPORTS", "source": "CL-R2B", "target": "A4",
+     "strength": "MODERATE", "confidence": 0.88, "status": "CONFIRMED",
+     "created_by": "human:program-owner", "created_at": "2026-06-11T09:05:00Z"},
+    {"relation": "CONTRADICTS", "source": "CL-R3", "target": "A4",
+     "strength": "WEAK", "confidence": 0.7, "status": "CONFIRMED",
+     "created_by": "human:program-owner", "created_at": "2026-06-29T09:00:00Z"},
+    {"relation": "SUPPORTS", "source": "CL-N1", "target": "A3",
+     "strength": "MODERATE", "confidence": 0.92, "status": "CONFIRMED",
+     "created_by": "human:program-owner", "created_at": "2026-04-22T09:00:00Z"}
+  ],
+
+  "decisions": []
+}

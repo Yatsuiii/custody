@@ -1,0 +1,5 @@
+# The benchmark is a clone, not our source. It should never enter this
+# repository's history, and neither should the credential it reads.
+AutomationBench/
+*.env
+.env

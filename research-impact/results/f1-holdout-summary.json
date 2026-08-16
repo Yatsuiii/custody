@@ -1,0 +1,176 @@
+{
+  "mode": "live",
+  "model": {
+    "api": "Vertex AI via google-genai",
+    "location": "global",
+    "model": "gemini-3.5-flash",
+    "project": "project-988bc9fe-092c-4b32-90c"
+  },
+  "proof_id": "80ca3f6b54124055abd0f8271f407212",
+  "recomputed_by": "scripts/summarise_result.py, from the raw answers",
+  "results": {
+    "A:v1": {
+      "aggregate": {
+        "call_failures": 0,
+        "calls": 54,
+        "edge_errors": 0,
+        "edge_judgments": 0,
+        "f1": 0.9934,
+        "fn": 2,
+        "fp": 0,
+        "invalid_transitions": 0,
+        "output_tokens": 429600,
+        "precision": 1.0,
+        "prompt_tokens": 278535,
+        "provenance_contains_cause": 0.9527,
+        "provenance_exact": 0.8986,
+        "recall": 0.9869,
+        "runs": 54,
+        "seconds": 1981.49,
+        "state_exact_of_hits": 0.9801,
+        "tp": 151,
+        "unrelated_disturbed": 0,
+        "unrelated_preserved": 1.0
+      },
+      "repair": {
+        "corrections_required": 5,
+        "nodes_repaired_per_correction": 1.0,
+        "residual_wrong_nodes_after_correction": 0,
+        "rows_needing_no_correction": 49,
+        "wrong_nodes": 5
+      },
+      "stability": {
+        "identical_rate": 0.963,
+        "mean_jaccard": 0.9938,
+        "pairs_compared": 54,
+        "variants_never_stable": [
+          "H11-retired-hypothesis"
+        ]
+      }
+    },
+    "A:v2": {
+      "aggregate": {
+        "call_failures": 0,
+        "calls": 54,
+        "edge_errors": 0,
+        "edge_judgments": 0,
+        "f1": 0.9737,
+        "fn": 5,
+        "fp": 3,
+        "invalid_transitions": 0,
+        "output_tokens": 208370,
+        "precision": 0.9801,
+        "prompt_tokens": 282909,
+        "provenance_contains_cause": 0.9662,
+        "provenance_exact": 0.9054,
+        "recall": 0.9673,
+        "runs": 54,
+        "seconds": 1166.34,
+        "state_exact_of_hits": 1.0,
+        "tp": 148,
+        "unrelated_disturbed": 3,
+        "unrelated_preserved": 0.9968
+      },
+      "repair": {
+        "corrections_required": 8,
+        "nodes_repaired_per_correction": 1.0,
+        "residual_wrong_nodes_after_correction": 0,
+        "rows_needing_no_correction": 48,
+        "wrong_nodes": 8
+      },
+      "stability": {
+        "identical_rate": 0.8889,
+        "mean_jaccard": 0.9383,
+        "pairs_compared": 54,
+        "variants_never_stable": [
+          "H11-retired-hypothesis",
+          "H12-redundancy",
+          "H13-weak-evidence"
+        ]
+      }
+    },
+    "B:v1": {
+      "aggregate": {
+        "call_failures": 0,
+        "calls": 432,
+        "edge_errors": 17,
+        "edge_judgments": 432,
+        "f1": 0.9387,
+        "fn": 0,
+        "fp": 20,
+        "invalid_transitions": 0,
+        "output_tokens": 202474,
+        "precision": 0.8844,
+        "prompt_tokens": 166884,
+        "provenance_contains_cause": 0.9388,
+        "provenance_exact": 0.9592,
+        "recall": 1.0,
+        "runs": 54,
+        "seconds": 1556.51,
+        "state_exact_of_hits": 0.9608,
+        "tp": 153,
+        "unrelated_disturbed": 20,
+        "unrelated_preserved": 0.9784
+      },
+      "repair": {
+        "corrections_required": 17,
+        "nodes_repaired_per_correction": 1.529,
+        "residual_wrong_nodes_after_correction": 0,
+        "rows_needing_no_correction": 40,
+        "wrong_nodes": 26
+      },
+      "stability": {
+        "identical_rate": 0.8889,
+        "mean_jaccard": 0.9206,
+        "pairs_compared": 54,
+        "variants_never_stable": [
+          "H13-weak-evidence",
+          "H16-support-for-contested",
+          "H18-stale-outranks-redundant"
+        ]
+      }
+    },
+    "B:v2": {
+      "aggregate": {
+        "call_failures": 0,
+        "calls": 432,
+        "edge_errors": 25,
+        "edge_judgments": 432,
+        "f1": 0.9,
+        "fn": 0,
+        "fp": 34,
+        "invalid_transitions": 0,
+        "output_tokens": 246193,
+        "precision": 0.8182,
+        "prompt_tokens": 220020,
+        "provenance_contains_cause": 0.9388,
+        "provenance_exact": 0.9592,
+        "recall": 1.0,
+        "runs": 54,
+        "seconds": 1790.37,
+        "state_exact_of_hits": 0.9608,
+        "tp": 153,
+        "unrelated_disturbed": 34,
+        "unrelated_preserved": 0.9633
+      },
+      "repair": {
+        "corrections_required": 25,
+        "nodes_repaired_per_correction": 1.6,
+        "residual_wrong_nodes_after_correction": 0,
+        "rows_needing_no_correction": 33,
+        "wrong_nodes": 40
+      },
+      "stability": {
+        "identical_rate": 0.963,
+        "mean_jaccard": 0.9954,
+        "pairs_compared": 54,
+        "variants_never_stable": [
+          "H18-stale-outranks-redundant"
+        ]
+      }
+    }
+  },
+  "runs": 3,
+  "suite": "holdout",
+  "variants": 18
+}

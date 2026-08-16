@@ -1,0 +1,15 @@
+[project]
+name = "keel"
+version = "0.1.0"
+description = "A research program as a typed graph: what new evidence changes, computed rather than narrated."
+requires-python = ">=3.12"
+# Nothing. The engine is pure, so its entire contract is testable offline and
+# it cannot disturb any other environment in this repository.
+dependencies = []
+
+[project.optional-dependencies]
+# Phase 3 only: the live claim judge and the agent that carries it.
+live = ["google-adk>=2.6.3", "google-cloud-aiplatform>=1.163.0"]
+
+[tool.ruff]
+line-length = 88

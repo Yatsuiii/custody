@@ -1,0 +1,2692 @@
+{
+  "digest": "80b07fc8cd242a0a74f46a617e6ae99067dfa1ee0240e2d9d89cf32e64a7995d",
+  "locked_at": "2026-08-15T10:35:24.087996+00:00",
+  "variants": [
+    {
+      "before": {
+        "B1": {
+          "because": [
+            "e-15c032b4665bf25f"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B2": {
+          "because": [
+            "e-0d772bd2569b121d"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B3": {
+          "because": [
+            "e-4d4fb30eacfa8488"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B4": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B5": {
+          "because": [
+            "e-85e7ecf2818ef438"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B6": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B7": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B8": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "F1": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F2": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F3": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F4": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F5": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F6": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F7": {
+          "because": [
+            "e-5ae9a4e7cd389da3"
+          ],
+          "kind": "experiment",
+          "state": "REDUNDANT"
+        },
+        "F8": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F9": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "H3": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H4": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H5": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        }
+      },
+      "confirmed": false,
+      "document": "E-GRD",
+      "id": "H01-root-and-reactivation",
+      "intent": "a contradiction that shakes three layers and makes finished-with work worth doing again",
+      "notes": "F7 was redundant because a note already settled B5. Contesting B5 must return F7 to PLANNED.",
+      "program": "agent_program.json",
+      "sentences": [
+        "We re-ran 1,200 agent trajectories through three widely used exit-status graders.",
+        "The same trajectory received different verdicts on 11% of tasks across repeats, driven by timing-dependent test setup rather than the agent."
+      ],
+      "truth_because": {
+        "B5": [
+          "e-85e7ecf2818ef438",
+          "e-b0362a86133af509"
+        ],
+        "F4": [
+          "e-919084a7d02d3223"
+        ],
+        "F5": [
+          "e-83acfc3ad1ac3ad2"
+        ],
+        "F6": [
+          "e-ec06dc452abfdde4"
+        ],
+        "F7": [],
+        "H3": [
+          "e-f1b0783da35a059d"
+        ],
+        "H4": [
+          "e-ec6ccc30c61eabb0"
+        ]
+      },
+      "truth_changed": {
+        "B5": "CONTESTED",
+        "F4": "STALE",
+        "F5": "STALE",
+        "F6": "STALE",
+        "F7": "PLANNED",
+        "H3": "REQUIRES_REVIEW",
+        "H4": "REQUIRES_REVIEW"
+      },
+      "truth_relations": [
+        {
+          "relation": "CONTRADICTS",
+          "sentence": 1,
+          "strength": "STRONG",
+          "target": "B5"
+        }
+      ]
+    },
+    {
+      "before": {
+        "B1": {
+          "because": [
+            "e-15c032b4665bf25f"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B2": {
+          "because": [
+            "e-0d772bd2569b121d"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B3": {
+          "because": [
+            "e-4d4fb30eacfa8488"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B4": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B5": {
+          "because": [
+            "e-85e7ecf2818ef438"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B6": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B7": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B8": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "F1": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F2": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F3": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F4": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F5": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F6": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F7": {
+          "because": [
+            "e-5ae9a4e7cd389da3"
+          ],
+          "kind": "experiment",
+          "state": "REDUNDANT"
+        },
+        "F8": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F9": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "H3": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H4": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H5": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        }
+      },
+      "confirmed": false,
+      "document": "E-DIST",
+      "id": "H02-leaf-contradiction",
+      "intent": "a contradiction against the one assumption nothing depends on",
+      "notes": "",
+      "program": "agent_program.json",
+      "sentences": [
+        "We compare public agent benchmark tasks against a month of production traffic from three deployments.",
+        "Production tasks touch 4.2 times more files and run 3.8 times longer than the benchmark's median task."
+      ],
+      "truth_because": {
+        "B8": [
+          "e-9b04696fb0441560"
+        ]
+      },
+      "truth_changed": {
+        "B8": "CONTESTED"
+      },
+      "truth_relations": [
+        {
+          "relation": "CONTRADICTS",
+          "sentence": 1,
+          "strength": "STRONG",
+          "target": "B8"
+        }
+      ]
+    },
+    {
+      "before": {
+        "B1": {
+          "because": [
+            "e-15c032b4665bf25f"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B2": {
+          "because": [
+            "e-0d772bd2569b121d"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B3": {
+          "because": [
+            "e-4d4fb30eacfa8488"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B4": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B5": {
+          "because": [
+            "e-85e7ecf2818ef438"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B6": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B7": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B8": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "F1": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F2": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F3": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F4": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F5": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F6": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F7": {
+          "because": [
+            "e-5ae9a4e7cd389da3"
+          ],
+          "kind": "experiment",
+          "state": "REDUNDANT"
+        },
+        "F8": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F9": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "H3": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H4": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H5": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        }
+      },
+      "confirmed": false,
+      "document": "E-OVR",
+      "id": "H03-support-for-supported",
+      "intent": "more support for an assumption already supported",
+      "notes": "",
+      "program": "agent_program.json",
+      "sentences": [
+        "We instrument agent runs on a 600-task suite and record context usage.",
+        "Sixty-one percent of runs exceeded the model's context window before the agent produced a final patch."
+      ],
+      "truth_because": {},
+      "truth_changed": {},
+      "truth_relations": [
+        {
+          "relation": "SUPPORTS",
+          "sentence": 1,
+          "strength": "STRONG",
+          "target": "B1"
+        }
+      ]
+    },
+    {
+      "before": {
+        "B1": {
+          "because": [
+            "e-15c032b4665bf25f"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B2": {
+          "because": [
+            "e-0d772bd2569b121d"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B3": {
+          "because": [
+            "e-4d4fb30eacfa8488"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B4": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B5": {
+          "because": [
+            "e-85e7ecf2818ef438"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B6": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B7": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B8": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "F1": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F2": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F3": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F4": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F5": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F6": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F7": {
+          "because": [
+            "e-5ae9a4e7cd389da3"
+          ],
+          "kind": "experiment",
+          "state": "REDUNDANT"
+        },
+        "F8": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F9": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "H3": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H4": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H5": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        }
+      },
+      "confirmed": false,
+      "document": "E-SCH",
+      "id": "H04-irrelevant-paper",
+      "intent": "a real systems paper with nothing to say about this program",
+      "notes": "",
+      "program": "agent_program.json",
+      "sentences": [
+        "We study request scheduling for batched agent inference under mixed arrival rates.",
+        "Speculative decoding raised throughput by 2.1 times at unchanged output quality."
+      ],
+      "truth_because": {},
+      "truth_changed": {},
+      "truth_relations": []
+    },
+    {
+      "before": {
+        "B1": {
+          "because": [
+            "e-15c032b4665bf25f"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B2": {
+          "because": [
+            "e-0d772bd2569b121d"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B3": {
+          "because": [
+            "e-4d4fb30eacfa8488"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B4": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B5": {
+          "because": [
+            "e-85e7ecf2818ef438"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B6": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B7": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B8": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "F1": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F2": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F3": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F4": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F5": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F6": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F7": {
+          "because": [
+            "e-5ae9a4e7cd389da3"
+          ],
+          "kind": "experiment",
+          "state": "REDUNDANT"
+        },
+        "F8": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F9": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "H3": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H4": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H5": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        }
+      },
+      "confirmed": false,
+      "document": "E-TRC",
+      "id": "H05-two-assumptions",
+      "intent": "one document that contradicts one assumption and settles another",
+      "notes": "",
+      "program": "agent_program.json",
+      "sentences": [
+        "We label every observation dropped by fixed-window truncation across 400 trajectories.",
+        "Only 3% of dropped observations were later referenced by the agent, and removing them changed task success by 0.2 points.",
+        "Attention probes over the retained window show no degradation up to 96k tokens."
+      ],
+      "truth_because": {
+        "B2": [
+          "e-0d772bd2569b121d",
+          "e-6f6fb7c88ac5422f"
+        ],
+        "B7": [
+          "e-967321caf524ae6c"
+        ],
+        "F4": [
+          "e-ec156f44847bf5eb"
+        ],
+        "F9": [
+          "e-a34e74ffed19374b"
+        ],
+        "H3": [
+          "e-e42aff976005f89a"
+        ]
+      },
+      "truth_changed": {
+        "B2": "CONTESTED",
+        "B7": "SUPPORTED",
+        "F4": "STALE",
+        "F9": "REDUNDANT",
+        "H3": "REQUIRES_REVIEW"
+      },
+      "truth_relations": [
+        {
+          "relation": "CONTRADICTS",
+          "sentence": 1,
+          "strength": "STRONG",
+          "target": "B2"
+        },
+        {
+          "relation": "SUPPORTS",
+          "sentence": 2,
+          "strength": "STRONG",
+          "target": "B7"
+        }
+      ]
+    },
+    {
+      "before": {
+        "B1": {
+          "because": [
+            "e-15c032b4665bf25f"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B2": {
+          "because": [
+            "e-0d772bd2569b121d"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B3": {
+          "because": [
+            "e-4d4fb30eacfa8488"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B4": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B5": {
+          "because": [
+            "e-85e7ecf2818ef438"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B6": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B7": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B8": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "F1": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F2": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F3": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F4": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F5": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F6": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F7": {
+          "because": [
+            "e-5ae9a4e7cd389da3"
+          ],
+          "kind": "experiment",
+          "state": "REDUNDANT"
+        },
+        "F8": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F9": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "H3": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H4": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H5": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        }
+      },
+      "confirmed": false,
+      "document": "E-DUP",
+      "id": "H06-shared-assumption",
+      "intent": "two hypotheses resting on the same contested assumption",
+      "notes": "",
+      "program": "agent_program.json",
+      "sentences": [
+        "We measure exact-duplicate tool results across four open agent traces.",
+        "Exact duplicates accounted for 6% of trajectory tokens, far below previously reported figures."
+      ],
+      "truth_because": {
+        "B3": [
+          "e-4d4fb30eacfa8488",
+          "e-86365fba2f8e9553"
+        ],
+        "F5": [
+          "e-f5a76d7b2343d8ce"
+        ],
+        "H4": [
+          "e-d31830c0eedc46cb"
+        ],
+        "H5": [
+          "e-4bccd07bc1a41040"
+        ]
+      },
+      "truth_changed": {
+        "B3": "CONTESTED",
+        "F5": "STALE",
+        "H4": "REQUIRES_REVIEW",
+        "H5": "REQUIRES_REVIEW"
+      },
+      "truth_relations": [
+        {
+          "relation": "CONTRADICTS",
+          "sentence": 1,
+          "strength": "STRONG",
+          "target": "B3"
+        }
+      ]
+    },
+    {
+      "before": {
+        "B1": {
+          "because": [
+            "e-15c032b4665bf25f"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B2": {
+          "because": [
+            "e-0d772bd2569b121d"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B3": {
+          "because": [
+            "e-4d4fb30eacfa8488"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B4": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B5": {
+          "because": [
+            "e-85e7ecf2818ef438"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B6": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B7": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B8": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "F1": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F2": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F3": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F4": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F5": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F6": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F7": {
+          "because": [
+            "e-5ae9a4e7cd389da3"
+          ],
+          "kind": "experiment",
+          "state": "REDUNDANT"
+        },
+        "F8": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F9": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "H3": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H4": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H5": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        }
+      },
+      "confirmed": false,
+      "document": "E-TWO",
+      "id": "H07-two-premises-broken",
+      "intent": "one document that breaks two of the same experiment's three premises",
+      "notes": "F4 requires B1, B2 and B5. Two of the three go at once, so its justification must carry both.",
+      "program": "agent_program.json",
+      "sentences": [
+        "We re-measure both context overflow and what truncation actually drops, on the same 600-task suite.",
+        "Only 18% of runs exceeded the context window before a final patch.",
+        "Only 3% of dropped observations were later referenced by the agent, and removing them changed task success by 0.2 points."
+      ],
+      "truth_because": {
+        "B1": [
+          "e-15c032b4665bf25f",
+          "e-b8e67be45edff7fb"
+        ],
+        "B2": [
+          "e-01f29d1c5ec9ac7f",
+          "e-0d772bd2569b121d"
+        ],
+        "F4": [
+          "e-890bbfeb5b9d3ffc",
+          "e-ec156f44847bf5eb"
+        ],
+        "F9": [
+          "e-cdee932874a758bd"
+        ],
+        "H3": [
+          "e-d4d7b8a977c57ac6",
+          "e-e42aff976005f89a"
+        ]
+      },
+      "truth_changed": {
+        "B1": "CONTESTED",
+        "B2": "CONTESTED",
+        "F4": "STALE",
+        "F9": "STALE",
+        "H3": "REQUIRES_REVIEW"
+      },
+      "truth_relations": [
+        {
+          "relation": "CONTRADICTS",
+          "sentence": 1,
+          "strength": "STRONG",
+          "target": "B1"
+        },
+        {
+          "relation": "CONTRADICTS",
+          "sentence": 2,
+          "strength": "STRONG",
+          "target": "B2"
+        }
+      ]
+    },
+    {
+      "before": {
+        "B1": {
+          "because": [
+            "e-15c032b4665bf25f"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B2": {
+          "because": [
+            "e-0d772bd2569b121d"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B3": {
+          "because": [
+            "e-4d4fb30eacfa8488"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B4": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B5": {
+          "because": [
+            "e-85e7ecf2818ef438",
+            "e-b0362a86133af509"
+          ],
+          "kind": "assumption",
+          "state": "CONTESTED"
+        },
+        "B6": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B7": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B8": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "F1": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F2": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F3": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F4": {
+          "because": [
+            "e-919084a7d02d3223"
+          ],
+          "kind": "experiment",
+          "state": "STALE"
+        },
+        "F5": {
+          "because": [
+            "e-83acfc3ad1ac3ad2"
+          ],
+          "kind": "experiment",
+          "state": "STALE"
+        },
+        "F6": {
+          "because": [
+            "e-ec06dc452abfdde4"
+          ],
+          "kind": "experiment",
+          "state": "STALE"
+        },
+        "F7": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F8": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F9": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "H3": {
+          "because": [
+            "e-f1b0783da35a059d"
+          ],
+          "kind": "hypothesis",
+          "state": "REQUIRES_REVIEW"
+        },
+        "H4": {
+          "because": [
+            "e-ec6ccc30c61eabb0"
+          ],
+          "kind": "hypothesis",
+          "state": "REQUIRES_REVIEW"
+        },
+        "H5": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        }
+      },
+      "confirmed": false,
+      "document": "E-GRD",
+      "id": "H08-duplicate-ingestion",
+      "intent": "the same document and the same judgment, a second time",
+      "notes": "",
+      "program": "agent_program.json",
+      "sentences": [
+        "We re-ran 1,200 agent trajectories through three widely used exit-status graders.",
+        "The same trajectory received different verdicts on 11% of tasks across repeats, driven by timing-dependent test setup rather than the agent."
+      ],
+      "truth_because": {},
+      "truth_changed": {},
+      "truth_relations": [
+        {
+          "relation": "CONTRADICTS",
+          "sentence": 1,
+          "strength": "STRONG",
+          "target": "B5"
+        }
+      ]
+    },
+    {
+      "before": {
+        "B1": {
+          "because": [
+            "e-15c032b4665bf25f"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B2": {
+          "because": [
+            "e-0d772bd2569b121d"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B3": {
+          "because": [
+            "e-4d4fb30eacfa8488"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B4": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B5": {
+          "because": [
+            "e-85e7ecf2818ef438"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B6": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B7": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B8": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "F1": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F2": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F3": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F4": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F5": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F6": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F7": {
+          "because": [
+            "e-5ae9a4e7cd389da3"
+          ],
+          "kind": "experiment",
+          "state": "REDUNDANT"
+        },
+        "F8": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F9": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "H3": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H4": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H5": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        }
+      },
+      "confirmed": false,
+      "document": "E-REP",
+      "id": "H09-human-override",
+      "intent": "a rejected relation must not immunise the assumption",
+      "notes": "",
+      "program": "agent_program.json",
+      "sentences": [
+        "A second group repeated the grader repeat-run protocol on a different task suite.",
+        "Verdicts differed across repeats on 9% of tasks, matching the earlier report."
+      ],
+      "truth_because": {
+        "B5": [
+          "e-85e7ecf2818ef438",
+          "e-ae179a63dc38759b"
+        ],
+        "F4": [
+          "e-919084a7d02d3223"
+        ],
+        "F5": [
+          "e-83acfc3ad1ac3ad2"
+        ],
+        "F6": [
+          "e-ec06dc452abfdde4"
+        ],
+        "F7": [],
+        "H3": [
+          "e-f1b0783da35a059d"
+        ],
+        "H4": [
+          "e-ec6ccc30c61eabb0"
+        ]
+      },
+      "truth_changed": {
+        "B5": "CONTESTED",
+        "F4": "STALE",
+        "F5": "STALE",
+        "F6": "STALE",
+        "F7": "PLANNED",
+        "H3": "REQUIRES_REVIEW",
+        "H4": "REQUIRES_REVIEW"
+      },
+      "truth_relations": [
+        {
+          "relation": "CONTRADICTS",
+          "sentence": 1,
+          "strength": "STRONG",
+          "target": "B5"
+        }
+      ]
+    },
+    {
+      "before": {
+        "B1": {
+          "because": [
+            "e-15c032b4665bf25f"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B2": {
+          "because": [
+            "e-0d772bd2569b121d"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B3": {
+          "because": [
+            "e-4d4fb30eacfa8488"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B4": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B5": {
+          "because": [
+            "e-85e7ecf2818ef438",
+            "e-b0362a86133af509"
+          ],
+          "kind": "assumption",
+          "state": "CONTESTED"
+        },
+        "B6": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B7": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B8": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "F1": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F2": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F3": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F4": {
+          "because": [
+            "e-919084a7d02d3223"
+          ],
+          "kind": "experiment",
+          "state": "STALE"
+        },
+        "F5": {
+          "because": [
+            "e-83acfc3ad1ac3ad2"
+          ],
+          "kind": "experiment",
+          "state": "STALE"
+        },
+        "F6": {
+          "because": [
+            "e-ec06dc452abfdde4"
+          ],
+          "kind": "experiment",
+          "state": "STALE"
+        },
+        "F7": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F8": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F9": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "H3": {
+          "because": [
+            "e-f1b0783da35a059d"
+          ],
+          "kind": "hypothesis",
+          "state": "REQUIRES_REVIEW"
+        },
+        "H4": {
+          "because": [
+            "e-ec6ccc30c61eabb0"
+          ],
+          "kind": "hypothesis",
+          "state": "REQUIRES_REVIEW"
+        },
+        "H5": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        }
+      },
+      "confirmed": false,
+      "document": "E-REP",
+      "id": "H10-more-of-the-same",
+      "intent": "a second contradiction where one already stands",
+      "notes": "",
+      "program": "agent_program.json",
+      "sentences": [
+        "A second group repeated the grader repeat-run protocol on a different task suite.",
+        "Verdicts differed across repeats on 9% of tasks, matching the earlier report."
+      ],
+      "truth_because": {},
+      "truth_changed": {},
+      "truth_relations": [
+        {
+          "relation": "CONTRADICTS",
+          "sentence": 1,
+          "strength": "STRONG",
+          "target": "B5"
+        }
+      ]
+    },
+    {
+      "before": {
+        "B1": {
+          "because": [
+            "e-15c032b4665bf25f"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B2": {
+          "because": [
+            "e-0d772bd2569b121d"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B3": {
+          "because": [
+            "e-4d4fb30eacfa8488"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B4": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B5": {
+          "because": [
+            "e-85e7ecf2818ef438"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B6": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B7": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B8": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "F1": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F2": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F3": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F4": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F5": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F6": {
+          "because": [
+            "e-28809eb0f4f3c71d"
+          ],
+          "kind": "experiment",
+          "state": "INVALIDATED"
+        },
+        "F7": {
+          "because": [
+            "e-5ae9a4e7cd389da3"
+          ],
+          "kind": "experiment",
+          "state": "REDUNDANT"
+        },
+        "F8": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F9": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "H3": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H4": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H5": {
+          "because": [
+            "d-retire-H5"
+          ],
+          "kind": "hypothesis",
+          "state": "RETIRED"
+        }
+      },
+      "confirmed": false,
+      "document": "E-GRD",
+      "id": "H11-retired-hypothesis",
+      "intent": "impact against a program a human has already pruned",
+      "notes": "",
+      "program": "agent_program.json",
+      "sentences": [
+        "We re-ran 1,200 agent trajectories through three widely used exit-status graders.",
+        "The same trajectory received different verdicts on 11% of tasks across repeats, driven by timing-dependent test setup rather than the agent."
+      ],
+      "truth_because": {
+        "B5": [
+          "e-85e7ecf2818ef438",
+          "e-b0362a86133af509"
+        ],
+        "F4": [
+          "e-919084a7d02d3223"
+        ],
+        "F5": [
+          "e-83acfc3ad1ac3ad2"
+        ],
+        "F7": [],
+        "H3": [
+          "e-f1b0783da35a059d"
+        ],
+        "H4": [
+          "e-ec6ccc30c61eabb0"
+        ]
+      },
+      "truth_changed": {
+        "B5": "CONTESTED",
+        "F4": "STALE",
+        "F5": "STALE",
+        "F7": "PLANNED",
+        "H3": "REQUIRES_REVIEW",
+        "H4": "REQUIRES_REVIEW"
+      },
+      "truth_relations": [
+        {
+          "relation": "CONTRADICTS",
+          "sentence": 1,
+          "strength": "STRONG",
+          "target": "B5"
+        }
+      ]
+    },
+    {
+      "before": {
+        "B1": {
+          "because": [
+            "e-15c032b4665bf25f"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B2": {
+          "because": [
+            "e-0d772bd2569b121d"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B3": {
+          "because": [
+            "e-4d4fb30eacfa8488"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B4": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B5": {
+          "because": [
+            "e-85e7ecf2818ef438"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B6": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B7": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B8": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "F1": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F2": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F3": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F4": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F5": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F6": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F7": {
+          "because": [
+            "e-5ae9a4e7cd389da3"
+          ],
+          "kind": "experiment",
+          "state": "REDUNDANT"
+        },
+        "F8": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F9": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "H3": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H4": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H5": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        }
+      },
+      "confirmed": false,
+      "document": "E-LAT",
+      "id": "H12-redundancy",
+      "intent": "evidence that answers what a planned experiment would have measured",
+      "notes": "",
+      "program": "agent_program.json",
+      "sentences": [
+        "We measure wall-clock cost of typed summary generation inside a live agent loop across four model sizes.",
+        "Typed summaries added 180ms per step at the median, inside the 500ms step budget in every configuration."
+      ],
+      "truth_because": {
+        "B6": [
+          "e-fd659c7ec2d5e846"
+        ],
+        "F8": [
+          "e-aa1accc2a12a42b5"
+        ]
+      },
+      "truth_changed": {
+        "B6": "SUPPORTED",
+        "F8": "REDUNDANT"
+      },
+      "truth_relations": [
+        {
+          "relation": "SUPPORTS",
+          "sentence": 1,
+          "strength": "STRONG",
+          "target": "B6"
+        }
+      ]
+    },
+    {
+      "before": {
+        "B1": {
+          "because": [
+            "e-15c032b4665bf25f"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B2": {
+          "because": [
+            "e-0d772bd2569b121d"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B3": {
+          "because": [
+            "e-4d4fb30eacfa8488"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B4": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B5": {
+          "because": [
+            "e-85e7ecf2818ef438"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B6": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B7": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B8": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "F1": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F2": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F3": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F4": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F5": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F6": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F7": {
+          "because": [
+            "e-5ae9a4e7cd389da3"
+          ],
+          "kind": "experiment",
+          "state": "REDUNDANT"
+        },
+        "F8": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F9": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "H3": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H4": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H5": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        }
+      },
+      "confirmed": false,
+      "document": "E-SML",
+      "id": "H13-weak-evidence",
+      "intent": "a different setting and a single seed, below the strength that moves",
+      "notes": "",
+      "program": "agent_program.json",
+      "sentences": [
+        "We looked at duplicate tool results in one notebook-editing agent, a different setting from software repair, with one seed.",
+        "Duplicates accounted for 9% of tokens in that single run."
+      ],
+      "truth_because": {},
+      "truth_changed": {},
+      "truth_relations": [
+        {
+          "relation": "CONTRADICTS",
+          "sentence": 1,
+          "strength": "WEAK",
+          "target": "B3"
+        }
+      ]
+    },
+    {
+      "before": {
+        "B1": {
+          "because": [
+            "e-15c032b4665bf25f"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B2": {
+          "because": [
+            "e-0d772bd2569b121d"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B3": {
+          "because": [
+            "e-4d4fb30eacfa8488"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B4": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B5": {
+          "because": [
+            "e-85e7ecf2818ef438"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B6": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B7": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B8": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "F1": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F2": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F3": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F4": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F5": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F6": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F7": {
+          "because": [
+            "e-5ae9a4e7cd389da3"
+          ],
+          "kind": "experiment",
+          "state": "REDUNDANT"
+        },
+        "F8": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F9": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "H3": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H4": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H5": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        }
+      },
+      "confirmed": true,
+      "document": "E-RCL",
+      "id": "H14-confirmed-invalidation",
+      "intent": "a confirmed contradiction against an assumption with no support",
+      "notes": "",
+      "program": "agent_program.json",
+      "sentences": [
+        "Three annotators independently labelled 300 tasks for whether success requires verbatim recall of an earlier tool result.",
+        "Inter-annotator agreement was 0.31 kappa, and adjudication changed 44% of initial labels."
+      ],
+      "truth_because": {
+        "B4": [
+          "e-3eaa9b00a0f24d1f"
+        ],
+        "F6": [
+          "e-3a14fa538b4301f3"
+        ],
+        "H5": [
+          "e-97dd72dac64a7cbb"
+        ]
+      },
+      "truth_changed": {
+        "B4": "INVALIDATED",
+        "F6": "REDUNDANT",
+        "H5": "WEAKENED"
+      },
+      "truth_relations": [
+        {
+          "relation": "CONTRADICTS",
+          "sentence": 1,
+          "strength": "STRONG",
+          "target": "B4"
+        }
+      ]
+    },
+    {
+      "before": {
+        "B1": {
+          "because": [
+            "e-15c032b4665bf25f"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B2": {
+          "because": [
+            "e-0d772bd2569b121d"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B3": {
+          "because": [
+            "e-4d4fb30eacfa8488"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B4": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B5": {
+          "because": [
+            "e-85e7ecf2818ef438"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B6": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B7": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B8": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "F1": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F2": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F3": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F4": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F5": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F6": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F7": {
+          "because": [
+            "e-5ae9a4e7cd389da3"
+          ],
+          "kind": "experiment",
+          "state": "REDUNDANT"
+        },
+        "F8": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F9": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "H3": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H4": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H5": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        }
+      },
+      "confirmed": false,
+      "document": "E-LOW",
+      "id": "H15-completed-work-untouched",
+      "intent": "a contested premise under both a finished and a planned experiment",
+      "notes": "F3 is COMPLETED and requires B1. It must not move.",
+      "program": "agent_program.json",
+      "sentences": [
+        "We instrument agent runs on the same 600-task suite with a 128k window.",
+        "Only 18% of runs exceeded the context window before a final patch, well under the 40% figure this line of work assumes."
+      ],
+      "truth_because": {
+        "B1": [
+          "e-15c032b4665bf25f",
+          "e-5ccb9112e3f2f1ca"
+        ],
+        "F4": [
+          "e-890bbfeb5b9d3ffc"
+        ],
+        "F9": [
+          "e-cdee932874a758bd"
+        ],
+        "H3": [
+          "e-d4d7b8a977c57ac6"
+        ]
+      },
+      "truth_changed": {
+        "B1": "CONTESTED",
+        "F4": "STALE",
+        "F9": "STALE",
+        "H3": "REQUIRES_REVIEW"
+      },
+      "truth_relations": [
+        {
+          "relation": "CONTRADICTS",
+          "sentence": 1,
+          "strength": "STRONG",
+          "target": "B1"
+        }
+      ]
+    },
+    {
+      "before": {
+        "B1": {
+          "because": [
+            "e-15c032b4665bf25f"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B2": {
+          "because": [
+            "e-0d772bd2569b121d",
+            "e-6f6fb7c88ac5422f"
+          ],
+          "kind": "assumption",
+          "state": "CONTESTED"
+        },
+        "B3": {
+          "because": [
+            "e-4d4fb30eacfa8488"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B4": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B5": {
+          "because": [
+            "e-85e7ecf2818ef438"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B6": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B7": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B8": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "F1": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F2": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F3": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F4": {
+          "because": [
+            "e-ec156f44847bf5eb"
+          ],
+          "kind": "experiment",
+          "state": "STALE"
+        },
+        "F5": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F6": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F7": {
+          "because": [
+            "e-5ae9a4e7cd389da3"
+          ],
+          "kind": "experiment",
+          "state": "REDUNDANT"
+        },
+        "F8": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F9": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "H3": {
+          "because": [
+            "e-e42aff976005f89a"
+          ],
+          "kind": "hypothesis",
+          "state": "REQUIRES_REVIEW"
+        },
+        "H4": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H5": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        }
+      },
+      "confirmed": false,
+      "document": "E-SUP",
+      "id": "H16-support-for-contested",
+      "intent": "support arriving for an assumption that is already contested",
+      "notes": "Conflicting evidence keeps an assumption CONTESTED. Nothing new may move, and nothing may be un-contested.",
+      "program": "agent_program.json",
+      "sentences": [
+        "We trace which truncated observations the agent later attempts to reference.",
+        "Twenty-nine percent of truncated observations were referenced again later, and 71% of those references failed."
+      ],
+      "truth_because": {},
+      "truth_changed": {},
+      "truth_relations": [
+        {
+          "relation": "SUPPORTS",
+          "sentence": 1,
+          "strength": "STRONG",
+          "target": "B2"
+        }
+      ]
+    },
+    {
+      "before": {
+        "B1": {
+          "because": [
+            "e-15c032b4665bf25f"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B2": {
+          "because": [
+            "e-0d772bd2569b121d"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B3": {
+          "because": [
+            "e-4d4fb30eacfa8488"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B4": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B5": {
+          "because": [
+            "e-85e7ecf2818ef438"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B6": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B7": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B8": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "F1": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F2": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F3": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F4": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F5": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F6": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F7": {
+          "because": [
+            "e-5ae9a4e7cd389da3"
+          ],
+          "kind": "experiment",
+          "state": "REDUNDANT"
+        },
+        "F8": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F9": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "H3": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H4": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H5": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        }
+      },
+      "confirmed": false,
+      "document": "E-ATT",
+      "id": "H17-establishes-is-not-a-dependency",
+      "intent": "contesting an assumption that only an ESTABLISHES edge touches",
+      "notes": "F9 would establish B7. Wanting to settle a question is not depending on its answer, so F9 must stay PLANNED.",
+      "program": "agent_program.json",
+      "sentences": [
+        "We measure retrieval accuracy from long agent transcripts as a function of position.",
+        "Accuracy on facts placed beyond 60k tokens fell to 54% even though the window extends to 128k."
+      ],
+      "truth_because": {
+        "B7": [
+          "e-53b10ae4f237cbe4"
+        ]
+      },
+      "truth_changed": {
+        "B7": "CONTESTED"
+      },
+      "truth_relations": [
+        {
+          "relation": "CONTRADICTS",
+          "sentence": 1,
+          "strength": "STRONG",
+          "target": "B7"
+        }
+      ]
+    },
+    {
+      "before": {
+        "B1": {
+          "because": [
+            "e-15c032b4665bf25f"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B2": {
+          "because": [
+            "e-0d772bd2569b121d"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B3": {
+          "because": [
+            "e-4d4fb30eacfa8488"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B4": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B5": {
+          "because": [
+            "e-85e7ecf2818ef438"
+          ],
+          "kind": "assumption",
+          "state": "SUPPORTED"
+        },
+        "B6": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B7": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "B8": {
+          "because": [],
+          "kind": "assumption",
+          "state": "UNKNOWN"
+        },
+        "F1": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F2": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F3": {
+          "because": [],
+          "kind": "experiment",
+          "state": "COMPLETED"
+        },
+        "F4": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F5": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F6": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F7": {
+          "because": [
+            "e-5ae9a4e7cd389da3"
+          ],
+          "kind": "experiment",
+          "state": "REDUNDANT"
+        },
+        "F8": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "F9": {
+          "because": [],
+          "kind": "experiment",
+          "state": "PLANNED"
+        },
+        "H3": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H4": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        },
+        "H5": {
+          "because": [],
+          "kind": "hypothesis",
+          "state": "ACTIVE"
+        }
+      },
+      "confirmed": false,
+      "document": "E-CMB",
+      "id": "H18-stale-outranks-redundant",
+      "intent": "one experiment that is simultaneously premise-broken and answered",
+      "notes": "F8 establishes B6, now settled, and requires B1, now contested. STALE must win: an experiment that cannot run answers nothing.",
+      "program": "agent_program.json",
+      "sentences": [
+        "We measure typed summary latency inside a live agent loop and, separately, context usage across the same suite.",
+        "Typed summaries added 150ms per step at the median, inside the 500ms step budget in every configuration.",
+        "Only 18% of runs exceeded the context window before a final patch, well under the 40% figure this line of work assumes."
+      ],
+      "truth_because": {
+        "B1": [
+          "e-15c032b4665bf25f",
+          "e-4bf0df29b9788abc"
+        ],
+        "B6": [
+          "e-f2e4e13de2b8c0b1"
+        ],
+        "F4": [
+          "e-890bbfeb5b9d3ffc"
+        ],
+        "F8": [
+          "e-9502b8274e93c0d4"
+        ],
+        "F9": [
+          "e-cdee932874a758bd"
+        ],
+        "H3": [
+          "e-d4d7b8a977c57ac6"
+        ]
+      },
+      "truth_changed": {
+        "B1": "CONTESTED",
+        "B6": "SUPPORTED",
+        "F4": "STALE",
+        "F8": "STALE",
+        "F9": "STALE",
+        "H3": "REQUIRES_REVIEW"
+      },
+      "truth_relations": [
+        {
+          "relation": "SUPPORTS",
+          "sentence": 1,
+          "strength": "STRONG",
+          "target": "B6"
+        },
+        {
+          "relation": "CONTRADICTS",
+          "sentence": 2,
+          "strength": "STRONG",
+          "target": "B1"
+        }
+      ]
+    }
+  ]
+}
