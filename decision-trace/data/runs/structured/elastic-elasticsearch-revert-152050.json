@@ -1,0 +1,4 @@
+{
+  "query": "I'm working in elastic/elasticsearch and I'm planning to reintroduce a change along these lines: \"Remove global ordinals from composite keyword path\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
+  "response": "Yes, this change has been tried and reverted previously.\n\n* **Relevant Decision:** `[elastic-elasticsearch-revert-152050]`\n* **Evidence:** PR #152050 (reverted in PR #152553)\n* **Reasoning:** The original change to remove global ordinals from the composite keyword path (PR #152050, along with PR #152433) was reverted in PR #152553 (*\"Revert composite keyword segment-ordinals path\"*) due to a regression."
+}

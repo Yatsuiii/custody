@@ -1,0 +1,11 @@
+{
+  "query": "I'm working in rust-lang/rust and I'm planning to reintroduce a change along these lines: \"early return on duplicate span lowerings\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
+  "response": "Yes, this has been tried and reverted before in the project's history:\n\n* **PR #149060** originally introduced the change (\"early return on duplicate span lowerings\").\n* **PR #149757** reverted PR #149060 because it caused performance regressions.",
+  "retrieved": [
+    "TARGET",
+    "rust-lang/rust#158504",
+    "rust-lang/rust#161046",
+    "rust-lang/rust#161075",
+    "rust-lang/rust#157428"
+  ]
+}

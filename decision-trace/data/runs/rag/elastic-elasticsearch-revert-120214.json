@@ -1,0 +1,11 @@
+{
+  "query": "I'm working in elastic/elasticsearch and I'm planning to reintroduce a change along these lines: \"[TEST] Use Docker Compose v2 for TestFixturePlugin\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
+  "response": "Yes, this exact change was previously introduced and subsequently reverted:\n\n* **Original PR:** PR #120214 introduced `[TEST] Use Docker Compose v2 for TestFixturePlugin`.\n* **Revert PR:** PR #120294 reverted it (`Revert \"[TEST] Use Docker Compose v2 for TestFixturePlugin\"`).\n\n**Reason for the revert:**\nThe change caused failing tests on **AmazonLinux 2023**. Additionally, the PR notes mention that the underlying issue with the incorrect version of `docker-compose` had been fixed directly in the VM images, meaning the change was no longer needed to prevent build failures.",
+  "retrieved": [
+    "TARGET",
+    "elastic/elasticsearch#153666",
+    "elastic/elasticsearch#156601",
+    "elastic/elasticsearch#156778",
+    "elastic/elasticsearch#153666"
+  ]
+}

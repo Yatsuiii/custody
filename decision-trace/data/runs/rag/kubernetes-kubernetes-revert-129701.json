@@ -1,0 +1,11 @@
+{
+  "query": "I'm working in kubernetes/kubernetes and I'm planning to reintroduce a change along these lines: \"tests: include stdout of failed commands in JUnit\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
+  "response": "Yes, this was previously attempted and reverted:\n\n* **PR #129701** originally introduced the change `\"tests: include stdout of failed commands in JUnit\"`.\n* **PR #129769** subsequently reverted it (`Revert \"tests: include stdout of failed commands in JUnit\"`).\n\n**Reasoning:**\nThe change broke TestGrid reporting, likely due to invalid characters in the JUnit output (referenced in [PR #129701 comment 2608402902](https://github.com/kubernetes/kubernetes/pull/129701#issuecomment-2608402902)). If you reintroduce it, you should ensure that stdout content is properly sanitized to avoid invalid characters breaking TestGrid.",
+  "retrieved": [
+    "TARGET",
+    "kubernetes/kubernetes#141131",
+    "kubernetes/kubernetes#140982",
+    "kubernetes/kubernetes#39867",
+    "kubernetes/kubernetes#141324"
+  ]
+}

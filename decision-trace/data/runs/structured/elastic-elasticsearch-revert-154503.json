@@ -1,0 +1,4 @@
+{
+  "query": "I'm working in elastic/elasticsearch and I'm planning to reintroduce a change along these lines: \"Consolidate fallback storage routing logic into central location\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
+  "response": "Yes, this change was previously tried and undone in the project's history:\n\n* **Relevant Decision:** `[elastic-elasticsearch-revert-154503]`\n* **Evidence:** PR #154503 / revert PR #156367\n* **Reasoning:** The original change to \"Consolidate fallback storage routing logic into central location\" (PR #154503) was reverted in PR #156367 because it caused test failures (which were unmuted when the change was reverted)."
+}

@@ -1,0 +1,4 @@
+{
+  "query": "I'm designing \"Bounding Self-Labeling Kubelets\" in kubernetes/enhancements and I'm considering an alternative approach instead of whatever was ultimately chosen. What does this project's history say about alternatives that were already considered here, and why weren't they used?",
+  "response": "Based on the project's decision history for **Bounding Self-Labeling Kubelets** (Evidence: `keps/sig-auth/279-limit-node-access/README.md`), an alternative involving a tainting scheme was considered. \n\nIt was not chosen because it was difficult to devise a tainting scheme that preserved information about which specific labels caused the taint."
+}

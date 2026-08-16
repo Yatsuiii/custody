@@ -1,0 +1,4 @@
+{
+  "query": "I'm working in kubernetes/kubernetes and I'm planning to reintroduce a change along these lines: \"fix: preserve options after remount for bind mounting\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
+  "response": "Yes, this exact change was previously introduced and subsequently reverted.\n\n* **Original PR:** PR #126599 (`fix: preserve options after remount for bind mounting`)\n* **Revert PR:** PR #127899 (`Revert 126599: fix: preserve options after remount for bind mounting`)\n* **Reasoning:** PR #126599 caused a regression and broke the `gce-cos-master-default` test grid (tracked in issue #127867). The entire change was reverted to fix the failing test."
+}

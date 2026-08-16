@@ -1,0 +1,11 @@
+{
+  "query": "I'm working in kubernetes/kubernetes and I'm planning to reintroduce a change along these lines: \"client-go: prevent unbounded goroutine growth in EventBroadcaster\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
+  "response": "Yes, this has been tried and reverted before:\n\n* **PR #140990** reverted the original PR **#140448** (*\"client-go: prevent unbounded goroutine growth in EventBroadcaster\"*).\n* **Reason for revert:** It was reverted because the follow-up fix required risky rework too close to the release candidates (tracked in/fixing **#140859**).",
+  "retrieved": [
+    "TARGET",
+    "kubernetes/kubernetes#141145",
+    "kubernetes/kubernetes#138075",
+    "kubernetes/kubernetes#34471",
+    "kubernetes/kubernetes#29788"
+  ]
+}

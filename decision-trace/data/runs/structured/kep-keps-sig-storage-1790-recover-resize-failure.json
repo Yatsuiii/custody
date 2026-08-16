@@ -1,0 +1,4 @@
+{
+  "query": "I'm designing \"Recovery from volume expansion failure\" in kubernetes/enhancements and I'm considering an alternative approach instead of whatever was ultimately chosen. What does this project's history say about alternatives that were already considered here, and why weren't they used?",
+  "response": "Based on the project's decision history for **Recovery from volume expansion failure** (Evidence: `keps/sig-storage/1790-recover-resize-failure/README.md`):\n\n* **Alternative considered / rejected reason:** Using `pvc.Status.Capacity` for tracking quota was rejected because `pvc.Status.Capacity` is calculated after binding happens, which could occur when the pod is started."
+}

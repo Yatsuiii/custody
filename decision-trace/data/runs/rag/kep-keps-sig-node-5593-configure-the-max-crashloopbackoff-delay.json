@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-5593: Configure the max CrashLoopBackOff delay\" in kubernetes/enhancements and I'm considering an alternative approach instead of whatever was ultimately chosen. What does this project's history say about alternatives that were already considered here, and why weren't they used?",
+  "response": "Based on the retrieved design documentation for **KEP-4603** (from which KEP-5593 was split), the project considered several alternative approaches grouped under the category of **\"More complex heuristics\"** (`keps/sig-node/4603-tune-crashloopbackoff/README.md`):\n\n### Considered Alternatives\n1. **Expose `podFailurePolicy` to nonJob Pods**\n2. **Subsidize successful running time / `readinessProbe` / `livenessProbe` seconds in current backoff delay**\n3. **Detect anomalous workload crashes**\n\n### Why They Weren't Used\nThese alternatives depend on the kubelet making runtime decisions based on various system or workload states/trends. They were not chosen because they:\n* Are **harder to reason about**.\n* Have an **unknown return on investment** for use cases relative to the effort required to implement them.\n* Are **expensive to benchmark and test**.\n\n---\n\n### Additional Alternatives / Directions from Issue History\nAnalysis of canonical tracking issues **[Kubernetes#57291](https://github.com/kubernetes/kubernetes/issues/57291)** and **[Kubernetes#50375](https://github.com/kubernetes/kubernetes/issues/50375)** highlighted other alternative behaviors requested by users:\n* **Constant or instant backoff for `Succeeded` Pods**\n* **Better late recovery behavior**\n\n**Why they weren't chosen initially:**\n* Although constant/instant backoff and late recovery were frequently requested, early recovery was prioritized because it is more approachable and easily modelable.\n* Establishing benchmarking and observability first was seen as a prerequisite to help evaluate and support more sophisticated late recovery or heuristic enhancements in the future.",
+  "retrieved": [
+    "keps/sig-node/4603-tune-crashloopbackoff/README.md",
+    "keps/sig-node/4603-tune-crashloopbackoff/README.md",
+    "TARGET",
+    "TARGET",
+    "keps/sig-node/4603-tune-crashloopbackoff/README.md"
+  ]
+}

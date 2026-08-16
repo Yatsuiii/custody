@@ -1,0 +1,4 @@
+{
+  "query": "I'm working in rust-lang/rust and I'm planning to reintroduce a change along these lines: \"Stop adding MSYS2 to PATH\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
+  "response": "Yes, this has been tried and reverted before.\n\n* **Previous Change & Revert:** PR #149516 (\"Stop adding MSYS2 to PATH\") was reverted in PR #149600 (\"Revert #149516 to fix i686-pc-windows-gnu host\").\n* **Reasoning / Impact:** The change caused `dist` to pick up an `x86_64` `libwinpthreads.dll` dependency, which resulted in a broken toolchain for the `i686-pc-windows-gnu` host.\n\n*(Evidence: Decision `rust-lang-rust-revert-149516`, PR #149516 / revert PR #149600)*"
+}

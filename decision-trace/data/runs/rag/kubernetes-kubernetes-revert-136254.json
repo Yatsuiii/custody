@@ -1,0 +1,11 @@
+{
+  "query": "I'm working in kubernetes/kubernetes and I'm planning to reintroduce a change along these lines: \"Extend PostFilterResult with a list of victim Pods\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
+  "response": "Yes, this has been tried and reverted previously:\n\n* **PR #137662** reverted PR **#136254** (\"Extend PostFilterResult with a list of victim Pods\").\n* **Reason:** Delayed preemption was dropped from the Workload-Aware Scheduling (WAS) work planned for the 1.36 minor release, and maintaining that extra complexity in the code was determined to be unnecessary.",
+  "retrieved": [
+    "TARGET",
+    "kubernetes/kubernetes#137050",
+    "kubernetes/kubernetes#140694",
+    "kubernetes/kubernetes#140289",
+    "kubernetes/kubernetes#141209"
+  ]
+}

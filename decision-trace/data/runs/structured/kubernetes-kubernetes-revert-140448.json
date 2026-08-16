@@ -1,0 +1,4 @@
+{
+  "query": "I'm working in kubernetes/kubernetes and I'm planning to reintroduce a change along these lines: \"client-go: prevent unbounded goroutine growth in EventBroadcaster\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
+  "response": "Yes, this exact change was previously attempted in **PR #140448** and subsequently reverted in **PR #140990**.\n\n### Reason for Reversion:\nThe change was reverted because the follow-up fix required risky rework too close to the release candidates. \n\n*(Evidence: PR #140448 / revert PR #140990)*"
+}

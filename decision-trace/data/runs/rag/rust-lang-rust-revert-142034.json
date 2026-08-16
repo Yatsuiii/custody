@@ -1,0 +1,11 @@
+{
+  "query": "I'm working in rust-lang/rust and I'm planning to reintroduce a change along these lines: \"Detect method not being present that is present in other tuple types\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
+  "response": "Yes, this has been tried and reverted before:\n\n* **PR #145765** (\"Revert suggestions for missing methods in tuples\") reverted **PR #142034**.\n* **Reasoning:** PR #142034 caused internal compiler errors (diagnostics ICEs), such as **rust-lang/rust#142488** and its duplicates, which had reached stable. PR #145765 was merged to safely validate and backport the revert to beta and stable until a proper fix could be implemented to reland the feature.",
+  "retrieved": [
+    "TARGET",
+    "rust-lang/rust#160928",
+    "rust-lang/rust#158504",
+    "rust-lang/rust#160683",
+    "rust-lang/rust#161036"
+  ]
+}

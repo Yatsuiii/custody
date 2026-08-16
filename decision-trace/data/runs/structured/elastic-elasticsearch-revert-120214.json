@@ -1,0 +1,4 @@
+{
+  "query": "I'm working in elastic/elasticsearch and I'm planning to reintroduce a change along these lines: \"[TEST] Use Docker Compose v2 for TestFixturePlugin\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
+  "response": "Yes, this change has been attempted previously and subsequently reverted.\n\nAccording to the repository's history:\n* **Evidence:** **PR #120214** (reverted in **PR #120294**)\n* **Reasoning:** The original change to use Docker Compose v2 for `TestFixturePlugin` was reverted because it caused test failures on **AmazonLinux 2023**."
+}

@@ -1,0 +1,4 @@
+{
+  "query": "I'm designing \"KEP-1979: Object Storage Support\" in kubernetes/enhancements and I'm considering an alternative approach instead of whatever was ultimately chosen. What does this project's history say about alternatives that were already considered here, and why weren't they used?",
+  "response": "Based on the decision memory for **KEP-1979: Object Storage Support**:\n\n* **Evidence**: `keps/sig-storage/1979-object-storage-support/README.md`\n* **Details**: The project record notes that the alternatives section of the KEP captures the main alternatives considered and documents the specific reasons why a different solution was decided upon over those alternatives (referenced under: *\"Here we capture the main alternatives and the reasons why we decided on a different solution.\"*)."
+}
