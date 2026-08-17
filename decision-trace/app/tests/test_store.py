@@ -3,13 +3,16 @@ abstraction, and prove citations/evidence and lifecycle survive the round
 trip."""
 
 import sys
+import uuid
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+import vertex  # noqa: E402
 from graph import DecisionGraph, resolve_active  # noqa: E402
 from loader import load_decisions  # noqa: E402
-from store import JSONFileDecisionStore  # noqa: E402
+from store import FirestoreDecisionStore, JSONFileDecisionStore, _firestore_doc_id  # noqa: E402
 
 APP_DIR = Path(__file__).resolve().parents[1]
 FALSIFIER_DATA = APP_DIR.parent / "data" / "decisions.jsonl"
@@ -89,3 +92,37 @@ def test_kep_decision_loads_with_evidence():
     assert decision.rationale == record["rationale_quote"]
     assert decision.evidence[0].url == record["citation"]["file"]["url"]
     assert decision.evidence[0].quote == record["rationale_quote"]
+
+
+def test_firestore_store_round_trip_persists_and_reloads():
+    """Real Firestore, no mocks. Writes to a throwaway collection under the
+    project vertex.py already talks to, reads back via a fresh client
+    instance to prove it's Firestore persisting the data, not an in-process
+    cache, then deletes every document it created."""
+    decisions = load_decisions(FALSIFIER_DATA)[:3]
+    collection = f"decisiontrace-test-{uuid.uuid4().hex[:12]}"
+
+    store = FirestoreDecisionStore(collection, project=vertex.PROJECT)
+    store.save_many(decisions)
+
+    try:
+        reloaded_store = FirestoreDecisionStore(collection, project=vertex.PROJECT)
+        reloaded = {d.id: d for d in reloaded_store.list_all()}
+        assert len(reloaded) == len(decisions)
+
+        for original in decisions:
+            round_tripped = reloaded[original.id]
+            assert round_tripped.subject == original.subject
+            assert round_tripped.rationale == original.rationale
+            assert round_tripped.current_status == original.current_status
+            assert [
+                (e.type, e.url, e.quote) for e in round_tripped.evidence
+            ] == [(e.type, e.url, e.quote) for e in original.evidence]
+
+        single = reloaded_store.get(decisions[0].id)
+        assert single is not None
+        assert single.id == decisions[0].id
+        assert reloaded_store.get("nonexistent-id") is None
+    finally:
+        for d in decisions:
+            store._collection.document(_firestore_doc_id(d.id)).delete()

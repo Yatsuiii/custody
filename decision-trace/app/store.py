@@ -92,3 +92,65 @@ class JSONFileDecisionStore:
 
     def list_all(self) -> list[Decision]:
         return list(self._by_id.values())
+
+
+def _decision_to_firestore_dict(d: Decision) -> dict:
+    """Firestore rejects nested arrays (`related_decisions` is a list of
+    `[target_id, type]` pairs in the JSON encoding), so re-shape that one
+    field into a list of maps. Everything else matches `_decision_to_dict`."""
+    raw = _decision_to_dict(d)
+    raw["related_decisions"] = [
+        {"target_id": target_id, "type": rel} for target_id, rel in raw["related_decisions"]
+    ]
+    return raw
+
+
+def _firestore_dict_to_decision(raw: dict) -> Decision:
+    raw = dict(raw)
+    raw["related_decisions"] = [
+        [entry["target_id"], entry["type"]] for entry in raw.get("related_decisions", [])
+    ]
+    return _dict_to_decision(raw)
+
+
+def _firestore_doc_id(decision_id: str) -> str:
+    """Decision ids carry `/` (e.g. `rust-lang/rust-pr-149375`), which
+    Firestore reads as a path separator rather than literal document-id
+    text. Quote it into a single safe path segment; the real id still
+    round-trips through the stored payload's own `id` field."""
+    from urllib.parse import quote
+
+    return quote(decision_id, safe="")
+
+
+class FirestoreDecisionStore:
+    """Cloud-backed `DecisionStore`, one document per decision, keyed by
+    decision id. Exists so Cloud Run's ephemeral filesystem doesn't break
+    the persistence guarantee `JSONFileDecisionStore` provides locally."""
+
+    def __init__(self, collection: str, project: str | None = None):
+        from google.cloud import firestore
+
+        self._client = firestore.Client(project=project)
+        self._collection = self._client.collection(collection)
+
+    def save(self, decision: Decision) -> None:
+        self._collection.document(_firestore_doc_id(decision.id)).set(
+            _decision_to_firestore_dict(decision)
+        )
+
+    def save_many(self, decisions: list[Decision]) -> None:
+        batch = self._client.batch()
+        for d in decisions:
+            batch.set(
+                self._collection.document(_firestore_doc_id(d.id)),
+                _decision_to_firestore_dict(d),
+            )
+        batch.commit()
+
+    def get(self, decision_id: str) -> Decision | None:
+        doc = self._collection.document(_firestore_doc_id(decision_id)).get()
+        return _firestore_dict_to_decision(doc.to_dict()) if doc.exists else None
+
+    def list_all(self) -> list[Decision]:
+        return [_firestore_dict_to_decision(doc.to_dict()) for doc in self._collection.stream()]

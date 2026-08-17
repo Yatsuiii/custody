@@ -10,3 +10,4 @@ decision-trace/data/corpus/
 decision-trace/app/data/
 decision-trace/data/*.bak
 decision-trace/data/decisions_wide_pool.jsonl
+.env*

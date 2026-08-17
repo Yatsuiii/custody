@@ -13,24 +13,28 @@ special the UI does.
 
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import streamlit as st  # noqa: E402
 
+import vertex  # noqa: E402
 from collaborate import ClaimCategory, answer  # noqa: E402
 from graph import DecisionGraph, resolve_active  # noqa: E402
 from loader import load_decisions  # noqa: E402
 from memory import propose_reconsideration  # noqa: E402
 from models import DecisionStatus, RelationshipType  # noqa: E402
 from retrieval import DecisionIndex, default_cache_path  # noqa: E402
-from store import JSONFileDecisionStore  # noqa: E402
+from store import DecisionStore, FirestoreDecisionStore, JSONFileDecisionStore  # noqa: E402
 
 APP_DIR = Path(__file__).resolve().parent
 FALSIFIER_DATA = APP_DIR.parent / "data" / "decisions.jsonl"
 UI_STORE_PATH = APP_DIR / "data" / "ui_store.jsonl"
+FIRESTORE_COLLECTION = "decisiontrace-decisions"
 
 STATUS_COLOR = {
     DecisionStatus.PROPOSED: "orange",
@@ -50,8 +54,12 @@ CATEGORY_LABEL = {
 
 
 @st.cache_resource
-def load_store_and_index() -> tuple[JSONFileDecisionStore, DecisionIndex]:
-    store = JSONFileDecisionStore(UI_STORE_PATH)
+def load_store_and_index() -> tuple[DecisionStore, DecisionIndex]:
+    store: DecisionStore
+    if os.environ.get("DECISIONTRACE_STORE") == "firestore":
+        store = FirestoreDecisionStore(FIRESTORE_COLLECTION, project=vertex.PROJECT)
+    else:
+        store = JSONFileDecisionStore(UI_STORE_PATH)
     if not store.list_all():
         store.save_many(load_decisions(FALSIFIER_DATA))
     index = DecisionIndex(store, cache_path=default_cache_path())
@@ -71,7 +79,7 @@ def _reconsidered_target_id(decision) -> str | None:
 
 
 def render_status_line(
-    decision, resolution, is_current: bool, store: JSONFileDecisionStore, graph: DecisionGraph,
+    decision, resolution, is_current: bool, store: DecisionStore, graph: DecisionGraph,
 ) -> None:
     badge = render_status_badge(decision.current_status)
     if is_current:
@@ -95,7 +103,7 @@ def render_status_line(
         st.markdown(f"{badge} — **not current**. Active: *{active_subject}* (`{active}`)")
 
 
-def render_decision_card(decision_id: str, store: JSONFileDecisionStore) -> None:
+def render_decision_card(decision_id: str, store: DecisionStore) -> None:
     decision = store.get(decision_id)
     if decision is None:
         st.warning(f"Unknown decision id: {decision_id}")
@@ -138,7 +146,7 @@ def render_decision_card(decision_id: str, store: JSONFileDecisionStore) -> None
         st.markdown(f"{marker} `{node_id}` — {render_status_badge(node.current_status)}{current_mark}: {node.subject}")
 
 
-def render_candidate_form(decision_id: str, store: JSONFileDecisionStore, index: DecisionIndex) -> None:
+def render_candidate_form(decision_id: str, store: DecisionStore, index: DecisionIndex) -> None:
     with st.form(key=f"reconsider-{decision_id}"):
         st.markdown("**Record a reconsideration of this decision:**")
         changed = st.text_area("What assumption has changed?", key=f"assumption-{decision_id}")
