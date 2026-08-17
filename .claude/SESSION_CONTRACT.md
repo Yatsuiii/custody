@@ -4297,3 +4297,62 @@ is real but not entered for that award, and why. Redeployed;
 `make verify-deploy` 4/4, console clean.
 
 Status: complete
+
+## Reposition Best Multimodal UX candidacy onto the graph GUI (opened 2026-08-17)
+
+Objective: the user still wants a Best Multimodal UX shot but explicitly
+does not want a forced-in capability. Narration was cut (previous
+sub-build) because it was both unverifiable and, on the user's own
+critique, pointless -- 27 seconds nobody has time for, saying nothing the
+verdict text didn't already say instantly. The Dependency Cartography page
+(`web/incident.html`) is a genuine second modality already built and
+live-proven today: an interactive SVG node-graph diagram (animated
+contamination paths, click-to-inspect right panel, a real revoke
+interaction that redraws the graph) alongside the text/evidence table --
+grasped by looking in seconds, not by listening for half a minute. This
+sub-build repositions the existing claim, adds no new capability, and
+takes no new technical risk.
+
+Branch: feat/memory-provenance
+Parent: b674c71
+
+Allowed files: `README.md`, `JUDGE_HANDOFF.md`, `.claude/SESSION_CONTRACT.md`.
+
+Non-goals:
+
+- No new capability, no code change to `scripts/render_gui.py` or
+  `web/incident.html`'s actual behavior -- this is a documentation/framing
+  change over what already exists and is already proven.
+- Do not overclaim. "Multimodal" here means an interactive visual graph
+  representation genuinely distinct from prose, not a claim of audio,
+  video, or image generation -- state it exactly that way, not vaguely.
+- No published rubric exists for this award beyond name and prize amount
+  (already checked live, per `JUDGE_HANDOFF.md`) -- do not invent one.
+
+Acceptance gates:
+
+1. `README.md` states the Multimodal UX candidacy against the Dependency
+   Cartography page specifically, naming what makes it a second modality
+   (interactive SVG graph + click interactions + live revoke redraw),
+   not vague "GUI" language.
+2. `JUDGE_HANDOFF.md` is updated to match -- the earlier "not entered"
+   framing from the prior sub-build is corrected, not left contradicting
+   this one.
+3. No claim about Reviewer Narration's removal is walked back or
+   softened; the honesty about why it was cut stays as written.
+4. `make check` unaffected (docs-only change).
+
+Verification: read both files for internal consistency after editing; grep
+for "Best Multimodal UX" to confirm every remaining mention agrees.
+
+**Closed 2026-08-17.** All four gates met. `README.md` gained a new
+"Best Multimodal UX candidacy" section naming the Dependency Cartography
+page specifically (interactive SVG graph, click-to-inspect, live revoke
+redraw), and the Reviewer narration section's closing note now points to
+it instead of implying no candidacy exists. `JUDGE_HANDOFF.md`'s opening
+and "What to actually produce" section both updated to match. `make check`
+376/376, unaffected (docs-only). Not yet redeployed or pushed — this is a
+docs-only change riding along with the still-unpushed `b674c71`; push on
+next explicit authorization.
+
+Status: complete

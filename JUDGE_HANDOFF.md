@@ -15,14 +15,23 @@ it is meant to stay one sentence:
 > if an approved revision is later compromised, identifies every memory
 > descended from it for selective revocation.
 
-Not entered as a **Best Multimodal UX** candidate — a Reviewer-narration
-audio widget was built and briefly deployed for that award, then removed
-on 2026-08-17 (see `README.md`'s "Reviewer narration" section): its
-playback couldn't be verified reliable in every browser, and the verdict
-text it narrated already conveyed everything the audio did. The
-underlying live Text-to-Speech capability is still real and gated
-(`make live-narration` / `make narration-gates`), just not surfaced or
-claimed for this award.
+Also a candidate for the separate **Best Multimodal UX** award ($5,000, 2
+winners) — no published rubric exists for that award beyond its name and
+prize amount (checked live against the hackathon's main page and rules
+page, not assumed). The candidacy is the live Dependency Cartography page
+(https://custody-incident-cave2.vercel.app/): a genuine second modality
+alongside the prose/data every other row of this project proves in —
+an interactive SVG node-graph diagram with animated contamination paths,
+a click-to-inspect right panel per node, and a real "Revoke exact
+descendants" interaction that redraws the graph live, all reading a
+judge's blast radius in seconds by looking, not by reading a table. A
+Reviewer-narration audio widget was built and briefly deployed for this
+award instead, then removed on 2026-08-17 (see `README.md`'s "Reviewer
+narration" section): its playback couldn't be verified reliable in every
+browser, and at 27 seconds it conveyed nothing the verdict text above it
+didn't already say instantly. The underlying live Text-to-Speech
+capability is still real and gated (`make live-narration` / `make
+narration-gates`), just not surfaced or claimed for this award.
 
 ## The real judging criteria, quoted from source, not assumed
 
@@ -131,11 +140,15 @@ commit, do not push, do not redeploy — this is a read-only review. Report:
    above (40/30/30), with specific evidence citations (file:line, proof
    id, or a claim you personally verified vs. one you're taking on
    trust).
-2. The single most damaging gap you can find, if any — the thing a real
+2. Whether the Dependency Cartography page reads as a credible Best
+   Multimodal UX candidate, given no published rubric exists — your own
+   honest read of whether an interactive SVG graph with a live revoke
+   interaction is a genuine second modality or a stretch.
+3. The single most damaging gap you can find, if any — the thing a real
    judge would flag first. This project's own `HANDOFF.md` and
    `SESSION_CONTRACT.md` already document several known limitations
    honestly (see `README.md`'s "Status, honestly" section) — check
    whether they're accurately stated or whether something is quietly
    overclaimed.
-3. Anything you could not verify and had to take on the project's own
+4. Anything you could not verify and had to take on the project's own
    word, named explicitly as such.

@@ -616,6 +616,22 @@ read from `proof-out/live-review.json` today, and any resulting demotion or
 revocation still goes through the existing `/demote`/`/revoke` endpoints,
 driven by a human.
 
+### Best Multimodal UX candidacy: the Dependency Cartography page
+
+No published rubric exists for this specialty award beyond its name and
+prize amount ($5,000, 2 winners), checked live against the hackathon's
+main page and rules page rather than assumed. The candidacy is
+https://custody-incident-cave2.vercel.app/ — the Dependency Cartography
+page (`web/incident.html`, `scripts/render_gui.py`) — not a bolt-on built
+for the award, but the same page the main track's Demo & Production
+Readiness criterion already reads: a genuine second modality alongside
+prose and tables, an interactive SVG node-graph diagram with animated
+contamination paths, a click-to-inspect right panel per node, and a real
+"Revoke exact descendants" interaction that redraws the graph live. A
+judge reads the blast radius by looking at it in seconds, not by parsing a
+table or listening to audio. This claim needed no new capability and no
+new risk — it names something already built and already live-proven.
+
 ### Reviewer narration: a real capability, not surfaced in the GUI
 
 `scripts/live_narration.py` runs its own independent quarantine +
@@ -634,14 +650,15 @@ audio. `make narration-gates` independently re-verifies it, including one
 independently issued, separate Cloud Text-to-Speech call under the
 project's own credentials at judge time.
 
-**Not surfaced in the GUI or claimed as a Best Multimodal UX candidate.**
-It was originally built and embedded as a `data:audio/mpeg;base64,...`
-player on the Architecture & Evidence page, but the audio player was
-removed on 2026-08-17: nobody watching a short demo has time to listen to
-it, the verdict text above it already conveyed everything the audio did,
-and its playback could not be verified reliable in every browser. The
-underlying capability and its live proof remain real and unchanged; only
-the UI surfacing and the award-candidacy claim were cut.
+**Not surfaced in the GUI.** It was originally built and embedded as a
+`data:audio/mpeg;base64,...` player on the Architecture & Evidence page,
+and was the project's first attempt at a Best Multimodal UX candidate, but
+the audio player was removed on 2026-08-17: nobody watching a short demo
+has time to listen to it, the verdict text above it already conveyed
+everything the audio did, and its playback could not be verified reliable
+in every browser. The underlying capability and its live proof remain real
+and unchanged; only the UI surfacing was cut. The award candidacy moved to
+the Dependency Cartography page instead — see above.
 
 ### The fleet at N=25: a tool shared across departments, revoked once
 
