@@ -8,6 +8,7 @@ RUN pip install --no-cache-dir -r app/requirements.txt
 COPY vertex.py gh_util.py ./
 COPY data/decisions.jsonl ./data/decisions.jsonl
 COPY app/ ./app/
+COPY .streamlit/ ./.streamlit/
 
 ENV PYTHONUNBUFFERED=1
 

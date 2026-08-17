@@ -37,14 +37,79 @@ FALSIFIER_DATA = APP_DIR.parent / "data" / "decisions.jsonl"
 UI_STORE_PATH = APP_DIR / "data" / "ui_store.jsonl"
 FIRESTORE_COLLECTION = "decisiontrace-decisions"
 
+# Excluded from the live demo only, not from data/decisions.jsonl or
+# RESULTS.md — this decision is a real, correctly-graded falsifier case
+# (RESULTS.md row 30, scored CR), but its "rationale" is literal unfilled
+# KEP-template boilerplate from GitHub, not a real design rationale. It
+# reads as a fabricated/broken answer in a live demo despite being
+# verbatim and correctly cited.
+DEMO_EXCLUDED_DECISION_IDS = {"kep-keps-sig-storage-1979-object-storage-support"}
+
 STATUS_COLOR = {
-    DecisionStatus.PROPOSED: "orange",
-    DecisionStatus.ACCEPTED: "green",
-    DecisionStatus.IMPLEMENTED: "green",
-    DecisionStatus.REVERTED: "red",
-    DecisionStatus.SUPERSEDED: "red",
-    DecisionStatus.REAFFIRMED: "green",
+    DecisionStatus.PROPOSED: "amber",
+    DecisionStatus.ACCEPTED: "accent",
+    DecisionStatus.IMPLEMENTED: "accent",
+    DecisionStatus.REVERTED: "danger",
+    DecisionStatus.SUPERSEDED: "danger",
+    DecisionStatus.REAFFIRMED: "accent",
 }
+
+_THEME_CSS = """
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&display=swap');
+:root {
+  --dt-bg: #f4f3ee; --dt-panel: #fdfcf9; --dt-panel-2: #f8f6f0;
+  --dt-line: #e0ddd2; --dt-ink: #1e1c17; --dt-ink-dim: #6b6858;
+  --dt-ink-faint: #9b9786; --dt-accent: #3f6e52; --dt-accent-dim: rgba(63,110,82,0.1);
+  --dt-danger: #b5432e; --dt-danger-dim: rgba(181,67,46,0.09);
+  --dt-amber: #a6741c; --dt-amber-dim: rgba(166,116,28,0.1);
+  --dt-mono: "IBM Plex Mono", "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+[data-testid="stAppViewContainer"], [data-testid="stHeader"] { background: var(--dt-bg); }
+[data-testid="stSidebar"] { background: var(--dt-panel); border-right: 1px solid var(--dt-line); }
+html, body, [class*="css"] { color: var(--dt-ink); }
+h1, h2, h3 { font-weight: 700 !important; letter-spacing: -0.01em; }
+h1 { font-size: 22px !important; }
+[data-testid="stCaptionContainer"], .stCaption {
+  color: var(--dt-ink-faint) !important; font-size: 12.5px !important;
+}
+p, li, span, label { color: var(--dt-ink); }
+code, .stMarkdown code { font-family: var(--dt-mono) !important; background: var(--dt-panel-2) !important;
+  border: 1px solid var(--dt-line); border-radius: 4px; color: var(--dt-ink-dim) !important; }
+hr { border-color: var(--dt-line) !important; }
+a { color: var(--dt-accent) !important; }
+[data-testid="stChatMessage"] {
+  background: var(--dt-panel) !important; border: 1px solid var(--dt-line) !important;
+  border-radius: 8px !important;
+}
+[data-testid="stChatInput"] { border-color: var(--dt-line) !important; }
+[data-testid="stForm"] {
+  background: var(--dt-panel-2); border: 1px solid var(--dt-line) !important; border-radius: 6px;
+}
+.stButton button, .stFormSubmitButton button, [data-testid="stBaseButton-secondary"] {
+  background: var(--dt-panel) !important; color: var(--dt-ink) !important;
+  border: 1px solid var(--dt-line) !important; border-radius: 5px !important;
+  font-size: 12.5px !important;
+}
+.stButton button:hover, .stFormSubmitButton button:hover { border-color: var(--dt-ink-faint) !important; }
+div[data-testid="stAlert"], .stAlert {
+  border-radius: 6px !important; border: 1px solid var(--dt-line) !important; background: var(--dt-panel-2) !important;
+}
+.dt-pill {
+  display: inline-block; font-family: var(--dt-mono); font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 8px; border-radius: 999px;
+  border: 1px solid transparent;
+}
+.dt-pill-accent { background: var(--dt-accent-dim); color: var(--dt-accent); border-color: rgba(63,110,82,0.3); }
+.dt-pill-danger { background: var(--dt-danger-dim); color: var(--dt-danger); border-color: rgba(181,67,46,0.3); }
+.dt-pill-amber { background: var(--dt-amber-dim); color: var(--dt-amber); border-color: rgba(166,116,28,0.3); }
+.dt-pill-gray { background: var(--dt-panel-2); color: var(--dt-ink-faint); border-color: var(--dt-line); }
+</style>
+"""
+
+
+def inject_theme() -> None:
+    st.markdown(_THEME_CSS, unsafe_allow_html=True)
 
 CATEGORY_LABEL = {
     ClaimCategory.VERIFIED_HISTORICAL_FACT: "📜 verified historical fact",
@@ -52,6 +117,24 @@ CATEGORY_LABEL = {
     ClaimCategory.INFERRED_ADVICE: "💭 inferred advice",
     ClaimCategory.MISSING_OR_UNCERTAIN: "❓ missing/uncertain",
 }
+
+
+def grounded_decision_id(claims) -> str | None:
+    """The decision id an answer actually resolved to, or None.
+
+    Embedding retrieval always returns candidates even when none of them
+    answer the question — `Answer.candidates_considered` reflects that raw
+    retrieval, not resolution. The "Current decision" card must track
+    what the model actually claimed, not what was merely retrieved, or it
+    renders a confident-looking card next to a missing/uncertain answer.
+    """
+    return next(
+        (
+            c.decision_id for c in claims
+            if c.decision_id and c.category != ClaimCategory.MISSING_OR_UNCERTAIN
+        ),
+        None,
+    )
 
 
 @st.cache_resource
@@ -62,14 +145,18 @@ def load_store_and_index() -> tuple[DecisionStore, DecisionIndex]:
     else:
         store = JSONFileDecisionStore(UI_STORE_PATH)
     if not store.list_all():
-        store.save_many(load_decisions(FALSIFIER_DATA))
+        decisions = [
+            d for d in load_decisions(FALSIFIER_DATA)
+            if d.id not in DEMO_EXCLUDED_DECISION_IDS
+        ]
+        store.save_many(decisions)
     index = DecisionIndex(store, cache_path=default_cache_path())
     return store, index
 
 
 def render_status_badge(status: DecisionStatus) -> str:
     color = STATUS_COLOR.get(status, "gray")
-    return f":{color}[**{status.value}**]"
+    return f'<span class="dt-pill dt-pill-{color}">{status.value}</span>'
 
 
 def _reconsidered_target_id(decision) -> str | None:
@@ -84,7 +171,7 @@ def render_status_line(
 ) -> None:
     badge = render_status_badge(decision.current_status)
     if is_current:
-        st.markdown(f"{badge} — this is the currently active decision")
+        st.markdown(f"{badge} — this is the currently active decision", unsafe_allow_html=True)
         return
     if decision.current_status == DecisionStatus.PROPOSED:
         # A candidate's own lineage is trivially just itself (RECONSIDERS
@@ -96,12 +183,16 @@ def render_status_line(
         active_subject = store.get(active).subject if active else "none"
         st.markdown(
             f"{badge} — a proposed candidate, not yet accepted. "
-            f"Active decision for what it reconsiders: *{active_subject}* (`{active}`)"
+            f"Active decision for what it reconsiders: *{active_subject}* (`{active}`)",
+            unsafe_allow_html=True,
         )
     else:
         active = resolution.active_id
         active_subject = store.get(active).subject if active else "none"
-        st.markdown(f"{badge} — **not current**. Active: *{active_subject}* (`{active}`)")
+        st.markdown(
+            f"{badge} — **not current**. Active: *{active_subject}* (`{active}`)",
+            unsafe_allow_html=True,
+        )
 
 
 def render_decision_card(decision_id: str, store: DecisionStore) -> None:
@@ -144,7 +235,10 @@ def render_decision_card(decision_id: str, store: DecisionStore) -> None:
         node = store.get(node_id)
         marker = "→" if node_id != decision_id else "▶"
         current_mark = " (current)" if node_id == resolution.active_id else ""
-        st.markdown(f"{marker} `{node_id}` — {render_status_badge(node.current_status)}{current_mark}: {node.subject}")
+        st.markdown(
+            f"{marker} `{node_id}` — {render_status_badge(node.current_status)}{current_mark}: {node.subject}",
+            unsafe_allow_html=True,
+        )
 
 
 def render_candidate_form(decision_id: str, store: DecisionStore, index: DecisionIndex) -> None:
@@ -195,6 +289,7 @@ def render_live_ingest(store: DecisionStore, index: DecisionIndex) -> None:
 
 def main() -> None:
     st.set_page_config(page_title="DecisionTrace", layout="wide")
+    inject_theme()
     st.title("DecisionTrace")
     st.caption("Persistent engineering-decision memory — ask why, get the current answer.")
 
@@ -227,8 +322,7 @@ def main() -> None:
                 "role": "assistant", "text": "\n".join(lines) or "No answer produced.",
             })
 
-            if result.candidates_considered:
-                st.session_state.current_decision_id = result.candidates_considered[0]
+            st.session_state.current_decision_id = grounded_decision_id(result.claims)
             st.rerun()
 
     with card_col:
