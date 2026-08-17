@@ -300,7 +300,8 @@ evidence and the correction history in `DECISIONS.md` #2.
 
 | | |
 | --- | --- |
-| Core, verified against real google-adk 2.6.3 | **built**, 363 tests |
+| Core, verified against real google-adk 2.6.3 | **built**, 376 tests |
+| Trust-boundary failure injection: Memory Bank unreachable, Agent Registry timeout, malformed live tool surface | **built**, 13 tests, each proven against a deliberately broken fail-open build |
 | Derivation graph and retroactive revocation | **built** |
 | Selective live Memory Bank deletion (new opt-in write path) | **built**, `make live-memory-deletion` |
 | Cross-department isolation | **built** |

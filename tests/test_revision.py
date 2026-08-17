@@ -15,6 +15,7 @@ from pathlib import Path
 
 from custody.origin import Trust, take_custody
 from custody.revision import (
+    Admission,
     ApprovedTool,
     AttestationAuthority,
     Denial,
@@ -76,6 +77,54 @@ class StaleRegistryMetadataIsReproducible(unittest.TestCase):
         payload = {"result": {"tools": [APPROVED["result"]["tools"][0]] * 2}}
         with self.assertRaises(ToolSurfaceError):
             surface(payload)
+
+
+class AMalformedLiveSurfaceFailsClosed(unittest.TestCase):
+    """Gate 3: the revision check itself erroring must not be mistaken for
+    "nothing changed". A live ``tools/list`` read that comes back
+    malformed -- truncated, the wrong shape, a tool missing its name -- is
+    exactly what a compromised or broken MCP server can produce, and it
+    must refuse to become a ``ToolSurface`` at all rather than silently
+    parse into an empty one that then gets treated as "no tools to admit,
+    proceed".
+    """
+
+    def test_a_non_object_result_is_refused(self):
+        with self.assertRaises(ToolSurfaceError):
+            surface({"result": "not an object"})
+
+    def test_a_missing_tools_key_is_refused(self):
+        with self.assertRaises(ToolSurfaceError):
+            surface({"result": {}})
+
+    def test_a_non_list_tools_value_is_refused(self):
+        with self.assertRaises(ToolSurfaceError):
+            surface({"result": {"tools": "fetch_page"}})
+
+    def test_a_tool_entry_that_is_not_an_object_is_refused(self):
+        with self.assertRaises(ToolSurfaceError):
+            surface({"result": {"tools": ["fetch_page"]}})
+
+    def test_a_tool_entry_missing_a_name_is_refused(self):
+        payload = {
+            "result": {"tools": [{"description": "no name field at all"}]}
+        }
+        with self.assertRaises(ToolSurfaceError):
+            surface(payload)
+
+    def test_a_parse_failure_never_produces_a_surface_to_admit_against(self):
+        """A caller that cannot build a ``ToolSurface`` from a malformed
+        live read has nothing to pass to ``RevisionCatalog.admit`` at all;
+        the empty ``Admission`` that results from never calling it denies
+        every tool by construction (`Admission.allows` on an empty tuple),
+        the same default-deny an unknown department already gets in
+        `FirestoreRevisionCatalogTests.test_no_pins_for_a_department_
+        denies_as_missing_not_a_crash`."""
+        with self.assertRaises(ToolSurfaceError):
+            surface({"result": {"tools": "not a list"}})
+
+        with self.assertRaises(ToolCallDenied):
+            Admission().require("fetch_page")
 
 
 class TheDigestAlgorithmIsPinned(unittest.TestCase):
