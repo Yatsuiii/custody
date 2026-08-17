@@ -13,6 +13,7 @@ special the UI does.
 
 from __future__ import annotations
 
+import html
 import os
 import sys
 from pathlib import Path
@@ -137,6 +138,23 @@ def grounded_decision_id(claims) -> str | None:
     )
 
 
+def ensure_frozen_benchmark_seeded(store: DecisionStore) -> None:
+    """Always upsert the frozen benchmark, never gate it on "store is
+    empty": Firestore is shared/persistent across every session this build
+    has ever had, so a single early live-ingest or reconsideration write
+    (which leaves the store non-empty forever) would otherwise permanently
+    block the canonical falsifier-graded decisions from ever loading. Ids
+    are fixed and save_many is an id-keyed upsert, so this is a no-op for
+    anything already correct and safe to repeat on every cold start; it
+    never touches live-ingested/reconsideration decisions, which live
+    under distinct id schemes."""
+    frozen_decisions = [
+        d for d in load_decisions(FALSIFIER_DATA)
+        if d.id not in DEMO_EXCLUDED_DECISION_IDS
+    ]
+    store.save_many(frozen_decisions)
+
+
 @st.cache_resource
 def load_store_and_index() -> tuple[DecisionStore, DecisionIndex]:
     store: DecisionStore
@@ -144,12 +162,7 @@ def load_store_and_index() -> tuple[DecisionStore, DecisionIndex]:
         store = FirestoreDecisionStore(FIRESTORE_COLLECTION, project=vertex.PROJECT)
     else:
         store = JSONFileDecisionStore(UI_STORE_PATH)
-    if not store.list_all():
-        decisions = [
-            d for d in load_decisions(FALSIFIER_DATA)
-            if d.id not in DEMO_EXCLUDED_DECISION_IDS
-        ]
-        store.save_many(decisions)
+    ensure_frozen_benchmark_seeded(store)
     index = DecisionIndex(store, cache_path=default_cache_path())
     return store, index
 
@@ -180,17 +193,17 @@ def render_status_line(
         target_id = _reconsidered_target_id(decision)
         target_resolution = resolve_active(graph, target_id) if target_id else None
         active = target_resolution.active_id if target_resolution else None
-        active_subject = store.get(active).subject if active else "none"
+        active_subject = html.escape(store.get(active).subject) if active else "none"
         st.markdown(
             f"{badge} — a proposed candidate, not yet accepted. "
-            f"Active decision for what it reconsiders: *{active_subject}* (`{active}`)",
+            f"Active decision for what it reconsiders: *{active_subject}* (`{html.escape(active or '')}`)",
             unsafe_allow_html=True,
         )
     else:
         active = resolution.active_id
-        active_subject = store.get(active).subject if active else "none"
+        active_subject = html.escape(store.get(active).subject) if active else "none"
         st.markdown(
-            f"{badge} — **not current**. Active: *{active_subject}* (`{active}`)",
+            f"{badge} — **not current**. Active: *{active_subject}* (`{html.escape(active or '')}`)",
             unsafe_allow_html=True,
         )
 
@@ -236,7 +249,8 @@ def render_decision_card(decision_id: str, store: DecisionStore) -> None:
         marker = "→" if node_id != decision_id else "▶"
         current_mark = " (current)" if node_id == resolution.active_id else ""
         st.markdown(
-            f"{marker} `{node_id}` — {render_status_badge(node.current_status)}{current_mark}: {node.subject}",
+            f"{marker} `{html.escape(node_id)}` — "
+            f"{render_status_badge(node.current_status)}{current_mark}: {html.escape(node.subject)}",
             unsafe_allow_html=True,
         )
 
