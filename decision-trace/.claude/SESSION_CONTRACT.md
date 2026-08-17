@@ -587,3 +587,78 @@ Remaining for the user: run the Firestore repair script, then redeploy
 (`gcloud run deploy`, same command as before) to ship the seeding fix
 and HTML-escape fix to production — until redeployed, the fixes exist
 only in this branch's code, not on the live URL.
+
+## Third real bug found: blank/frozen page and silent hangs, no loading feedback (opened/closed 2026-08-17)
+
+User said the first two bugs found weren't what they hit and told me to
+go look myself instead of asking. Actually used the live production app
+under realistic conditions (cold navigation, no pre-warming) instead of
+re-reading code, and reproduced a real, severe UX bug on the first try:
+
+`main()` calls `load_store_and_index()` synchronously at the very top,
+before the sidebar or chat UI render at all. On a cold container (Cloud
+Run scale-to-zero, or the first hit after any deploy — both extremely
+likely during a multi-take recording session with pauses between takes)
+this does a real Firestore write plus a real Vertex embedding call for
+every decision, easily 20-30s, with **zero visual feedback**: the page
+renders only the title/caption and then goes completely blank except for
+Streamlit's own spinner icon in the far top-right corner — no sidebar, no
+chat box, nothing to click, nothing explaining why. Screenshotted this
+exact state live. This plausibly also explains an earlier-seeming
+"the chat input silently ate my question" moment during this session's
+own testing: typing into where the input *will* render, during this
+blank window, before it exists yet.
+
+Same root cause, two more instances: `index.reindex(store)` (a real,
+~10-30s full-corpus re-embed, since the cache key is content-derived and
+changes whenever any decision is added) is called with **no spinner** in
+both `render_candidate_form` (after "Record reconsideration") and
+`render_live_ingest` (after its own "Ingesting..." spinner already
+closes) — both look exactly like the button did nothing for however long
+the re-embed takes. This matches something noticed directly earlier this
+session: clicking "Record reconsideration" on production and seeing no
+visible change for several seconds before Firestore confirmed the
+candidate had, in fact, been created.
+
+Branch: explore/decision-trace-v0
+Parent: this session's html-escape/seeding-fix commit
+
+Allowed files:
+- `app/ui.py` only (wrap the three blocking calls in `st.spinner(...)`
+  with a clear message; no business-logic changes)
+- `decision-trace/HANDOFF.md`, `decision-trace/.claude/SESSION_CONTRACT.md`
+
+Non-goals:
+- Not attempting to reduce the actual embedding/reindex latency itself
+  (that's an infra/architecture question — e.g. keep-warm, incremental
+  re-embedding instead of full-corpus) — this fix only makes the existing
+  wait legible instead of looking hung.
+
+Acceptance gates:
+1. Cold-start local repro (deleted local ui_store.jsonl/card_embeddings.json)
+   shows a clear "Loading DecisionTrace's decision memory..." message
+   instead of a blank page — verified live via screenshot, before and
+   after the fix.
+2. Both `index.reindex()` call sites show a spinner during the reindex
+   itself, not just during the surrounding ingest call.
+3. Full test suite passes, no regressions (spinner wraps are UI-only,
+   no logic change expected).
+
+Verification: local cold-start repro screenshotted before (blank page
+confirmed) and after (spinner message confirmed) the fix; full suite run.
+
+Status: complete
+
+Result: Fixed. `st.spinner()` added around all three blocking calls.
+Reproduced the exact blank-page bug locally first (screenshot: title +
+caption only, Streamlit's own spinner icon top-right, nothing else — no
+sidebar, no chat box), confirmed the fix resolves it (screenshot: clear
+"Loading DecisionTrace's decision memory (first load after a cold start
+can take 20-30s)..." message), confirmed the app renders normally once
+loading completes. Not yet verified on production — needs the same
+redeploy as the other fixes from this session. This is not confirmed to
+be either of the user's original two bugs (they said the earlier
+HTML-injection/missing-Firestore-data fixes "were not it"); it's a third,
+independently-found, well-evidenced issue from actually using the
+deployed app under cold-start conditions rather than continuing to guess
+from code review alone.

@@ -262,7 +262,12 @@ def render_candidate_form(decision_id: str, store: DecisionStore, index: Decisio
         submitted = st.form_submit_button("Record reconsideration")
         if submitted and changed.strip():
             candidate = propose_reconsideration(store, decision_id, changed.strip())
-            index.reindex(store)
+            # reindex() re-embeds the whole corpus (a new candidate
+            # changes the content-derived cache key) — a real, ~10-30s
+            # Vertex call. Without a spinner this looks like the button
+            # did nothing.
+            with st.spinner("Updating decision memory..."):
+                index.reindex(store)
             st.success(f"Recorded candidate decision `{candidate.id}` (status: PROPOSED).")
             st.rerun()
 
@@ -297,7 +302,8 @@ def render_live_ingest(store: DecisionStore, index: DecisionIndex) -> None:
                 )
                 return
             store.save_many(decisions)
-            index.reindex(store)
+            with st.spinner("Updating decision memory..."):
+                index.reindex(store)
             st.success(f"Ingested {len(decisions)} decision(s) from {repo}.")
 
 
@@ -307,7 +313,14 @@ def main() -> None:
     st.title("DecisionTrace")
     st.caption("Persistent engineering-decision memory — ask why, get the current answer.")
 
-    store, index = load_store_and_index()
+    # load_store_and_index() is cheap on a warm container (cached by
+    # st.cache_resource) but does a real Vertex embedding call for every
+    # decision on a cold one (Cloud Run scale-to-zero, or the first hit
+    # after a deploy) — with no indicator, the page renders only the
+    # title/caption above and then sits blank for 20-30s with nothing to
+    # click, which reads as a hung app rather than a loading one.
+    with st.spinner("Loading DecisionTrace's decision memory (first load after a cold start can take 20-30s)..."):
+        store, index = load_store_and_index()
     render_live_ingest(store, index)
 
     if "chat_history" not in st.session_state:
