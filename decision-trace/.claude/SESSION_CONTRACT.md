@@ -662,3 +662,51 @@ HTML-injection/missing-Firestore-data fixes "were not it"); it's a third,
 independently-found, well-evidenced issue from actually using the
 deployed app under cold-start conditions rather than continuing to guess
 from code review alone.
+
+---
+
+Objective: document, without applying, the confound in the falsifier's
+structured condition and the fix that resolves it.
+
+Branch: explore/decision-trace-v0
+
+Parent: HEAD
+
+Allowed files:
+- docs/FALSIFIER_CONFOUND_HANDOFF.md
+- .claude/SESSION_CONTRACT.md
+
+Non-goals:
+- Do not apply the fix. No change to run_conditions.py, grade.py,
+  mine_decisions.py, rag_index.py, or RESULTS.md in this session.
+- Do not re-run any condition and do not spend Vertex calls.
+- Do not alter the preregistered thresholds in verdict_for().
+- No commit, no push.
+
+Baseline: RESULTS.md reports structured at 100/100/100 over n=37 with verdict
+GO; data/runs holds 37 cached runs per condition.
+
+Acceptance gates:
+1. The handoff cites the confound at file and line: run_conditions.py:137
+   (card carries rationale_quote), run_conditions.py:143-144 (all cards, no
+   retrieval), grade.py:43 (judge keys on the same string).
+2. It names what must NOT be changed, so the sound parts survive the fix:
+   pick_quote's LLM-free ground truth, build_query's non-leaking query, the
+   decoy-bearing RAG corpus, the separate judge call, the frozen thresholds.
+3. It states the re-run cost as counts, separating regeneration from
+   re-judging.
+4. It offers a zero-cost honest fallback for the case where no re-run happens.
+5. Only the two allowed files are modified.
+
+Verification: line references re-checked against the current files with grep;
+`git status --porcelain` shows only the two allowed paths plus pre-existing
+untracked entries.
+
+Status: complete
+
+Result: Handoff written to docs/FALSIFIER_CONFOUND_HANDOFF.md. Fix not
+applied, by design. Ownership passes to whoever next works this branch.
+Verification re-run this session: all three cited line references
+(run_conditions.py:137, :143-144, grade.py:43) confirmed exact against
+current files via grep; `git status --porcelain` confirmed only the two
+allowed files plus pre-existing untracked entries.
