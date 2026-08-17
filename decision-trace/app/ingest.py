@@ -85,6 +85,19 @@ def _extract_json(raw: str) -> dict | None:
         return None
 
 
+def _as_str_list(value: object) -> list[str]:
+    """Coerces a field the model was asked to return as a JSON array into
+    an actual list[str], defaulting to empty on any other shape (a bare
+    string, a number, null). Without this, a malformed response where
+    Gemini returns `"rejected_alternatives": "none"` instead of `[]` would
+    pass a raw string into `Decision.rejected_alternatives`, and
+    `retrieval.render_card`'s `'; '.join(...)` would silently iterate over
+    its characters instead of failing or defaulting cleanly."""
+    if not isinstance(value, list):
+        return []
+    return [str(item) for item in value if isinstance(item, (str, int, float))]
+
+
 def extract_decision_fields(source_text: str) -> dict:
     """Calls Gemini for structured extraction, then programmatically
     verifies the returned rationale_quote is a real substring of
@@ -101,14 +114,15 @@ def extract_decision_fields(source_text: str) -> dict:
         rationale_quote = None
         parsed["rationale"] = None
 
+    subject = parsed.get("subject")
     return {
-        "subject": parsed.get("subject") or "(untitled)",
+        "subject": subject if isinstance(subject, str) and subject else "(untitled)",
         "context": parsed.get("context"),
         "chosen_approach": parsed.get("chosen_approach"),
-        "rejected_alternatives": parsed.get("rejected_alternatives") or [],
+        "rejected_alternatives": _as_str_list(parsed.get("rejected_alternatives")),
         "rationale": parsed.get("rationale"),
         "rationale_quote": rationale_quote,
-        "constraints": parsed.get("constraints") or [],
+        "constraints": _as_str_list(parsed.get("constraints")),
     }
 
 

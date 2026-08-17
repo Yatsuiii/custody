@@ -78,3 +78,115 @@ recording itself is explicitly out of scope (no screen/voice capture
 capability here) and handed back to the user as the one remaining manual
 step — DEMO_SCRIPT.md is a ready-to-follow, timed script referencing only
 things already proven live this week.
+
+## Live-ingest UI wiring + failure-path tests (opened 2026-08-17)
+
+Objective: a judge re-review scored Innovation & Utility 80/100 and
+Architectural Discipline 78/100, docked for two named reasons: (1) the
+judged demo only ever shows the frozen 55-decision benchmark, so
+"operational utility" is asserted, not demoed — `ingest_repo()` in
+`app/ingest.py` already works and is tested but isn't reachable from the
+UI; (2) the test suite is happy-path only (911 lines across 5 files, zero
+tests named `timeout`/`error`/`malformed`) — no proof of behavior when
+Gemini times out, a PR body is malformed, or Firestore is unavailable.
+Close both gaps.
+
+Branch: explore/decision-trace-v0
+Parent: 162234a
+
+Allowed files:
+- `app/ui.py` (add a live-ingest entry point calling the existing
+  `ingest_repo()` — UI wiring only, not new extraction logic)
+- new tests under `app/tests/` for ingest failure paths and existing
+  component failure paths (Gemini timeout, malformed PR/KEP input,
+  Firestore unavailable)
+- `app/ingest.py` (added mid-session, 2026-08-17): the failure-path tests
+  found a real bug in `extract_decision_fields` — a malformed Gemini
+  response where `rejected_alternatives`/`constraints` come back as a
+  string instead of a list passes straight through into a `Decision`,
+  where downstream `'; '.join(...)` would silently iterate over
+  characters instead of failing or defaulting cleanly. Scope: minimal
+  type-validation fix only, not a rewrite of the extraction pipeline.
+- `README.md`'s "What's deliberately not in the demo" section (update to
+  reflect live ingest now being wired, if it lands) and status notes
+- `decision-trace/HANDOFF.md` (status update only, at session end)
+- `decision-trace/.claude/SESSION_CONTRACT.md` (this file)
+
+Non-goals:
+- `BUILD_SCOPE.md`, `RESULTS.md`, `data/decisions.jsonl`, and the frozen
+  falsifier pipeline scripts (`mine_decisions.py`, `build_corpus.py`,
+  `rag_index.py`, `run_conditions.py`, `grade.py`, `vertex.py`,
+  `gh_util.py`) stay frozen and untouched — this is product work, not a
+  re-run of the falsifier.
+- No new Cloud Run deploy required by this contract alone; if live-ingest
+  wiring needs redeploying to reach the judged URL, that's a follow-up
+  the user will trigger explicitly, not assumed here.
+- No touching Custody's `feat/memory-provenance` branch/services or the
+  archived `failure-mining/`/`research-access/`/`research-impact/`/
+  `contribution-gate/` directories (already removed from this branch at
+  162234a — stay removed).
+- No git commit/push without explicit authorization already given this
+  session (user said "you can do everything else," 2026-08-17) — commit
+  and push are in scope for this contract.
+
+Baseline: run `app/tests/` and record the pass count before starting
+(real API calls, needs `CLOUDSDK_CONFIG` pointed at `.gcloud`, ~5 min).
+
+Acceptance gates:
+1. The UI exposes a way to point ingestion at a live repo (at minimum, one
+   judge-choosable target) and it produces at least one real decision
+   record end-to-end through `ingest_repo()` — not a mock, not a canned
+   fixture.
+2. At least one test proves a Gemini API timeout/error during collaboration
+   or ingestion is surfaced as a clear failure, not a silent wrong answer.
+3. At least one test proves a malformed/incomplete PR or KEP input to
+   `ingest.py` fails predictably (raises or returns a clear error) rather
+   than producing a garbage decision record.
+4. At least one test proves Firestore unavailability is handled — either a
+   clear error or a documented fallback, not a silent data loss.
+5. Full test suite passes afterward; count recorded and compared to
+   baseline. `README.md`'s "not in the demo" section updated to match
+   reality (remove the ingest caveat if it now holds, or narrow it
+   precisely to what's still true).
+
+Verification: run `app/tests/` before and after with counts compared;
+manually exercise the new UI ingest path once against a real small repo to
+confirm the end-to-end record actually appears and shapes a subsequent
+answer, mirroring the existing Stage 8 discipline.
+
+Status: complete
+
+Result: Baseline 31/31, final 38/38 (7 new tests in
+`app/tests/test_failure_paths.py`, 0 regressions). `app/ui.py` gained a
+"Live ingest" sidebar panel (repo text input, max-candidates control,
+Ingest button) that calls the existing `ingest_repo()` and adds results to
+the session store via `store.save_many()` + `index.reindex()`. Manually
+exercised through the real browser UI (Chrome, not a script): ingesting
+`kubernetes/kubernetes` produced "Ingested 4 decision(s)", and a follow-up
+question ("Why configure the max CrashLoopBackOff delay?") correctly
+surfaced the freshly ingested `kep-keps-sig-node-5593-configure-the-max-
+crashloopbackoff-delay` decision as the current active decision on the
+card, with a real cited evidence URL — gate 1 satisfied against a real
+repo, no mock. Gates 2-4 each covered by mocked failure-injection tests
+(the failure condition itself is mocked; nothing else in the call path
+is): Gemini timeout/error during `collaborate.answer` and
+`ingest.extract_decision_fields` both propagate as a clear exception
+rather than a fabricated answer; malformed/unparseable Gemini extraction
+output defaults to a predictable "(untitled)"/empty-fields shape; an
+incomplete revert-PR candidate raises `KeyError` rather than constructing
+a Decision with silently missing data; Firestore unavailability (mocked
+collection raising on `.stream()`/`.get()`/`.set()`) raises clearly on
+both read and write, never a silent empty result or a silently-lost
+write. **Real bug found and fixed**: `extract_decision_fields` never
+validated that `rejected_alternatives`/`constraints` came back from
+Gemini as JSON arrays — a malformed response returning a bare string for
+either field passed straight through into `Decision`, where
+`retrieval.render_card`'s `'; '.join(...)` would have silently iterated
+over the string's characters instead of failing or defaulting cleanly.
+Fixed with a new `ingest._as_str_list` helper that coerces to `list[str]`
+or defaults to `[]`; the fix required adding `app/ingest.py` to this
+contract's Allowed files mid-session (documented above), since the bug
+was discovered only after the contract was opened. Covered by a
+regression test (`test_wrongly_typed_model_fields_do_not_produce_a_garbage_
+decision_record`). `README.md`'s "not in the demo" section rewritten to
+describe the live-ingest panel instead of listing it as a gap.

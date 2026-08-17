@@ -25,6 +25,7 @@ import streamlit as st  # noqa: E402
 import vertex  # noqa: E402
 from collaborate import ClaimCategory, answer  # noqa: E402
 from graph import DecisionGraph, resolve_active  # noqa: E402
+from ingest import ingest_repo  # noqa: E402
 from loader import load_decisions  # noqa: E402
 from memory import propose_reconsideration  # noqa: E402
 from models import DecisionStatus, RelationshipType  # noqa: E402
@@ -158,12 +159,47 @@ def render_candidate_form(decision_id: str, store: DecisionStore, index: Decisio
             st.rerun()
 
 
+def render_live_ingest(store: DecisionStore, index: DecisionIndex) -> None:
+    """Live ingestion entry point — calls the same `ingest_repo()` already
+    proven in `app/tests/test_ingest.py`, on whatever repo the judge types
+    in, instead of only ever loading the frozen 55-decision benchmark. A
+    failure here (bad repo name, no matching PRs/KEPs, a Gemini error) is
+    surfaced as a `st.error`, never swallowed into a silently empty result."""
+    with st.sidebar:
+        st.markdown("### Live ingest")
+        st.caption(
+            "Point extraction at a real GitHub repo — pulls merged revert "
+            "PRs and KEP-style \"Alternatives Considered\" sections, "
+            "extracts them with Gemini, and adds them to this session's "
+            "decision memory alongside the benchmark."
+        )
+        repo = st.text_input("GitHub repo (owner/name)", value="kubernetes/kubernetes")
+        target = st.number_input("Max candidates per channel", min_value=1, max_value=10, value=2)
+        if st.button("Ingest"):
+            with st.spinner(f"Ingesting {repo}..."):
+                try:
+                    decisions = ingest_repo(repo, revert_target=int(target), kep_target=int(target))
+                except Exception as e:
+                    st.error(f"Ingestion failed: {e}")
+                    return
+            if not decisions:
+                st.warning(
+                    f"No revert pairs or KEP alternatives found in {repo} "
+                    "(or none survived quote verification)."
+                )
+                return
+            store.save_many(decisions)
+            index.reindex(store)
+            st.success(f"Ingested {len(decisions)} decision(s) from {repo}.")
+
+
 def main() -> None:
     st.set_page_config(page_title="DecisionTrace", layout="wide")
     st.title("DecisionTrace")
     st.caption("Persistent engineering-decision memory — ask why, get the current answer.")
 
     store, index = load_store_and_index()
+    render_live_ingest(store, index)
 
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = []

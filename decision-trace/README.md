@@ -121,8 +121,12 @@ First load embeds all 55 benchmark decisions once (~30s), then caches to
 `app/data/card_embeddings.json` (gitignored, regenerates on a fresh
 checkout).
 
-Run the tests (31 tests, no mocks — most exercise real Gemini/embedding
-calls, one exercises real Firestore against a throwaway collection):
+Run the tests (38 tests — 31 use no mocks, exercising real Gemini/
+embedding calls and, for one, real Firestore against a throwaway
+collection; 7 in `test_failure_paths.py` mock exactly the failure
+condition under test — Gemini timeout, malformed model output, Firestore
+unavailability — since those can't be forced against a real backend on
+demand):
 
 ```bash
 .venv/bin/python -m pytest app/tests/ -v
@@ -162,9 +166,9 @@ app/
   retrieval.py     card-level embedding search over decisions
   collaborate.py   Gemini answers, four-way claim categorization
   memory.py        conversational candidate-decision creation (the write path)
-  ingest.py        live GitHub/KEP discovery + extraction (not wired into the UI — see below)
+  ingest.py        live GitHub/KEP discovery + extraction, wired into ui.py's sidebar
   ui.py            Streamlit UI
-  tests/           31 tests, all real API calls, no mocks
+  tests/           real API calls except deliberate failure-injection mocks (see below)
 
 BUILD_SCOPE.md     frozen MVP spec
 RESULTS.md         frozen falsifier result (the evidence this product exists on)
@@ -176,11 +180,18 @@ edited as the product evolves — they're the record of why this exists.
 
 ## What's deliberately not in the demo
 
-- **Live ingestion isn't wired into the UI.** `ingest.py` works and is
-  tested, but the judged demo runs off the frozen benchmark corpus on
-  purpose — pointing extraction at an arbitrary live repo mid-demo is a
-  reliability gamble the demo doesn't need to take. The backend function
-  is real and tested; wiring it into the UI is unbuilt, not unbuilt-and-untested.
+- **Live ingestion is wired into the UI (2026-08-17)**, via a "Live ingest"
+  panel in the sidebar: type any `owner/repo`, click Ingest, and
+  `ingest_repo()` runs for real against GitHub + Gemini and adds the
+  resulting decisions to the session's store — confirmed end-to-end with a
+  real repo (`kubernetes/kubernetes`), including a follow-up question that
+  cited the freshly ingested decision as the current active one. What's
+  still deliberately narrow: it's additive to the frozen-benchmark path,
+  not a replacement — the judged demo's core 9-step script still runs off
+  the frozen benchmark corpus, since that's the scenario with a known,
+  repeatable answer; live ingestion is there for judges who want to point
+  it at their own repo, with candidate counts capped (default 2 per
+  channel) to keep a live run's runtime bounded.
 - **No Google ADK.** The rubric's "Google Agent Framework" requirement is
   satisfied by direct use of the Google GenAI SDK (`google-genai`), which
   is one of the four frameworks the rubric names explicitly (alongside

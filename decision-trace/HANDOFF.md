@@ -74,12 +74,51 @@ don't conflate them.
    something this session can produce; the script is ready to record
    from. Devpost submission text itself also still needs writing/pasting
    into their form.
-5. **Live ingestion isn't wired into the UI.** `ingest.py` works and is
-   tested (Stage 7), but `ui.py` still loads only from the frozen
-   benchmark — deliberately, per BUILD_SCOPE §15's call to keep the judged
-   demo off a live-extraction gamble. If judges want to point it at their
-   own repo live, that's unbuilt UI wiring on top of an already-working
-   backend function.
+5. ~~Live ingestion isn't wired into the UI.~~ **Done (2026-08-17).**
+   `ui.py` now has a "Live ingest" sidebar panel (repo text input + max-
+   candidates control + Ingest button) that calls `ingest_repo()` for
+   real and adds the resulting decisions to the session's store.
+   Confirmed manually end-to-end through the actual browser UI (not just
+   a script): ingesting `kubernetes/kubernetes` added 4 real KEP-sourced
+   decisions, and asking "Why configure the max CrashLoopBackOff delay?"
+   afterward correctly surfaced the freshly ingested `KEP-5593` decision
+   as the current active decision, citing its real evidence URL. The
+   judged demo's core 9-step script still runs off the frozen benchmark
+   (that's the scenario with a known, repeatable answer); live ingest is
+   additive, for judges who want to try their own repo, capped at a
+   small default candidate count to keep runtime bounded.
+
+## Failure-path test coverage added (2026-08-17)
+
+A judge re-review docked Architectural Discipline for a happy-path-only
+suite. Added `app/tests/test_failure_paths.py` (7 tests, the project's
+first deliberate use of mocks — for the specific failure conditions that
+can't be forced on a real API on demand; everything else in the call path
+stays real, per house convention):
+
+- Gemini timeout/error during collaboration (`collaborate.answer`) and
+  during ingestion extraction (`ingest.extract_decision_fields`) both
+  propagate as a clear exception rather than being swallowed into a
+  fabricated answer.
+- Malformed/unparseable Gemini extraction output defaults to a predictable
+  "(untitled)"/empty-fields shape rather than crashing or fabricating.
+- **Real bug found and fixed**: `extract_decision_fields` didn't validate
+  that `rejected_alternatives`/`constraints` came back as JSON arrays — a
+  malformed response returning a bare string for either field passed
+  straight through into `Decision`, where `retrieval.render_card`'s
+  `'; '.join(...)` would silently iterate over the string's characters
+  instead of failing or defaulting cleanly. Fixed with `ingest._as_str_list`,
+  which coerces to `list[str]` or defaults to `[]`. Covered by a
+  regression test.
+- An incomplete revert-PR candidate (missing required upstream fields)
+  raises `KeyError` predictably rather than constructing a Decision with
+  silently missing data.
+- Firestore unavailability (mocked collection raising on `.stream()`,
+  `.get()`, `.set()`) surfaces as a clear raised exception on read and
+  write, not a silent empty result or a silently-lost write.
+
+Full suite: 38/38 (was 31/31 before this session — 7 new failure-path
+tests, 0 regressions). Detail in `.claude/SESSION_CONTRACT.md`.
 
 ## Decided next step: deploy to Cloud Run — now confirmed a HARD requirement, not just polish
 
