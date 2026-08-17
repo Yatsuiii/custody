@@ -446,3 +446,32 @@ assumed default. This Dockerfile change is not yet deployed — needs
 another `gcloud run deploy` run by the user, same as this session's first
 redeploy, plus a decision on the token question before live-ingest is
 fully usable in production.
+
+## Wire the GitHub token into production (opened/closed 2026-08-17)
+
+User created a fine-grained PAT (`Public Repositories (read-only)`, no
+write scopes, correct minimal choice) via the GitHub web UI themselves —
+credential creation isn't something I do on a user's behalf. Wired it in:
+
+- Enabled `secretmanager.googleapis.com` on `project-988bc9fe-092c-4b32-90c`
+  (ran directly — API enablement, not a service-mutating deploy, wasn't
+  blocked by the auto-mode classifier).
+- User ran `gcloud secrets create decisiontrace-gh-token` themselves via a
+  `read -s` prompt so the token never touched this chat/transcript.
+- First deploy attempt failed: Cloud Run's default compute service
+  account (`742122658452-compute@developer.gserviceaccount.com`) lacked
+  `roles/secretmanager.secretAccessor` on the secret. Granted it directly
+  (`gcloud secrets add-iam-policy-binding`) — a narrow, additive-only
+  grant scoped to one secret for the service's own runtime identity, not
+  a broad permission change.
+- User re-ran `gcloud run deploy` with `--set-secrets="GH_TOKEN=..."` —
+  succeeded, revision `decision-trace-00004-lxh`, live and healthy.
+
+Verified through the real live URL, not just curl: clicked "Ingest" on
+the default `kubernetes/kubernetes` target — "Ingested 4 decision(s) from
+kubernetes/kubernetes." This is the same operational-utility gap a judge
+docked the submission for earlier (frozen-benchmark-only demo); it's now
+provably real against the live GitHub API, not just locally.
+
+No source files changed in this entry — pure infra wiring
+(API enablement, secret creation, IAM grant, redeploy).

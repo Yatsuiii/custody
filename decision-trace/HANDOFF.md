@@ -4,6 +4,42 @@ Written 2026-08-17. Read this before doing anything else here. This is a
 resume point, not a status report to skim — the next session should be
 able to act on it without re-deriving anything.
 
+## Update (later 2026-08-17): decision-card bug fixed, UI restyled, live-ingest actually works in prod
+
+Everything below this note was true earlier in the day; several things it
+lists as "done" had real gaps that got fixed in a later session the same
+day. Full detail in `.claude/SESSION_CONTRACT.md`'s later entries;
+summary:
+
+- **Real bug found and fixed**: the "Current decision" card was driven by
+  raw embedding retrieval, not by what the model actually answered — a
+  missing/uncertain answer could still show a confident-looking card next
+  to it, contradicting the product's own "resolved current-decision, not
+  a document dump" pitch. Fixed via `grounded_decision_id()` in `app/ui.py`.
+- The `kep-keps-sig-storage-1979-object-storage-support` benchmark entry
+  (real, verbatim, correctly graded in RESULTS.md, but its "rationale" is
+  literal unfilled KEP-template boilerplate) is excluded from the live
+  demo at seed time only — `data/decisions.jsonl` and `RESULTS.md` are
+  untouched and byte-identical.
+- UI restyled (`.streamlit/config.toml` + CSS in `app/ui.py`) — paper
+  palette, mono decision ids, status pills — replacing default Streamlit
+  chrome, which read as generic/unpolished.
+- **Live ingest was silently broken in production this whole time**:
+  `app/ingest.py` shells out to the `gh` CLI, which was never installed
+  in the Docker image — it only ever worked in local testing. Fixed:
+  pinned `gh` binary added to `Dockerfile`, plus a fine-grained
+  read-only GitHub PAT (public repos only, no write scopes) provisioned
+  as a Cloud Run secret and granted to the service's runtime account.
+- All of the above is deployed and verified live, not just locally:
+  current production revision `decision-trace-00004-lxh`. Manually
+  clicked "Ingest" against `kubernetes/kubernetes` on the actual
+  production URL and got "Ingested 4 decision(s)" — the operational-
+  utility gap a judge previously docked this submission for is now
+  provably real in production, not just in local dev.
+- Stale Firestore document for the excluded KEP-1979 entry (left over
+  from earlier smoke-test sessions) was deleted directly from the
+  `decisiontrace-decisions` collection.
+
 ## Where things stand
 
 **The MVP is built, tested, and demo-verified. Nothing is deployed and no
