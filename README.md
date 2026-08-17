@@ -219,7 +219,7 @@ git clone https://github.com/Yatsuiii/custody.git && cd custody
 python3.12 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 
-make check     # ruff, then 363 tests, none skipped
+make check     # ruff, then 376 tests, none skipped
 make demo      # the poisoning scenario, with Custody and without
 make cost      # what a compromised tool destroys, with the graph and without
 make revoke    # retroactive revocation across departments, and a replay
@@ -391,10 +391,16 @@ fail-closed because it never reaches dispatch.
 ```bash
 CLOUDSDK_CONFIG="$PWD/.gcloud" \
 CUSTODY_PROJECT=project-988bc9fe-092c-4b32-90c \
+CUSTODY_FIRESTORE_PROJECT=project-988bc9fe-092c-4b32-90c \
 make live-revision-binding
 
 make revision-binding-gates
 ```
+
+`CUSTODY_FIRESTORE_PROJECT` matters here specifically: without it, the
+server falls back to an in-process nonce ledger that cannot detect a
+replay across the redeploy this proof itself performs, and the command
+hangs waiting for a denial log that will never be written.
 
 Closes the gap the paragraph above states: IAP and Custody's own client-side
 admission check both run at read time, not dispatch time, so nothing
@@ -610,20 +616,7 @@ read from `proof-out/live-review.json` today, and any resulting demotion or
 revocation still goes through the existing `/demote`/`/revoke` endpoints,
 driven by a human.
 
-### Reviewer narration: a genuine second modality, for Best Multimodal UX
-
-The GUI built earlier the same day (the Dependency Cartography and
-Architecture & Evidence pages) was single-modality — HTML/SVG, text and
-graph visuals, click interactions only. No published rubric defines what
-"multimodal" means for the hackathon's Best Multimodal UX award beyond its
-name and prize amount, checked live against the hackathon and rules pages
-rather than assumed. Rather than a cosmetic UI polish pass, which would not
-add a modality, or an unrelated forced integration (the project's own
-contract already warns against inventing a Veo use), the Custody Reviewer's
-real, already-live Gemini-drafted verdict (`custody/review.py`'s
-`draft_verdict`, proven above) is narrated as speech through a real Google
-Cloud Text-to-Speech call — a genuine audio output modality tied to content
-that already exists and is already real, not fabricated for the award.
+### Reviewer narration: a real capability, not surfaced in the GUI
 
 `scripts/live_narration.py` runs its own independent quarantine +
 `draft_verdict` flow (own per-run marker, not a read of
@@ -635,26 +628,20 @@ audio to `proof-out/live-narration.mp3` alongside evidence in
 contract (no trust/origin field, no import of `custody.catalog` or
 `custody.graph`) is unchanged.
 
-Live proof (`make live-narration`, proof
-`26f576c3ffe74958938b383b57755aee`): the drafted verdict correctly
-reproduced the per-run marker, and Cloud Text-to-Speech returned 86,304
-bytes of valid MP3 audio. `make narration-gates` reports 14/14 PASS: the
-same offline structural checks `review_gates.py` already uses, plus a
-recomputed `audio_sha256` matched against the recorded digest (rejects a
-stale or forged claim), an MP3-header sanity check, and one independently
-issued, separate Cloud Text-to-Speech call under the project's own
-credentials at judge time — there is no durable Cloud resource to reread
-here, so the independent check re-makes the live call instead, the same
-substitution the Reviewer's own gate script already makes for Gemini.
+Live proof (`make live-narration`): the drafted verdict correctly
+reproduces the per-run marker, and Cloud Text-to-Speech returns valid MP3
+audio. `make narration-gates` independently re-verifies it, including one
+independently issued, separate Cloud Text-to-Speech call under the
+project's own credentials at judge time.
 
-The audio is embedded in the Architecture & Evidence page as a
-`data:audio/mpeg;base64,...` URI (encoded at render time in
-`scripts/render_architecture.py`, never stored encoded on disk) inside a
-new `"audio"` widget, alongside the verdict text as its visible,
-accessible fallback — a text+audio pairing with user-initiated playback
-(`<audio controls>`, no autoplay), not audio replacing text. Non-goal, as
-with the Reviewer above: no console or human-facing review queue; no
-image or video generation is involved.
+**Not surfaced in the GUI or claimed as a Best Multimodal UX candidate.**
+It was originally built and embedded as a `data:audio/mpeg;base64,...`
+player on the Architecture & Evidence page, but the audio player was
+removed on 2026-08-17: nobody watching a short demo has time to listen to
+it, the verdict text above it already conveyed everything the audio did,
+and its playback could not be verified reliable in every browser. The
+underlying capability and its live proof remain real and unchanged; only
+the UI surfacing and the award-candidacy claim were cut.
 
 ### The fleet at N=25: a tool shared across departments, revoked once
 

@@ -27,7 +27,6 @@ time:
 
 from __future__ import annotations
 
-import base64
 import json
 import re
 import subprocess
@@ -47,7 +46,6 @@ from scripts import (  # noqa: E402
     gateway_gates,
     memory_deletion_gates,
     model_armor_gates,
-    narration_gates,
     observability_gates,
     registry_gates,
     review_gates,
@@ -72,7 +70,6 @@ JUDGE_FN = {
     "D1/D2": memory_deletion_gates.judge,
     "Auditor": auditor_gates.judge_offline,
     "Reviewer": review_gates.judge_offline,
-    "Narration": narration_gates.judge_offline,
     "Fleet N=25": fleet_gates.judge_offline,
     "F1": chain_gates.judge_offline,
 }
@@ -133,8 +130,6 @@ LIVE_PROOFS = [
               "scripts/live_auditor.py", "live-auditor.json"),
     LiveProof("Reviewer", "Gemini drafts a verdict on a quarantined item", "Fleet & agents",
               "scripts/live_review.py", "live-review.json"),
-    LiveProof("Narration", "The Reviewer's verdict, spoken aloud via Cloud Text-to-Speech", "Fleet & agents",
-              "scripts/live_narration.py", "live-narration.json"),
     LiveProof("Fleet N=25", "A tool shared across departments, revoked once, pulled from both", "Fleet & agents",
               "scripts/live_fleet.py", "live-fleet.json"),
     LiveProof("F1", "A genuine live derived_from chain, sales -> support -> finance", "Fleet & agents",
@@ -296,24 +291,6 @@ def widget_review(data: dict) -> dict | None:
     }
 
 
-def widget_narration(data: dict) -> dict | None:
-    v = data.get("verdict", {}).get("summary")
-    narration = data.get("narration", {})
-    audio_path = narration.get("audio_path")
-    if not (v and audio_path):
-        return None
-    audio_file = REPO_ROOT / audio_path
-    if not audio_file.exists():
-        return None
-    audio_b64 = base64.b64encode(audio_file.read_bytes()).decode("ascii")
-    return {
-        "type": "audio",
-        "label": "Gemini's verdict, spoken via Cloud Text-to-Speech",
-        "text": v,
-        "src": "data:audio/mpeg;base64," + audio_b64,
-    }
-
-
 def widget_fleet(data: dict) -> dict | None:
     shared = data.get("shared_tool_departments")
     untouched = data.get("untouched_departments")
@@ -348,7 +325,7 @@ def widget_chain(data: dict) -> dict | None:
 
 WIDGET_FN = {
     "R1": widget_r1, "R2": widget_r2, "S1": widget_s1, "M1": widget_m1, "O1": widget_o1,
-    "D1/D2": widget_d1d2, "Auditor": widget_auditor, "Reviewer": widget_review, "Narration": widget_narration,
+    "D1/D2": widget_d1d2, "Auditor": widget_auditor, "Reviewer": widget_review,
     "Fleet N=25": widget_fleet, "F1": widget_chain,
 }
 
@@ -458,7 +435,6 @@ TEMPLATE = """<!doctype html>
   .w-box .w-value { font-family: var(--mono); font-size: 11.5px; color: var(--ink); word-break: break-word; }
   .w-box .w-text { font-size: 12px; color: var(--ink); line-height: 1.45; }
   .w-note { margin-top: 8px; font-family: var(--mono); font-size: 10.5px; color: var(--ink-dim); }
-  .w-audio audio { width: 100%; margin-top: 10px; }
 
   .w-timeline { display: flex; flex-direction: column; gap: 0; }
   .w-step { display: flex; gap: 10px; padding: 7px 0; }
@@ -583,12 +559,6 @@ TEMPLATE = """<!doctype html>
         '<div class="w-col"><div class="w-collabel">' + esc(w.label_before) + '</div><ul>' + beforeItems + "</ul></div>" +
         '<div class="w-col"><div class="w-collabel">' + esc(w.label_after) + '</div><ul>' + afterItems + "</ul></div>" +
         "</div>";
-    }
-    if (w.type === "audio") {
-      return '<div class="widget w-audio">' +
-        '<div class="w-box safe"><div class="w-label">' + esc(w.label) + '</div><div class="w-text">' + esc(w.text) + "</div>" +
-        '<audio controls preload="none" src="' + w.src + '"></audio>' +
-        "</div></div>";
     }
     if (w.type === "groups") {
       return '<div class="widget w-groups">' +

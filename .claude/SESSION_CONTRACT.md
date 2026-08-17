@@ -4199,3 +4199,101 @@ research-archive file touched, matching the non-goals.
 Status: complete
 
 Status: complete
+
+## Full proof-check audit and Narration removal (opened 2026-08-17)
+
+Objective: the user does not trust the prior session's fix claims and asked
+for an independent, adversarial full proof check before recording, having
+found 2 real bugs themselves. Audit performed: browser click-through of
+both GUI pages, a fresh full live-* sweep, a grep sweep for the same
+hardcoded-coupling bug class fixed in 671659a, `make demo`/`make incident`
+output review, and a README/JUDGE_HANDOFF claims cross-check.
+
+Branch: feat/memory-provenance
+Parent: d5ea105
+
+Allowed files: `scripts/render_architecture.py`, `README.md`,
+`JUDGE_HANDOFF.md`, `SUBMISSION_HANDOFF.md`, `web/*.html` (regenerated),
+`.claude/SESSION_CONTRACT.md`, `proof-out/*`.
+
+Findings from the audit:
+
+1. Confirmed live pages were stale (undeployed since `4ec8e45`, two
+   commits and ~2 days behind). Full fresh live-* sweep run (11 producers,
+   all clean), `make gates` back to G5 4/4 groups, `make check` 376/376,
+   redeployed, `make verify-deploy` 4/4.
+2. Re-verified the 671659a coupling fix for real under fresh conditions:
+   ran R2 (ends on v1) immediately followed by S1, both live, S1 passed
+   20/20 with no manual restoration -- the fix holds.
+3. Grep sweep for the same hardcoded-shared-state bug class elsewhere in
+   `scripts/*_gates.py` and `live/*/server/*.py`: clean, no other
+   instances found. R1/R2's own internal `"v1"`/`"v2"` checks are
+   self-contained (their own before/after within one proof run), not the
+   same class of bug.
+2. `make demo` / `make incident` output read critically: matches the
+   documented story exactly, no defects found.
+3. Stale test counts found and fixed in three judge-facing docs:
+   `README.md` (363 -> 376, two places), `JUDGE_HANDOFF.md` (352 -> 376).
+   `JUDGE_HANDOFF.md` and `README.md` both also missing
+   `CUSTODY_FIRESTORE_PROJECT` from their `make live-revision-binding`
+   instructions -- a judge following either verbatim would hit the exact
+   silent-hang R2 finding from 671659a. Both fixed.
+4. Real, reproducible UI bug found and fixed in the incident page: none.
+   The two things that looked like bugs during manual browser testing
+   (a transient `.investigate-hit` pulse animation appearing to do
+   nothing, and header stats reading 0 via `get_page_text`) were both
+   confirmed to be artifacts of the audit tooling's timing, not real
+   defects -- verified by waiting out the animation/count-up and
+   rechecking via screenshot, which showed the correct state both times.
+5. **Narration audio player: could not be verified either way, and cut
+   entirely on user request rather than left as an unverified risk.**
+   The embedded `data:audio/mpeg;base64,...` player never left
+   `readyState 0` / a spinning loading indicator in extended testing
+   (data: URI, blob: URL, and a fresh, trivially-valid ffmpeg-generated
+   test MP3 all reproduced the same stuck-loading state), but a control
+   test proved this is a limitation of the sandboxed browser-automation
+   environment itself -- it cannot decode any MP3, not something specific
+   to Custody's file or embedding code -- so no real-browser verdict was
+   reached. Given that genuine uncertainty, the user's own two independent
+   complaints (a widget nobody has time to listen to, and now a widget
+   whose audio might not even play for a judge who tries), and that the
+   verdict text already conveys everything the audio does, the user opted
+   to remove the audio player and the whole Narration section from the
+   GUI rather than carry an unverified interactive element into a
+   recording. `scripts/live_narration.py` and its live proof
+   (`make live-narration` / `make narration-gates`) are left intact as a
+   real, still-provable capability; only its GUI surfacing and the Best
+   Multimodal UX candidacy claim are removed.
+
+Non-goals:
+
+- No change to `scripts/live_narration.py`, `custody/review.py`, or any
+  already-gated judge/producer logic -- this is a GUI-surfacing and
+  doc-accuracy pass, not new capability work.
+- No change to `HANDOFF.md` (explicitly non-judge-facing, a build log).
+- Do not remove the underlying Narration capability or its live proof
+  machinery, only its GUI widget and the award-candidacy claim.
+
+Acceptance gates:
+
+1. `web/architecture.html` no longer renders a Narration row or an
+   `<audio>` element anywhere.
+2. No remaining "Best Multimodal UX" candidacy claim in judge-facing docs
+   (`README.md`, `JUDGE_HANDOFF.md`, `SUBMISSION_HANDOFF.md`).
+3. `make check` and `make gates` unaffected. `make gui` regenerates clean.
+4. Redeployed and `make verify-deploy` 4/4, console clean, confirmed
+   in-browser that the Narration row is genuinely gone from the live page.
+
+Verification: `make check`, `make gui`, `make verify-deploy` after
+redeploy, a live browser check.
+
+**Closed 2026-08-17.** All four gates met. `make check` 376/376 unaffected.
+`make gates` still G5 4/4 groups. `web/architecture.html` regenerated with
+zero remaining references to Narration/audio (confirmed via grep and via
+the browser's own accessibility tree post-deploy: "no narration widgets or
+audio players present"). "Best Multimodal UX" candidacy claims corrected
+in `README.md` and `JUDGE_HANDOFF.md` to state plainly that the capability
+is real but not entered for that award, and why. Redeployed;
+`make verify-deploy` 4/4, console clean.
+
+Status: complete
