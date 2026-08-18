@@ -1,4 +1,11 @@
 {
   "query": "I'm working in kubernetes/kubernetes and I'm planning to reintroduce a change along these lines: \"client-go: prevent unbounded goroutine growth in EventBroadcaster\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
-  "response": "Yes, this exact change was previously attempted in **PR #140448** and subsequently reverted in **PR #140990**.\n\n### Reason for Reversion:\nThe change was reverted because the follow-up fix required risky rework too close to the release candidates. \n\n*(Evidence: PR #140448 / revert PR #140990)*"
+  "response": "Yes, this exact change was previously attempted and reverted:\n\n* **Decision Card:** `[kubernetes-kubernetes-revert-140448]`\n* **Evidence:** PR #140448 / Revert PR #140990\n* **Reasoning:** The original change (\"client-go: prevent unbounded goroutine growth in EventBroadcaster\", PR #140448) was rolled back in PR #140990 because the subsequent patch carried too much risk right before the release candidate milestone.",
+  "retrieved": [
+    "kubernetes-kubernetes-revert-140448",
+    "kubernetes-kubernetes-revert-127300",
+    "kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure",
+    "kep-keps-sig-scheduling-5229-asynchronous-api-calls-during-scheduling",
+    "kep-keps-sig-node-5593-configure-the-max-crashloopbackoff-delay"
+  ]
 }

@@ -710,3 +710,796 @@ Verification re-run this session: all three cited line references
 (run_conditions.py:137, :143-144, grade.py:43) confirmed exact against
 current files via grep; `git status --porcelain` confirmed only the two
 allowed files plus pre-existing untracked entries.
+
+## Apply the falsifier confound fix (opened 2026-08-17)
+
+Objective: apply the fix specified in docs/FALSIFIER_CONFOUND_HANDOFF.md
+section 4, now explicitly authorized by the user ("alright fix it then").
+User separately confirmed cost is trivial (~$0.10-0.15 in Vertex tokens for
+the 148-call re-run) before authorizing.
+
+Branch: explore/decision-trace-v0
+
+Parent: HEAD (the confound-documentation commit)
+
+Allowed files:
+- mine_decisions.py (add rationale_card distillation)
+- a new backfill script to enrich data/decisions.jsonl with rationale_card
+  without re-mining (re-mining from live search would risk changing which
+  37 decisions are in the set)
+- data/decisions.jsonl (adds rationale_card field only; every existing
+  field for all 37 rows must be byte-identical otherwise)
+- run_conditions.py (pooled card index + equal TOP_K retrieval for
+  structured; card prompt renders rationale_card, never rationale_quote)
+- rag_index.py (only if a shared helper is needed; prefer reusing
+  build_index/top_k_chunks as-is)
+- grade.py (still grades against rationale_quote; no change expected
+  unless the judge prompt needs adjustment)
+- a new test file asserting the grading key never appears unconditionally
+  in a condition's prompt
+- data/runs/structured/ (regenerated, 37 files)
+- data/corpus/ (new pooled card index cache file)
+- RESULTS.md (per handoff gates 4-5: Threats to validity section,
+  per-source breakdown, recomputed verdict)
+- decision-trace/HANDOFF.md, decision-trace/.claude/SESSION_CONTRACT.md
+
+Non-goals:
+- Do not touch data/runs/code_only/ or data/runs/rag/ (queries unchanged,
+  cached answers stay valid per the handoff's cost table).
+- Do not alter the preregistered thresholds in verdict_for() after seeing
+  new numbers — record whatever verdict comes out, including CAUTION/KILL.
+- Do not change pick_quote()'s ground-truth extraction, build_query()'s
+  no-leak property, or the RAG decoy corpus construction.
+- No commit/push without separate explicit authorization (not yet given
+  this entry).
+
+Baseline: RESULTS.md currently reports structured 100/100/100, n=37,
+verdict GO, computed from the confounded prompt. data/runs holds 37
+cached runs per condition.
+
+Acceptance gates (from the handoff, verbatim):
+1. rationale_card present for all 37 decisions, not a substring of the
+   corresponding rationale_quote, asserted at write time.
+2. structured and rag each receive exactly TOP_K retrieved items, from
+   the same embedder, over a pooled 37-card index.
+3. A test exists and passes asserting the grading key never appears
+   unconditionally in any condition's prompt, for all 37 decisions.
+4. RESULTS.md carries a Threats to validity section stating: citation-
+   correctness is satisfied by construction for the structured arm
+   (unchanged property, since the card still carries the citation); and
+   19/37 decisions come from kubernetes/enhancements.
+5. RESULTS.md adds a per-source breakdown (revert-pair vs KEP).
+6. Verdict recomputed against the unchanged thresholds in verdict_for(),
+   recorded as whatever it comes out to be.
+
+Verification: run the new leakage test; re-run structured generation (37
+calls) and re-judge all three conditions (111 calls); diff
+data/decisions.jsonl to confirm only rationale_card was added per row;
+read RESULTS.md back and cross-check every number against the new
+data/runs output.
+
+Status: complete
+
+Result: All 6 acceptance gates satisfied — verified directly, not assumed:
+rationale_card present for all 37 rows and not a substring of
+rationale_quote (checked programmatically); pooled 37-card index with equal
+TOP_K=5 for both structured and rag (confirmed in run_conditions.py);
+test_no_leakage.py exists and all 115 cases pass; RESULTS.md carries Threats
+to validity and per-source breakdown sections; verdict recomputed against
+the unchanged verdict_for() thresholds.
+
+**A second, more serious bug was found during this session's verification
+pass, beyond the original confound**: the first post-fix run (done in the
+prior session, before this entry resumed it) showed structured collapsing
+to 0% rationale-match on all 19 KEP-sourced decisions specifically (46%
+combined overall) — not a capability limit, a broken input. Root-caused to
+two stacked bugs in `distill_rationale_card`/`CARD_PROMPT`, both in
+mine_decisions.py: (1) the prompt asked "why was {chosen} rejected" for
+every decision, but for kep_alternatives records `chosen` is the KEP's own
+title — the proposal that WON, never rejected — a false-premise question
+the model correctly refused to answer usefully; (2) `document[:8000]`
+truncation fed the model the raw multi-thousand-word KEP file from the top,
+which frequently doesn't reach the `## Alternatives Considered` section
+mine_keps() had to search specifically to find. Fixed both: added
+`extract_alternatives_section()` (shared by mine_keps() and the backfill,
+single source of truth) so KEP cards are distilled from the actual
+relevant section, not a truncated prefix of the whole file; reworded
+CARD_PROMPT to be accurate for both decision shapes instead of presuming
+rejection. Regenerated only the 19 affected rationale_card values, re-ran
+structured generation and all three conditions' grading (both required
+since the card content embedded in the structured prompt changed).
+
+**Final, honest numbers** (RESULTS.md, all three conditions freshly
+re-judged 2026-08-18): code_only 5%, rag 57%, structured 68% combined-
+correct, n=37. KEP-subset rationale-match went from a bugged 0% to a real
+42% (revert_pair subset unaffected, still 94%, since only KEP cards
+changed). Structured now clearly beats rag (68% vs 57%), reversing from
+the pre-fix state where the bug made structured look worse than rag on
+KEPs specifically. **Verdict is still CAUTION, not GO** — verdict_for()
+requires rag<=70% AND structured>=85% for a clean GO; rag clears its side
+(57%<=70%) but structured (68%) doesn't clear 85%. Per this contract's own
+non-goal, the threshold was not touched or relaxed after seeing the
+number. This means the README's committed "100% vs 57%, GO" claim is
+stale from the pre-confound-fix run and is no longer accurate — it needs
+updating to reflect the real, current result (68% vs 57%, CAUTION) before
+any Devpost submission copy is written citing this benchmark. That
+README update is out of this entry's allowed-files scope and is flagged
+to the user as the next action, not silently done here.
+
+Nothing committed or pushed — matches this entry's non-goal (no commit/push
+without separate explicit authorization, not given this entry).
+
+## Multi-point rationale cards for multi-alternative KEP sections (opened 2026-08-18)
+
+Objective: close the real gap found while verifying the confound fix above.
+All 11 remaining KEP-subset failures (of 19) have 0% hallucination and 100%
+correct citation — the model faithfully reports its card, but the card
+covers a *different* rejected alternative than the one `rationale_quote`
+happens to cite, when a KEP's `## Alternatives Considered` section discusses
+more than one. A one-sentence card is structurally lossy for those sections.
+User explicitly authorized pursuing a fix over documenting it as a
+limitation ("Yes, fix it").
+
+Branch: explore/decision-trace-v0
+Parent: HEAD (the falsifier-confound-fix commit-state above, still
+uncommitted)
+
+Allowed files:
+- mine_decisions.py (new multi-point card prompt/function, additive next to
+  the existing single-sentence distill_rationale_card — revert_pair already
+  scores 94% and is not touched)
+- a new backfill script (or extending backfill_rationale_cards.py) to
+  regenerate rationale_card for all 19 kep_alternatives rows uniformly (not
+  cherry-picked to just the 11 that failed — applying the improved method
+  to the whole affected population, not per-decision after seeing scores,
+  is the same anti-p-hacking discipline as the parent entry)
+- data/decisions.jsonl (rationale_card field only, kep_alternatives rows)
+- data/corpus/cards-index.json (rebuilt, card text changed)
+- data/runs/structured/kep-*.json (regenerated, 19 files)
+- RESULTS.md (recomputed)
+- decision-trace/HANDOFF.md, decision-trace/.claude/SESSION_CONTRACT.md
+
+Non-goals (same guardrails as the parent entry):
+- Do not touch pick_quote()'s ground-truth extraction — the point is to
+  make the card able to cover more ground, not to redefine what counts as
+  correct.
+- Do not touch revert_pair cards, data/runs/rag/, data/runs/code_only/, or
+  verdict_for()'s thresholds.
+- Do not cherry-pick regeneration to only the 11 currently-failing
+  decisions — all 19 kep_alternatives cards get the new method.
+- No commit/push without separate explicit authorization.
+
+Baseline: RESULTS.md currently reports structured 68% combined (KEP subset
+42%), rag 57%, verdict CAUTION, n=37 — the parent entry's honest, bug-fixed
+result.
+
+Acceptance gates:
+1. New card-generation path produces up to ~3 short paraphrased points when
+   a KEP's alternatives section discusses multiple distinct alternatives,
+   one point when it discusses one — not a fixed multi-point format
+   regardless of source content.
+2. Every regenerated card still passes the substring-of-rationale_quote
+   assertion and test_no_leakage.py in full.
+3. All 19 kep_alternatives rows regenerated uniformly, card index and
+   structured runs rebuilt for exactly those 19, rag/code_only untouched
+   (verify via file mtimes same as the parent entry did).
+4. RESULTS.md recomputed via a full grade.py re-run (same reasoning as the
+   parent entry: the judge isn't cached per-response, so a clean
+   apples-to-apples table requires re-grading all three conditions).
+5. Verdict recorded as whatever verdict_for() outputs against the unchanged
+   thresholds — including if it's still CAUTION.
+
+Verification: run test_no_leakage.py; diff decisions.jsonl to confirm only
+the 19 kep_alternatives rows' rationale_card changed; spot-check 3+
+previously-failing decisions to confirm the new card now covers the
+ground-truth quote's specific alternative; read RESULTS.md back and
+cross-check every number against data/runs output.
+
+Status: complete
+
+Result: Root cause was not model quality (0% hallucination, 100% correct
+citations throughout) — a one-sentence card structurally cannot represent a
+KEP section that discusses multiple distinct rejected alternatives, so it
+was a coin-flip whether the card's single point matched the specific
+alternative pick_quote() happened to extract as ground truth. Added
+distill_rationale_card_multi() (mine_decisions.py, additive, revert_pair
+untouched) allowing up to N short paraphrased points, one per genuinely
+distinct alternative named in the source. Regenerated all 19
+kep_alternatives cards uniformly (not cherry-picked), rebuilt the card
+index, re-ran structured generation for those 19, re-graded all three
+conditions fresh (111 judge calls). Ran twice: first with a 3-point cap
+(structured 68% -> 78% combined, KEP subset 42% -> 63%), then uncapped to
+6 points after the user asked to push further (auth-5681's ground truth
+turned out to reference a 4th alternative the 3-point cap had cut) — the
+uncapped run produced byte-identical aggregate numbers (78%/63%), a real
+plateau, not a bug: the remaining failures were spot-checked and include
+at least one (api-machinery-2876) where the ground-truth quote isn't about
+a rejected alternative at all but a scoping/sequencing rationale, which no
+amount of card content can match without touching pick_quote() — an
+explicit non-goal, correctly left alone. Kept the uncapped version as
+final since it's more methodologically complete even though it didn't
+move this benchmark's score. rag/code_only confirmed untouched via file
+mtimes both rounds. 115/115 leakage tests pass. Final: code_only 3%, rag
+57%, structured 78% combined, n=37, verdict CAUTION (unchanged threshold:
+needs >=85%). This is now genuinely the ceiling of the card-content lever;
+further improvement would need a larger n or a different mechanism, not
+another prompt iteration. HANDOFF.md and README.md still need updating to
+this final number (README specifically, out of every entry's file scope
+so far — flagged repeatedly, not yet done).
+
+Nothing committed or pushed.
+
+## Write the Devpost architecture-diagram handoff doc (opened 2026-08-18)
+
+Objective: write `decision-trace/docs/ARCHITECTURE_DIAGRAM_HANDOFF.md` — a
+resume-point handoff for a fresh session to build a beautifully-designed,
+standalone visual architecture diagram for the Devpost "Architecture
+Diagram" upload field, mirroring the approach used for the sibling Custody
+project this session (`custody/docs/ARCHITECTURE_DIAGRAM_HANDOFF.md`, and
+the iterative design work that produced `custody/web/system-diagram.html`).
+This entry covers writing the handoff doc only — not building the diagram
+itself, not touching app code, not deploying anything.
+
+Branch: explore/decision-trace-v0
+Parent: HEAD (same branch/commit state as the active falsifier-confound
+entry above; this is an independent, unrelated docs-only addition and
+does not depend on that work landing first)
+
+Allowed files:
+- decision-trace/docs/ARCHITECTURE_DIAGRAM_HANDOFF.md (new)
+- decision-trace/.claude/SESSION_CONTRACT.md (this entry)
+
+Non-goals:
+- Do not touch `docs/architecture.md` (the existing Mermaid diagram) —
+  it stays as the GitHub-native technical reference, same rule as Custody.
+- Do not touch `app/*.py`, `.streamlit/config.toml`, README.md, or any
+  other file — this session only writes the handoff markdown.
+- Do not build the diagram HTML/SVG itself in this entry — that's the
+  fresh session's job, per the handoff doc's own instructions.
+- Do not invent components, model names, or Google Cloud services not
+  already verified in README.md / docs/architecture.md / app/*.py.
+
+Baseline: N/A (docs-only, no code under test).
+
+Acceptance gates:
+1. The handoff states the real, already-established design tokens
+   (`.streamlit/config.toml` + `_THEME_CSS` in `app/ui.py`) verbatim, so
+   the fresh session copies real hex values instead of inventing a new
+   palette — same "paper" family already used in Custody, confirmed by
+   direct file read this session.
+2. The handoff lists every real component from `docs/architecture.md`'s
+   Mermaid diagram (UI, collaborate.answer, retrieval.DecisionIndex,
+   graph.resolve_active, memory.propose_reconsideration,
+   FirestoreDecisionStore, Firestore, Vertex AI/Google GenAI SDK,
+   gemini-3.7-flash, text-embedding-005, Cloud Run, ingest.py) as the
+   required diagram content — nothing invented, nothing dropped.
+3. The handoff encodes the concrete design lessons learned building
+   Custody's diagram this session (see "Design lessons" section below,
+   written into the doc): build the real topology first with labeled
+   arrows, not a stacked list of section headings; do not wrap the whole
+   thing in one giant box or add numbered 1-N step badges — those made
+   Custody's diagram feel like a slide deck, not an engineering map, and
+   were reverted after user feedback; keep generous whitespace; if a
+   scope indicator (bracket/tick) is added, verify by the actual x/y
+   coordinates that it never geometrically encloses a node it shouldn't
+   (this exact bug happened in Custody's diagram and had to be fixed
+   twice).
+4. The handoff specifies the build method: static HTML + hand-authored
+   inline SVG, headless-Chrome screenshot at 3-4x device scale factor,
+   exported as PNG under Devpost's 35MB cap — the same reproducible
+   pipeline used for Custody, commands included.
+
+Verification: read the finished handoff doc back and confirm every
+component name and hex value it cites matches what's actually in
+`docs/architecture.md`, `.streamlit/config.toml`, and `app/ui.py` today.
+
+Status: complete
+
+Result: `docs/ARCHITECTURE_DIAGRAM_HANDOFF.md` written this session, all
+four gates satisfied (design tokens, component list, design lessons,
+build method) — confirmed by the fresh-session read of the doc that
+opens the next entry below.
+
+## Build the Devpost architecture diagram (opened 2026-08-18)
+
+Objective: execute `docs/ARCHITECTURE_DIAGRAM_HANDOFF.md` as written — build
+the standalone, beautifully-designed static architecture diagram for the
+Devpost "Architecture Diagram" upload field. Hand-authored inline SVG in a
+static HTML page, screenshotted at high DPI, exported as PNG. This is the
+"fresh session" the handoff doc was written for.
+
+Branch: explore/decision-trace-v0
+Parent: HEAD
+
+Allowed files:
+- decision-trace/docs/system-diagram.html (new)
+- decision-trace/docs/exports/system-diagram.png (new, or similar path)
+- decision-trace/.claude/SESSION_CONTRACT.md (this entry)
+
+Non-goals (per the handoff doc verbatim):
+- Do not touch `docs/architecture.md`'s existing Mermaid diagram.
+- Do not touch `app/*.py`, `.streamlit/config.toml`, or any product code.
+- Do not invent capabilities/components not verified in README.md /
+  docs/architecture.md / app/*.py — no ADK-shaped boxes.
+- Do not deploy this page anywhere public; build, screenshot, leave local.
+- Do not touch the unrelated in-progress falsifier-confound work (the
+  modified `data/decisions.jsonl`, `RESULTS.md`, `data/runs/structured/*`
+  from the active entry above) — untouched, unrelated, uncommitted work
+  in progress from a separate contract entry.
+- No git commit/push without explicit authorization.
+- No uploading to Devpost from this session (no browser session/credentials
+  established for that yet) — flag the exported PNG as ready for the user
+  to upload themselves, unless the user explicitly asks me to drive that
+  via browser automation this session.
+
+Baseline: N/A (new standalone asset, no code under test).
+
+Acceptance gates (per the handoff doc's own 6 gates):
+1. Every real component listed in the handoff (product code + Google Cloud
+   services + the two named models) appears — nothing invented, nothing
+   dropped, no ADK-shaped boxes.
+2. Visual language matches DecisionTrace's own established tokens
+   (`--dt-*` CSS variables, IBM Plex Mono, existing pill colors) — not
+   Custody's diagram, not a generic new palette.
+3. Reads as real system topology with labeled arrows — not stacked
+   section cards, not boxed-and-numbered, not over-collapsed into zones
+   that lose spatial relationships (the three Custody mistakes to avoid).
+4. Any scope bracket/tick's bounding box is checked against every node's
+   bounding box and confirmed not to falsely enclose anything.
+5. Exported as static PNG, under 35MB, legible at Devpost's display
+   resolution — verified by reading the exported file back.
+6. Ready for upload to Devpost's Architecture Diagram field (actual
+   upload only if the user explicitly authorizes driving that this
+   session).
+
+Verification: read the exported PNG back via the Read tool to visually
+confirm no overlapping labels, no text clipped at the image edge, and
+correct bracket/box geometry, before calling this done.
+
+Status: complete
+
+Result: `docs/system-diagram.html` (hand-authored inline SVG, no library,
+2000x900 viewBox) built and exported to `docs/exports/system-diagram.png`
+at 8000x3600px (~913KB, well under the 35MB cap) via headless Chrome at
+`--force-device-scale-factor=4`. All 12 real components from the handoff
+present (app/ui.py, app/ingest.py, retrieval.DecisionIndex,
+graph.resolve_active(), collaborate.answer(),
+memory.propose_reconsideration(), the DecisionStore Protocol boundary +
+FirestoreDecisionStore, Firestore, Vertex AI, gemini-3.7-flash,
+text-embedding-005), plus Browser and GitHub as external nodes — no ADK
+boxes. Visual language pulled verbatim from `_THEME_CSS`/`.streamlit/
+config.toml` (`--dt-*` hex values, IBM Plex Mono for identifiers). Real
+topology with 3 color-coded, labeled edge families (green=read path,
+amber=write path, grey=ingest/external), two dashed zone boundaries
+(Cloud Run vs Google Cloud) instead of one dominant box, no numbered
+badges, no prose legend block (one small two-line caption only). One
+scope annotation (`graph.resolve_active()`'s "plain code — no LLM call"
+tick) — built as a short line strictly within that node's own x-range
+(830-980, inside the node's 810-1000 span) so it cannot geometrically
+enclose any other node by construction; confirmed by reading the
+rendered PNG back at both preview and full 8000x3600 resolution — no
+overlapping labels, no clipped text, tick reads as attached only to
+graph.resolve_active(). Two rounds of self-review before finalizing:
+first render surfaced a label collision (the amber "write PROPOSED
+decision" text overlapped the rotated "DecisionStore Protocol
+(interface)" label) and unused canvas whitespace below the content;
+fixed by rerouting the Memory→Store arrow around the protocol strip and
+trimming the canvas height, then re-rendered clean. Not done this
+session: uploading to Devpost (no browser session authorized for that;
+the PNG is ready at `docs/exports/system-diagram.png` for the user to
+upload themselves).
+
+Status: active
+
+## Tighten pick_quote() for kep_alternatives ground truth (opened 2026-08-18)
+
+Objective: the 78% plateau's remaining failures were inspected in full (all
+7, not a sample) — 5 of 7 trace to `RATIONALE_CUES` (generic "because"/
+"since"/"instead of") matching a sentence that explains why the CHOSEN KEP
+design works, not why an alternative was REJECTED. Concrete evidence: e.g.
+`api-machinery-2523`'s "ground truth" is "Disadvantages [of the field] -
+...3 options instead of 2" (a disadvantage of the chosen field, not a
+rejected alternative); `scheduling-5229`'s is "This prevents race
+conditions [in the chosen design] because..." User explicitly authorized
+touching `pick_quote()` after seeing this evidence — the one thing every
+prior entry in this project refused to touch without it, specifically to
+avoid re-defining ground truth after seeing unflattering numbers. This is
+the third and intended-to-be-final such authorization.
+
+Branch: explore/decision-trace-v0
+Parent: HEAD (the multi-point rationale cards commit-state, still
+uncommitted)
+
+Allowed files:
+- mine_decisions.py (new REJECTION_CUES tier + pick_quote(require_rejection)
+  parameter, additive — RATIONALE_CUES and the no-arg default behavior are
+  unchanged, so revert_pair mining via mine_reverts() is untouched)
+- reextract_kep_quotes.py (new, one-off — re-extracts rationale_quote for
+  the existing 19 kep_alternatives rows from their already-cited source
+  file, NOT a re-mine: same 19 decision_ids, no new GitHub search)
+- data/decisions.jsonl (rationale_quote + quote_has_rationale_cue fields
+  only, kep_alternatives rows; rationale_card, citation, chosen, etc.
+  unchanged)
+- RESULTS.md (recomputed)
+- decision-trace/HANDOFF.md, decision-trace/.claude/SESSION_CONTRACT.md
+
+Non-goals:
+- Do not re-mine (no live GitHub search for new decisions) — the 37
+  decision_ids stay exactly as they are.
+- Do not touch revert_pair's ground truth or mine_reverts() — that arm
+  scores 94% and RATIONALE_CUES was never the problem there.
+- Do not regenerate rationale_card or re-run structured/rag/code_only
+  generation — model responses don't depend on rationale_quote at all
+  (only build_query()'s chosen/context fields do, and those are
+  untouched), so only re-grading is needed, not re-running conditions.
+- Apply re-extraction uniformly to all 19 kep_alternatives rows, not
+  cherry-picked to the 5 diagnosed failures.
+- No commit/push without separate explicit authorization.
+
+Baseline: RESULTS.md currently reports structured 78% combined (KEP
+subset 63%), rag 57%, verdict CAUTION, n=37 — the multi-point-cards
+entry's result, confirmed a real plateau under the old ground truth.
+
+Acceptance gates:
+1. REJECTION_CUES requires explicit rejection/negative framing
+   (rejected/ruled out/dismissed/chose not to/decided against/etc.), not
+   generic "because"/"since" — verified by re-reading the regex against
+   the 5 concrete examples above.
+2. All 19 kep_alternatives rows re-extracted uniformly; rows where no
+   rejection-cue sentence exists keep their original quote (documented,
+   not silently dropped) rather than forcing a worse pick.
+3. Every kep_alternatives rationale_card still not a substring of its
+   (possibly new) rationale_quote, asserted at write time.
+4. test_no_leakage.py passes in full against the updated decisions.jsonl.
+5. RESULTS.md recomputed via a full grade.py re-run (judge isn't cached).
+6. Verdict recorded as whatever verdict_for() outputs, unchanged
+   thresholds — including if still CAUTION.
+
+Verification: run test_no_leakage.py; read the re-extraction script's own
+changed/unchanged/no-pick log; read RESULTS.md back and cross-check every
+number; confirm via file mtimes that data/runs/ (all three conditions) was
+NOT touched this entry, since responses don't depend on rationale_quote.
+
+Status: complete
+
+Result: First pass of the REJECTION_CUES tier had a real bug of its own —
+included a bare "alternative" cue, which matched markdown ATX subsection
+headers like "### Alternative: Introduce ExactResourceVersion..." (no
+sentence-ending punctuation, so sentences()'s whitespace-collapse glues
+the header label onto whatever prose follows it into one contaminated
+candidate). Caught by manually reading all 11 changed quotes before
+spending the grading budget — several were header fragments, not real
+prose. Fixed by adding MARKDOWN_HEADER_LINE stripping (require_rejection
+path only) and removing the "alternative"/"in favor of"/"instead of" cues
+that were too easily satisfied by labels rather than reasoning. Re-ran:
+6 of 19 kep_alternatives quotes changed (9 found no rejection-cue sentence
+and safely kept their prior quote per the fallback design, 4 were already
+unchanged), all 6 changes hand-verified as genuine on-topic rejection
+prose, not header fragments. 115/115 leakage tests pass. data/runs/
+confirmed untouched by this entry (responses don't depend on
+rationale_quote, only grading does).
+
+Full re-grade (111 calls): structured 76% combined (KEP subset 58%), rag
+57%, code_only 0%, verdict CAUTION (unchanged thresholds, needs >=85%).
+This is within judge-noise of the prior 78%/63% — a wash, not a
+regression: only 6 quotes changed, and LLM-judge grading has inherent
+run-to-run variance at this n. The meaningful finding is that three
+independent, real bug fixes (confound fix: 46%->68%; multi-point cards:
+68%->78%; stricter ground truth: 78%->76%) now all converge on the same
+~76-78% band. That convergence is itself evidence this is a genuine,
+stable measurement of the approach at n=37, not an artifact of any one
+remaining bug. Further movement would need a larger sample or a different
+mechanism (e.g. per-alternative retrieval instead of one card per
+decision) — flagged to the user as a research question, not something to
+keep chasing via more prompt/regex iteration on the same n=37 set.
+
+Nothing committed or pushed.
+
+## Write the per-alternative retrieval handoff doc (opened 2026-08-18)
+
+Objective: this session is getting long (multiple rounds of falsifier
+work already this session — confound fix, multi-point cards, stricter
+ground truth, all `Status: complete` above). User asked to pursue
+per-alternative retrieval as the next lever but explicitly asked for it
+to be handed off to a fresh session rather than implemented here. Write
+`decision-trace/docs/PER_ALTERNATIVE_RETRIEVAL_HANDOFF.md` — a
+resume-point doc, same pattern as
+`decision-trace/docs/ARCHITECTURE_DIAGRAM_HANDOFF.md` and
+`custody/docs/ARCHITECTURE_DIAGRAM_HANDOFF.md` (sibling project, same
+session). This entry covers writing the handoff doc only, not the
+retrieval-index change itself.
+
+Branch: explore/decision-trace-v0
+Parent: HEAD (the pick_quote()-tightening commit-state above, still
+uncommitted)
+
+Allowed files:
+- decision-trace/docs/PER_ALTERNATIVE_RETRIEVAL_HANDOFF.md (new)
+- decision-trace/.claude/SESSION_CONTRACT.md (this entry)
+
+Non-goals:
+- Do not implement the per-alternative retrieval change itself — that's
+  the fresh session's job, per the handoff doc's own instructions.
+- Do not touch mine_decisions.py, run_conditions.py, rag_index.py,
+  data/decisions.jsonl, or RESULTS.md in this entry.
+
+Baseline: RESULTS.md currently reports structured 76% combined (KEP
+subset 58%), rag 57%, verdict CAUTION, n=37 — the final, converged result
+from this session's three falsifier-fix entries.
+
+Acceptance gates:
+1. The handoff states the exact current mechanism (get_card_index() in
+   run_conditions.py embeds one whole rationale_card per decision, so
+   retrieval picks decisions, not alternatives) and precisely what
+   changes (index one embeddable unit per alternative-point, still
+   tagged with its parent decision_id, so retrieval can surface the
+   specific point a query is about).
+2. The handoff gives concrete function signatures/names to add
+   (point-splitting helper, per-point card-text renderer, a new point-
+   level index, and the one-line swap in run_structured()) so the fresh
+   session isn't re-deriving the design from scratch.
+3. The handoff is explicit that this is an experiment, not a guaranteed
+   win — a larger, more granular pooled index could make retrieval
+   *harder* (more distractors) even though each candidate is more
+   topically precise — and specifies exactly what evidence would confirm
+   or reject the hypothesis (same grade.py re-run, compare structured's
+   KEP-subset combined score against the current 58% baseline).
+4. The handoff carries forward every open, unresolved item from this
+   session: README.md still needs updating to the real 76%/57%/CAUTION
+   numbers (out of every prior entry's scope), and the Devpost
+   architecture-diagram entry status if still open.
+
+Verification: read the finished handoff doc back and confirm the function
+names/signatures it proposes actually match what's in the current
+run_conditions.py/rag_index.py/mine_decisions.py (not stale/invented).
+
+Status: complete
+
+Result: docs/PER_ALTERNATIVE_RETRIEVAL_HANDOFF.md written. Every function
+name/signature it proposes reusing (card_text, cite_str, CARDS_INDEX_CACHE,
+DATA_DIR, get_card_index, run_structured, build_structured_prompt, TOP_K)
+verified against run_conditions.py's actual current line-for-line content
+via grep before being cited — not invented or stale. Carries forward the
+open README.md item and states plainly which three fix rounds are already
+done so a fresh session doesn't re-derive or redo them.
+
+Nothing committed or pushed.
+
+## Implement per-alternative retrieval (opened 2026-08-18)
+
+Objective: execute docs/PER_ALTERNATIVE_RETRIEVAL_HANDOFF.md as written —
+the fresh session it was written for. Split each decision's rationale_card
+into individual alternative-points and index each point separately (still
+tagged with its parent decision_id), instead of indexing one whole card per
+decision. Swap run_structured() to retrieve from the point-level index.
+Re-run structured generation for all 37 decisions and re-grade all three
+conditions. User explicitly authorized running this now, including the
+real Vertex API cost (37 generation calls + 111 judge calls, same order as
+prior rounds).
+
+Branch: explore/decision-trace-v0
+Parent: HEAD (the per-alternative-retrieval-handoff-doc commit-state above,
+still uncommitted; the falsifier confound fix / multi-point cards /
+pick_quote-tightening changes to data/decisions.jsonl and RESULTS.md from
+earlier this session are also still uncommitted and are carried forward,
+not reverted)
+
+Allowed files:
+- run_conditions.py (add split_rationale_points, point_card_text,
+  POINTS_INDEX_CACHE, get_point_index; swap run_structured() to use
+  get_point_index() instead of get_card_index())
+- data/corpus/points-index.json (new cache file — cards-index.json stays
+  untouched, kept for rollback/comparison per the handoff's non-goals)
+- data/runs/structured/*.json (all 37 regenerated — the handoff is explicit
+  every decision needs regenerating this time, not just KEP rows, since the
+  retrieval mechanism changed for everyone)
+- RESULTS.md (recomputed)
+- decision-trace/HANDOFF.md, decision-trace/.claude/SESSION_CONTRACT.md
+
+Non-goals (per the handoff doc verbatim):
+- Do not touch pick_quote(), CARD_PROMPT/CARD_PROMPT_MULTI, or
+  verdict_for()'s thresholds.
+- Do not change TOP_K from 5.
+- Do not delete or overwrite data/corpus/cards-index.json.
+- Do not touch data/runs/rag/ or data/runs/code_only/ (queries/retrieval
+  for those conditions are unaffected by this change).
+- No commit/push without separate explicit authorization.
+
+Baseline: RESULTS.md currently reports structured 76% combined (KEP subset
+58%, revert_pair subset 94%), rag 57%, code_only 0%, verdict CAUTION, n=37.
+
+Acceptance gates (per the handoff doc's own 6 gates):
+1. split_rationale_points() yields one element for single-sentence cards
+   and N elements for multi-point cards — spot-checked against 3+ real
+   rationale_card values before trusting it on the full set.
+2. get_point_index() builds without error; data/corpus/points-index.json is
+   new, cards-index.json is untouched (byte-identical).
+3. run_structured() swapped to the point index; all 37 decisions'
+   structured runs regenerated (old files deleted first, every one
+   regenerates, not just KEP rows).
+4. Full grade.py re-run (111 calls, judge isn't cached).
+5. test_no_leakage.py still passes in full.
+6. RESULTS.md's kep_alternatives-subset combined score recorded and
+   compared against the 58% baseline — whatever it is, including if worse.
+
+Verification: spot-check split_rationale_points() against 3+ real cards;
+confirm cards-index.json unchanged (checksum) after the run; run
+test_no_leakage.py; read RESULTS.md back and cross-check every number
+against the new data/runs output; confirm data/runs/rag and
+data/runs/code_only untouched via file mtimes.
+
+Status: complete
+
+Result: All 6 acceptance gates satisfied. `split_rationale_points()`
+verified against 3 real cards (a 6-point KEP card, a 3-point KEP card, and
+a single-sentence revert_pair card) before trusting it on the full set —
+multi-point cards split correctly on "- " lines, single-sentence cards
+yield exactly one unchanged element. `get_point_index()` built
+`data/corpus/points-index.json` (new, 1.59MB) without error;
+`data/corpus/cards-index.json` confirmed byte-identical before/after
+(md5 839cbe1376d8e9c137798ff3562c7f01, unchanged). `run_structured()`
+swapped to `get_point_index()`; all 37 structured runs regenerated (old
+files deleted first, confirmed 37/37 present after). `data/runs/rag` and
+`data/runs/code_only` confirmed untouched two ways: aggregate md5 of all
+their files unchanged, and per-file mtimes ~45 hours old, predating this
+entry entirely (run_conditions.py's `if not out.exists()` guard correctly
+skipped them). test_no_leakage.py: 115/115 pass, both before and after.
+Full grade.py re-run (111 judge calls) completed cleanly.
+
+**Result: a clean null.** structured combined 76%, revert_pair subset 94%,
+kep_alternatives subset 58% — byte-identical to the pre-experiment
+baseline in every aggregate number. Retrieval granularity was not the
+bottleneck: splitting multi-point cards into separately-indexed points and
+doubling the pooled index size (60-90 points vs 37 cards, same TOP_K=5)
+did not change which content reached the model's prompt for these
+queries. Documented as a dedicated section in RESULTS.md ("Per-alternative
+retrieval experiment (2026-08-18) — null result") rather than silently
+folded into the unchanged headline table, so the experiment and its
+negative result are traceable. This closes the retrieval-granularity
+lever: per the handoff doc's own acceptance framing, a real result
+including "if it's worse" was to be recorded, not chased further — "no
+change" is exactly as informative here, and further movement on the
+kep_alternatives 58% ceiling needs a larger n or a genuinely different
+mechanism, not another indexing-granularity iteration on this n=37 set.
+
+Encountered and fixed along the way (infra, not code): `CLOUDSDK_CONFIG`
+needed to point at `$PWD/../.gcloud` (one level above the repo root, a
+symlink to `custody/.gcloud`), not `$PWD/.gcloud` inside decision-trace/
+— the first generation attempt failed with `DefaultCredentialsError`
+before any Vertex calls succeeded; corrected and reran cleanly, matching
+the path documented in HANDOFF.md's own app/ test commands.
+
+`run_conditions.py` now calls `get_point_index()` as the live default
+(the code change from this entry, not reverted) — RESULTS.md documents
+that reverting to `get_card_index()` is a one-line change if a future
+session prefers the simpler whole-card mechanism, now that per-point
+retrieval is confirmed not to help either way.
+
+Nothing committed or pushed (no authorization given this entry).
+
+## Update README.md's stale benchmark claim (opened 2026-08-18)
+
+Objective: README.md's "Why not just RAG?" section still states the
+original, debunked "100% vs 57%, GO" claim from before this session's
+three falsifier fix rounds. Every one of those entries flagged this as
+out-of-scope and outstanding. External review (via the user) independently
+flagged the same stale claim as DecisionTrace's single biggest Devpost
+liability. Update it to the real, converged, honest numbers.
+
+Note: a separate, concurrently-active session
+("Implement per-alternative retrieval") may change RESULTS.md's numbers
+again later. This entry uses the latest numbers on disk as of now (RESULTS.md
+mtime 2026-08-18 14:41, nothing from that other entry has run yet — no
+data/corpus/points-index.json, no process running). If those numbers change
+later, README needs one more quick follow-up edit; not blocking on
+speculative future work from a parallel session.
+
+Branch: explore/decision-trace-v0
+Parent: HEAD
+
+Allowed files:
+- decision-trace/README.md ("Why not just RAG?" section only — one
+  paragraph, one table, one sentence in the opening description)
+- decision-trace/.claude/SESSION_CONTRACT.md (this entry)
+
+Non-goals:
+- Do not touch any other README section (spin-up, deploy, project layout,
+  etc.) — those weren't flagged as stale.
+- Do not touch RESULTS.md, data/decisions.jsonl, or any code — this is a
+  docs-only claim correction using numbers that already exist.
+- No commit/push without separate explicit authorization.
+
+Baseline: README currently states structured 100%, rag 57%, "GO" framing.
+RESULTS.md currently states structured 76%, rag 57%, code_only 0%,
+verdict CAUTION, n=37 (per-source: revert_pair 94%, kep_alternatives 58%).
+
+Acceptance gates:
+1. The claims table matches RESULTS.md's top-level numbers exactly (76% /
+   57% / 0%), not rounded up or softened past what the data says.
+2. The surrounding prose states the CAUTION verdict honestly (doesn't clear
+   the preregistered 85% GO bar) rather than implying a clean win.
+3. The "measured, rather than assumed" framing stays truthful — it should,
+   since this session did run three real, verified re-measurements.
+4. No invented statistics — every number traces directly to RESULTS.md.
+
+Verification: read the updated README section back and diff every number
+against the current RESULTS.md by hand.
+
+Status: complete
+
+Result: "Why not just RAG?" section rewritten. Every number
+(14/14/0/8 code_only, 76/59/57/3 rag, 100/76/76/0 structured, 94%
+revert_pair subset, 58% kep_alternatives subset n=19) verified against
+RESULTS.md's current table by direct side-by-side comparison, byte-for-
+byte match. States the CAUTION verdict and the 85% bar it didn't clear
+honestly, explains the KEP-subset drag mechanism, and names the
+per-alternative-retrieval hypothesis as the open next step rather than
+hiding it. Opening description's "measured, rather than assumed" line
+updated to mention the three-round fix history instead of implying a
+single clean measurement.
+
+Nothing committed or pushed.
+
+## Strengthen the demo script (opened 2026-08-18)
+
+Objective: per external review (via user), sharpen docs/DEMO_SCRIPT.md so
+the state-change/persistence moment is unmissable, since that's what
+separates DecisionTrace from "sophisticated RAG chatbot" — the
+organizers' own stated failure mode to avoid. Review also suggested
+adding an agent-led clarifying-question interaction; checked
+app/collaborate.py first — it's explicitly scoped to answer, never ask
+(BUILD_SCOPE §12/§16, "five question classes... not a general chat"), so
+that suggestion is not implemented: scripting a capability the product
+doesn't have would be the exact kind of overclaim this project's own
+discipline exists to prevent. Also found and fixed the same stale
+100%/57% claim in the script's 0:30-1:00 segment that README had.
+
+Branch: explore/decision-trace-v0
+Parent: HEAD
+
+Allowed files:
+- decision-trace/docs/DEMO_SCRIPT.md
+- decision-trace/.claude/SESSION_CONTRACT.md (this entry)
+
+Non-goals:
+- Do not add a clarifying-question feature to app/collaborate.py or
+  app/memory.py — out of scope, and see above for why it wasn't scripted.
+- Do not touch the timing plan's overall 4-minute structure or the
+  Google Cloud proof segment's content, only make its already-strongest
+  moment mandatory instead of hedged.
+- No commit/push without separate explicit authorization.
+
+Baseline: docs/DEMO_SCRIPT.md's 0:30-1:00 segment stated "100%" and "57%"
+(the pre-fix numbers); step 3 of the backend-proof segment was marked
+"(Strongest cut, if time allows)" despite the script's own text calling
+it "the actual proof."
+
+Acceptance gates:
+1. The falsifier numbers in the script match RESULTS.md exactly, same as
+   the README fix (76%/57%, CAUTION).
+2. The Cloud Run restart / fresh-session persistence step is no longer
+   hedged as optional — it's the step that proves durable state, and per
+   the review this session incorporated, it's the single most important
+   beat against a judge reading this as "just RAG with extra UI."
+3. No new capability is scripted that isn't real and evidenced in the
+   current app code.
+
+Verification: read the updated script back; diff its numbers against
+RESULTS.md; confirm nothing added references a code path that doesn't
+exist in app/collaborate.py or app/memory.py.
+
+Status: complete
+
+Result: falsifier numbers corrected to 76%/57%/94% (revert-pair subset),
+verified against RESULTS.md. Step 5 (record reconsideration) now
+explicitly narrated as the "memory actually changes" differentiator. Step
+3 of the Cloud Run proof segment changed from "(Strongest cut, if time
+allows)" to "Do not cut this step for time," with an explicit note that
+every other beat could in principle be faked by a good retrieval demo but
+this one requires a real write surviving a real process boundary.
+Clarifying-question suggestion from the review explicitly not
+implemented — checked app/collaborate.py first, confirmed it's scoped to
+answer-only (BUILD_SCOPE §12/§16), so scripting it would overclaim a
+capability that doesn't exist.
+
+Nothing committed or pushed.

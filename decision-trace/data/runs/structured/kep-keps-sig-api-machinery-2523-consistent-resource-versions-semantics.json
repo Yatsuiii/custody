@@ -1,4 +1,11 @@
 {
   "query": "I'm designing \"Consistent Resource Version Semantics for List\" in kubernetes/enhancements and I'm considering an alternative approach instead of whatever was ultimately chosen. What does this project's history say about alternatives that were already considered here, and why weren't they used?",
-  "response": "Based on the project's decision history in `keps/sig-api-machinery/2523-consistent-resource-versions-semantics/README.md` for **Consistent Resource Version Semantics for List**:\n\nAn alternative approach considered had the disadvantage that because the field would be deprecated but never actually removed, it would result in having 3 options to understand in practice instead of 2."
+  "response": "Based on the decision history for **Consistent Resource Version Semantics for List** (Evidence: `keps/sig-api-machinery/2523-consistent-resource-versions-semantics/README.md`), two main alternative approaches were considered and rejected:\n\n1. **Adding `ExactResourceVersion` and `MinResourceVersion` parameters:**\n   * **Reason rejected:** This approach increases API complexity and requires redundant parameters to maintain backward compatibility.\n\n2. **Using comparison syntax in query strings:**\n   * **Reason rejected:** This handles exact matches awkwardly and still requires duplicate parameters to preserve backward compatibility.",
+  "retrieved": [
+    "kep-keps-sig-api-machinery-2523-consistent-resource-versions-semantics",
+    "kep-keps-sig-api-machinery-2523-consistent-resource-versions-semantics",
+    "kep-keps-sig-storage-2451-service-account-token-volumes",
+    "kep-keps-sig-scheduling-5501-reflect-preenqueue-rejections-in-pod-status",
+    "kep-keps-sig-storage-2451-service-account-token-volumes"
+  ]
 }

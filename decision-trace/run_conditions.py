@@ -119,37 +119,108 @@ def run_rag(d: dict, query: str, target_doc: str) -> tuple[str, list[str]]:
     return vertex.generate(prompt), retrieved_ids
 
 
-def structured_cards_for_repo(all_decisions: list[dict], repo: str) -> str:
-    cards = []
-    for d in all_decisions:
-        if d["repo"] != repo:
-            continue
-        c = d["citation"]
-        cite = (
-            f"PR #{c['original_pr']['number']} / revert PR #{c['revert_pr']['number']}"
-            if "original_pr" in c else c["file"]["path"]
-        )
-        cards.append(
-            f"Decision [{d['decision_id']}]\n"
-            f"Context: {d['context']}\n"
-            f"Chosen: {d['chosen']}\n"
-            f"Rejected/Reverted: {d['rejected']}\n"
-            f"Rationale: {d['rationale_quote']}\n"
-            f"Evidence: {cite}"
-        )
-    return "\n\n".join(cards)
-
-
-def run_structured(all_decisions: list[dict], d: dict, query: str) -> str:
-    cards = structured_cards_for_repo(all_decisions, d["repo"])
-    prompt = (
-        f"You have access to this repository's structured engineering-decision "
-        f"memory:\n\n{cards}\n\n---\n\nDeveloper question: {query}\n\n"
-        f"Answer using only the decision memory above. If a decision is "
-        f"relevant, cite its evidence (PR/issue number or file path) and "
-        f"explain the reasoning. If nothing above is relevant, say so."
+def cite_str(d: dict) -> str:
+    c = d["citation"]
+    return (
+        f"PR #{c['original_pr']['number']} / revert PR #{c['revert_pr']['number']}"
+        if "original_pr" in c else c["file"]["path"]
     )
-    return vertex.generate(prompt)
+
+
+def card_text(d: dict) -> str:
+    """A distilled DecisionTrace card. Renders `rationale_card` (an
+    abstractive paraphrase), never `rationale_quote` (the verbatim ground
+    truth the judge grades against) — see
+    docs/FALSIFIER_CONFOUND_HANDOFF.md section 4.1."""
+    return (
+        f"Decision [{d['decision_id']}]\n"
+        f"Context: {d['context']}\n"
+        f"Chosen: {d['chosen']}\n"
+        f"Rejected/Reverted: {d['rejected']}\n"
+        f"Rationale: {d['rationale_card']}\n"
+        f"Evidence: {cite_str(d)}"
+    )
+
+
+CARDS_INDEX_CACHE = DATA_DIR / "corpus" / "cards-index.json"
+
+
+def get_card_index(all_decisions: list[dict]):
+    """Embedding index over every decision's card, pooled across all repos
+    (37 cards), not per-repo. A per-repo pool is 5-19 cards, too small for
+    top-5 retrieval to filter anything; pooling makes retrieval do real
+    work and gives structured the same budget as RAG's TOP_K."""
+    docs = [{"id": d["decision_id"], "text": card_text(d)} for d in all_decisions]
+    return rag_index.load_or_build_index(CARDS_INDEX_CACHE, docs)
+
+
+def split_rationale_points(rationale_card: str) -> list[str]:
+    """rationale_card is either one sentence (single-alternative cards)
+    or several "- "-prefixed lines (distill_rationale_card_multi output).
+    Splits into individual points; a single-sentence card yields a
+    one-element list, unchanged in meaning."""
+    lines = [
+        ln.strip().lstrip("- ").strip()
+        for ln in rationale_card.splitlines()
+        if ln.strip()
+    ]
+    bulleted = [ln for ln in lines if rationale_card.strip().startswith("-")]
+    return bulleted if bulleted else [rationale_card.strip()]
+
+
+def point_card_text(d: dict, point: str) -> str:
+    """Same shape as card_text(), but Rationale: is a single alternative
+    point instead of the whole (possibly multi-point) card — so a
+    retrieved unit is self-contained enough to answer from and cite
+    correctly even when only one point of a multi-point decision is
+    retrieved."""
+    return (
+        f"Decision [{d['decision_id']}]\n"
+        f"Context: {d['context']}\n"
+        f"Chosen: {d['chosen']}\n"
+        f"Rejected/Reverted: {d['rejected']}\n"
+        f"Rationale: {point}\n"
+        f"Evidence: {cite_str(d)}"
+    )
+
+
+POINTS_INDEX_CACHE = DATA_DIR / "corpus" / "points-index.json"
+
+
+def get_point_index(all_decisions: list[dict]):
+    """Like get_card_index(), but pooled across every alternative-point
+    (roughly 60-90 points across 37 decisions, not 37 whole cards) —
+    retrieval can now surface the specific point a query is about,
+    instead of the whole decision it belongs to."""
+    docs = []
+    for d in all_decisions:
+        for point in split_rationale_points(d["rationale_card"]):
+            docs.append({"id": d["decision_id"], "text": point_card_text(d, point)})
+    return rag_index.load_or_build_index(POINTS_INDEX_CACHE, docs)
+
+
+def build_structured_prompt(query: str, retrieved_cards: list[str]) -> str:
+    cards = "\n\n".join(retrieved_cards)
+    return (
+        f"You have retrieved the following {len(retrieved_cards)} decision "
+        f"cards from this project's structured engineering-decision memory "
+        f"via semantic search:\n\n{cards}\n\n---\n\nDeveloper question: "
+        f"{query}\n\nAnswer using only the decision cards above. If a "
+        f"decision is relevant, cite its evidence (PR/issue number or file "
+        f"path) and explain the reasoning. If nothing above is relevant, "
+        f"say so."
+    )
+
+
+def run_structured(all_decisions: list[dict], d: dict, query: str) -> tuple[str, list[str]]:
+    chunk_texts, chunk_doc_ids, chunk_vecs = get_point_index(all_decisions)
+    retrieved = rag_index.top_k_chunks(
+        query, chunk_texts, chunk_doc_ids, chunk_vecs, k=TOP_K
+    )
+    retrieved_cards = [text for _, text in retrieved]
+    retrieved_ids = [doc_id for doc_id, _ in retrieved]
+    prompt = build_structured_prompt(query, retrieved_cards)
+    return vertex.generate(prompt), retrieved_ids
 
 
 def run_code_only(d: dict, query: str) -> str:
@@ -180,8 +251,11 @@ def main() -> None:
 
         out = RUNS_DIR / "structured" / f"{did}.json"
         if not out.exists():
-            resp = run_structured(decisions, d, query)
-            out.write_text(json.dumps({"query": query, "response": resp}, indent=2))
+            resp, retrieved_ids = run_structured(decisions, d, query)
+            out.write_text(json.dumps(
+                {"query": query, "response": resp, "retrieved": retrieved_ids},
+                indent=2,
+            ))
 
         out = RUNS_DIR / "rag" / f"{did}.json"
         if not out.exists():

@@ -8,8 +8,10 @@ records with explicit lifecycle status — so asking "why is this built this
 way" gets you the *currently active* rationale, not a pile of retrieved
 documents you have to reconcile yourself.
 
-It exists because we measured, rather than assumed, that this beats
-chat-with-your-repo RAG. See [Why not just RAG?](#why-not-just-rag) below.
+It exists because we measured, rather than assumed, whether this beats
+chat-with-your-repo RAG — and re-measured twice more after finding real
+methodology bugs in our own first attempt. See
+[Why not just RAG?](#why-not-just-rag) below.
 
 ## The problem
 
@@ -32,7 +34,12 @@ to explain the resolved answer and ground every claim in a real citation.
 ## Why not just RAG?
 
 We didn't assume the structured approach was better — we ran a falsifier
-first and were prepared to kill the project if it lost.
+first and were prepared to kill the project if it lost. We also didn't
+stop at the first result: our initial run had a real confound (the
+structured condition's prompt and the judge's ground truth shared the
+same underlying text), and fixing that honestly took three rounds, each
+one a genuine bug found and fixed, not a retry until the number looked
+better. Full diagnosis of all three rounds: [`RESULTS.md`](./RESULTS.md).
 
 **n = 37** real decisions (reverted PRs + Kubernetes KEP
 "Alternatives Considered" sections) across 4 repos (`kubernetes/kubernetes`,
@@ -42,18 +49,30 @@ state the correct current rationale.
 
 | Condition | Citation-correct | Rationale-match | Combined (both correct) | Hallucination rate |
 |---|---|---|---|---|
-| code-only (no retrieval) | 14% | 16% | 3% | 8% |
-| embedding RAG | 76% | 62% | **57%** | 3% |
-| DecisionTrace (structured) | 100% | 100% | **100%** | 3% |
+| code-only (no retrieval) | 14% | 14% | 0% | 8% |
+| embedding RAG | 76% | 59% | **57%** | 3% |
+| DecisionTrace (structured) | 100% | 76% | **76%** | 0% |
 
-The RAG failures aren't random noise — they concentrate specifically in
-long, template-structured documents (the KEP "Alternatives Considered"
-sections), where semantic search retrieves a relevant-looking chunk that
-isn't the chunk carrying the actual, current rationale. That's a real,
-explained mechanism, not an unexplained score gap: it's exactly the class
-of document where "retrieve the most similar text" and "state what's
-actually true right now" come apart. Full breakdown, per-decision results,
-and methodology: [`RESULTS.md`](./RESULTS.md).
+Structured clearly beats RAG (76% vs 57%) — but this is an honest
+**CAUTION**, not a clean win: our preregistered bar for declaring the
+structured approach decisively better required it to clear 85% combined,
+and it doesn't, at this sample size. The gap is concentrated entirely in
+one document type: on revert-PR pairs, structured already scores 94%
+(matching RAG); the drag is Kubernetes KEP "Alternatives Considered"
+sections specifically, where structured scores 58% combined (n=19) —
+long, template-structured documents where a single decision often names
+several distinct rejected alternatives, and correctly identifying *which
+one* a question is about is genuinely harder than citation-correctness
+alone suggests (structured's citation-correct rate is 100% throughout;
+every remaining miss is about stating the specific right reason, not
+finding the right decision).
+
+That's a real, explained mechanism, not an unexplained score gap — and
+it's also DecisionTrace's clearest next research direction, not a result
+we're hiding: retrieving individual alternative-points instead of whole
+decision cards is the current hypothesis for closing it. Full breakdown,
+per-decision results, and all three rounds of methodology fixes:
+[`RESULTS.md`](./RESULTS.md).
 
 ## What it does (5-minute tour)
 

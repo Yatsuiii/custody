@@ -1,4 +1,11 @@
 {
   "query": "I'm designing \"KEP-5229: Asynchronous API calls during scheduling\" in kubernetes/enhancements and I'm considering an alternative approach instead of whatever was ultimately chosen. What does this project's history say about alternatives that were already considered here, and why weren't they used?",
-  "response": "Based on the decision memory for **KEP-5229: Asynchronous API calls during scheduling**:\n\n* **Evidence:** `keps/sig-scheduling/5229-asynchronous-api-calls-during-scheduling/README.md`\n* **Reasoning/Rationale:** The chosen approach ensures that during an API call, the pod is marked as \"in-flight\" and is not eligible for rescheduling. This is done specifically to prevent race conditions that would arise from parallel updates to a single pod."
+  "response": "Based on the project's decision history for **KEP-5229: Asynchronous API calls during scheduling** (Evidence: `keps/sig-scheduling/5229-asynchronous-api-calls-during-scheduling/README.md`), three main alternative approaches were considered and rejected:\n\n1. **Failure handler execution**\n   * **Why it was not used:** It requires complex refactoring or creates circular dependencies to handle `PreEnqueue` errors, and it ignores nominated node updates.\n\n2. **Scheduling queue execution**\n   * **Why it was not used:** It delays backoff start times, increases in-flight memory usage, and fails to handle nominated node modifications.\n\n3. **Direct goroutine dispatching**\n   * **Why it was not used:** It cannot delay or merge outgoing requests and relies on separate layers to prevent concurrent update race conditions.",
+  "retrieved": [
+    "kep-keps-sig-scheduling-5229-asynchronous-api-calls-during-scheduling",
+    "kep-keps-sig-scheduling-5229-asynchronous-api-calls-during-scheduling",
+    "kep-keps-sig-scheduling-5229-asynchronous-api-calls-during-scheduling",
+    "kep-keps-sig-scheduling-5501-reflect-preenqueue-rejections-in-pod-status",
+    "kep-keps-sig-scheduling-5501-reflect-preenqueue-rejections-in-pod-status"
+  ]
 }

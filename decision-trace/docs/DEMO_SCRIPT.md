@@ -34,13 +34,16 @@ Show the live URL loading: https://decision-trace-742122658452.us-central1.run.a
 
 On screen: the results table from `RESULTS.md`.
 
-> "We didn't assume structured memory beats RAG — we measured it. 37 real
+> "We didn't assume structured memory beats RAG — we measured it, and
+> re-measured after finding real bugs in our own first attempt. 37 real
 > decisions across 4 open-source repos. Naive embedding RAG: 57% combined
-> correct. DecisionTrace's structured approach: 100%. The RAG failures
-> aren't random — they concentrate in long, template-structured documents,
-> where semantic search grabs a relevant-looking chunk that isn't the one
-> carrying the actual current rationale. That's the mechanism this product
-> is built to fix."
+> correct. DecisionTrace's structured approach: 76% — clearly ahead, and
+> on revert-PR decisions specifically it's already at 94%. The remaining
+> gap is one document type: long, template-structured design docs that
+> name several rejected alternatives in one section, where citing the
+> right decision is easy but stating the specific right reason is
+> genuinely harder. That's the mechanism this product is built around —
+> and the mechanism we're still actively closing."
 
 ## 1:00–3:00 — Live walkthrough (6 steps, ~20s each)
 
@@ -60,9 +63,12 @@ Use the real question from this week's verification pass:
    line of the answer (verified historical fact / current active decision
    / inferred advice / missing-uncertain) — every claim is labeled with
    why it should be trusted.
-5. **Record a reconsideration.** Use the "Record a reconsideration of this
-   decision" form: type an assumption change, submit. Show the new
-   `PROPOSED` candidate decision appear.
+5. **Record a reconsideration.** This is the step that separates
+   DecisionTrace from a chat-with-your-repo tool with a nicer UI — say so
+   out loud: *"This isn't just answering questions, it's a place where
+   the project's memory actually changes."* Use the "Record a
+   reconsideration of this decision" form: type an assumption change,
+   submit. Show the new `PROPOSED` candidate decision appear.
 6. **Ask a related question again** in the same session — show the
    candidate now shapes the answer (it's live in the index immediately,
    not just saved).
@@ -81,10 +87,14 @@ Show, in order:
 2. The Firestore console — the `decisiontrace-decisions` collection, with
    the candidate decision just created in step 5 visible as a real
    document.
-3. (Strongest cut, if time allows) Restart/redeploy the Cloud Run revision
-   on screen, reload the app, ask about the same candidate again — show it
-   survived the restart. This is the actual proof that persistence is
-   real infrastructure, not an in-memory demo trick.
+3. **Do not cut this step for time.** Restart/redeploy the Cloud Run
+   revision on screen, reload the app, ask about the same candidate
+   again — show it survived the restart. Every other beat in this script
+   (the answer, the timeline, the claim tags) could in principle be faked
+   by a good retrieval demo with a nice UI; this step is the one that
+   can't be — it requires a real write surviving a real process boundary.
+   If the timing is tight, cut length elsewhere (step 2 or 3 of the
+   walkthrough) before cutting this.
 
 ## 3:40–4:00 — Close
 

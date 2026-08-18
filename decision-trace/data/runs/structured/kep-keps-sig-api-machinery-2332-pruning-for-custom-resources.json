@@ -1,4 +1,11 @@
 {
   "query": "I'm designing \"Pruning for Custom Resources\" in kubernetes/enhancements and I'm considering an alternative approach instead of whatever was ultimately chosen. What does this project's history say about alternatives that were already considered here, and why weren't they used?",
-  "response": "Based on the decision history for **Pruning for Custom Resources**:\n\n* **Evidence:** `keps/sig-api-machinery/2332-pruning-for-custom-resources/README.md`\n* **Alternative Considered & Reasoning:** Alternative approaches were considered, but were decided against due to having **complex semantics**."
+  "response": "Based on the project's decision history in `keps/sig-api-machinery/2332-pruning-for-custom-resources/README.md`, the following alternatives were considered and rejected for the reasons outlined below:\n\n1. **Nested `x-kubernetes-preserve-unknown-fields: false`**\n   * **Why it wasn't used:** It was rejected because it could encourage unidiomatic API designs and lacked clear, immediate use cases.\n\n2. **Per-version pruning toggles**\n   * **Why it wasn't used:** It was rejected because partially enabled pruning across different CRD versions undermines data consistency and security.\n\n3. **Pruning exclusively for `additionalProperties: false`**\n   * **Why it wasn't used:** It was rejected because evaluating arbitrary empty schemas is impractical, and it conflates validation behavior with pruning.\n\n4. **Recursive `additionalProperties` semantics**\n   * **Why it wasn't used:** It was rejected because standard OpenAPI v3 constructs are designed to operate locally rather than recursively.\n\n5. **Skeleton schemas**\n   * **Why it wasn't used:** It was rejected due to having overly complex semantics compared to structural schemas generated directly from Go types.",
+  "retrieved": [
+    "kep-keps-sig-api-machinery-2332-pruning-for-custom-resources",
+    "kep-keps-sig-api-machinery-2332-pruning-for-custom-resources",
+    "kep-keps-sig-api-machinery-2332-pruning-for-custom-resources",
+    "kep-keps-sig-api-machinery-2332-pruning-for-custom-resources",
+    "kep-keps-sig-api-machinery-2332-pruning-for-custom-resources"
+  ]
 }

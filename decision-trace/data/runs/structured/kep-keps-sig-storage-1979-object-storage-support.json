@@ -1,4 +1,11 @@
 {
   "query": "I'm designing \"KEP-1979: Object Storage Support\" in kubernetes/enhancements and I'm considering an alternative approach instead of whatever was ultimately chosen. What does this project's history say about alternatives that were already considered here, and why weren't they used?",
-  "response": "Based on the decision memory for **KEP-1979: Object Storage Support**:\n\n* **Evidence**: `keps/sig-storage/1979-object-storage-support/README.md`\n* **Details**: The project record notes that the alternatives section of the KEP captures the main alternatives considered and documents the specific reasons why a different solution was decided upon over those alternatives (referenced under: *\"Here we capture the main alternatives and the reasons why we decided on a different solution.\"*)."
+  "response": "Based on the project's decision history in `keps/sig-storage/1979-object-storage-support/README.md`, the following alternatives were considered and rejected for KEP-1979 (Object Storage Support):\n\n1. **Automatic bucket mounting to pods**\n   * **Why it was rejected:** Varied application connection needs prevent a single standard mount mechanism across different drivers.\n\n2. **Static BucketAccess provisioning**\n   * **Why it was rejected:** Handling diverse policy expectations across drivers introduced extreme complexity and a high risk of bugs.\n\n3. **Storing BucketClass on Bucket objects**\n   * **Why it was rejected:** Binding is already sufficiently managed using only the `BucketClaim` reference.\n\n4. **Bucket creation annotations**\n   * **Why it was rejected:** Tracking creation latency to prevent orphaned resources was deemed unnecessary for COSI.\n\n5. **Cross-resource protection finalizers**\n   * **Why it was rejected:** Users manually removing finalizers frequently resulted in corrupted states and cleanup bugs.",
+  "retrieved": [
+    "kep-keps-sig-storage-1979-object-storage-support",
+    "kep-keps-sig-storage-1979-object-storage-support",
+    "kep-keps-sig-storage-1979-object-storage-support",
+    "kep-keps-sig-storage-1979-object-storage-support",
+    "kep-keps-sig-storage-1979-object-storage-support"
+  ]
 }

@@ -1,4 +1,11 @@
 {
   "query": "I'm designing \"KEP-5501: Reflect PreEnqueue rejections in Pod status\" in kubernetes/enhancements and I'm considering an alternative approach instead of whatever was ultimately chosen. What does this project's history say about alternatives that were already considered here, and why weren't they used?",
-  "response": "Based on the decision history for **KEP-5501: Reflect PreEnqueue rejections in Pod status** (Evidence: `keps/sig-scheduling/5501-reflect-preenqueue-rejections-in-pod-status/README.md`), the alternatives considered were evaluated against scenarios involving transient rejections. \n\nSpecifically, the rationale notes that plugins like the `DynamicResources` plugin might observe a rejection simply because the scheduler processes a Pod faster than a `ResourceClaim` becomes visible through the watcher (see issue comment: `https://issues.k8s.io/129698#issuecomment-2614991955`)."
+  "response": "Based on the project's decision history for **KEP-5501: Reflect PreEnqueue rejections in Pod status** (Evidence: `keps/sig-scheduling/5501-reflect-preenqueue-rejections-in-pod-status/README.md`), the following four alternative approaches were considered and rejected:\n\n1. **Explicit + Delayed**\n   * **Reasoning:** Ruled out because introducing a distinct message structure requires breaking API changes and introduces high code complexity.\n\n2. **Explicit + Immediate**\n   * **Reasoning:** Rejected because it breaks plugin APIs by requiring a separate return object, and it carries high risks of outdated status information.\n\n3. **Implicit + Immediate**\n   * **Reasoning:** Dismissed because dispatching status updates immediately creates noisy transient alerts and overburdens the API server.\n\n4. **Implicit + Delayed with Opt-out**\n   * **Reasoning:** Dropped because providing an opt-out mechanism forces empty log entries, which weakens observability without sufficient necessity.",
+  "retrieved": [
+    "kep-keps-sig-scheduling-5501-reflect-preenqueue-rejections-in-pod-status",
+    "kep-keps-sig-scheduling-5501-reflect-preenqueue-rejections-in-pod-status",
+    "kep-keps-sig-scheduling-5501-reflect-preenqueue-rejections-in-pod-status",
+    "kep-keps-sig-scheduling-5501-reflect-preenqueue-rejections-in-pod-status",
+    "kep-keps-sig-scheduling-5229-asynchronous-api-calls-during-scheduling"
+  ]
 }

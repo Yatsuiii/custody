@@ -4,6 +4,95 @@ Written 2026-08-17. Read this before doing anything else here. This is a
 resume point, not a status report to skim — the next session should be
 able to act on it without re-deriving anything.
 
+## Update (2026-08-18): the falsifier confound fix is done, numbers changed, README is now stale
+
+**The "100% vs 57%, GO" claim everywhere below and in README.md is
+outdated. Do not cite it.** `docs/FALSIFIER_CONFOUND_HANDOFF.md` documented
+a real confound in the original benchmark; that fix is now fully applied
+and verified (all 6 acceptance gates checked directly, 115/115 leakage
+tests pass, full detail in `.claude/SESSION_CONTRACT.md`'s "Apply the
+falsifier confound fix" entry, now `Status: complete`).
+
+While verifying the fix, a second, separate bug was found and fixed: the
+first post-fix run had structured collapsing to 0% rationale-match on all
+19 KEP-sourced decisions specifically, dragging the overall combined score
+to 46%. Root cause was in `mine_decisions.py`'s card-distillation prompt,
+not a capability limit — it asked "why was `{chosen}` rejected" for every
+decision, a false premise for KEP records where `chosen` is the proposal
+that *won*, and separately truncated long KEP files before reaching the
+`## Alternatives Considered` section it needed to read. Fixed both; see
+the session contract entry for the full diagnosis.
+
+**Update again, same day**: that 68% was itself improved further. All 11
+of the then-remaining KEP failures had 0% hallucination and 100% correct
+citations — the model wasn't wrong, a one-sentence card just structurally
+can't represent a KEP section that names multiple distinct rejected
+alternatives. Added `distill_rationale_card_multi()` (mine_decisions.py)
+to let a card carry one point per real alternative instead of collapsing
+them into one lossy sentence. Applied uniformly to all 19 KEP rows (not
+cherry-picked), re-ran and re-graded fresh. Tried a 3-point cap first
+(68% -> 78%), then uncapped it to 6 after finding one case referenced a
+4th alternative the cap had cut — the uncapped run landed on the exact
+same aggregate number, a genuine plateau: remaining failures were
+spot-checked and at least one is a case where the ground-truth quote
+isn't about a rejected alternative at all (a scoping rationale for the
+chosen approach), which is a `pick_quote()` ground-truth issue, not
+something more card content can fix — and touching `pick_quote()` is an
+explicit non-goal. Full diagnosis in `.claude/SESSION_CONTRACT.md`'s
+"Multi-point rationale cards" entry.
+
+**Update a third time, same day**: user pushed back on 78% and asked to
+"think harder." Reading all 7 remaining failures (not a sample) in full
+found that 5 of 7 traced to `pick_quote()`'s `RATIONALE_CUES` regex — it
+matches generic words ("because"/"since"/"instead of") that fire just as
+often on prose justifying the CHOSEN KEP design as on prose rejecting an
+alternative. Concrete example: `api-machinery-2523`'s "ground truth" quote
+was "Disadvantages [of the chosen field]... 3 options instead of 2" — not
+a rejected alternative at all. This is a real extraction-precision bug,
+not p-hacking bait, but fixing it means touching `pick_quote()`, which
+every entry before this one explicitly refused to do without new,
+explicit authorization (to prevent redefining ground truth after seeing
+unflattering numbers). User authorized it after seeing the evidence.
+Added a stricter `REJECTION_CUES` tier (`require_rejection=True`,
+additive — default behavior for `revert_pair` mining is byte-identical).
+First attempt had its own bug (a bare "alternative" cue matched markdown
+subsection headers like "### Alternative: X", which have no
+sentence-ending punctuation and got glued onto following prose) — caught
+by manually reading all 11 changed quotes before spending any grading
+budget, then fixed by stripping header lines and dropping the too-broad
+cues. Re-extracted ground truth for the existing 19 `kep_alternatives`
+rows only (no re-mining, no new decisions) — 6 of 19 quotes actually
+changed, 9 found no qualifying sentence and safely kept their prior quote.
+
+**Current, final, freshly re-judged numbers** (RESULTS.md, 2026-08-18):
+
+| Condition | Combined (citation + rationale) |
+|---|---|
+| code_only | 0% |
+| rag | 57% |
+| structured | 76% |
+
+76% is within judge-noise of the prior 78% (only 6 quotes changed; an
+LLM judge has real run-to-run variance at this n) — a wash, not a
+regression. **The meaningful finding is convergence**: three independent,
+real bug fixes — confound fix (46%), multi-point cards (68% -> 78%),
+stricter ground truth (78% -> 76%) — all land in the same ~76-78% band.
+That stability across three different fixes is itself evidence this is a
+genuine measurement of the approach at n=37, not an artifact of any one
+remaining bug. **Verdict is CAUTION, not GO** — `verdict_for()`'s bar
+needs structured>=85%. The threshold was never touched. Further movement
+now needs a larger sample or a different mechanism (e.g. per-alternative
+retrieval instead of one card per decision), not another round of prompt
+or regex tuning against this same n=37 set — flagged to the user as a
+research question, not pursued further here.
+
+**Action needed, not yet done**: README.md's Architecture section still
+states the old "100% vs 57%, GO" framing (that file was out of every
+entry's allowed-files scope so far). It needs to be updated to the real
+76%/57%/CAUTION numbers before any Devpost submission text is written
+that cites this benchmark — writing marketing copy off the stale number
+would be a false claim to judges.
+
 ## Update (later 2026-08-17): decision-card bug fixed, UI restyled, live-ingest actually works in prod
 
 Everything below this note was true earlier in the day; several things it
@@ -264,6 +353,27 @@ fresh checkout).
 decoy pool) was deliberately excluded from git — regenerate via
 `build_corpus.py` only if you need to re-run the falsifier itself, not for
 normal product work.
+
+## Falsifier status (2026-08-18, updated)
+
+Note above ("falsifier artifacts are frozen") predates this session's
+falsifier-fix work — `mine_decisions.py`, `run_conditions.py`, `grade.py`,
+`data/decisions.jsonl`, and `RESULTS.md` were all deliberately touched
+this session, each behind an explicit session-contract entry with user
+authorization (see `.claude/SESSION_CONTRACT.md`). Current, real,
+converged numbers: code_only 0%, rag 57%, structured 76% combined, n=37,
+verdict CAUTION. Four independent fix rounds this session (confound fix,
+multi-point cards, stricter ground-truth extraction, per-alternative
+retrieval indexing) all converged on the same ~76% band — the last one
+(retrieval granularity) was a clean null result, documented in RESULTS.md.
+This is the real ceiling of prompt/retrieval-mechanism iteration on this
+n=37 set; further movement needs a larger sample or a different lever.
+**Done, 2026-08-18**: README.md's "Why not just RAG?" section was updated
+to the real 76%/57%/CAUTION numbers (see the "Update README.md's stale
+benchmark claim" session-contract entry) — the claim is no longer stale.
+`docs/DEMO_SCRIPT.md` was updated to match and its persistence-proof step
+made mandatory rather than hedged (see the "Strengthen the demo script"
+entry). Both verified against RESULTS.md by hand, number for number.
 
 ## Session-contract discipline, if you're an agent picking this up
 

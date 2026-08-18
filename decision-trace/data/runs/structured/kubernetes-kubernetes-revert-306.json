@@ -1,4 +1,11 @@
 {
   "query": "I'm working in kubernetes/kubernetes and I'm planning to reintroduce a change along these lines: \"Solved data races in pkg/registry\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
-  "response": "Yes, this change was previously introduced in **PR #306** and subsequently reverted in **revert PR #140294** (via bumping SMD to v6.4.2).\n\n### Why it was undone:\nIt caused a regression in Server-Side Apply (SSA), where patching a nullable container type (a list or map) could result in `422 required` errors for apply requests that had previously succeeded."
+  "response": "Yes, this change was previously tried and reverted.\n\n* **Evidence:** PR #306 (reverted in PR #140294)\n* **Reasoning:** The change introduced a Server-Side Apply (SSA) regression for nullable container types, which caused valid list and map updates to fail with unexpected 422 validation errors. It was rolled back by bumping SMD to v6.4.2 to revert PR #306.",
+  "retrieved": [
+    "kubernetes-kubernetes-revert-306",
+    "kubernetes-kubernetes-revert-140448",
+    "kubernetes-kubernetes-revert-126599",
+    "kubernetes-kubernetes-revert-126794",
+    "kubernetes-kubernetes-revert-127300"
+  ]
 }

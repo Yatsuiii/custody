@@ -1,4 +1,11 @@
 {
   "query": "I'm designing \"KEP-6122: Configurable Scaling Delay with Pod Resource Exposure\" in kubernetes/enhancements and I'm considering an alternative approach instead of whatever was ultimately chosen. What does this project's history say about alternatives that were already considered here, and why weren't they used?",
-  "response": "Based on the project's decision memory for **KEP-6122: Configurable Scaling Delay with Pod Resource Exposure** (Evidence: `keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md`), an alternative approach was briefly considered but rejected for the following reasons:\n\n1. **Deviation from core model:** It deviates from Kubernetes' deterministic resource management model.\n2. **Unreliability:** CPU usage fluctuates rapidly, making it unreliable for infrastructure decisions."
+  "response": "Based on the project's decision history in `keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md`, the following alternatives were considered and rejected or deferred:\n\n1. **Pod-Level Grace Period**\n   * **Why it was not used:** Altering the core Pod specification requires wider consensus and would delay the Alpha delivery of the feature.\n\n2. **Real-Time Usage Release**\n   * **Why it was not used:** Fluctuating CPU load makes utilization an unreliable metric and conflicts with deterministic resource management.\n\n3. **Handshake Synchronization**\n   * **Why it was not used:** Coupling the kubelet directly to workload readiness signals creates a risk where misbehaving containers could stall scaling operations.\n\n4. **Node Declared Features Opt-Out**\n   * **Why it was not used:** These are temporary mechanisms tied to feature lifecycles, making them unsuitable for long-term use.\n\n5. **Immediate Actuation**\n   * **Why it was not used:** Removing CPUs immediately with no delay prevents latency-sensitive workloads from safely migrating active tasks.",
+  "retrieved": [
+    "kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure",
+    "kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure",
+    "kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure",
+    "kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure",
+    "kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure"
+  ]
 }

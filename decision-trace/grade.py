@@ -152,6 +152,45 @@ def main() -> None:
             f"{sup_rate:.0%} ({sup_n}/{sup_d})" + " |"
         )
 
+    lines.append("\n## Threats to validity\n")
+    lines.append(
+        "- **Citation-correctness is satisfied by construction for the "
+        "structured arm.** Every retrieved card carries its own citation "
+        "field (`Evidence: PR #N` / file path) inline, so a model that "
+        "answers from a retrieved card at all is very likely to cite "
+        "correctly — this measures whether retrieval found the right "
+        "card, not independent recall of the citation.\n"
+    )
+    n_kep = sum(1 for d in decisions.values() if d["source"] == "kep_alternatives")
+    n_revert = sum(1 for d in decisions.values() if d["source"] == "revert_pair")
+    lines.append(
+        f"- **{n_kep} of {len(decisions)} decisions ({n_kep / len(decisions):.0%}) "
+        f"come from kubernetes/enhancements KEPs** (source `kep_alternatives`); "
+        f"the remaining {n_revert} are revert-PR pairs across three repos. "
+        f"The headline numbers are weighted toward KEP-shaped sources — see "
+        f"the per-source breakdown below.\n"
+    )
+
+    lines.append("\n## Per-source breakdown\n")
+    lines.append("| Condition | Source | Citation-correct | Rationale-match | Combined |")
+    lines.append("|---|---|---|---|---|")
+    for cond in CONDITIONS:
+        for source in ("revert_pair", "kep_alternatives"):
+            source_ids = {did for did, d in decisions.items() if d["source"] == source}
+            scores = [s for s in all_scores[cond] if s["decision_id"] in source_ids]
+            if not scores:
+                continue
+            cc = sum(1 for s in scores if s.get("citation_correct")) / len(scores)
+            rm = sum(1 for s in scores if s.get("rationale_match")) / len(scores)
+            comb = sum(
+                1 for s in scores
+                if s.get("citation_correct") and s.get("rationale_match")
+            ) / len(scores)
+            lines.append(
+                f"| {cond} | {source} | {cc:.0%} | {rm:.0%} | {comb:.0%} "
+                f"(n={len(scores)}) |"
+            )
+
     lines.append("\n## Per-decision detail\n")
     lines.append("| decision_id | repo | code_only | rag | structured |")
     lines.append("|---|---|---|---|---|")

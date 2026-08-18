@@ -1,4 +1,11 @@
 {
   "query": "I'm working in elastic/elasticsearch and I'm planning to reintroduce a change along these lines: \"Use a bulk scorer for rescoring vectors\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
-  "response": "Yes, this change was previously attempted and reverted:\n\n* **Decision**: Use a bulk scorer for rescoring vectors (Decision `[elastic-elasticsearch-revert-151875]`)\n* **Evidence**: Introduced in PR #151875 and reverted in PR #152097.\n* **Reasoning/Why it was undone**: It caused an unexpected behavior change between the old and new code, resulting in multiple issues that the revert fixed: #152093, #152094, and #152099."
+  "response": "Yes, this change was previously attempted in **PR #151875** (\"Use a bulk scorer for rescoring vectors\") and subsequently reverted in **PR #152097** (Decision `[elastic-elasticsearch-revert-151875]`).\n\n**Why it was reverted:**\nThe change was rolled back because certain test seeds triggered failures by attempting to read from an already depleted iterator, and the underlying root cause was unclear at the time.",
+  "retrieved": [
+    "elastic-elasticsearch-revert-151875",
+    "elastic-elasticsearch-revert-147071",
+    "elastic-elasticsearch-revert-152050",
+    "elastic-elasticsearch-revert-154503",
+    "elastic-elasticsearch-revert-120214"
+  ]
 }
