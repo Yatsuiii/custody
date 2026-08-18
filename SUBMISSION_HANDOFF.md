@@ -89,24 +89,50 @@ Cloud** (Console, Cloud Run dashboard, Vertex logs, or a `.run` URL). Budget
 a shot for it. The Cloud Run revision is live and the control plane answers
 `/health`, so this is a screen recording, not a build task.
 
+**Revised 2026-08-18, per external review**: the version below replaces
+an earlier 5-segment cut whose middle segment spent 90 seconds scrolling
+three separate live proofs (R1, F1, Fleet N=25) back to back — accurate,
+but it read as a feature tour, not a story. A judge watching that segment
+has to reconstruct the throughline themselves. The cut below tells one
+continuous incident instead, and pushes the proof-tour into a much
+shorter tail. Every beat below is something that already runs today —
+checked against `scripts/demo.py` and `scripts/incident.py` before
+writing this, not scripted speculatively.
+
 A four-minute cut that matches what the repo can actually prove:
 
-1. **The problem, 30s.** `make demo`. Week one a page carries an
-   instruction, week three it leaves the building. The two-column output
-   is the whole pitch and it is already legible on a terminal.
-2. **The mechanism, 45s.** The Dependency Cartography page. Click
-   **Revoke exact descendants**. The lineage flips to REVOKED, the evidence
-   ledger fills in, 32 removed and 575 preserved. This is the most
-   screen-ready thing in the project — use it, do not narrate the README.
-3. **That it is real, 90s.** The Architecture & Evidence page, scrolling
-   the live proof rows. Land on R1 (a same-schema image swap blocked before
-   dispatch), F1 (a real cross-department `derived_from` chain against live
-   Memory Bank), and Fleet N=25. Each row shows its own captured data.
-4. **The fleet claim, 45s.** One revocation, 2 departments pulled, 23
-   untouched, verified by 25 independent Memory Bank rereads.
-5. **Honesty, 30s.** Say out loud that G5 is BLOCKED and why. Judges
-   reward a project that names its own gap far more than one that hides it,
-   and this project's entire posture is built on that.
+1. **Hook, 20s.** One sentence: *"When a tool your fleet trusted turns out
+   to be compromised, do you wipe everyone's memory, or do you know
+   exactly what it touched?"* Cut straight to the Dependency Cartography
+   page already loaded.
+2. **The one story, 120s.** Tell it as a single incident, not a feature
+   list — this is the whole pitch, say the story out loud while you click:
+   - *Day 1:* `vendor_portal` is vouched for by three departments; its
+     output really flows sales → support → finance, each hop a real
+     retrieval, not a staged edge. Point at the lineage graph.
+   - *Day 21:* `vendor_portal` is found compromised. Demote it.
+   - Click **Revoke exact descendants**. The lineage flips to REVOKED
+     live, the evidence ledger fills in: 32 records removed, 575
+     unrelated fleet memories preserved untouched. Say the number out
+     loud — "not the whole app, not the whole department, exactly the 32
+     records that trace back to this tool."
+   - Quick cut to a terminal running `make demo`'s export check: a
+     request citing the now-untrusted content is **REFUSED**, with the
+     reason printed. This is the same principle — trust status gates
+     what leaves, not just what's remembered — enforced at a second,
+     independent choke point.
+3. **It's real, not a mock, 40s.** One cut to the Architecture & Evidence
+   page, land on exactly one live proof row (R1: a same-schema image swap
+   blocked before dispatch is the most concrete) plus the Fleet N=25 stat
+   — one revocation, 2 departments pulled, 23 untouched, verified by 25
+   independent Memory Bank rereads. Say "this same mechanism, run for
+   real against Google Cloud" and move on — do not re-scroll every proof
+   row; that's what the page itself is for, after the video.
+4. **Honesty, 30s.** Say out loud that G5 is BLOCKED and why. Judges
+   reward a project that names its own gap far more than one that hides
+   it, and this project's entire posture is built on that.
+5. **Close, 30s.** Google Cloud stack in one breath (Cloud Run, Firestore,
+   Vertex AI, Agent Registry/Gateway/Model Armor), live URL on screen.
 
 Do not add UI for the video. The scale-up decision earlier in this project
 was explicitly "a reported number, not a UI feature competing for video

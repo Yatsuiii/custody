@@ -219,7 +219,10 @@ git clone https://github.com/Yatsuiii/custody.git && cd custody
 python3.12 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 
-make check     # ruff, then 376 tests, none skipped
+make check     # ruff, then 376 tests. On a genuinely fresh clone with no
+               # live proofs run yet, expect "OK (skipped=1)" — one test
+               # honestly skips re-judging proof-out/ artifacts that don't
+               # exist yet, rather than faking a pass. 0 failures either way.
 make demo      # the poisoning scenario, with Custody and without
 make cost      # what a compromised tool destroys, with the graph and without
 make revoke    # retroactive revocation across departments, and a replay

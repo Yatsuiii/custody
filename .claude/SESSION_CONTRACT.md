@@ -4356,3 +4356,165 @@ docs-only change riding along with the still-unpushed `b674c71`; push on
 next explicit authorization.
 
 Status: complete
+
+---
+
+## Compress the demo video script to one revocation story (opened 2026-08-18)
+
+Objective: per external review (via user, same session that produced the
+architecture diagrams and the DecisionTrace falsifier work), the current
+4-minute demo script (`SUBMISSION_HANDOFF.md` §1) risks "communication
+overload" — a 90-second segment scrolls through multiple separate live
+proofs (R1, F1, Fleet N=25) instead of telling one continuous story.
+Review's suggested shape: trusted write -> source compromised -> exact
+descendants identified and revoked -> unrelated fleet memory survives ->
+export refused if it cites revoked memory, then a short infra-proof tail.
+Checked before rewriting: `make demo`'s poisoning scenario
+(`scripts/demo.py`) already includes an export-refusal beat (the
+`ATTACKER` export line), so this narrative is real and demoable, not
+invented for the script.
+
+Branch: feat/memory-provenance
+Parent: HEAD
+
+Allowed files:
+- SUBMISSION_HANDOFF.md (§1, the demo script section, only)
+- .claude/SESSION_CONTRACT.md (this entry)
+
+Non-goals:
+- Do not add any new UI or code for the video — same standing rule this
+  file already states ("a reported number, not a UI feature competing
+  for video time").
+- Do not touch docs/DEVPOST_SUBMISSION_DRAFT.md's other sections (Project
+  Story, Features, etc.) — those weren't flagged, only the video script.
+- Do not script any beat that isn't already real and demoable in the
+  current repo (`make demo`, the Dependency Cartography page, the
+  Architecture & Evidence page) — verify before writing, same as
+  DecisionTrace's clarifying-question check this session.
+- No commit/push without separate explicit authorization.
+
+Baseline: current script is 5 segments (30/45/90/45/30s) — problem,
+mechanism, "that it is real" (proof-scrolling), fleet claim, honesty.
+
+Acceptance gates:
+1. The compressed script tells one continuous story matching the
+   review's shape (trusted write, compromise, exact revocation,
+   preserved-unrelated-memory, export refusal) as a single throughline,
+   not separate disconnected segments.
+2. The "that it is real" proof-scrolling segment is cut down
+   dramatically (from 90s covering 3 separate proofs to a short tail
+   proving live Google Cloud infra, not a tour of every live-proof row).
+3. The honesty beat (G5 BLOCKED) is kept — review didn't flag it and it's
+   a real strength per this project's own stated philosophy.
+4. Total still fits the ~4-minute budget.
+5. Every beat traces to something that actually runs today (`make demo`,
+   the live Cartography page's revoke button, the Architecture & Evidence
+   page) — no new capability implied.
+
+Verification: read the updated script back; confirm every referenced
+command/page/button exists in the current repo.
+
+Status: complete
+
+Result: rewrote SUBMISSION_HANDOFF.md §1 as one continuous incident
+(vouch -> compromise -> demote -> revoke exact descendants -> unrelated
+survives -> export refused) instead of five loosely-connected segments,
+one of which was 90s of scrolling three separate proofs. Checked before
+writing: scripts/incident.py already runs this exact narrative end to
+end offline (docstring confirms), scripts/demo.py's export check really
+does print REFUSED for untrusted-cited content, and every specific
+number reused (32 removed / 575 preserved, 2 departments pulled / 23
+untouched, 25 independent rereads) was grepped against web/timeline.html
+and README.md's live-fleet section and matched exactly — none invented,
+all carried forward from what the pre-existing script already used.
+Proof-tour segment cut from 90s/3 rows to 40s/1 row + the Fleet N=25
+stat. Honesty beat (G5 BLOCKED) kept unchanged. Total still ~240s (4:00).
+No UI/code added, per the file's own standing rule.
+
+Nothing committed or pushed.
+
+---
+
+## Verify and fix the clean-clone reproducibility claim (opened 2026-08-18)
+
+Objective: external review flagged "the README test-count claim wasn't
+trivially reproducible from a clean environment" without specifics. Did
+not take the claim on faith — actually cloned fresh from
+`https://github.com/Yatsuiii/custody.git` into `/tmp/custody-clean-clone-test`
+and ran README's own spin-up instructions verbatim (`python3.12 -m venv
+.venv`, pip install, `make check`). Found a real, reproducible bug, not a
+documentation nit: `scripts/live_gateway.py`'s `_write_policy()` writes
+into `proof-out/gateway-iap-{phase}-{proof_id}.json` without creating
+`proof-out/` first. That directory is gitignored (`.gitignore:5`) and
+this repo's local copy has it only because it accumulated from weeks of
+live-proof runs — invisible on this machine, guaranteed-present on a
+judge's genuine fresh clone. Result on the clean clone: `make check`
+reports "Ran 376 tests" (the count matches) but with 1 failure + 3 errors
+(all in `tests/test_live_gateway_producer.py`, all
+`FileNotFoundError`/downstream `RuntimeError` from the missing
+directory) + 1 skip — not the clean "376 tests, none skipped" the README
+claims.
+
+Branch: feat/memory-provenance
+Parent: HEAD
+
+Allowed files:
+- scripts/live_gateway.py (`_write_policy`, add the missing
+  `path.parent.mkdir(parents=True, exist_ok=True)` — same idiom already
+  used at line 1334 in `main()`, just missing at the actual write site
+  the unit tests exercise directly)
+- .claude/SESSION_CONTRACT.md (this entry)
+
+Non-goals:
+- Do not touch any other test file or script even if similarly
+  proof-out-dependent, unless the same clean-clone run surfaces it —
+  fix what was actually found broken, not a speculative sweep.
+- Do not commit the local `proof-out/` directory or change
+  `.gitignore` — it's correctly gitignored generated output; the fix is
+  making the code that writes into it not assume it exists.
+- No commit/push without separate explicit authorization.
+
+Baseline: clean-clone `make check` result before the fix: 376 ran, 1
+failure, 3 errors, 1 skipped (see above). This repo's own working copy
+currently passes 376/376 only because its local `proof-out/` already
+exists from prior sessions' work — masking the same bug.
+
+Acceptance gates:
+1. The fix is applied at the actual write site (`_write_policy`), not
+   papered over by manually creating `proof-out/` in the test fixtures
+   or by documenting an extra manual step in README.
+2. Re-running `make check` in the SAME clean clone
+   (`/tmp/custody-clean-clone-test`, `proof-out/` deleted again first, to
+   prove the fix and not just re-use the directory the failing run
+   already half-created) passes 376/376, none skipped.
+3. The same fix applied to this working repo (not just the throwaway
+   clone) so the bug doesn't linger, masked, until the next genuinely
+   fresh clone (e.g. Devpost judge, CI).
+4. `make check` still passes here afterward too.
+
+Verification: delete proof-out/ in the clean clone, re-run `make check`
+there and confirm 376/376; apply the same one-line fix here; run
+`make check` here and confirm 376/376 with proof-out/ already present
+(the common case) — both paths need to work.
+
+Status: complete
+
+Result: real bug confirmed and fixed, not just a docs claim corrected.
+Added `path.parent.mkdir(parents=True, exist_ok=True)` to
+`_write_policy()` in scripts/live_gateway.py (both here and in the
+throwaway clone, to prove the fix before trusting it). Re-ran `make
+check` in `/tmp/custody-clean-clone-test` with `proof-out/` deleted
+again first (not reusing the half-created directory from the failing
+run): 376 tests, 0 failures, 0 errors, 1 legitimate skip
+("no proof-out/ artifacts present on this clone" —
+tests/test_stored_artifacts.py:86, confirmed by reading the test that
+this is an honest skip-when-nothing-to-check, not a bug). Re-ran here
+(proof-out/ already populated from prior sessions): 376/376, zero
+skips, unchanged from before the fix. README's "376 tests, none
+skipped" claim corrected to state the fresh-clone case precisely (one
+expected skip until a live proof has run at least once) instead of
+implying a uniform result regardless of clone state. Cleanup:
+/tmp/custody-clean-clone-test left in place in case the user wants to
+inspect it further; safe to delete any time, it's outside the repo.
+
+Nothing committed or pushed.

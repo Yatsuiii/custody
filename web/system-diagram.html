@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Custody — system architecture</title>
+<style>
+  :root {
+    --bg: #f4f3ee; --panel: #fdfcf9; --panel-2: #f8f6f0;
+    --line: #cfccc0; --line-soft: #ecebe3;
+    --ink: #1e1c17; --ink-dim: #6b6858; --ink-faint: #9b9786;
+    --accent: #3f6e52; --accent-dim: rgba(63, 110, 82, 0.1);
+    --danger: #b5432e; --danger-dim: rgba(181, 67, 46, 0.09);
+    --warn: #a5761f; --warn-dim: rgba(165, 118, 31, 0.1);
+    --sans: -apple-system, "Segoe UI", Roboto, system-ui, sans-serif;
+    --mono: "IBM Plex Mono", "SF Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 13px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  .mono { font-family: var(--mono); }
+  .shell { max-width: 1760px; margin: 0 auto; padding: 16px 24px 24px; }
+
+  h1 { font-size: 14px; margin: 0; font-weight: 700; letter-spacing: 0.01em; }
+  p.lede { color: var(--ink-faint); font-size: 11px; max-width: 100ch; margin: 3px 0 12px; }
+
+  figure { margin: 0; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); padding: 12px 20px 8px; }
+  figure svg { display: block; width: 100%; height: auto; }
+  figcaption { color: var(--ink-dim); font-size: 11.5px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line-soft); }
+
+  .node rect { fill: var(--panel); stroke: var(--ink-dim); stroke-width: 1.3; }
+  .node.core rect { stroke: var(--accent); stroke-width: 1.6; }
+  .node.danger rect { fill: var(--danger-dim); stroke: var(--danger); }
+  .node.gated rect { fill: var(--warn-dim); stroke: var(--warn); stroke-dasharray: 4 3; }
+  .node.group rect { fill: var(--panel-2); }
+  .node text.t { font-family: var(--mono); font-weight: 700; font-size: 13px; fill: var(--ink); }
+  .node text.s { font-family: var(--sans); font-size: 10.5px; fill: var(--ink-dim); }
+  .node.danger text.t, .node.danger text.s { fill: var(--danger); }
+  .node.gated text.s { fill: var(--warn); }
+  .node.faint rect { stroke: var(--line); }
+  .node.faint text.t { fill: var(--ink-faint); font-weight: 600; }
+  .node.faint text.s { fill: var(--ink-faint); }
+
+  .tag { font-family: var(--mono); font-size: 9px; fill: var(--ink-faint); text-transform: uppercase; letter-spacing: .04em; }
+  .plane-label { font-family: var(--mono); font-size: 11px; font-weight: 700; fill: var(--accent); opacity: 0.75; letter-spacing: .04em; text-transform: uppercase; }
+  .plane-bracket { stroke: var(--accent); stroke-width: 1.2; opacity: 0.4; fill: none; }
+
+  .edge { fill: none; stroke: var(--ink-faint); stroke-width: 1.3; }
+  .edge.trust { stroke: var(--accent); stroke-width: 1.6; }
+  .edge.untrust { stroke: var(--warn); stroke-width: 1.4; }
+  .edge.deny { stroke: var(--danger); stroke-width: 1.4; stroke-dasharray: 5 4; }
+  .edge.read { stroke: var(--ink-faint); stroke-width: 1.1; stroke-dasharray: 3 4; }
+  .edge.feedback { stroke: var(--danger); stroke-width: 1.3; stroke-dasharray: 5 4; }
+  .elabel { font-family: var(--mono); font-size: 9.5px; fill: var(--ink-dim); paint-order: stroke; stroke: var(--panel); stroke-width: 3; }
+  .elabel.trust { fill: var(--accent); }
+  .elabel.untrust { fill: var(--warn); }
+  .elabel.deny, .elabel.feedback { fill: var(--danger); }
+
+  .legend { display: flex; gap: 22px; margin-top: 16px; font-size: 11px; color: var(--ink-dim); flex-wrap: wrap; }
+  .legend .sw { display: inline-block; width: 18px; height: 2px; margin-right: 6px; vertical-align: 2px; background: var(--ink-faint); }
+  .legend .sw.trust { background: var(--accent); }
+  .legend .sw.untrust { background: var(--warn); }
+  .legend .sw.deny { background: var(--danger); }
+  .legend .sw.read { background: var(--ink-faint); background-image: linear-gradient(90deg, var(--ink-faint) 60%, transparent 40%); background-size: 6px 2px; }
+
+  footer { margin-top: 18px; color: var(--ink-faint); font-size: 10.5px; }
+</style>
+</head>
+<body>
+<div class="shell">
+  <h1>Custody &mdash; system architecture</h1>
+  <p class="lede">A deterministic provenance and revocation substrate for persistent agent memory.</p>
+
+  <figure>
+    <svg viewBox="0 0 1720 715" role="img" aria-label="Flow diagram: a department agent's tool call passes through Google Agent Platform discovery and IAP gateway, then Custody's revision.py pin check (blocking on mismatch), origin.py labeling, and service.py trust split into either Vertex AI Memory Bank (trusted) or quarantine reviewed by Gemini (untrusted). Every event is recorded to graph.py and Firestore. Cloud Scheduler drives a daily Auditor that revokes compromised descendants back through Memory Bank. Exports pass through action.py, which requires trusted citations. Cloud Logging and Agent Observability tap every admission. Firestore state renders read-only on four frontend pages.">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="var(--ink-faint)"/>
+        </marker>
+        <marker id="arrow-trust" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/>
+        </marker>
+        <marker id="arrow-untrust" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="var(--warn)"/>
+        </marker>
+        <marker id="arrow-deny" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="var(--danger)"/>
+        </marker>
+      </defs>
+
+      <g transform="translate(0,-255)">
+      <!-- ===== group backdrops ===== -->
+      <g class="node group"><rect x="252" y="288" width="176" height="252" rx="8"/></g>
+      <text class="tag" x="260" y="280">google agent platform</text>
+
+      <g class="node group"><rect x="872" y="732" width="386" height="56" rx="8"/></g>
+      <text class="tag" x="880" y="724">cloud scheduler &rarr; provenance auditor</text>
+
+      <!-- ===== subtle control-plane scope indicators (no box): revision/origin/catalog/service cluster, plus separate ticks over graph.py and action.py so Memory Bank/Firestore (sitting between them) are never enclosed ===== -->
+      <path class="plane-bracket" d="M478,388 L478,380 L1052,380 L1052,388"/>
+      <text class="plane-label" x="765" y="374" text-anchor="middle">Custody trust control plane</text>
+      <path class="plane-bracket" d="M900,604 L900,596 L1052,596 L1052,604"/>
+      <path class="plane-bracket" d="M1490,550 L1490,542 L1670,542 L1670,550"/>
+
+      <!-- ===== nodes ===== -->
+      <!-- Fleet -->
+      <g class="node core"><rect x="40" y="435" width="170" height="80" rx="8"/></g>
+      <text class="t" x="125" y="470" text-anchor="middle">Fleet</text>
+      <text class="s" x="125" y="488" text-anchor="middle">25 dept agents</text>
+      <text class="s" x="125" y="502" text-anchor="middle">ADK Runner</text>
+
+      <!-- Discovery boundary -->
+      <g class="node"><rect x="268" y="300" width="150" height="42" rx="6"/></g>
+      <text class="t" x="343" y="318" text-anchor="middle" font-size="11.5">Agent Registry</text>
+      <text class="s" x="343" y="332" text-anchor="middle">tools/list, drift detect</text>
+
+      <g class="node"><rect x="268" y="352" width="150" height="42" rx="6"/></g>
+      <text class="t" x="343" y="370" text-anchor="middle" font-size="11.5">Agent Identity</text>
+      <text class="s" x="343" y="384" text-anchor="middle">principal per dispatch</text>
+
+      <g class="node"><rect x="268" y="404" width="150" height="42" rx="6"/></g>
+      <text class="t" x="343" y="422" text-anchor="middle" font-size="11.5">Agent Gateway</text>
+      <text class="s" x="343" y="436" text-anchor="middle">IAP, time-boxed lease</text>
+
+      <g class="node"><rect x="268" y="456" width="150" height="42" rx="6"/></g>
+      <text class="t" x="343" y="474" text-anchor="middle" font-size="11.5">Model Armor</text>
+      <text class="s" x="343" y="488" text-anchor="middle">injection screen</text>
+
+      <!-- revision.py -->
+      <g class="node core"><rect x="480" y="435" width="150" height="80" rx="8"/></g>
+      <text class="t" x="555" y="470" text-anchor="middle">revision.py</text>
+      <text class="s" x="555" y="488" text-anchor="middle">pin match check</text>
+
+      <!-- blocked -->
+      <g class="node danger"><rect x="480" y="548" width="150" height="42" rx="6"/></g>
+      <text class="t" x="555" y="566" text-anchor="middle" font-size="11.5">blocked</text>
+      <text class="s" x="555" y="580" text-anchor="middle">refused before dispatch</text>
+
+      <!-- origin.py -->
+      <g class="node core"><rect x="690" y="435" width="150" height="80" rx="8"/></g>
+      <text class="t" x="765" y="465" text-anchor="middle">origin.py</text>
+      <text class="s" x="765" y="483" text-anchor="middle">USER/MODEL/TOOL</text>
+      <text class="s" x="765" y="497" text-anchor="middle">/DERIVED</text>
+
+      <!-- catalog.py -->
+      <g class="node core"><rect x="900" y="318" width="150" height="52" rx="6"/></g>
+      <text class="t" x="975" y="340" text-anchor="middle" font-size="11.5">catalog.py</text>
+      <text class="s" x="975" y="356" text-anchor="middle">per-dept trust grants</text>
+
+      <!-- service.py -->
+      <g class="node core"><rect x="900" y="435" width="150" height="80" rx="8"/></g>
+      <text class="t" x="975" y="465" text-anchor="middle">service.py</text>
+      <text class="s" x="975" y="483" text-anchor="middle">split trusted /</text>
+      <text class="s" x="975" y="497" text-anchor="middle">quarantined</text>
+
+      <!-- quarantine / review / gemini -->
+      <g class="node"><rect x="1110" y="330" width="140" height="42" rx="6"/></g>
+      <text class="t" x="1180" y="348" text-anchor="middle" font-size="11">quarantine</text>
+      <text class="s" x="1180" y="362" text-anchor="middle">withheld, reviewable</text>
+
+      <g class="node core"><rect x="1300" y="330" width="140" height="42" rx="6"/></g>
+      <text class="t" x="1370" y="348" text-anchor="middle" font-size="11">review.py</text>
+      <text class="s" x="1370" y="362" text-anchor="middle">hands off, no verdict</text>
+
+      <g class="node"><rect x="1490" y="322" width="180" height="58" rx="6"/></g>
+      <text class="t" x="1580" y="344" text-anchor="middle" font-size="12">Gemini 3.5 Flash</text>
+      <text class="s" x="1580" y="360" text-anchor="middle">drafts Verdict, no</text>
+      <text class="s" x="1580" y="372" text-anchor="middle">trust/origin field</text>
+
+      <!-- memory bank -->
+      <g class="node core"><rect x="1110" y="435" width="180" height="80" rx="8"/></g>
+      <text class="t" x="1200" y="465" text-anchor="middle">Memory Bank</text>
+      <text class="s" x="1200" y="483" text-anchor="middle">Vertex AI / Agent Engine</text>
+      <text class="s" x="1200" y="497" text-anchor="middle">via BaseMemoryService</text>
+
+      <!-- TTS gated, toned down -->
+      <g class="node gated faint"><rect x="1490" y="435" width="180" height="52" rx="6"/></g>
+      <text class="t" x="1580" y="456" text-anchor="middle" font-size="11.5">Cloud TTS</text>
+      <text class="s" x="1580" y="472" text-anchor="middle">gated, not in GUI</text>
+
+      <!-- action.py -->
+      <g class="node core"><rect x="1490" y="558" width="180" height="66" rx="8"/></g>
+      <text class="t" x="1580" y="584" text-anchor="middle">action.py</text>
+      <text class="s" x="1580" y="600" text-anchor="middle">export gate</text>
+
+      <!-- egress -->
+      <g class="node"><rect x="1490" y="656" width="180" height="42" rx="6"/></g>
+      <text class="t" x="1580" y="674" text-anchor="middle" font-size="11.5">egress</text>
+      <text class="s" x="1580" y="688" text-anchor="middle">must cite trusted memory</text>
+
+      <!-- graph.py -->
+      <g class="node core"><rect x="900" y="612" width="150" height="66" rx="8"/></g>
+      <text class="t" x="975" y="638" text-anchor="middle">graph.py</text>
+      <text class="s" x="975" y="654" text-anchor="middle">descendants, revoke</text>
+
+      <!-- firestore -->
+      <g class="node core"><rect x="1110" y="612" width="180" height="66" rx="8"/></g>
+      <text class="t" x="1200" y="638" text-anchor="middle">Firestore</text>
+      <text class="s" x="1200" y="654" text-anchor="middle">graph + catalog + demotion log</text>
+
+      <!-- scheduler / auditor -->
+      <g class="node"><rect x="900" y="746" width="150" height="28" rx="5"/></g>
+      <text class="t" x="975" y="765" text-anchor="middle" font-size="10.5">Cloud Scheduler</text>
+
+      <g class="node"><rect x="1110" y="746" width="180" height="28" rx="5"/></g>
+      <text class="t" x="1200" y="765" text-anchor="middle" font-size="10.5">Provenance Auditor</text>
+
+      <!-- telemetry, toned down -->
+      <g class="node faint"><rect x="268" y="740" width="360" height="66" rx="8"/></g>
+      <text class="t" x="448" y="766" text-anchor="middle" font-size="11.5">Cloud Logging + Agent Observability</text>
+      <text class="s" x="448" y="782" text-anchor="middle">one OTel span per admission, custody.digest</text>
+
+      <!-- frontend, toned down -->
+      <g class="node faint"><rect x="480" y="880" width="800" height="66" rx="8"/></g>
+      <text class="t" x="880" y="906" text-anchor="middle" font-size="11.5">4 live pages &mdash; incident / timeline / fleet / architecture.html</text>
+      <text class="s" x="880" y="922" text-anchor="middle">read-only render of Firestore state, one Vercel project</text>
+
+      <!-- ===== edges ===== -->
+      <!-- fleet -> boundary -->
+      <path class="edge" d="M210,475 L268,421" marker-end="url(#arrow)"/>
+      <text class="elabel" x="180" y="440">discover &amp; bind</text>
+
+      <!-- boundary -> revision -->
+      <path class="edge" d="M418,421 L480,470" marker-end="url(#arrow)"/>
+      <text class="elabel" x="422" y="415">tools/call</text>
+
+      <!-- revision -> blocked -->
+      <path class="edge deny" d="M555,515 L555,548" marker-end="url(#arrow-deny)"/>
+      <text class="elabel deny" x="562" y="536">mismatch</text>
+
+      <!-- revision -> origin -->
+      <path class="edge" d="M630,475 L690,475" marker-end="url(#arrow)"/>
+      <text class="elabel" x="637" y="468">admitted</text>
+
+      <!-- origin -> service -->
+      <path class="edge" d="M840,475 L900,475" marker-end="url(#arrow)"/>
+
+      <!-- catalog -> service -->
+      <path class="edge" d="M975,370 L975,435" marker-end="url(#arrow)"/>
+      <text class="elabel" x="982" y="405">dept grants</text>
+
+      <!-- service -> quarantine (untrust) -->
+      <path class="edge untrust" d="M1015,435 C1040,390 1070,365 1110,353" marker-end="url(#arrow-untrust)"/>
+      <text class="elabel untrust" x="1058" y="378">untrusted</text>
+
+      <!-- quarantine -> review -->
+      <path class="edge untrust" d="M1250,351 L1300,351" marker-end="url(#arrow-untrust)"/>
+
+      <!-- review -> gemini -->
+      <path class="edge untrust" d="M1440,351 L1490,351" marker-end="url(#arrow-untrust)"/>
+      <text class="elabel untrust" x="1443" y="344">explain</text>
+
+      <!-- service -> memory bank (trust) -->
+      <path class="edge trust" d="M1050,470 L1110,470" marker-end="url(#arrow-trust)"/>
+      <text class="elabel trust" x="1057" y="463">trusted write</text>
+
+      <!-- memory bank -> tts (gated) -->
+      <path class="edge read" d="M1290,455 L1490,455" marker-end="url(#arrow)"/>
+      <text class="elabel" x="1330" y="448">narration, gated</text>
+
+      <!-- service -> graph.py (records both) -->
+      <path class="edge" d="M975,515 L975,612" marker-end="url(#arrow)"/>
+      <text class="elabel" x="982" y="565">record every split</text>
+
+      <!-- graph -> firestore -->
+      <path class="edge" d="M1050,645 L1110,645" marker-end="url(#arrow)"/>
+      <text class="elabel" x="1057" y="638">persist</text>
+
+      <!-- scheduler -> auditor -->
+      <path class="edge" d="M1050,760 L1110,760" marker-end="url(#arrow)"/>
+
+      <!-- auditor -> firestore (reads) -->
+      <path class="edge read" d="M1200,746 L1200,678" marker-end="url(#arrow)"/>
+      <text class="elabel" x="1207" y="730">re-examine</text>
+
+      <!-- auditor -> memory bank (revoke feedback) -->
+      <path class="edge feedback" d="M1230,746 C1290,690 1290,560 1200,515" marker-end="url(#arrow-deny)"/>
+      <text class="elabel feedback" x="1300" y="600">demote &rarr; revoke</text>
+
+      <!-- memory bank -> fleet (retrieval, feedback arc routed fully above the core box) -->
+      <path class="edge read" d="M1110,460 C 700,420 300,410 125,435" marker-end="url(#arrow)"/>
+      <text class="elabel" x="600" y="405">retrieval</text>
+
+      <!-- memory bank -> action.py (citation check) -->
+      <path class="edge trust" d="M1290,500 C1400,530 1440,545 1490,575" marker-end="url(#arrow-trust)"/>
+      <text class="elabel trust" x="1330" y="530">citation must be trusted</text>
+
+      <!-- fleet -> action.py (export request), long dashed -->
+      <path class="edge read" d="M150,515 C 200,700 1200,850 1490,600" marker-end="url(#arrow)"/>
+      <text class="elabel" x="700" y="790">export request</text>
+
+      <!-- action -> egress -->
+      <path class="edge" d="M1580,624 L1580,656" marker-end="url(#arrow)"/>
+
+      <!-- boundary + revision + service -> telemetry (taps) -->
+      <path class="edge read" d="M343,498 L343,740" marker-end="url(#arrow)"/>
+      <path class="edge read" d="M555,515 C 500,600 450,680 440,740" marker-end="url(#arrow)"/>
+      <path class="edge read" d="M900,480 C 700,560 500,640 460,740" marker-end="url(#arrow)"/>
+
+      <!-- firestore -> frontend (render) -->
+      <path class="edge read" d="M1150,678 C 1050,780 950,830 880,880" marker-end="url(#arrow)"/>
+      <text class="elabel" x="1000" y="800">render evidence</text>
+      </g>
+
+    </svg>
+    <figcaption>
+      Solid green = trusted write path. Amber = quarantined/untrusted path to
+      Gemini review. Dashed red = deny or revoke. Dashed grey = read-only,
+      feedback, or gated-off-GUI. Every node is live and evidenced against
+      <code>README.md</code>'s status table as of 2026-08-18; Cloud Run hosts
+      the Custody core (revision.py through action.py) and the export MCP
+      server; Vertex AI hosts Memory Bank, Gemini, and Cloud TTS.
+    </figcaption>
+  </figure>
+
+  <div class="legend">
+    <span><span class="sw trust"></span>trusted write</span>
+    <span><span class="sw untrust"></span>quarantine / review</span>
+    <span><span class="sw deny"></span>block / revoke</span>
+    <span><span class="sw read"></span>read / feedback / gated</span>
+  </div>
+
+  <footer>Custody &middot; All Things Agentic Hackathon &middot; Fortified Enterprise Fleet</footer>
+</div>
+</body>
+</html>
