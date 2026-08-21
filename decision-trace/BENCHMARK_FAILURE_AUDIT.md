@@ -322,9 +322,13 @@ correct reasons per answer** and scored zero for every one of them.
 (`2523`, the row this audit independently classifies as borderline). At
 that rate judge ambiguity accounts for roughly one case, not four.
 
-**H3 is confirmed and quantified.** `CARD_PROMPT_MULTI`'s "up to 6" cap
-binds on 4 of 19 KEPs (source alternatives vs card points: 9→6, 8→6, 7→5,
-7→4), and 3 of those 4 are failures.
+**H3 is confirmed and quantified.** The card holds fewer points than the
+source names alternatives on **4 of 19** KEPs by the forensic count
+(9→6, 8→6, 7→5, 7→4) and **6 of 19** by the stricter leaf-based count that
+`audit_v0_failures.py` reports (see the note under the 19-KEP table). The
+"up to 6" ceiling in `CARD_PROMPT_MULTI` binds literally on two of them,
+`storage-1979` (9 alternatives) and `node-6122` (8); on the rest the model
+simply stopped early. Either way 3 of the 4, and 4 of the 6, are failures.
 
 **H4 is confirmed.** Three failures lost the target alternative's card
 point to the `TOP_K=5` budget *within the correct decision* — `1979` (6
@@ -382,6 +386,19 @@ truth still selected by the loose `RATIONALE_CUES` (Defect 2).
 71 named alternatives across the 19 KEPs. 9 of 19 ground truths are stale
 loose-cue picks; 5 of 19 quotes sit in section prose or outside the
 canonical section rather than inside a named alternative.
+
+**Which extractor the `nAlt` column uses.** The counts above come from the
+forensic extractor: immediate child headings, or top-level bullets where a
+section uses no headings. `audit_v0_failures.py` recomputes the same column
+with the final v2 rule (leaf-most headings, name-shape filtered) and gets
+different numbers for three shapes of document — where a KEP groups its
+options (`3488`: 6 leaves beneath 4 group headings), writes them as prose
+bullets (`auth-1205`, `2332`: 0 headings), or uses a design-FAQ layout
+(`5501`: 0). Both counts are reported rather than reconciled into one,
+because the disagreement between them *is* the finding: how many
+alternatives a KEP "has" depends on the extractor, which is exactly why v0's
+single regex produced targets it could not justify. The script is the
+reproducible source; this table is the reading that drove the diagnosis.
 
 Note the passes are not clean either: `auth-279`, `cli-2382`,
 `instrumentation-647`, `storage-1790`, `2885` and `storage-2451` all pass
