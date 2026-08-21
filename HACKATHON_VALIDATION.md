@@ -96,7 +96,30 @@ smoke check followed by an unedited recording of the incident sequence below.
    surgically undo the damage without resetting everything.” State that G5 is
    still BLOCKED on real elapsed time.
 
-READY TO RECORD: **NO — pending the manual browser-console/UI smoke check.**
+### Independent browser smoke check — 2026-08-21
+
+Performed by a separate release-engineer/judge session, cold, against
+`https://custody-incident-cave2.vercel.app` (root/incident, `/fleet.html`,
+`/architecture.html`, `/timeline.html`). `make check` (377/377), `make
+verify-deploy` (4/4 PASS), and `make gates` (4 PASS, 1 BLOCKED — G5) were
+independently re-run and confirmed, not just re-read. All four pages loaded
+with no console errors, no failed network requests, no auth wall, no stale
+build. The incident page's "Revoke exact descendants" interaction was
+actually clicked: the graph correctly marked the vendor_portal → sales →
+support → finance chain and the sales/support/finance department cards as
+REVOKED, the 32/3/5/575 counters stayed internally consistent, unrelated
+sources/departments (engineering, procurement, the 7 untouched tools)
+stayed visibly untouched, and a second click produced no corrupted state.
+`architecture.html` shows honest per-row `STALE`/`PASS`/`BLOCKED` badges
+(R1/R2/S1/M1/O1/D1-D2/Auditor/Reviewer captured 4 days ago and correctly
+marked STALE; Fleet N=25 and F1 chain captured 8-9 minutes prior and marked
+PASS); G5 is shown BLOCKED, not silently upgraded. `fleet.html` correctly
+reads as a static visualization of a captured live proof, not a
+continuously-live surface — consistent with the claim boundary already
+recorded above. No P0 or P1 defects found. Zero code changes made.
+
+READY TO RECORD: **YES.** Freeze feature development. Record the
+submission. State G5 as BLOCKED on real elapsed time in the recording.
 
 ## Historical pre-refresh baseline
 

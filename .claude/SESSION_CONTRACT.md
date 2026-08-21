@@ -22,8 +22,14 @@ The product in one sentence, and it must stay one sentence:
 One deployed Cloud Run control plane, a scalable population of governed ADK
 agents, one public repo, one four-minute video.
 
-Branch: feat/memory-provenance
+Branch: hardening/fleet-track-pre-submission
 Parent: b0c7019 (repository initialized 2026-08-09)
+
+Note, 2026-08-21: `hardening/fleet-track-pre-submission` and
+`feat/memory-provenance` currently point to the same integrated commit
+(`1ea8b15`); this field is kept pointed at the branch actually checked out
+so the evidence-gate hook (which reads only this first `Branch:` line in
+the file) matches the working tree.
 
 Allowed files: everything under /run/media/Yatsuiii/Windows-SSD/custody.
 
@@ -1293,7 +1299,7 @@ and carry no disclosure burden, but must be listed if any code is lifted.
 `google-adk` is consumed unmodified. Do not read from or modify
 `~/datahub-causality-agent`, `~/priorto`, Throughline, or Chronicle.
 
-Status: active
+Status: complete (informational disclosure note, no further action pending)
 
 ## Presentation pass: one judge-facing incident narrative (opened 2026-08-14)
 
@@ -3182,7 +3188,7 @@ touching them. That is exactly the cross-contamination the branch decision
 above avoided, and it is a reason to commit Custody's WIP before cutting
 `feat/research-impact`.
 
-Status: active
+Status: complete (superseded by later second-project-search sessions below)
 
 ## Second project, F1: is the deterministic layer load-bearing? (2026-08-15)
 
@@ -4518,3 +4524,60 @@ implying a uniform result regardless of clone state. Cleanup:
 inspect it further; safe to delete any time, it's outside the repo.
 
 Nothing committed or pushed.
+
+## Independent release-readiness audit (opened 2026-08-21)
+
+Objective: Independently verify, as a fresh release engineer/judge, whether
+`hardening/fleet-track-pre-submission` (HEAD `1ea8b15`, same commit as
+`feat/memory-provenance`) is actually ready to record. Re-check `make
+verify-deploy`, `make gates`, and `HACKATHON_VALIDATION.md`'s claims, then do
+the one declared remaining gap: a manual public-browser/console/UI smoke test
+of the deployed pages and the incident revoke interaction. Only fix
+demonstrated P0/P1 release defects; no feature work, no redesign, no polish.
+
+Branch: hardening/fleet-track-pre-submission
+Parent: 1ea8b15
+
+Allowed files: none expected. If a P0/P1 defect is found, the smallest fix
+only, scoped to the specific broken file(s), plus `HACKATHON_VALIDATION.md`
+if new verified facts must be recorded.
+
+Non-goals: no new features, agents, Google services, redesign, or
+presentation changes absent a concrete judge-facing defect. Do not touch
+unrelated dirty working-tree files (web/architecture.html, web/incident.html,
+contribution-gate/, research-access/, research-impact/, failure-mining/,
+second-project-search/, web/fleet.html, web/timeline.html, docs/*) unless a
+found defect requires it. Do not fake or fast-forward G5.
+
+Baseline: reported — `make check` PASS (377 tests), `make verify-deploy`
+4/4 PASS, `make gates` 4 PASS/0 FAIL/1 BLOCKED (G5). To be independently
+re-run this session.
+
+Acceptance gates:
+1. `make verify-deploy` independently re-run and confirmed against
+   `https://custody-incident-cave2.vercel.app`.
+2. Every judge-facing public page (root/incident, architecture, fleet,
+   timeline) opened in a real browser; console checked for exceptions/failed
+   requests.
+3. Incident page's revoke-descendants interaction actually exercised in the
+   browser, before/after state verified visually.
+4. Fleet page's claim boundary (static visualization vs. live proof)
+   recorded accurately.
+5. Final verdict delivered: READY TO RECORD yes/no, with P0/P1/P2 findings.
+
+Verification: `make check`, `make verify-deploy`, `make gates`, manual
+browser smoke test via claude-in-chrome tools.
+
+**Closed 2026-08-21.** All five acceptance gates passed. `make check`
+377/377, `make verify-deploy` 4/4 PASS, `make gates` 4 PASS/1 BLOCKED (G5,
+correctly). Browser smoke test of all four public pages (root/incident,
+`/fleet.html`, `/architecture.html`, `/timeline.html`) found zero console
+errors, zero failed requests, no auth wall, no stale build. The incident
+page's revoke interaction was clicked live and verified correct
+before/after with internally consistent counts. `fleet.html`'s claim
+boundary recorded accurately (static visualization of a captured live
+proof, not a continuously-live surface). No P0/P1 defects found; zero
+product code changed. `HACKATHON_VALIDATION.md` updated with this finding;
+READY TO RECORD flipped from NO to YES.
+
+Status: complete
