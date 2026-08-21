@@ -344,9 +344,11 @@ CLOUDSDK_CONFIG="$PWD/../.gcloud" .venv/bin/streamlit run app/ui.py \
 ```
 First load takes ~30s (embeds the current decision store once, then caches to
 `app/data/card_embeddings.json`, gitignored — regenerates on a fresh checkout
-or changed card set). The current working tree has 63 loaded domain decisions
-from the additive corpus expansion; the frozen graded run artifacts remain
-n=37 until the expansion's run/grade/update gates complete.
+or changed card set). The checked-in branch has the frozen 37-source-row
+corpus, which loads as 55 domain decisions. A separate local user-owned
+42-source-row / 63-domain-record expansion remains uncommitted and ungraded;
+the frozen graded run artifacts remain n=37 until its run/grade/update gates
+complete.
 
 **Falsifier artifacts are frozen** — `RESULTS.md`, `data/decisions.jsonl`,
 `data/runs/`, and the pipeline scripts (`mine_decisions.py`,

@@ -181,8 +181,10 @@ Benchmark state deliberately not rerun:
 
 - Frozen evaluation remains `RESULTS.md`, n=37, RAG 57%, structured 76%,
   CAUTION.
-- The working tree contains the user-owned additive expansion: 42 source
-  rows and 63 loaded domain decisions.
+- The integrated branch contains the checked-in frozen corpus: 37 source
+  rows and 55 loaded domain decisions.
+- A separate local, user-owned additive expansion to 42 source rows and 63
+  loaded domain decisions remains uncommitted and ungraded.
 - Only 37 run files per condition exist, so the 5 new source rows have not
   been graded. No new benchmark number is claimed.
 

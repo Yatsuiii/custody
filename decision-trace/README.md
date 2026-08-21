@@ -149,10 +149,10 @@ DECISIONTRACE_STORE=firestore VERTEX_PROJECT=<your-project> \
 
 First load embeds the current decision store once (~30s), then caches to
 `app/data/card_embeddings.json` (gitignored, regenerates when the card set
-changes). The checked-in falsifier evidence remains the frozen n=37 run in
-`RESULTS.md`; this working tree also contains an additive 42-source-row
-corpus expansion whose 63 loaded domain records have not yet been rerun and
-must not be used to claim new benchmark numbers.
+changes). The checked-in `data/decisions.jsonl` remains the frozen
+37-source-row benchmark corpus, which loads as 55 domain records. A separate
+local, user-owned expansion to 42 source rows / 63 domain records remains
+uncommitted and ungraded; it must not be used to claim new benchmark numbers.
 
 Run the tests (53 tests, including real Gemini/embedding calls, live GitHub
 ingestion, a real Firestore round trip, and targeted failure-injection tests
@@ -202,7 +202,7 @@ app/
 
 BUILD_SCOPE.md     frozen MVP spec
 RESULTS.md         frozen falsifier result (the evidence this product exists on)
-  data/decisions.jsonl   source decision corpus; current working tree: 42 source rows -> 63 loaded domain records; frozen graded evidence remains n=37
+  data/decisions.jsonl   checked-in frozen corpus: 37 source rows -> 55 loaded domain records; separate local 42/63 expansion remains ungraded
 ```
 
 `BUILD_SCOPE.md` and `RESULTS.md` are frozen evidence artifacts and are not
