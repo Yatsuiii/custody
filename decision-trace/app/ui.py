@@ -138,6 +138,19 @@ def grounded_decision_id(claims) -> str | None:
     )
 
 
+def render_collaboration_trace(reports) -> None:
+    """Render the answer-scoped worker handoffs without adding UI logic."""
+    if not reports:
+        return
+    with st.expander("Agent collaboration trace", expanded=False):
+        for report in reports:
+            ids = f" · {', '.join(report.decision_ids)}" if report.decision_ids else ""
+            st.markdown(
+                f"**{report.worker}** · `{report.stage}` · "
+                f"`{report.status}`{ids}\n\n{report.summary}"
+            )
+
+
 def ensure_frozen_benchmark_seeded(store: DecisionStore) -> None:
     """Always upsert the frozen benchmark, never gate it on "store is
     empty": Firestore is shared/persistent across every session this build
@@ -185,6 +198,7 @@ def render_status_line(
     badge = render_status_badge(decision.current_status)
     if is_current:
         st.markdown(f"{badge} — this is the currently active decision", unsafe_allow_html=True)
+        st.caption(f"Deterministic lifecycle: {resolution.explanation}")
         return
     if decision.current_status == DecisionStatus.PROPOSED:
         # A candidate's own lineage is trivially just itself (RECONSIDERS
@@ -199,6 +213,8 @@ def render_status_line(
             f"Active decision for what it reconsiders: *{active_subject}* (`{html.escape(active or '')}`)",
             unsafe_allow_html=True,
         )
+        if target_resolution:
+            st.caption(f"Deterministic lifecycle: {target_resolution.explanation}")
     else:
         active = resolution.active_id
         active_subject = html.escape(store.get(active).subject) if active else "none"
@@ -206,6 +222,7 @@ def render_status_line(
             f"{badge} — **not current**. Active: *{active_subject}* (`{html.escape(active or '')}`)",
             unsafe_allow_html=True,
         )
+        st.caption(f"Deterministic lifecycle: {resolution.explanation}")
 
 
 def render_decision_card(decision_id: str, store: DecisionStore) -> None:
@@ -275,7 +292,7 @@ def render_candidate_form(decision_id: str, store: DecisionStore, index: Decisio
 def render_live_ingest(store: DecisionStore, index: DecisionIndex) -> None:
     """Live ingestion entry point — calls the same `ingest_repo()` already
     proven in `app/tests/test_ingest.py`, on whatever repo the judge types
-    in, instead of only ever loading the frozen 55-decision benchmark. A
+    in, instead of only ever loading the frozen benchmark. A
     failure here (bad repo name, no matching PRs/KEPs, a Gemini error) is
     surfaced as a `st.error`, never swallowed into a silently empty result."""
     with st.sidebar:
@@ -334,6 +351,7 @@ def main() -> None:
         for turn in st.session_state.chat_history:
             with st.chat_message(turn["role"]):
                 st.markdown(turn["text"])
+                render_collaboration_trace(turn.get("trace", []))
 
         question = st.chat_input("Ask why something is designed this way...")
         if question:
@@ -347,6 +365,7 @@ def main() -> None:
                 lines.append(f"- {label}{cite}: {claim.text}")
             st.session_state.chat_history.append({
                 "role": "assistant", "text": "\n".join(lines) or "No answer produced.",
+                "trace": result.worker_reports,
             })
 
             st.session_state.current_decision_id = grounded_decision_id(result.claims)

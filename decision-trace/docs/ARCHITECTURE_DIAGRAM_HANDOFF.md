@@ -93,8 +93,10 @@ one of four frameworks the rubric names explicitly. If the diagram implies
 an agent framework, that's wrong; don't add ADK-shaped boxes.
 
 **Data (the evidence trail, worth a small mention, not a full node):**
-- `data/decisions.jsonl` — the 55-decision benchmark corpus (`BUILD_SCOPE.md`
-  and `RESULTS.md` are frozen evidence artifacts, referenced not drawn)
+- `data/decisions.jsonl` — the source decision corpus (`BUILD_SCOPE.md` and
+  `RESULTS.md` are frozen evidence artifacts, referenced not drawn); this
+  working tree currently has 42 source rows expanded to 63 domain records,
+  while the frozen graded run artifacts remain n=37
 
 ## Design tokens — already established, don't invent new ones
 

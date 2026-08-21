@@ -21,7 +21,7 @@ from __future__ import annotations
 import json
 import re
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
 
@@ -51,6 +51,23 @@ class Answer:
     question: str
     claims: list[Claim]
     candidates_considered: list[str]  # decision ids retrieved for grounding
+    worker_reports: list["WorkerReport"] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class WorkerReport:
+    """The compact handoff exchanged by one specialized worker.
+
+    Reports are intentionally small and answer-scoped. Persistent decision
+    state remains owned by `DecisionStore`; these reports make collaboration
+    observable without creating a second source of truth.
+    """
+
+    worker: str
+    stage: str
+    status: str
+    summary: str
+    decision_ids: tuple[str, ...] = ()
 
 
 _SYSTEM_INSTRUCTIONS = """You are DecisionTrace, an engineering-decision memory assistant.
@@ -107,10 +124,15 @@ def _render_candidate(c: RetrievalCandidate) -> str:
             f"The currently active decision in this lineage is "
             f"id={c.resolution.active_id!r}."
         )
+    lines.append(f"Deterministic lifecycle explanation: {c.resolution.explanation}")
     return "\n".join(lines)
 
 
-def _parse_claims(raw: str) -> list[Claim]:
+def _parse_claims(
+    raw: str,
+    allowed_ids: set[str] | None = None,
+    authoritative_ids: set[str] | None = None,
+) -> list[Claim]:
     match = re.search(r"\[.*\]", raw, re.DOTALL)
     if not match:
         return [Claim(
@@ -126,21 +148,83 @@ def _parse_claims(raw: str) -> list[Claim]:
         )]
 
     claims = []
+    if not isinstance(items, list):
+        return [Claim(
+            text="Model returned a JSON object instead of a claim list.",
+            category=ClaimCategory.MISSING_OR_UNCERTAIN, decision_id=None,
+        )]
+
     for item in items:
+        if not isinstance(item, dict):
+            claims.append(Claim(
+                text="Model returned a malformed claim.",
+                category=ClaimCategory.MISSING_OR_UNCERTAIN, decision_id=None,
+            ))
+            continue
         try:
             category = ClaimCategory(item["category"])
         except (KeyError, ValueError):
             category = ClaimCategory.MISSING_OR_UNCERTAIN
+        decision_id = item.get("decision_id")
+        if decision_id is not None and not isinstance(decision_id, str):
+            decision_id = None
+
+        # A model may only cite a decision the scout actually handed to it.
+        # Authoritative categories also need to point at a candidate that
+        # passed the evidence/lifecycle gate; otherwise the claim is demoted
+        # to uncertainty instead of becoming organizational truth.
+        if allowed_ids is not None and decision_id not in allowed_ids:
+            category = ClaimCategory.MISSING_OR_UNCERTAIN
+            decision_id = None
+        elif (
+            authoritative_ids is not None
+            and category == ClaimCategory.CURRENT_ACTIVE_DECISION
+            and decision_id not in authoritative_ids
+        ):
+            category = ClaimCategory.MISSING_OR_UNCERTAIN
+            decision_id = None
         claims.append(Claim(
-            text=item.get("text", ""), category=category,
-            decision_id=item.get("decision_id"),
+            text=item.get("text", ""), category=category, decision_id=decision_id,
         ))
     return claims
 
 
+def _challenge_candidates(
+    candidates: list[RetrievalCandidate],
+) -> tuple[list[RetrievalCandidate], list[str]]:
+    """Return evidence-bearing candidates and deterministic challenge notes."""
+    trusted: list[RetrievalCandidate] = []
+    challenges: list[str] = []
+    for candidate in candidates:
+        if not candidate.decision.evidence:
+            challenges.append(
+                f"{candidate.decision.id}: no source evidence, cannot ground an authoritative claim"
+            )
+            continue
+        if candidate.resolution.ambiguous:
+            challenges.append(
+                f"{candidate.decision.id}: lifecycle is ambiguous, so no current truth is promoted"
+            )
+        trusted.append(candidate)
+    return trusted, challenges
+
+
 def answer(question: str, index: DecisionIndex, k: int = 5) -> Answer:
     candidates = index.search(question, k=k)
+    reports = [WorkerReport(
+        worker="Evidence Scout",
+        stage="discover",
+        status="complete" if candidates else "blocked",
+        summary=f"Retrieved {len(candidates)} decision candidate(s) from structured memory.",
+        decision_ids=tuple(c.decision.id for c in candidates),
+    )]
     if not candidates:
+        reports.append(WorkerReport(
+            worker="Gemini Reconciler",
+            stage="reconcile",
+            status="blocked",
+            summary="No candidate evidence was available to reconcile.",
+        ))
         return Answer(
             question=question,
             claims=[Claim(
@@ -148,13 +232,71 @@ def answer(question: str, index: DecisionIndex, k: int = 5) -> Answer:
                 category=ClaimCategory.MISSING_OR_UNCERTAIN, decision_id=None,
             )],
             candidates_considered=[],
+            worker_reports=reports,
         )
 
-    context = "\n\n".join(_render_candidate(c) for c in candidates)
+    reports.append(WorkerReport(
+        worker="Lifecycle Resolver",
+        stage="resolve",
+        status=(
+            "challenged"
+            if any(c.resolution.ambiguous for c in candidates)
+            else "complete"
+        ),
+        summary="Resolved each candidate against typed lifecycle edges; ambiguity is retained.",
+        decision_ids=tuple(c.decision.id for c in candidates),
+    ))
+    trusted_candidates, challenges = _challenge_candidates(candidates)
+    reports.append(WorkerReport(
+        worker="Provenance Challenger",
+        stage="challenge",
+        status="challenged" if challenges else "complete",
+        summary=(
+            "; ".join(challenges)
+            if challenges
+            else "Every candidate supplied source evidence and a resolvable lifecycle state."
+        ),
+        decision_ids=tuple(c.decision.id for c in trusted_candidates),
+    ))
+
+    if not trusted_candidates:
+        reports.append(WorkerReport(
+            worker="Gemini Reconciler",
+            stage="reconcile",
+            status="blocked",
+            summary="The challenger rejected every candidate for lack of usable evidence.",
+        ))
+        return Answer(
+            question=question,
+            claims=[Claim(
+                text="The retrieved candidates do not contain enough verified source evidence to answer.",
+                category=ClaimCategory.MISSING_OR_UNCERTAIN, decision_id=None,
+            )],
+            candidates_considered=[c.decision.id for c in candidates],
+            worker_reports=reports,
+        )
+
+    context = "\n\n".join(_render_candidate(c) for c in trusted_candidates)
     prompt = f"{_SYSTEM_INSTRUCTIONS}\n\nRetrieved decisions:\n\n{context}\n\nQuestion: {question}"
     raw = vertex.generate(prompt)
-    claims = _parse_claims(raw)
+    allowed_ids = {c.decision.id for c in trusted_candidates}
+    authoritative_ids = {
+        c.decision.id
+        for c in trusted_candidates
+        if c.is_current and not c.resolution.ambiguous
+    }
+    claims = _parse_claims(
+        raw, allowed_ids=allowed_ids, authoritative_ids=authoritative_ids
+    )
+    reports.append(WorkerReport(
+        worker="Gemini Reconciler",
+        stage="reconcile",
+        status="complete",
+        summary="Synthesized only from challenger-approved candidates; claim IDs were validated.",
+        decision_ids=tuple(sorted(allowed_ids)),
+    ))
     return Answer(
         question=question, claims=claims,
         candidates_considered=[c.decision.id for c in candidates],
+        worker_reports=reports,
     )

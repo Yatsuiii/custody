@@ -13,7 +13,7 @@ Two source shapes, mirroring the two mining channels:
   since it did exist in the repo before being reverted) and the revert
   record (REVERTED, carrying the rationale quote), linked by a REVERTS
   edge. This is the same shape Stage 1's hardcoded test used for the k8s
-  delayed-preemption case; this loader generalizes it to all 18 pairs.
+  delayed-preemption case; this loader applies it to every source row.
 - `kep_alternatives`: becomes ONE Decision (ACCEPTED — a design choice was
   made; the falsifier data doesn't capture whether it was later revisited,
   so no supersession edge is invented). `rejected_alternatives` is left

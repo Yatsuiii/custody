@@ -14,9 +14,11 @@ flowchart TB
 
     subgraph cloudrun["Cloud Run — decision-trace service"]
         UI
-        Collab["collaborate.answer()<br/>4-way claim categorization"]
-        Retrieval["retrieval.DecisionIndex<br/>card-level embedding search"]
-        Graph["graph.resolve_active()<br/>deterministic lifecycle resolver"]
+        Collab["collaborate.answer()<br/>worker orchestration"]
+        Scout["Evidence Scout<br/>DecisionIndex.search()"]
+        Resolver["Lifecycle Resolver<br/>resolve_active()"]
+        Challenge["Provenance Challenger<br/>evidence + claim gate"]
+        Reconcile["Gemini Reconciler<br/>grounded explanation"]
         Memory["memory.propose_reconsideration()<br/>conversational write path"]
         Store["store.FirestoreDecisionStore<br/>(DecisionStore Protocol)"]
     end
@@ -29,12 +31,15 @@ flowchart TB
     Gemini["gemini-3.7-flash<br/>(generation)"]
     Embed["text-embedding-005<br/>(retrieval)"]
 
-    UI -->|"ask why...?"| Retrieval
-    Retrieval -->|"embed query"| Vertex
-    Retrieval -->|"card similarity search"| Store
-    Retrieval -->|"resolve current status"| Graph
-    Retrieval --> Collab
-    Collab -->|"grounded generation"| Vertex
+    UI -->|"ask why...?"| Collab
+    Collab --> Scout
+    Scout -->|"embed query"| Vertex
+    Scout -->|"card similarity search"| Store
+    Scout --> Resolver
+    Resolver --> Challenge
+    Challenge --> Reconcile
+    Reconcile -->|"grounded generation"| Vertex
+    Reconcile -->|"claims + worker trace"| UI
     Vertex --> Gemini
     Vertex --> Embed
 
@@ -42,7 +47,7 @@ flowchart TB
     Memory -->|"write PROPOSED decision"| Store
     Store <-->|"save / get / list_all"| Firestore
 
-    Graph -.->|"reads, never writes"| Store
+    Resolver -.->|"reads, never writes"| Store
 ```
 
 ## Why the pieces are shaped this way
@@ -51,10 +56,17 @@ flowchart TB
   BUILD_SCOPE's one non-negotiable: a reverted/superseded decision must
   never be presented as current guidance. That's a graph traversal over
   typed edges (`supersedes`, `reverts`, `reaffirms`, `reconsiders`, ...),
-  walked to a fixed point — not something delegated to Gemini's judgment,
-  because an LLM can be argued into hallucinating a wrong current-status
-  under the right prompt pressure, and this is the one place in the
-  product that can't be allowed to be wrong.
+  replayed in stable topological order — not something delegated to Gemini's
+  judgment, because an LLM can be argued into hallucinating a wrong
+  current-status under the right prompt pressure. Cycles and competing
+  successors are returned as ambiguous instead of being last-writer wins.
+
+- **The answer path has four explicit workers.** The Evidence Scout retrieves
+  cards, the Lifecycle Resolver supplies deterministic status, the Provenance
+  Challenger removes records without source evidence and validates model claim
+  IDs, and the Gemini Reconciler explains the surviving evidence. Their
+  answer-scoped reports are rendered in the UI; they do not create a second
+  persistent state model.
 
 - **`store.DecisionStore` is a `Protocol`, not a concrete dependency.**
   `JSONFileDecisionStore` (local file, zero GCP dependency) and
@@ -79,14 +91,15 @@ flowchart TB
 
 ## Data flow: the two paths that matter
 
-**Read path** (`ask why...`): UI → `retrieval.DecisionIndex.search()` →
-embeds the query via Vertex AI, ranks cards by similarity against
-`FirestoreDecisionStore`, resolves each candidate's current status via
-`graph.resolve_active()` → `collaborate.answer()` sends the resolved
-candidates + question to Gemini, which must tag every claim as verified
-historical fact, current active decision, inferred advice, or
-missing/uncertain → rendered in the UI with the resolved decision card,
-timeline, and evidence citations alongside the answer.
+**Read path** (`ask why...`): UI → `collaborate.answer()` → Evidence Scout
+(`retrieval.DecisionIndex.search()`) embeds the query via Vertex AI, ranks
+cards against `FirestoreDecisionStore`, and hands them to the Lifecycle
+Resolver (`graph.resolve_active()`). The Provenance Challenger rejects
+evidence-less/ambiguous authority and constrains claim IDs to the candidate
+set. The Gemini Reconciler then tags claims as verified historical fact,
+current active decision, inferred advice, or missing/uncertain. The UI renders
+the answer, worker trace, deterministic lifecycle explanation, timeline, and
+evidence citations together.
 
 **Write path** (`record a reconsideration`): UI form submit →
 `memory.propose_reconsideration()` constructs a new `Decision` with

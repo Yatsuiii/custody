@@ -76,7 +76,7 @@ def render_card(d: Decision) -> str:
 
 class DecisionIndex:
     """Embeds every decision in a store once, cached to disk so repeated
-    searches (and repeated test runs) don't re-embed 55 cards each time."""
+    searches and repeated test runs don't re-embed the whole store each time."""
 
     def __init__(self, store: DecisionStore, cache_path: Path | None = None):
         self.decisions: list[Decision] = store.list_all()

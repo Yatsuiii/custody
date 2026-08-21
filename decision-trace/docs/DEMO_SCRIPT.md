@@ -62,7 +62,9 @@ Use the real question from this week's verification pass:
 4. **State current status.** Point at the claim-category tags next to each
    line of the answer (verified historical fact / current active decision
    / inferred advice / missing-uncertain) — every claim is labeled with
-   why it should be trusted.
+   why it should be trusted. Open **Agent collaboration trace** and show the
+   four handoffs: Evidence Scout → Lifecycle Resolver → Provenance Challenger
+   → Gemini Reconciler. This is the visible collaboration moment.
 5. **Record a reconsideration.** This is the step that separates
    DecisionTrace from a chat-with-your-repo tool with a nicer UI — say so
    out loud: *"This isn't just answering questions, it's a place where
@@ -72,6 +74,12 @@ Use the real question from this week's verification pass:
 6. **Ask a related question again** in the same session — show the
    candidate now shapes the answer (it's live in the index immediately,
    not just saved).
+
+When the decision card is visible, point to its deterministic lifecycle line:
+it names the typed `SUPERSEDES`/`REVERTS`/`REAFFIRMS` events that made the
+current result. If a candidate is challenged for missing evidence or an
+ambiguous lifecycle, leave it as `missing/uncertain`; that fail-closed moment
+is part of the product proof, not a demo error.
 
 ## 3:00–3:40 — Backend proof on Google Cloud
 
@@ -100,7 +108,8 @@ Show, in order:
 
 > "Gemini 3.7 via the Google GenAI SDK, Cloud Run, Firestore — all real,
 > all measured against a falsifier before we built anything. DecisionTrace:
-> the current answer, not a document dump."
+> collaborating agents reconstruct not just what engineers once decided, but
+> which decision actually governs the codebase now."
 
 Show the URL one more time on screen.
 

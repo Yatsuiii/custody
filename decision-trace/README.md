@@ -2,6 +2,8 @@
 
 **Live demo:** https://decision-trace-742122658452.us-central1.run.app
 
+**Demo script:** [`docs/DEMO_SCRIPT.md`](./docs/DEMO_SCRIPT.md)
+
 DecisionTrace is a conversational agent that turns a repository's PRs,
 issues, and design proposals into structured, evidence-backed decision
 records with explicit lifecycle status — so asking "why is this built this
@@ -100,6 +102,15 @@ model's own inference, or an admission that the data doesn't say — so "I
 don't know" is a valid, expected answer instead of something the model has
 to be tricked into.
 
+The answer path is collaborative and visible: an **Evidence Scout** retrieves
+candidate decision cards, a **Lifecycle Resolver** replays typed edges, a
+**Provenance Challenger** rejects evidence-less or ambiguous authority, and a
+**Gemini Reconciler** explains only the candidates that survived those checks.
+The UI exposes those handoffs in an “Agent collaboration trace” alongside the
+current-decision card. The workers exchange answer-scoped reports; canonical
+organizational state remains the structured decision store and deterministic
+resolver.
+
 ## Architecture
 
 Full diagram and component breakdown: [`docs/architecture.md`](./docs/architecture.md).
@@ -136,9 +147,12 @@ DECISIONTRACE_STORE=firestore VERTEX_PROJECT=<your-project> \
   .venv/bin/streamlit run app/ui.py --server.headless true --server.port 8765
 ```
 
-First load embeds all 55 benchmark decisions once (~30s), then caches to
-`app/data/card_embeddings.json` (gitignored, regenerates on a fresh
-checkout).
+First load embeds the current decision store once (~30s), then caches to
+`app/data/card_embeddings.json` (gitignored, regenerates when the card set
+changes). The checked-in falsifier evidence remains the frozen n=37 run in
+`RESULTS.md`; this working tree also contains an additive 42-source-row
+corpus expansion whose 63 loaded domain records have not yet been rerun and
+must not be used to claim new benchmark numbers.
 
 Run the tests (38 tests — 31 use no mocks, exercising real Gemini/
 embedding calls and, for one, real Firestore against a throwaway
@@ -183,7 +197,7 @@ app/
   store.py         DecisionStore protocol + JSONFileDecisionStore + FirestoreDecisionStore
   loader.py        loads the frozen falsifier benchmark into the store
   retrieval.py     card-level embedding search over decisions
-  collaborate.py   Gemini answers, four-way claim categorization
+  collaborate.py   worker handoffs, provenance gate, Gemini reconciliation
   memory.py        conversational candidate-decision creation (the write path)
   ingest.py        live GitHub/KEP discovery + extraction, wired into ui.py's sidebar
   ui.py            Streamlit UI
@@ -191,7 +205,7 @@ app/
 
 BUILD_SCOPE.md     frozen MVP spec
 RESULTS.md         frozen falsifier result (the evidence this product exists on)
-data/decisions.jsonl   the 55-decision benchmark corpus (18 revert pairs -> 36 decisions, + 19 KEP records -> 19 decisions)
+  data/decisions.jsonl   source decision corpus; current working tree: 42 source rows -> 63 loaded domain records; frozen graded evidence remains n=37
 ```
 
 `BUILD_SCOPE.md` and `RESULTS.md` are frozen evidence artifacts and are not

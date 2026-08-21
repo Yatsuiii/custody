@@ -8,7 +8,7 @@ behavior. These tests are the deliberate exception — they mock exactly the
 one failure condition under test (a raised timeout, a malformed response
 shape, an unreachable Firestore backend) because a real API outage can't be
 forced on demand. Nothing else in the call path is mocked: `_build_index`
-below still builds off the real 55-decision benchmark and the checked-in
+below still builds off the checked-in benchmark corpus and the checked-in
 embedding cache, so the only faked thing in each test is the specific
 failure being proven.
 """
@@ -39,8 +39,8 @@ FALSIFIER_DATA = APP_DIR.parent / "data" / "decisions.jsonl"
 def _build_index(tmp_path) -> DecisionIndex:
     store = JSONFileDecisionStore(tmp_path / "store.jsonl")
     store.save_many(load_decisions(FALSIFIER_DATA))
-    # Reuses the checked-in embedding cache (the benchmark's 55 decisions
-    # are exactly the set its cache key covers) so building the index
+    # Reuses the checked-in embedding cache when its content key matches the
+    # current corpus, so building the index
     # doesn't need a real embed call; only the query embed in `answer()`
     # does, and only `vertex.generate` is mocked below.
     return DecisionIndex(store, cache_path=default_cache_path())

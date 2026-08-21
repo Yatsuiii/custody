@@ -342,9 +342,11 @@ CLOUDSDK_CONFIG="$PWD/../.gcloud" .venv/bin/python -m pytest app/tests/ -v
 CLOUDSDK_CONFIG="$PWD/../.gcloud" .venv/bin/streamlit run app/ui.py \
   --server.headless true --server.port 8765
 ```
-First load takes ~30s (embeds all 55 benchmark decisions once, then
-caches to `app/data/card_embeddings.json`, gitignored — regenerates on a
-fresh checkout).
+First load takes ~30s (embeds the current decision store once, then caches to
+`app/data/card_embeddings.json`, gitignored — regenerates on a fresh checkout
+or changed card set). The current working tree has 63 loaded domain decisions
+from the additive corpus expansion; the frozen graded run artifacts remain
+n=37 until the expansion's run/grade/update gates complete.
 
 **Falsifier artifacts are frozen** — `RESULTS.md`, `data/decisions.jsonl`,
 `data/runs/`, and the pipeline scripts (`mine_decisions.py`,

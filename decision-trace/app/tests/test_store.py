@@ -2,6 +2,7 @@
 abstraction, and prove citations/evidence and lifecycle survive the round
 trip."""
 
+import json
 import sys
 import uuid
 from pathlib import Path
@@ -20,9 +21,13 @@ FALSIFIER_DATA = APP_DIR.parent / "data" / "decisions.jsonl"
 
 def test_all_benchmark_records_load_without_error():
     decisions = load_decisions(FALSIFIER_DATA)
-    # 18 revert pairs -> 36 decisions, 19 kep records -> 19 decisions.
-    assert len(decisions) == 55
-    assert len({d.id for d in decisions}) == 55  # no id collisions
+    source_records = [json.loads(line) for line in FALSIFIER_DATA.open()]
+    expected = sum(
+        2 if record["source"] == "revert_pair" else 1
+        for record in source_records
+    )
+    assert len(decisions) == expected
+    assert len({d.id for d in decisions}) == expected  # no id collisions
 
 
 def test_store_round_trip_persists_and_reloads(tmp_path):

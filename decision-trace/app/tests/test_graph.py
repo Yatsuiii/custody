@@ -12,9 +12,10 @@ from models import Decision, DecisionStatus, Evidence, RelationshipType  # noqa:
 DATA_DIR = Path(__file__).resolve().parents[2] / "data"
 
 
-def make(id_, status=DecisionStatus.ACCEPTED, edges=None):
+def make(id_, status=DecisionStatus.ACCEPTED, edges=None, introduced_at=None):
     return Decision(
         id=id_, subject=id_, current_status=status,
+        introduced_at=introduced_at,
         related_decisions=edges or [],
     )
 
@@ -41,6 +42,49 @@ def test_supersede_then_revert_chain():
         assert result.active_id == "C", f"resolving from {start} should still find C active"
         assert result.history == ["A", "B", "C"]
         assert not result.ambiguous
+
+
+def test_supersession_chain_is_order_independent_and_explained():
+    """Stores may return records in any order; lifecycle edges define order."""
+    a = make("A", introduced_at="2024-01-01T00:00:00Z")
+    b = make(
+        "B",
+        introduced_at="2024-02-01T00:00:00Z",
+        edges=[("A", RelationshipType.SUPERSEDES)],
+    )
+    c = make(
+        "C",
+        introduced_at="2024-03-01T00:00:00Z",
+        edges=[("B", RelationshipType.SUPERSEDES)],
+    )
+
+    result = resolve_active(DecisionGraph([c, a, b]), "A")
+
+    assert result.active_id == "C"
+    assert result.history == ["A", "B", "C"]
+    assert "B SUPERSEDES A" in result.explanation
+    assert "C SUPERSEDES B" in result.explanation
+
+
+def test_lifecycle_cycle_is_ambiguous_not_last_writer_wins():
+    a = make("A", edges=[("B", RelationshipType.SUPERSEDES)])
+    b = make("B", edges=[("A", RelationshipType.SUPERSEDES)])
+
+    result = resolve_active(DecisionGraph([a, b]), "A")
+
+    assert result.active_id is None
+    assert result.ambiguous
+    assert "cycle" in result.explanation.lower()
+
+
+def test_mention_without_lifecycle_edge_does_not_change_active_truth():
+    a = make("A")
+    mention = make("B")
+
+    result = resolve_active(DecisionGraph([mention, a]), "A")
+
+    assert result.active_id == "A"
+    assert result.history == ["A"]
 
 
 def test_reaffirm_reactivates_original_decision():
