@@ -4581,3 +4581,100 @@ product code changed. `HACKATHON_VALIDATION.md` updated with this finding;
 READY TO RECORD flipped from NO to YES.
 
 Status: complete
+
+## Video-support UI enhancement: Fleet Overview toggle + Incident replay stepper (opened 2026-08-21)
+
+Objective: The 4-minute demo video repeatedly cuts back to the same
+Dependency Cartography screenshot because it was the only page with a
+before/after state change. Add two small, judge-facing, evidence-backed
+interactions to two already-existing, already-untracked static pages
+(`web/fleet.html`, `web/timeline.html`) so the video has more visually
+distinct beats, without building any new page, new backend logic, or new
+data. Both pages already embed real proof data (fleet.html's
+DEPARTMENT_TOOLS/SHARED_DEPTS map matches `proof-out/live-fleet.json`'s
+25-department fixture; timeline.html already shows the same
+vouched/compromised/blast-radius numbers `incident.html` computes from
+`scripts/incident.py`). This is a presentation-layer change only.
+
+Branch: hardening/fleet-track-pre-submission
+Parent: 42d1efd
+
+Allowed files: `web/fleet.html`, `web/timeline.html`,
+`submission-video/*` (rebuilding the video with new shots),
+`.claude/SESSION_CONTRACT.md`.
+
+Non-goals:
+
+- No new backend logic, no new Python data-generation script, no new
+  proof/gate. Both pages keep using exactly the data already embedded in
+  them (fleet.html's DEPARTMENT_TOOLS/SHARED_DEPTS; timeline.html's
+  existing vouched/compromised/blast-radius/cost numbers, plus the same
+  four-hop lineage array already embedded verbatim in `incident.html`'s
+  `#incident-data` JSON — copied in, not recomputed or invented).
+- No new page. `fleet.html` and `timeline.html` already exist
+  (untracked, pre-existing this session); enhance them in place.
+- No change to `incident.html`, `architecture.html`, or any `scripts/*.py`
+  generator — this is JS/CSS added to two static files, not a rerun of a
+  generator.
+- No fabricated counts. Every number shown in either new state must
+  already appear in the page's existing embedded data.
+- Do not touch `contribution-gate/`, `docs/`, `failure-mining/`,
+  `research-access/`, `research-impact/`, `second-project-search/` or any
+  other pre-existing unrelated dirty/untracked file.
+
+Baseline: `web/fleet.html` (122 lines) renders a flat 5-column grid of 25
+department/tool cards from a hardcoded `DEPARTMENT_TOOLS`/`SHARED_DEPTS`
+map, statically already in the post-revocation (sales/finance red) state.
+`web/timeline.html` (182 lines) renders a static vouched-to-compromised
+bar plus a cost-comparison table and sensitivity table, all numbers
+already final/revealed with no interactivity. Neither page has a
+before/after toggle or a step-through.
+
+Acceptance gates:
+
+1. `fleet.html` gains a two-state toggle ("25 trusted" all-green ->
+   "simulate compromise" -> sales/finance turn red, counts update to
+   2 pulled / 23 confirmed untouched) driven entirely by data already in
+   the file. No page reload, no new JSON fetch.
+2. `timeline.html` gains a step-through control that reveals, in order:
+   Day 1 vouched -> propagation hops (sales -> support -> finance, using
+   the same lineage ids/labels `incident.html` already shows) -> Day 16
+   compromise discovered -> blast radius computed (32/3-5/575, already
+   the page's own stat-strip numbers) -> revoke (existing cost-comparison
+   panel). Each step highlights/reveals rather than replacing content
+   wholesale, so a viewer can see state accumulate.
+3. Both pages still render correctly with JS could-be-absent-safe markup
+   (initial state is a sensible static state, not a blank page) and both
+   still pass a manual open-in-browser + console check (no errors).
+4. The submission video is rebuilt using these two new interactive beats
+   in place of some of the repeated Dependency Cartography cuts, per the
+   user's requested structure. `custody_demo.mp4` regenerated, not hand
+   patched.
+5. No files outside "Allowed files" change; `git status` confirms only
+   `web/fleet.html`, `web/timeline.html`, and `submission-video/*` differ
+   from before this session, plus this contract.
+
+Verification: manual browser open of both pages (before/after states),
+console check via claude-in-chrome, then re-run the screenshot capture +
+`ffmpeg` assembly for the video, then re-run `make check` to confirm zero
+impact on the Python test suite (these are static HTML/JS files outside
+`custody/` and `tests/`).
+
+**Closed 2026-08-21.** All five acceptance gates passed. `fleet.html`
+gained a Simulate compromise / Restore toggle driven entirely by the
+existing DEPARTMENT_TOOLS/SHARED_DEPTS map (35/35 make fleet-gates data
+unchanged). `timeline.html` gained a 6-step replay stepper (Day 1 -> sales
+-> support -> Day 16 discovered -> blast radius computed -> revoked) using
+the same four lineage hops incident.html already embeds verbatim from
+scripts/incident.py's compute(). Both tested locally (python3 -m
+http.server) in a real browser via claude-in-chrome: zero console errors,
+correct default/JS-off state, all toggle/step transitions verified by
+screenshot. submission-video/custody_demo.mp4 rebuilt (225s, 1920x1080,
+30fps, frame count verified exact) using the new Fleet/Timeline states in
+place of repeated Dependency Cartography cuts, per the user's requested
+structure; Dependency Cartography kept as the one-time climax shot for the
+live revoke click. `make check` still 377/377 (no Python touched). git
+status confirms only web/fleet.html, web/timeline.html,
+.claude/SESSION_CONTRACT.md, and submission-video/* changed.
+
+Status: complete
