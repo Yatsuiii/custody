@@ -1,0 +1,7 @@
+PR #150096: Revert #148937
+
+https://github.com/rust-lang/rust/issues/148937:  Remove initialized-bytes tracking from `BorrowedBuf` and `BorrowedCursor`
+
+This caused several performance regressions because of existing code which uses `Read::read` and therefore requires full buffer initialization. This is particularly a problem when the same buffer is re-used for multiple read calls since this means it needs to be fully re-initialized each time.
+
+There is still some benefit to landing the API changes, but we will have to add private APIs so that the existing infrastructure can track and avoid redundant initialization.

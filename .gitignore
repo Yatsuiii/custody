@@ -11,3 +11,7 @@ decision-trace/app/data/
 decision-trace/data/*.bak
 decision-trace/data/decisions_wide_pool.jsonl
 .env*
+
+# DecisionTrace v2: regenerable embedding caches (build_v2_cases.py / run_conditions_v2.py rebuild them)
+decision-trace/data/v2/cards-index.json
+decision-trace/data/v2/rag-target-index/

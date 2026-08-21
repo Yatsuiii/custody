@@ -1,0 +1,9 @@
+PR #140990: Revert "client-go: prevent unbounded goroutine growth in EventBroadcaster"
+
+Reverts #140448 because the follow-up fix requires risky rework too close to the release candidates.
+
+Fixes #140859
+
+```release-note
+NONE
+```

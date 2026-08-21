@@ -251,3 +251,124 @@ Budget: one distillation call per KEP alternative, then
 
 Only after all five: generate, grade, publish `RESULTS_V2.md`, and record
 whatever `verdict_for()` returns.
+
+---
+
+# Amendment 1 — derivation rules revised at the dry-run gate
+
+Recorded **before any v2 generation, grading or scoring call**. §9 of this
+spec reserves the dry run as the point at which a bad rule gets fixed
+rather than run. Three rules did not survive contact with the documents.
+Each change is listed with what it was, what it is now, and the evidence
+that forced it. No score existed when any of them were made.
+
+## A1.1 — the unit is the *leaf-most* alternative heading, not the child
+
+**Was** (V2): an immediate child heading of the canonical section, or a
+top-level bullet where the section uses no headings.
+
+**Now**: the leaf-most heading inside the canonical section whose own name
+is not a part label (`Advantages`, `Disadvantages`, `Cons`, …). Prose-bullet
+sections yield nothing at all.
+
+**Why**: KEPs group at different depths. KEP-2876 lists `Rego`, `Expr`,
+`WebAssembly` flat at level 3; KEP-3488 groups its options under
+`Policy definition and configuration separation alternatives` and names the
+real ones a level deeper. Taking immediate children gave KEP-3488 four
+group labels — and "the group label instead of the option" is exactly the
+representation error the audit found in v0's card for that KEP. Taking
+leaves gives `Duck Typed CRDs`, `OpenAPIv3 $ref in CRDs`,
+`` `/matchRules` subresource ``, which are the actual alternatives.
+
+Prose-bullet sections are dropped because there the option name and its
+rationale are one fused sentence, so no name can be put in the question
+without also putting the reason there. This excludes 3 KEPs on document
+shape: `auth-1205` (a v0 **failure**), `2332` and `storage-2451` (v0
+**passes**). A fourth, `5501`, contributes nothing because its Alternatives
+section is written as a design FAQ. Dropping one failure and three passes
+is not a score-selective filter, and it was fixed before any score existed.
+
+## A1.2 — name-shape filter replaces the length filter
+
+**Was** (V3): reject if under 3 characters or if stripping links leaves
+under 8 characters.
+
+**Now**: reject if the name is a question, matches the meta-name prefix
+list, or its head noun is a meta word (`alternatives`, `considerations`,
+`criteria`, `analysis`, `justification`, …). Strip a leading
+`Rejected alternative:` alongside enumeration and `Alternative:`.
+
+**Why**: the 8-character rule deleted `Rego` and `Expr`, two genuine
+alternatives, while admitting `How should outdated messages be handled?`
+and `Primary evaluation criteria`, which are design questions no one can
+substitute into "was X considered, and why wasn't it adopted?". Stripping
+`Rejected alternative:` matters for fairness: leaving it in would put the
+disposition into the question.
+
+## A1.3 — the cue-word requirement is removed entirely
+
+**Was** (V4): a labelled disposition part, **or** a body containing a
+`REJECTION_CUES`/`RATIONALE_CUES` hit; otherwise excluded.
+
+**Now**: the labelled disposition part when present, otherwise the whole
+write-up. No lexical gate.
+
+**Why**: this is the most important amendment. The cue gate excluded 28 of
+71 alternatives, and reading them showed it was excluding the *good* ones:
+
+- "…so there is not a clear way for this to be implemented" — dropped.
+- "It's unclear how we would do this without conflicting with usage of
+  groups and potentially compromising security" — dropped.
+- "File-based config isn't easily kept in sync in HA apiserver setups" —
+  dropped.
+
+while v0's cue list happily admitted "requests would be **rejected** once
+the initial token got expired", where the word means HTTP requests. Keyword
+matching for rationale is precisely the defect that produced v0's invalid
+ground truth, and rebuilding the benchmark on top of it would import the
+disease into the cure. A heading under a section titled *Alternatives* is,
+by the document's own structure, an option the project did not take, so its
+write-up is evidence about why — whether or not it uses a magic word.
+
+Consequence to keep in view: 46 of 65 KEP targets are whole-body evidence
+and 19 are labelled disposition parts. `RESULTS_V2.md` reports the split.
+
+## A1.4 — the decoy invariant is restated as anti-planting
+
+**Was** (§6 rule 2, as tested): no decoy chunk may contain any case's
+evidence span.
+
+**Now**: no case's **own cited document** may appear in its repo's decoy
+pool, and any incidental overlap must come from a different document and is
+printed for disclosure.
+
+**Why**: the original assertion failed, and the cause was not a leak.
+KEP-5593 inherits its Alternatives section from its predecessor KEP-4603,
+and 4603 is a legitimate member of the 150-document decoy pool. 5593's own
+document is not in the pool. Public corpora genuinely repeat themselves,
+and this particular repetition can only ever help the **RAG** arm — it
+cannot reach structured or code-only. Forbidding it would mean deleting a
+real decoy to make RAG's job harder, which §6 rule 4 prohibits. It is
+disclosed instead: **6 of 65 KEP cases**, all from KEP-5593, have evidence
+text that also appears in KEP-4603.
+
+## A1.5 — resulting case set
+
+| | count |
+|---|---|
+| cases | **83** |
+| clusters (decisions) | 33 |
+| `revert_pair` (carried over unchanged) | 18 |
+| `kep_alternative` | 65, across 15 KEPs |
+| evidence tier: labelled / whole-body / v0 carryover | 19 / 46 / 18 |
+| alternatives per contributing KEP (min/median/max) | 1 / 4 / 9 |
+| exclusions after the rules above | 0 |
+| evidence verified verbatim in live source | 83/83 |
+
+Residual imperfections, disclosed rather than tuned away: `Scopes`
+(KEP-3488) and `On Success and the 10 minute recovery threshold`
+(KEP-5593) are topic headings rather than option names — 2 of 65. Three
+structural passes were made over the derivation rules; all were completed
+before any generation ran, and rule-tuning stopped there.
+
+The predictions in §8 stand as written and were not revised.

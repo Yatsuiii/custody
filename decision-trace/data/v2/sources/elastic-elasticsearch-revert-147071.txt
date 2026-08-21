@@ -1,0 +1,9 @@
+PR #147360: Revert "Enforce single values when multi_value=no is configured on fields with doc values (#147071)"
+
+Reverts elastic/elasticsearch#147071.
+
+This change is reverted to unblock CI. The newly added `mapping/40_doc_values_multi_value` YAML tests were failing deterministically on `bwc-snapshots` Part 6 in mixed-cluster tests that include 9.4.0 nodes — the `cluster_features: ["mapper.doc_values.multi_value"]` gate wasn't skipping the tests on mixed clusters where older nodes lack the feature, so the index request lands on a 9.4.0 node that silently accepts the document (`201 Created` instead of the expected `4xx`). The two `multi_value=no on multi-field {sub,parent} rejects parent array` scenarios both failed, and the subsequent cluster instability caused a cascade of `Connection refused` failures on other unrelated tests in the same task.
+
+Every PR that rebased `main` after #147071 merged inherited this failure, making Part 6 red across the board.
+
+Reproduced locally on `main` HEAD and confirmed that reverting clears the failure. See [build scan](https://gradle-enterprise.elastic.co/s/4qsrkpigs62vs) from PR #147321 for the CI signature.

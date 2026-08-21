@@ -1,0 +1,19 @@
+PR #140294: Bump SMD to v6.4.2 to revert #306 to fix regression in SSA for nullable container types
+
+#### What type of PR is this?
+
+/kind bug
+
+#### What this PR does / why we need it:
+
+Based on discussions in https://github.com/kubernetes-sigs/structured-merge-diff/issues/331 we've decided to revert https://github.com/kubernetes-sigs/structured-merge-diff/pull/306
+
+#### Which issue(s) this PR is related to:
+
+#### Special notes for your reviewer:
+
+#### Does this PR introduce a user-facing change?
+
+```release-note
+Fix a regression in server side apply where patching a container type (list or map) could result in `422 required` errors for apply requests that previously succeeded.
+```

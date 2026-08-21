@@ -1,0 +1,5 @@
+PR #145765: Revert suggestions for missing methods in tuples
+
+As requested by @estebank and as discussed with @jackh726, this reverts rust-lang/rust#142034 because of diagnostics ICEs like rust-lang/rust#142488 and its duplicates that have reached stable by now. 
+
+We will work on a proper fix to reland this cool work in the near future, but in the meantime, a revert is safer to validate and backport to beta and stable, so here it is.

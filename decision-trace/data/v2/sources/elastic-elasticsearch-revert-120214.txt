@@ -1,0 +1,4 @@
+PR #120294: Revert "[TEST] Use Docker Compose v2 for TestFixturePlugin"
+
+Reverts elastic/elasticsearch#120214
+Reverting this change because this is causing failing tests on AmazonLinux 2023. The problem with wrong version of `docker-compose` has been fixed in the VM images so builds should no longer fail.

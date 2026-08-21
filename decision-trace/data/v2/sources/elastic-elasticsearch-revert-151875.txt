@@ -1,0 +1,9 @@
+PR #152097: Revert "Use a bulk scorer for rescoring vectors"
+
+Reverts elastic/elasticsearch#151875
+
+For some seeds, it tries to read from an exhausted iterator. Not sure what the difference is between the old and new code to cause this behaviour change
+
+Fixes #152093
+Fixes #152094
+Fixes #152099

@@ -1,0 +1,14 @@
+PR #130965: Revert "Add e2e test for Regular Container image change"
+
+Reverts kubernetes/kubernetes#126794
+
+This breaks the master blocking test grid https://testgrid.k8s.io/sig-release-master-blocking#ci-crio-cgroupv1-node-e2e-conformance.
+
+/cc @dshebib 
+/assign @SergeyKanzhelev
+
+@kubernetes/release-team-release-signal 
+
+```release-note
+None
+```

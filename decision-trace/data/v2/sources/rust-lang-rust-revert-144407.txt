@@ -1,0 +1,5 @@
+PR #145979: Revert "fix(debuginfo): disable overflow check for recursive non-enum types"
+
+This reverts commit 49eda8edd5c99e4c65c687fff0b8e194eb339a23.
+
+Discussed during the T-compiler triage meeting with the [decision](https://rust-lang.zulipchat.com/#narrow/channel/238009-t-compiler.2Fmeetings/topic/.5Bweekly.5D.202025-08-28/near/536614591) to revert rust-lang/rust#144407 instead of attempting a forward fix.

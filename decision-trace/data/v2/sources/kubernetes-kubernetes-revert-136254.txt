@@ -1,0 +1,9 @@
+PR #137662: Revert "Extend PostFilterResult with a list of victim Pods"
+
+Reverts kubernetes/kubernetes#136254
+
+Reason: we decided to drop delayed preemption from the WAS work planned for the 1.36 minor. Leaving this complexity in the code is unnecessary.
+
+```release-note
+NONE
+```

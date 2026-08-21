@@ -1,0 +1,9 @@
+PR #154930: Revert performing basic const checks in typeck on stable
+
+Revert rust-lang/rust#149375, it caused a (desirable, but unintended) change where we now emit errors about constants in dead code. This was due to mir never seeing dead code, so no const checks being run on it. But typeck sees all written code and will check it.
+
+We'll land this again, with a proper types FCP and everything
+
+fixes https://github.com/rust-lang/rust/issues/153765
+
+see [#t-types/nominated > #153765: 1.95 beta regression: trait method calls in dead c…](https://rust-lang.zulipchat.com/#narrow/channel/326866-t-types.2Fnominated/topic/.23153765.3A.201.2E95.20beta.20regression.3A.20trait.20method.20calls.20in.20dead.20c.E2.80.A6/with/580203072) for discussions

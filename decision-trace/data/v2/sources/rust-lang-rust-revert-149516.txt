@@ -1,0 +1,20 @@
+PR #149600: Revert #149516 to fix i686-pc-windows-gnu host
+
+Revert rust-lang/rust#149516 because it caused dist to pick up x86_64 `libwinpthreads.dll` dependency, resulting in broken toolchain.
+
+Note, I didn't use the procedure explained at: https://forge.rust-lang.org/compiler/reviews.html#reverts because the revert button isn't there.
+
+This reverts commit 5afd8ff8df0e0850b4b5671676f4bb057b33dada, reversing
+changes made to 7cb02f975248447461a95110eb466c76cb3ac7cf.
+<!-- homu-ignore:start -->
+<!--
+If this PR is related to an unstable feature or an otherwise tracked effort,
+please link to the relevant tracking issue here. If you don't know of a related
+tracking issue or there are none, feel free to ignore this.
+
+This PR will get automatically assigned to a reviewer. In case you would like
+a specific user to review your work, you can assign it to them by using
+
+    r? <reviewer name>
+-->
+<!-- homu-ignore:end -->

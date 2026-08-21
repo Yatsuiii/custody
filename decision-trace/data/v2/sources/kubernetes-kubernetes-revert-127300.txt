@@ -1,0 +1,15 @@
+PR #128694: Revert "[FG:InPlacePodVerticalScaling] kubelet: Propagate error in doPodResizeAction() to the caller"
+
+Reverts kubernetes/kubernetes#127300
+
+Per https://github.com/kubernetes/kubernetes/pull/127300#discussion_r1833787098, this PR causes `setPodCgroupConfig` to unconditionally return a non-nil error, and subsequently causes most pod resizes to fail.
+
+Fixes https://github.com/kubernetes/kubernetes/issues/128699
+
+```release-note
+NONE
+```
+
+/sig node
+/kind regression
+/milestone v1.32
