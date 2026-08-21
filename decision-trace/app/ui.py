@@ -286,7 +286,6 @@ def render_candidate_form(decision_id: str, store: DecisionStore, index: Decisio
             with st.spinner("Updating decision memory..."):
                 index.reindex(store)
             st.success(f"Recorded candidate decision `{candidate.id}` (status: PROPOSED).")
-            st.rerun()
 
 
 def render_live_ingest(store: DecisionStore, index: DecisionIndex) -> None:
