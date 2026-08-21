@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-1979: Object Storage Support\" in kubernetes/enhancements and I'm considering using \"Encode BucketAccess connection information in a JSON blob\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the approach **\"Encode BucketAccess connection information in a JSON blob\"** was considered for KEP-1979: Object Storage Support.\n\n### Why it was not adopted:\nDriver authors struggled to parse a single JSON payload. Instead, they preferred distinct Secret entries that can be flexibly mounted through environment variables or separate files.\n\n**Evidence:** \n* `keps/sig-storage/1979-object-storage-support/README.md`",
+  "retrieved": [
+    "kep-keps-sig-storage-1979-object-storage-support::encode-bucketaccess-connection-information-in-a-json-blob",
+    "kep-keps-sig-storage-1979-object-storage-support::bucketaccess-static-provisioning",
+    "kep-keps-sig-storage-1979-object-storage-support::bucketaccess-read-write-accessmode",
+    "kep-keps-sig-storage-1979-object-storage-support::automatically-mount-buckets-to-pods",
+    "kep-keps-sig-storage-1979-object-storage-support::updating-bucketaccess-secrets"
+  ]
+}

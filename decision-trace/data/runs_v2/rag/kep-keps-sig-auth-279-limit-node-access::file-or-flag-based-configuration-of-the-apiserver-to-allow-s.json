@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"Bounding Self-Labeling Kubelets\" in kubernetes/enhancements and I'm considering using \"File or flag-based configuration of the apiserver to allow specifying allowed labels\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, that approach was considered as an alternative, but it was not adopted for the following reasons:\n\n* A fixed set of labels and label prefixes is simpler to reason about and ensures every cluster behaves consistently.\n* File-based configuration is not easily inspectable to verify enforced labels.\n* File-based configuration is not easily kept in sync in High Availability (HA) apiserver setups.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "query": "I'm working in elastic/elasticsearch and I'm planning to reintroduce a change along these lines: \"Consolidate fallback storage routing logic into central location\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
+  "response": "Yes, this exact change was previously attempted and subsequently reverted.\n\n* **Original PR:** PR #154503 (*\"Consolidate fallback storage routing logic into central location\"*)\n* **Revert PR:** PR #156367 (*\"Revert 'Consolidate fallback storage routing logic into central location' and unmute tests\"*)\n\n**Reason for Reversion:**\nThe change was reverted because it introduced multiple test suite failures that required muting. Before reintroducing it, ensure that the underlying causes of those test failures are identified and resolved.",
+  "retrieved": [
+    "elastic-elasticsearch-revert-154503",
+    "elastic-elasticsearch-revert-152050",
+    "elastic-elasticsearch-revert-147071",
+    "elastic-elasticsearch-revert-151875",
+    "elastic-elasticsearch-revert-120214"
+  ]
+}

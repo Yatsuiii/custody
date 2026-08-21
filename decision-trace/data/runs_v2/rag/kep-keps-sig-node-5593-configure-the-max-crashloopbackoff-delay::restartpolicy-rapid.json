@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-5593: Configure the max CrashLoopBackOff delay\" in kubernetes/enhancements and I'm considering using \"RestartPolicy: Rapid\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the `RestartPolicy: Rapid` approach was previously considered in the 1.31 version of **KEP-4603** (documented in `keps/sig-node/4603-tune-crashloopbackoff/README.md`, issue `enhancements#4603`), but it was rejected and removed in favor of a per-node configuration (which later split into KEP-5593).\n\nAccording to `keps/sig-node/4603-tune-crashloopbackoff/README.md` (and referencing discussions in `Kubernetes#57291`), the approach was not adopted due to the following reasons:\n\n1. **Risk to Global Node Stability and Persona Mismatch:**\n   * Pod manifest authors generally lack node-wide or cluster-wide visibility into system load and scheduling. Granting individual namespace users the ability to reduce backoff curves was considered too risky for shared node stability.\n   * Moving to a per-node configuration ensures that only a cluster operator persona\u2014who has exclusive access and holistic operational visibility\u2014can configure faster restart behaviors.\n\n2. **API Version Skew and Technical Complexity:**\n   * Adding a new enum value (`Rapid`) to an existing field (`restartPolicy`) required detailed management of version skew across at least three kubelet versions per the Kubernetes [API policy for new enum values in existing fields](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api_changes.md#new-enum-value-in-existing-field).\n   * The API server cannot determine the version of each individual kubelet to conditionally translate `Rapid` into `Always`. Consequently, every kubelet across $n-3$ and current versions would need complex coordination and handling to interpret or support the value properly.",
+  "retrieved": [
+    "keps/sig-node/4603-tune-crashloopbackoff/README.md",
+    "TARGET",
+    "keps/sig-node/4603-tune-crashloopbackoff/README.md",
+    "TARGET",
+    "keps/sig-node/4603-tune-crashloopbackoff/README.md"
+  ]
+}

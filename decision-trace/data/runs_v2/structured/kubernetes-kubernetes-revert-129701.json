@@ -1,0 +1,11 @@
+{
+  "query": "I'm working in kubernetes/kubernetes and I'm planning to reintroduce a change along these lines: \"tests: include stdout of failed commands in JUnit\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
+  "response": "Yes, this exact change was previously attempted and reverted in the project:\n\n* **Evidence:** PR #129701 (reverted in PR #129769)\n* **Reasoning:** The change (\"tests: include stdout of failed commands in JUnit\") was reverted because it disrupted TestGrid's result processing, likely caused by unsupported characters being present in the output.",
+  "retrieved": [
+    "kubernetes-kubernetes-revert-129701",
+    "kubernetes-kubernetes-revert-126794",
+    "kubernetes-kubernetes-revert-126599",
+    "kubernetes-kubernetes-revert-127300",
+    "elastic-elasticsearch-revert-154503"
+  ]
+}

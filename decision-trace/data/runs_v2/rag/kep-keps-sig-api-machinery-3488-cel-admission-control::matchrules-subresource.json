@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-3488: CEL for Admission Control\" in kubernetes/enhancements and I'm considering using \"`/matchRules` subresource\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the **`/matchRules` subresource** approach was considered as an alternative. \n\nThe idea was to require a configuration CRD to declare that it provides match criteria by exposing a `/matchRules` subresource (e.g., configuring `matchRulesPath: .spec.match` under `subresources.matchRules`).\n\nWhile it had pros (such as explicitly opting in to provide structured match criteria and following the pattern used by the `scale` subresource for polymorphism across CRDs), it was not adopted due to the following cons:\n\n1. **Mismatch with subresource purpose:** A primary purpose of subresources is accessing or modifying a portion of a resource independently, which is not what this feature was trying to achieve.\n2. **High maintenance and development cost:** From a Kubernetes development and maintenance perspective, subresources\u2014particularly for CRDs\u2014are expensive to introduce and maintain.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET"
+  ]
+}

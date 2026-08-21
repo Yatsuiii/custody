@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-5681: Conditional Authorization\" in kubernetes/enhancements and I'm considering using \"Expose all conditions in AdmissionReview, and have admission plugins \u201cacknowledge\u201d the conditions\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the approach **\"Expose all conditions in AdmissionReview, and have admission plugins 'acknowledge' the conditions\"** was considered in **`keps/sig-auth/5681-conditional-authorization/README.md` (KEP-5681: Conditional Authorization)**, but it was not adopted because it turned out to be unnecessarily complicated and raised significant security and architectural issues:\n\n1. **Question of distribution:** It was unclear and undesirable whether all conditions from potentially every authorizer in the chain should be sent to every admission webhook.\n2. **Partial vs. full evaluation:** Evaluating all conditions produced by a given authorizer at once as a set according to defined semantics is much simpler for both users and implementers than allowing admission webhooks to evaluate individual conditions piecemeal.\n3. **Security and authorization permissions:** There was no good way to verify that a particular admission webhook had the right to acknowledge a specific authorizer's conditions. For example, if a conditional authorizer is controlled by a cloud provider or infrastructure team, a malicious user could dynamically register an admission webhook attempting to acknowledge those conditions.\n4. **Conflicting outputs:** It created conflicts if multiple dynamically registered admission webhooks evaluated the same input data (conditions + request body) to different outputs.\n\nBecause regular users cannot dynamically register authorizers, there is no need to dynamically register condition enforcers either. Consequently, the proposal concluded that:\n- There should be a 1:1 mapping between the authorizer and its condition enforcer, registered together in `AuthorizationConfiguration`.\n- Only the authorizer itself can evaluate its own conditions in the admission phase, and only as a complete set all at once, rather than partially.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET"
+  ]
+}

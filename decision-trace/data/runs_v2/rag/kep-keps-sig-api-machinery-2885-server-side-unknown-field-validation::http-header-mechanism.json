@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-2885: Server Side Unknown Field Validation\" in kubernetes/enhancements and I'm considering using \"HTTP header mechanism\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the **HTTP header mechanism** was considered as an alternative to the query parameter opt-in mechanism in KEP-2885 (`keps/sig-api-machinery/2885-server-side-unknown-field-validation/README.md`).\n\nThe proposed approach considered using a MIME-type parameter (such as `application/json;validation=strict`) or a new header (such as `X-Kubernetes-Validation:Strict`). However, it was not adopted for the following reasons:\n\n1. **Schema interpretation is independent of content type:** Interpreting input strictly or not according to the target schema is independent of the content type itself, making `Content-Type` an inappropriate way to parameterize validation opt-in.\n2. **Incompatibility with patch semantics:** For `PATCH` operations, strictness is evaluated when decoding the *result* of the patch. Therefore, using `Content-Type` does not make sense because `Content-Type` provides information about the inbound request body rather than the resulting object.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET"
+  ]
+}

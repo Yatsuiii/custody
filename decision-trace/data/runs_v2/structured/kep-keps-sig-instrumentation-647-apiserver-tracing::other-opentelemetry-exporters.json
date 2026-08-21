@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-647: APIServer Tracing\" in kubernetes/enhancements and I'm considering using \"Other OpenTelemetry Exporters\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, using \"Other OpenTelemetry Exporters\" was considered for **KEP-647: APIServer Tracing**.\n\n**Why it was not adopted:**\nVendoring various exporters in-tree was rejected because it would burden Kubernetes maintainers with the responsibility of selecting and managing an official set of tracing backends.\n\n**Evidence:**\n* `keps/sig-instrumentation/647-apiserver-tracing/README.md`",
+  "retrieved": [
+    "kep-keps-sig-instrumentation-647-apiserver-tracing::other-opentelemetry-exporters",
+    "kep-keps-sig-instrumentation-647-apiserver-tracing::introducing-a-new-egressselector-type",
+    "kep-keps-sig-storage-1979-object-storage-support::automatically-mount-buckets-to-pods",
+    "kep-keps-sig-cloud-provider-2133-out-of-tree-credential-provider::api-server-proxy",
+    "kep-keps-sig-scheduling-5229-asynchronous-api-calls-during-scheduling::1-handle-api-calls-in-the-scheduling-queue"
+  ]
+}

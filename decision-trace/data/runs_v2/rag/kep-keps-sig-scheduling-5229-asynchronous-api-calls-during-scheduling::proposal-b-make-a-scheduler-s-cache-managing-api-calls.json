@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-5229: Asynchronous API calls during scheduling\" in kubernetes/enhancements and I'm considering using \"Proposal B: Make a scheduler's cache managing API calls\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, this approach was considered in **`keps/sig-scheduling/5229-asynchronous-api-calls-during-scheduling/README.md`** under the section **\"2.2: Send API calls through a kube-scheduler's cache\"**.\n\nRather than adopting it as a standalone solution, it contributed to a hybrid design (**\"Proposal C: Create a separate component managing API calls, but treat the cache as a middleware\"**). \n\nThe primary reasons and drawbacks for not relying solely on the cache to manage API calls include:\n\n1. **Cache only stores bound Pods**: The scheduler cache currently stores only bound Pods, while non-bound Pods are stored in the scheduling queue. Handling all API calls through the cache would require integration with the scheduling queue for pending Pods.\n2. **Merging internal and external updates**: The cache would need to handle and merge updates coming from both internal scheduler actions and external API events (e.g., users modifying the spec, other components updating status, and the scheduler's own updates returning as events).\n3. **Complex race/conflict handling**: Complex logic is required to handle external updates that arrive while an internal update is pending or in progress.\n4. **Still requires queuing/metadata mechanics**: To achieve skipping or merging of API calls, the cache would still need to adopt mechanisms from the separate queueing component approach, such as storing additional data regarding which specific fields need updating.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET"
+  ]
+}

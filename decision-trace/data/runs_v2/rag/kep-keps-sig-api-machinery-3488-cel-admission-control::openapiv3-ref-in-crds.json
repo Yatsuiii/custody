@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-3488: CEL for Admission Control\" in kubernetes/enhancements and I'm considering using \"OpenAPIv3 `$ref` in CRDs\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the \"OpenAPIv3 `$ref` in CRDs\" approach was considered as an alternative under the policy definition and configuration separation alternatives. \n\nIt was not adopted because:\n* **CRDs do not yet support OpenAPIv3 `$ref`s**, meaning support would need to be added to Kubernetes first, which would presumably require a separate KEP.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET"
+  ]
+}

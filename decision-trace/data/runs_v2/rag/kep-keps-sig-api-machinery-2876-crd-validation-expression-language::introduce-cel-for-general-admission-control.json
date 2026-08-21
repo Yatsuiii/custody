@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-2876: CRD Validation Expression Language\" in kubernetes/enhancements and I'm considering using \"Introduce CEL for General Admission Control\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, introducing CEL for General Admission Control was considered in **`keps/sig-api-machinery/2876-crd-validation-expression-language/README.md`** (referencing a discussion on **PR #2877** at `https://github.com/kubernetes/enhancements/pull/2877#discussion_r704513565`).\n\nWhile it was recognized as valuable for future implementation, the project decided to implement **CRD validation with CEL first** for the following reasons:\n\n1. **Better scoped / More constrained:** Validation rules can be constrained to just the relevant field or subtree.\n2. **Self-contained:** It operates within a single CRD manifest that takes effect all at once.\n3. **Easier to type check:** CRD validation rules have more knowledge about the schema of the data being validated compared to general admission expressions, which may receive arbitrary resources.\n4. **Convenience and Complementarity:** Inline validation expressions directly in CRDs are sufficiently convenient to justify existing as their own standalone feature, even if CEL for general admission were added later or already implemented, and CRD validation expressions can be kept congruent with future general admission CEL support.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET"
+  ]
+}

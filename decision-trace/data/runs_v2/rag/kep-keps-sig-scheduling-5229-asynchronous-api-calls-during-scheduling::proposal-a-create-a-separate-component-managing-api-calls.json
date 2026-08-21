@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-5229: Asynchronous API calls during scheduling\" in kubernetes/enhancements and I'm considering using \"Proposal A: Create a separate component managing API calls\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Based on the retrieved document `keps/sig-scheduling/5229-asynchronous-api-calls-during-scheduling/README.md`, **Proposal A: Create a separate component managing API calls** was indeed considered as an alternative design, but was not selected (the project selected **Proposal C: Create a separate component managing API calls, but treat the cache as a middleware** instead).\n\n### Reasons / Trade-offs noted regarding Proposal A and queueing in a separate component:\n* **Cache obsolescence / outdated data**: Having a separate component on its own would cause the cache to be less informed (i.e., not updated with the API calls' details), which would provide the scheduler with outdated data unless the queue acted as a middleware between the event handler and the cache.\n* **Complex conflict resolution**: It requires complex logic to handle potential conflicts between different update types for the same Pod.\n* **In-memory state and caching overhead**: It requires a clear strategy for how to update the in-memory Pod object during scheduling and requires extra steps to cache the updated objects.\n\nUltimately, the chosen design (Proposal C) combines both approaches by creating a separate component managing API calls while treating the cache as a middleware.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET"
+  ]
+}

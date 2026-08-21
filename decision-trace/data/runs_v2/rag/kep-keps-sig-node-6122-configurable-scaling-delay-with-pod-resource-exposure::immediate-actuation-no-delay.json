@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-6122: Configurable Scaling Delay with Pod Resource Exposure\" in kubernetes/enhancements and I'm considering using \"Immediate Actuation (No Delay)\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the approach **\"Immediate Actuation (No Delay)\"** was considered as an alternative in **KEP-6122** (`keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md`) under the *Alternatives* section (\"3. Immediate Actuation (No Delay)\").\n\n### Description\nUnder this approach, the new cpuset is applied immediately when the scale-down request is processed, without any delay.\n\n### Why it was rejected / not adopted\n* **Current behavior limitation:** Immediate actuation is the existing behavior without KEP-6122.\n* **No preparation time for workloads:** It does not provide workloads time to prepare for CPU removal.\n* **Performance degradation for latency-sensitive workloads:** Applications sensitive to latency (such as DPDK workloads) can experience performance degradation because they cannot migrate tasks away from the CPUs being removed before actuation occurs. \n\nKEP-6122 addresses this gap by introducing a configurable delay window instead.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-1979: Object Storage Support\" in kubernetes/enhancements and I'm considering using \"Bucket creation annotation\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the \"Bucket creation annotation\" approach was considered during the `v1alpha2` KEP planning for COSI (KEP-1979). \n\nIt was not adopted because:\n* **Deemed unnecessary:** While Volume Snapshotter uses an annotation to track snapshot creation (which can take a long time) to identify and prevent orphan snapshots from being created, COSI developers did not believe such a mechanism was necessary for COSI.\n* **Potential future implementation outside KEP:** If such protection is needed in the future, COSI may implement it as an implementation detail outside of the KEP process.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "keps/sig-node/5474-enable-writable-cgroups/README.md",
+    "keps/sig-cloud-provider/1179-building-without-in-tree-providers/README.md"
+  ]
+}

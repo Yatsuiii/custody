@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-5593: Configure the max CrashLoopBackOff delay\" in kubernetes/enhancements and I'm considering using \"More complex heuristics\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the approach of using **\"More complex heuristics\"** was considered in **`keps/sig-node/4603-tune-crashloopbackoff/README.md`** (the predecessor KEP from which KEP-5593 was split). \n\nThese approaches (predicated on the kubelet making runtime decisions based on system or workload states/trends, such as exposing `podFailurePolicy` to nonJob Pods, subsidizing successful running/probe time, or detecting anomalous workload crashes) were not adopted because they share the following drawbacks:\n\n1. **Harder to reason about.**\n2. **Unknown return on investment (ROI)** for use cases relative to the investment required to implement them.\n3. **Expensive to benchmark and test.**\n\nThe KEP notes that simpler early recovery approaches were chosen first because they are more approachable and easily modelable, though more complex heuristics might be revisited after the initial KEP reaches beta and beyond once observability and benchmarking work provide empirical support.",
+  "retrieved": [
+    "TARGET",
+    "keps/sig-node/4603-tune-crashloopbackoff/README.md",
+    "keps/sig-node/4603-tune-crashloopbackoff/README.md",
+    "TARGET",
+    "keps/sig-node/4603-tune-crashloopbackoff/README.md"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-5681: Conditional Authorization\" in kubernetes/enhancements and I'm considering using \"Do nothing, force implementers to implement all of this out of tree\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, that approach was considered for **KEP-5681: Conditional Authorization**. \n\nAccording to `keps/sig-auth/5681-conditional-authorization/README.md`, the alternative of doing nothing and forcing implementers to implement all of this out of tree was rejected because external setups:\n- Introduce security risks.\n- Enforce redundant webhooks per request.\n- Lack atomic policy evaluation.\n- Obscure conditional rules from users.",
+  "retrieved": [
+    "kep-keps-sig-auth-5681-conditional-authorization::do-nothing-force-implementers-to-implement-all-of-this-out-o",
+    "kep-keps-sig-auth-5681-conditional-authorization::extract-label-and-field-selectors-from-the-request-and-curre",
+    "kep-keps-sig-auth-5681-conditional-authorization::expose-all-conditions-in-admissionreview-and-have-admission-",
+    "kep-keps-sig-auth-5681-conditional-authorization::require-the-client-to-annotate-its-write-request-with-field-",
+    "kep-keps-sig-auth-5681-conditional-authorization::only-one-conditionset-exposed-as-part-of-subjectaccessreview"
+  ]
+}

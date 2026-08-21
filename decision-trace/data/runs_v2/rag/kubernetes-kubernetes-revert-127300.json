@@ -1,0 +1,11 @@
+{
+  "query": "I'm working in kubernetes/kubernetes and I'm planning to reintroduce a change along these lines: \"[FG:InPlacePodVerticalScaling] kubelet: Propagate error in doPodResizeAction() to the caller\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
+  "response": "Yes, this exact change has been attempted and reverted previously in the project's history:\n\n* **Original PR:** PR #127300 introduced `[FG:InPlacePodVerticalScaling] kubelet: Propagate error in doPodResizeAction() to the caller`.\n* **Revert PR:** PR #128694 reverted PR #127300.\n* **Reason for Revert:** According to PR #128694 (and discussion referenced in `https://github.com/kubernetes/kubernetes/pull/127300#discussion_r1833787098`), propagating the error caused `setPodCgroupConfig` to unconditionally return a non-nil error, which subsequently caused most pod resizes to fail (tracked in issue #128699).",
+  "retrieved": [
+    "TARGET",
+    "kubernetes/kubernetes#139425",
+    "kubernetes/kubernetes#141004",
+    "kubernetes/kubernetes#139425",
+    "kubernetes/kubernetes#140882"
+  ]
+}

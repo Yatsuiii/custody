@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-5229: Asynchronous API calls during scheduling\" in kubernetes/enhancements and I'm considering using \"Proposal A: Create a separate component managing API calls\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the approach **\"Proposal A: Create a separate component managing API calls\"** was considered for **KEP-5229: Asynchronous API calls during scheduling**.\n\n### Why it was not adopted\nIt was not used because introducing an independent component risked leaving the cache out of sync with outgoing requests, which would feed obsolete data to the scheduler.\n\n### Evidence\n* `keps/sig-scheduling/5229-asynchronous-api-calls-during-scheduling/README.md`",
+  "retrieved": [
+    "kep-keps-sig-scheduling-5229-asynchronous-api-calls-during-scheduling::proposal-a-create-a-separate-component-managing-api-calls",
+    "kep-keps-sig-scheduling-5229-asynchronous-api-calls-during-scheduling::proposal-b-make-a-scheduler-s-cache-managing-api-calls",
+    "kep-keps-sig-scheduling-5229-asynchronous-api-calls-during-scheduling::1-handle-api-calls-in-the-scheduling-queue",
+    "kep-keps-sig-scheduling-5229-asynchronous-api-calls-during-scheduling::2-handle-api-calls-in-the-handleschedulingfailure",
+    "kep-keps-sig-scheduling-5229-asynchronous-api-calls-during-scheduling::1-just-dispatch-goroutines"
+  ]
+}

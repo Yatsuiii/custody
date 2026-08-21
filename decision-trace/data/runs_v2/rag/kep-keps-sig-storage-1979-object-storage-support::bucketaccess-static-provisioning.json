@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-1979: Object Storage Support\" in kubernetes/enhancements and I'm considering using \"BucketAccess static provisioning\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, **BucketAccess static provisioning** was considered for KEP-1979 (documented in `keps/sig-storage/1979-object-storage-support/README.md`), but it was **not adopted** for the following reasons:\n\n1. **Not an intrinsic need / workaround for driver limitations:** The request for static provisioning was driven by users wanting to make modifications to Object Storage Provider (OSP) accesses unsupported by OSP drivers, rather than an intrinsic need of the COSI specification.\n2. **Accesses do not hold critical data:** Portability is maintained without static provisioning because object storage accesses do not hold critical application data; any `BucketClaim` can have a new, valid `BucketAccess` created for it at any time to grant access.\n3. **High complexity and risk:** Implementing static `BucketAccess` provisioning would be incredibly complicated. Design and development work would be large, and the risk for bugs would be high.\n4. **Conflicting expectations in corner cases:** COSI, OSP drivers, Admins, and Users would likely have conflicting expectations on how to handle corner cases in static access policies, and the COSI specification could not reasonably enforce consistent handling across them.\n5. **Operational risk:** If manual modifications were made, OSP drivers could not be guaranteed to preserve them and could get stuck in a state where they no longer know how to manage the `BucketAccess`.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET"
+  ]
+}

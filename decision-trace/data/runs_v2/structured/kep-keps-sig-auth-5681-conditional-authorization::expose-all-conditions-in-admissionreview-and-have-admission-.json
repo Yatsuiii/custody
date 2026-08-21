@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-5681: Conditional Authorization\" in kubernetes/enhancements and I'm considering using \"Expose all conditions in AdmissionReview, and have admission plugins \u201cacknowledge\u201d the conditions\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, that approach was considered for **KEP-5681: Conditional Authorization**.\n\n* **Why it was not adopted:** Exploring this approach further revealed that it would be overly complex in practice.\n* **Evidence:** `keps/sig-auth/5681-conditional-authorization/README.md`",
+  "retrieved": [
+    "kep-keps-sig-auth-5681-conditional-authorization::expose-all-conditions-in-admissionreview-and-have-admission-",
+    "kep-keps-sig-auth-5681-conditional-authorization::only-one-conditionset-exposed-as-part-of-subjectaccessreview",
+    "kep-keps-sig-auth-5681-conditional-authorization::do-nothing-force-implementers-to-implement-all-of-this-out-o",
+    "kep-keps-sig-auth-5681-conditional-authorization::extract-label-and-field-selectors-from-the-request-and-curre",
+    "kep-keps-sig-auth-5681-conditional-authorization::propagate-an-api-server-generated-request-uid-to-both-author"
+  ]
+}

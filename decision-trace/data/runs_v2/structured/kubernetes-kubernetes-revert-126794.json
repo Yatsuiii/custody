@@ -1,0 +1,11 @@
+{
+  "query": "I'm working in kubernetes/kubernetes and I'm planning to reintroduce a change along these lines: \"Add e2e test for Regular Container image change\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
+  "response": "Yes, this change has been tried previously and was subsequently reverted.\n\nAccording to decision **[kubernetes-kubernetes-revert-126794]**:\n* **Evidence:** PR #126794 (reverted in PR #130965)\n* **Reasoning:** The original change to add an e2e test for Regular Container image change was rolled back because it caused failures in the main branch's release-blocking test suite.",
+  "retrieved": [
+    "kubernetes-kubernetes-revert-126794",
+    "kubernetes-kubernetes-revert-126599",
+    "kubernetes-kubernetes-revert-127300",
+    "kubernetes-kubernetes-revert-129701",
+    "kubernetes-kubernetes-revert-140448"
+  ]
+}

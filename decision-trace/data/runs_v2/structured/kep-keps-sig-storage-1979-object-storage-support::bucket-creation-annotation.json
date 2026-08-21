@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-1979: Object Storage Support\" in kubernetes/enhancements and I'm considering using \"Bucket creation annotation\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the **\"Bucket creation annotation\"** approach was already considered for **KEP-1979: Object Storage Support**.\n\n### Why it was not adopted:\nDevelopers deemed this safeguard unnecessary for COSI (Container Object Storage Interface) during design planning, though they noted it could potentially be added later as an internal detail if required.\n\n**Evidence:** \n* `keps/sig-storage/1979-object-storage-support/README.md`",
+  "retrieved": [
+    "kep-keps-sig-storage-1979-object-storage-support::bucket-creation-annotation",
+    "kep-keps-sig-storage-1979-object-storage-support::automatically-mount-buckets-to-pods",
+    "kep-keps-sig-storage-1979-object-storage-support::bucketclass-field-on-bucket-resource",
+    "kep-keps-sig-storage-1979-object-storage-support::bucketaccess-static-provisioning",
+    "kep-keps-sig-storage-1979-object-storage-support::cross-resource-protection-finalizers"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "query": "I'm working in elastic/elasticsearch and I'm planning to reintroduce a change along these lines: \"Enforce single values for text fields and ip fields when multi_value=no is configured in the mapping (multi_value=no part 3/5)\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
+  "response": "Yes, a very similar change was previously attempted and reverted.\n\n### Prior Attempt and Revert Details\n\n* **Original PR:** [#147071](https://github.com/elastic/elasticsearch/pull/147071) (*\"Enforce single values when multi_value=no is configured on fields with doc values\"*)\n* **Revert PR:** [#147360](https://github.com/elastic/elasticsearch/pull/147360) (*\"Revert 'Enforce single values when multi_value=no is configured on fields with doc values (#147071)'\"*)\n\n### Why It Was Reverted\nThe change had to be reverted to unblock CI due to test failures in mixed-cluster BWC (backward compatibility) testing:\n\n1. **BWC Feature Gating Issue:** In `bwc-snapshots` (Part 6) tests running mixed clusters that included older 9.4.0 nodes, the `cluster_features: [\"mapper.doc_values.multi_value\"]` gate did not properly skip the tests on mixed clusters where older nodes lacked the feature.\n2. **Silent Acceptance on Older Nodes:** When index requests landed on a 9.4.0 node, the node silently accepted documents (returning `201 Created` instead of the expected `4xx` rejection).\n3. **Failing Tests & Cascading Failures:** In the newly added YAML test file `mapping/40_doc_values_multi_value`, the two `multi_value=no on multi-field {sub,parent} rejects parent array` scenarios failed deterministically. This triggered cluster instability and a cascade of `Connection refused` errors across unrelated tests in the task.\n\nWhen reintroducing this behavior, make sure the cluster feature gating properly handles mixed clusters with older nodes that lack the feature so BWC tests pass.",
+  "retrieved": [
+    "TARGET",
+    "elastic/elasticsearch#111968",
+    "elastic/elasticsearch#156728",
+    "elastic/elasticsearch#156585",
+    "elastic/elasticsearch#156778"
+  ]
+}

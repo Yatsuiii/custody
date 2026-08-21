@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-1979: Object Storage Support\" in kubernetes/enhancements and I'm considering using \"Handling systems that cannot support multi-bucket BucketAccesses\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, handling systems that cannot support multi-bucket `BucketAccess`es (such as Azure blob storage using SAS tokens for `Key`-based access) was considered in **KEP-1979: Object Storage Support** (`keps/sig-storage/1979-object-storage-support/README.md`). \n\nThe team evaluated several alternatives to handle systems lacking multi-bucket support:\n\n1. **Not supporting multi-bucket BucketAccesses at all:**\n   - **Why it wasn't adopted:** It has consistently been the most requested COSI and `ObjectBucketClaim` feature, so omitting it from the specification was not considered to be in the users' best interests.\n\n2. **Introducing a new gRPC call/response for drivers to declare capability support:**\n   - **Why it wasn't adopted:** A driver might support multi-bucket access for certain configurations (e.g., `ServiceAccount` auth) but not others (e.g., `Key` auth). Managing the permutations of supported features would make the design logic and gRPC documentation infeasible.\n\n3. **Using a separate gRPC call (e.g., `DriverGrantMultipleBucketAccess`) returning `Unimplemented` or a separate `MultiBucketAccess` CRD:**\n   - **Why it wasn't adopted:** The existing `DriverGrantBucketAccess` call was not overloaded, and having separate CRDs merely moved complexity elsewhere without sufficient usability improvements to justify the added KEP complexity.\n\n### Proposed/Adopted Design\nTo balance portability and support for multi-bucket access, a twofold approach was proposed:\n1. **Disallow multi-bucket access by default** to preserve the most portable configuration, while making it configurable via `BucketAccessClass`.\n2. **Instruct drivers to return the gRPC code `OutOfRange`** if (and only if) they cannot support a multi-bucket access request, allowing misconfigurations to be reported clearly.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "keps/sig-cluster-lifecycle/generic/1755-communicating-a-local-registry/README.md"
+  ]
+}

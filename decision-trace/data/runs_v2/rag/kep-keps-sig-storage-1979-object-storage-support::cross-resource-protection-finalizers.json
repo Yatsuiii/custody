@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-1979: Object Storage Support\" in kubernetes/enhancements and I'm considering using \"Cross-resource protection finalizers\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, cross-resource protection finalizers were considered during the COSI v1alpha2 design cycle. \n\nAccording to the retrieved design documentation:\n\n* **Reasoning against adoption:** COSI received feedback from **sig-storage** regarding the use of PV/PVC protection finalizers (`.../pv-protection` and `.../pvc-protection`). In real-world scenarios, administrators and users frequently removed PV/PVC protection finalizers when encountering issues, leading to broken system states and incorrect cleanup behavior for storage drivers. As a result, COSI was cautioned against relying on finalizers to manage order-of-operations concerns across different resources.\n* **Alternative approach:** Instead of relying on cross-resource protection finalizers, COSI v1alpha2 drew inspiration from the volume snapshot design and adopted the use of **annotations** to help inform cross-resource references and bindings (though cross-resource finalizers may still be used as an implementation detail during development if needed).",
+  "retrieved": [
+    "TARGET",
+    "keps/sig-api-machinery/5080-ordered-namespace-deletion/README.md",
+    "keps/sig-storage/3751-volume-attributes-class/README.md",
+    "keps/sig-cloud-provider/1179-building-without-in-tree-providers/README.md",
+    "keps/sig-api-machinery/5080-ordered-namespace-deletion/README.md"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "query": "I'm working in kubernetes/kubernetes and I'm planning to reintroduce a change along these lines: \"client-go: prevent unbounded goroutine growth in EventBroadcaster\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
+  "response": "Yes, this change has been attempted and reverted previously in the project's history.\n\n* **Evidence:** PR #140448 (reverted in PR #140990)\n* **Reasoning:** The original change (\"client-go: prevent unbounded goroutine growth in EventBroadcaster\") was rolled back because the subsequent patch carried too much risk right before the release candidate milestone.",
+  "retrieved": [
+    "kubernetes-kubernetes-revert-140448",
+    "kubernetes-kubernetes-revert-127300",
+    "kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::handshake-based-synchronization",
+    "kep-keps-sig-scheduling-5229-asynchronous-api-calls-during-scheduling::1-just-dispatch-goroutines",
+    "kep-keps-sig-scheduling-5229-asynchronous-api-calls-during-scheduling::1-handle-api-calls-in-the-scheduling-queue"
+  ]
+}

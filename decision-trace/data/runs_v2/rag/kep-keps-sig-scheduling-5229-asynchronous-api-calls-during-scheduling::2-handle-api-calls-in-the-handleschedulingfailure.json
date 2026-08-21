@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-5229: Asynchronous API calls during scheduling\" in kubernetes/enhancements and I'm considering using \"2: Handle API calls in the handleSchedulingFailure\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Based on the retrieved design proposal document (`keps/sig-scheduling/5229-asynchronous-api-calls-during-scheduling/README.md`), the approach **\"1.2: Handle API calls in the handleSchedulingFailure\"** was considered.\n\nThe document outlines several drawbacks and complexities associated with this approach:\n\n1. **Race Conditions and Retries**: Synchronous API calls within the handler could be made asynchronous, but extra effort would be required to prevent race conditions\u2014such as blocking pod retries using `PreEnqueue` (similar to asynchronous preemption) or implementing advanced queueing logic.\n2. **Handling `PreEnqueue` Plugin Status Updates Requires Significant Refactoring**: While it covers pod status updates during the failure handler, handling status updates for pods rejected by `PreEnqueue` plugins would require refactoring via:\n   - Running a simplified scheduling cycle for pods rejected by `PreEnqueue` to update the pod condition. This can negatively impact scheduling performance because scheduling cycles would be spent on pods that are ultimately unschedulable.\n   - Requiring `PreEnqueue` plugins to also be called within this simplified scheduling cycle, or alternatively duplicating that logic inside `PreFilter` plugins.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET"
+  ]
+}

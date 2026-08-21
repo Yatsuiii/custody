@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-6122: Configurable Scaling Delay with Pod Resource Exposure\" in kubernetes/enhancements and I'm considering using \"Generalizing Scale-Down Delay to Other Resource Types\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the approach **\"Generalizing Scale-Down Delay to Other Resource Types\"** was considered for KEP-6122. \n\nIt was not adopted because extending grace periods to memory and dynamic resources was deferred in order to keep the current implementation focused on exclusive CPUs.\n\n**Evidence:**\n* `keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md`",
+  "retrieved": [
+    "kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::generalizing-scale-down-delay-to-other-resource-types",
+    "kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::pod-level-grace-period-opt-in-opt-out-mechanism",
+    "kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::hook-based-synchronization-approach",
+    "kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::handshake-based-synchronization",
+    "kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::cpu-release-based-on-real-time-usage"
+  ]
+}

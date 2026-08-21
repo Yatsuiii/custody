@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"Bounding Self-Labeling Kubelets\" in kubernetes/enhancements and I'm considering using \"Forbid all labels regardless of namespace except for a specifically allowed set\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the approach **\"Forbid all labels regardless of namespace except for a specifically allowed set\"** was considered as an alternative, but it was not adopted for the following reasons:\n\n* **Disruptive to existing usage:** It was much more disruptive to the existing usage of `--node-labels`.\n* **Difficult integration:** It was much more difficult to integrate with other systems that allow arbitrary topology labels, such as CSI.\n* **Improper restrictions:** It placed restrictions on how labels outside the `kubernetes.io` and `k8s.io` label namespaces could be used, which did not seem proper.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET"
+  ]
+}

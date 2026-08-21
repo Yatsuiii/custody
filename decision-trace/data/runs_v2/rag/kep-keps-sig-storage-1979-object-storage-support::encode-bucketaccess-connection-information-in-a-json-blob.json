@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-1979: Object Storage Support\" in kubernetes/enhancements and I'm considering using \"Encode BucketAccess connection information in a JSON blob\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, that approach was previously considered and used in COSI v1alpha1, but it was deprecated in COSI v1alpha2 for the following reasons:\n\n* **In COSI v1alpha1:** BucketAccess connection/authentication information was encoded as a JSON blob in the BucketAccess's chosen Secret so it could be mounted to user Pods as a file (which was considered generally safer than mounting via environment variables).\n* **Why it was changed/not adopted going forward:** \n  * Multiple driver implementers reported that they were unable to process the JSON blob file into forms suitable for their applications.\n  * Implementers requested that each entry in the JSON blob instead be encoded as individual Secret data fields, allowing them to load the values as files or environment variables depending on their applications' specific needs.\n  * Consequently, COSI v1alpha2 deprecated the JSON blob file in favor of the more flexible approach of encoding each field in a separate Secret data key. Both formats are not supported simultaneously to keep development and usage consistent.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "keps/sig-cluster-lifecycle/generic/1755-communicating-a-local-registry/README.md"
+  ]
+}

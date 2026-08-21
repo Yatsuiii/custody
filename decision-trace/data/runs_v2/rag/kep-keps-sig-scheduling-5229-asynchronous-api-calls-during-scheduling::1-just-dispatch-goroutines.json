@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-5229: Asynchronous API calls during scheduling\" in kubernetes/enhancements and I'm considering using \"1: Just dispatch goroutines\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Based on the proposal document `keps/sig-scheduling/5229-asynchronous-api-calls-during-scheduling/README.md`, an approach based on dispatching goroutines and using a simple queue to store pending calls was considered, but has several drawbacks:\n\n* **No inherent support for delaying calls:** It does not inherently support delaying API calls.\n* **Requires higher-level race prevention mechanisms:** Delays due to side effects (especially during issues with `kube-apiserver`) mean higher-level mechanisms (such as 1.1 or 1.2) are still required to prevent pod update races.\n* **More effort for specific scheduling scenarios:** Supporting scenarios like `nominatedNodeName` requires extra effort in the higher-level mechanisms.\n* **Blocks optimizations:** It prevents further optimizations, such as the ability to merge two API calls. \n\nAdditionally, the motivation notes that the scheduler aims to move away from the model of busy-waiting goroutines to establish a universal approach that better controls the number of dispatched goroutines across the kube-scheduler.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET"
+  ]
+}

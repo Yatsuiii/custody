@@ -372,3 +372,90 @@ structural passes were made over the derivation rules; all were completed
 before any generation ran, and rule-tuning stopped there.
 
 The predictions in §8 stand as written and were not revised.
+
+---
+
+# Amendment 2 — v2.1, removing the supervision leak
+
+Recorded **after** v2's numbers were seen and **before** any v2.1
+generation or grading call. The v2 result is not being discarded or
+rewritten; it stands in `RESULTS_V2.md` exactly as it came out, including
+its GO verdict. What follows is a further experiment, because that GO is
+not defensible and saying so is more useful than banking it.
+
+## A2.1 — What v2 actually measured
+
+v2 returned structured 99% (82/83), RAG 55%, code_only 10%, verdict GO.
+Two measured properties of the construction explain most of that gap.
+
+1. **The card index is bijective with the test set.** 83 cards for 83
+   cases, each card's `reason` distilled from precisely the span the judge
+   grades against, and the question containing that card's
+   `alternative_name` verbatim. Measured: the case's own card is in the
+   top 5 for 83/83 cases and at rank 1 for 82/83. Structured was performing
+   an exact-key lookup against a store built one record per question.
+2. **Half the KEP questions need no memory at all.** `code_only` has no
+   retrieval and no cards and still scores `rationale_match` on 32 of 65
+   KEP cases, because naming an alternative usually implies its weakness.
+
+Neither is a coding error; both follow from deriving the cases and the
+cards from the same structural pass. But the combination means v2 tested
+retrieval and generation over a pre-solved memory, and did not test the
+step where a decision-memory product can actually fail: **extraction**.
+
+## A2.2 — The one change
+
+Exactly one thing changes. The structured store is rebuilt by an
+**unsupervised ingestion pass**:
+
+- One call per KEP over its whole canonical Alternatives section.
+- The model decides how many alternatives exist, names them itself, and
+  writes each one's reason. Uncapped.
+- It is **not** given the case list, the case names, or any per-case
+  evidence span.
+- All **19** KEPs are ingested, including the 4 that contribute no cases,
+  so their alternatives enter the index as genuine distractors.
+- Revert cards are unchanged: a revert decision has exactly one
+  alternative and its card was already distilled from the whole PR body,
+  so there was never per-case supervision there.
+
+Everything else is held fixed: the same 83 questions, the same targets,
+the same judge prompts, the same `TOP_K=5`, the same embedder, the same
+model, the same thresholds imported from `grade.py`.
+
+`rag` and `code_only` responses are **reused unchanged**, because their
+prompts are byte-identical between v2 and v2.1. That is a uniform rule
+applied to every case of those conditions, not a per-case choice, and it
+is the same rule `docs/FALSIFIER_CONFOUND_HANDOFF.md` §5 used in v0.
+
+## A2.3 — Hypothesis and predictions
+
+**Hypothesis.** The remaining difficulty in structured decision memory
+lives in extraction, not in retrieval or generation. Removing the
+supervision leak should therefore move the number materially, and whatever
+it moves to is the first honest estimate of the product's real capability.
+
+Predictions, fixed now:
+
+1. Structured combined **falls from 99%**. Predicted band **70–90%**.
+2. The drop is driven by **extraction recall**, not by retrieval rank: the
+   ingester will fail to emit a matching record for some case
+   alternatives, and those cases will fail.
+3. RAG stays at 55% and code_only at 10% by construction, since their
+   responses are reused.
+
+**New metric, defined before results.** *Extraction recall*: of the 65 KEP
+case alternatives, the fraction for which the unsupervised ingester
+produced a record whose own card is retrieved into that case's top-5
+prompt. This is the number the experiment exists to produce.
+
+## A2.4 — Kill criterion
+
+If structured under v2.1 is **below 85%**, the verdict is CAUTION and that
+is the reported result. No third benchmark, no further rule changes, no
+re-judging. If it is at or above 85% with the leak removed, the GO is
+reported together with both the v2 and v2.1 numbers and with this
+amendment attached, so a reader can see exactly what was and was not
+tested.
+
+Either way `RESULTS_V2.md` keeps the v2 numbers alongside the v2.1 ones.

@@ -1,0 +1,11 @@
+{
+  "query": "I'm working in rust-lang/rust and I'm planning to reintroduce a change along these lines: \"Perform many const checks in typeck\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
+  "response": "Yes, this change has been tried before and was subsequently reverted:\n\n* **Relevant Decision:** `[rust-lang-rust-revert-149375]`\n* **Evidence:** PR #149375 (reverted in PR #154930: *Revert performing basic const checks in typeck on stable*)\n* **Reasoning / Context:** The change was reverted because performing these checks unintentionally caused compilation errors for constants in unreachable code, a behavior change that requires a formal approval process before it can be applied to stable.",
+  "retrieved": [
+    "rust-lang-rust-revert-149375",
+    "rust-lang-rust-revert-144407",
+    "rust-lang-rust-revert-142034",
+    "rust-lang-rust-revert-149060",
+    "rust-lang-rust-revert-148937"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-1979: Object Storage Support\" in kubernetes/enhancements and I'm considering using \"Automatically mount buckets to Pods\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the approach of **automatically mounting buckets to Pods** was considered for **KEP-1979: Object Storage Support**. \n\n### Why it was not adopted:\nIt was not used because diverse application requirements and access methods made it infeasible to build a standardized mounting approach that would work consistently across every workload and driver.\n\n**Evidence:**\n* `keps/sig-storage/1979-object-storage-support/README.md`",
+  "retrieved": [
+    "kep-keps-sig-storage-1979-object-storage-support::automatically-mount-buckets-to-pods",
+    "kep-keps-sig-storage-1979-object-storage-support::bucketaccess-static-provisioning",
+    "kep-keps-sig-storage-1979-object-storage-support::handling-systems-that-cannot-support-multi-bucket-bucketacce",
+    "kep-keps-sig-storage-1979-object-storage-support::bucket-creation-annotation",
+    "kep-keps-sig-storage-1979-object-storage-support::bucketclass-field-on-bucket-resource"
+  ]
+}

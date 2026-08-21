@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-6122: Configurable Scaling Delay with Pod Resource Exposure\" in kubernetes/enhancements and I'm considering using \"Generalizing Scale-Down Delay to Other Resource Types\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the approach **\"Generalizing Scale-Down Delay to Other Resource Types\"** was considered as an alternative in `keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md`. \n\nIt was not adopted for the initial Alpha implementation (and was deferred to Alpha2/Beta) for the following reasons:\n\n1. **Scope Focus**: The initial implementation focuses strictly on exclusive CPUs, which is the only resource type currently supporting in-place vertical scaling with guaranteed QoS pods (via KEP-5554). Non-exclusive resources (like general CPU and memory requests) are not distinguishable at the container level for selective resource removal.\n2. **Implementation Complexity**: Extending the delay mechanism to other resource types (such as memory, hugepages, ephemeral-storage, or DRA resources) requires coordination across multiple resource managers (e.g., Memory Manager, DRA framework) and potentially new APIs, with each resource type having different semantics for what \"graceful release\" means.\n3. **Limited Use Cases**: As of today, exclusive CPUs are the primary use case requiring delayed scale-down. Not all other resource types have in-place scaling implementations that would benefit from this feature (though memory resize was noted in discussions around KEP-6050 for memory-backed emptyDir downsizing).\n4. **Need for User Feedback**: The SIG Node community agreed to first collect user feedback from the Alpha1 implementation of the CPU-focused delay mechanism before designing a more generalized solution across other resource types.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET"
+  ]
+}

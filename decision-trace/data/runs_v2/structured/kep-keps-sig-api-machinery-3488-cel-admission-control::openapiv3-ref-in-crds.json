@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-3488: CEL for Admission Control\" in kubernetes/enhancements and I'm considering using \"OpenAPIv3 `$ref` in CRDs\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the approach of using **OpenAPIv3 `$ref` in CRDs** was considered for \"KEP-3488: CEL for Admission Control\".\n\n**Why it was not adopted:**\nCRDs do not currently support or accommodate these references, which would necessitate creating an independent enhancement proposal to implement that functionality first.\n\n**Evidence:**\n* `keps/sig-api-machinery/3488-cel-admission-control/README.md`",
+  "retrieved": [
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::openapiv3-ref-in-crds",
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::generate-crds",
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::duck-typed-crds",
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::matchrules-subresource",
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::policyconfiguration-kind-with-config-embedded"
+  ]
+}

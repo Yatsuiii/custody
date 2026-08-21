@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-2876: CRD Validation Expression Language\" in kubernetes/enhancements and I'm considering using \"Build our own\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the approach to **\"Build our own\"** expression language was considered. \n\nIt was not adopted because:\n* It would require a **much larger engineering investment**.\n* The project does not plan to entertain building a custom language unless there is strong evidence showing that none of the existing, available expression languages (such as CEL) are able to support CRD validation use cases well.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET"
+  ]
+}

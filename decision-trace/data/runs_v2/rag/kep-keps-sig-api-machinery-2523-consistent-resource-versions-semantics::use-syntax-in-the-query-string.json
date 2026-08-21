@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"Consistent Resource Version Semantics for List\" in kubernetes/enhancements and I'm considering using \"Use syntax in the query string\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the approach **\"Use syntax in the query string\"** (introducing syntax like `=N` and `>=N` instead of additional parameters) was considered as an alternative, but it was not adopted due to the following disadvantages:\n\n1. **Backward Compatibility:** To support backward compatibility with older servers, clients would still have to be asked to pass redundant parameters, such as `resourceVersion=234&resourceVersion>=234`.\n2. **Handling 'Exact' Matches:** It was not clear how to support \"Exact\" matches because `==` does not work well in query parameters (requiring something else to be selected), and `=` was already used for the legacy case.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET"
+  ]
+}

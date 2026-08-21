@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-3488: CEL for Admission Control\" in kubernetes/enhancements and I'm considering using \"Duck Typed CRDs\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Based on the retrieved chunks:\n\n**Yes, the \"Duck Typed CRDs\" approach was considered** as an alternative for separating policy definition and configuration (and was shown in the initial examples of the KEP).\n\n### Challenges / Considerations identified:\nWhile the chunks do not explicitly state a final decision or why it was definitively rejected/not adopted, they highlight the primary challenge of this alternative:\n* **Schema Mismatches and Sync Issues:** The main challenge is dealing with mismatches between how CRDs declare the `spec.match` schema and what the apiserver expects. Even with a controller keeping them in sync (via an `admission.kubernetes.io/is-policy-configuration-definition` annotation), it can briefly fall out of sync.\n* **Failure Handling Complexity:** To handle unrecognized fields, missing required fields, incorrectly typed fields in `spec.match`, or CRD deletions, the system would need complex error handling to mark the `ValidatingAdmissionPolicy` status as \"misconfigured\" and trigger the `FailurePolicy` on admission validations.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET"
+  ]
+}

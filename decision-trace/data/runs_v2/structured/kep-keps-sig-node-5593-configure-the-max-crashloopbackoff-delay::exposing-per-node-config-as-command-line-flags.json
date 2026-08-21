@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-5593: Configure the max CrashLoopBackOff delay\" in kubernetes/enhancements and I'm considering using \"Exposing per-node config as command-line flags\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, that approach was considered for **KEP-5593: Configure the max CrashLoopBackOff delay**.\n\nIt was not adopted because adding more command-line interface (CLI) flags is discouraged, and the `KubeletConfiguration` API offers a viable per-node alternative now that config directory support has reached beta.\n\n**Evidence:** \n* `keps/sig-node/5593-configure-the-max-crashloopbackoff-delay/README.md`",
+  "retrieved": [
+    "kep-keps-sig-node-5593-configure-the-max-crashloopbackoff-delay::exposing-per-node-config-as-command-line-flags",
+    "kep-keps-sig-node-5593-configure-the-max-crashloopbackoff-delay::global-override",
+    "kep-keps-sig-node-5593-configure-the-max-crashloopbackoff-delay::on-success-and-the-10-minute-recovery-threshold",
+    "kep-keps-sig-node-5593-configure-the-max-crashloopbackoff-delay::restartpolicy-rapid",
+    "kep-keps-sig-node-5593-configure-the-max-crashloopbackoff-delay::per-exit-code-configuration"
+  ]
+}

@@ -1503,3 +1503,53 @@ answer-only (BUILD_SCOPE §12/§16), so scripting it would overclaim a
 capability that doesn't exist.
 
 Nothing committed or pushed.
+
+## Find the mechanism behind the falsifier's 76% plateau (opened 2026-08-21)
+
+Objective: determine the actual root-cause mechanism of the 9 remaining
+structured failures, by tracing each one from live source section ->
+ground-truth quote -> rationale_card -> retrieved points -> realized
+prompt -> generated answer -> judge verdict. Then decide on that evidence
+alone whether the `kep_alternatives` half of the benchmark measures the
+system or mismeasures it, and only if it mismeasures, preregister and run
+a corrected v2. The score is not allowed to select the conclusion.
+
+Branch: research/decisiontrace-plateau
+Parent: 1c33d3d (cut from the frozen submission commit; never merged back,
+never deployed)
+
+Allowed files: BENCHMARK_FAILURE_AUDIT.md, BENCHMARK_V2_SPEC.md,
+RESULTS_V2.md, data/v2/**, data/runs_v2/**, and the new v2-only scripts
+build_v2_cases.py, run_conditions_v2.py, grade_v2.py,
+test_no_leakage_v2.py, audit_v0_failures.py. Plus this file and the
+repo-root contract.
+
+Non-goals: no deploy, no merge, no push. No mutation of any v0 artifact
+(RESULTS.md, decisions.jsonl, data/runs/**, mine_decisions.py,
+run_conditions.py, grade.py, test_no_leakage.py, rag_index.py, vertex.py).
+No change to verdict_for()'s thresholds. No app/** changes. No repeat of a
+closed lever (chunk size, embedding model, TOP_K, retrieval granularity).
+
+Baseline: HEAD == 1c33d3d, decisions.jsonl == 37 rows,
+`pytest test_no_leakage.py -q` == 115 passed, RESULTS.md == structured 76%
+(28/37), rag 57%, code_only 0%, verdict CAUTION.
+
+Acceptance gates:
+1. All 9 structured failures and all 19 KEP rows classified against the
+   live source, one named primary cause each, with totals.
+2. Every claim about a KEP's Alternatives section checked against the live
+   document, not inferred from the card or the quote.
+3. If v2 is built, its spec is committed before the first v2 generation
+   call, its cases derive from one uniform structural rule, and a
+   structural dry run reports counts and exclusions before any spend.
+4. test_no_leakage_v2.py proves no condition's prompt carries its own
+   grading rationale, for every case.
+5. `git diff 1c33d3d --stat` shows only new files plus the contracts.
+
+Verification: `git diff 1c33d3d --name-status` read by hand for v0
+mutations; `pytest test_no_leakage.py test_no_leakage_v2.py -q`;
+`git stash list` still shows the parked hardening-branch work; final report
+gives numerator/denominator for every score and the verdict from the
+unchanged verdict_for().
+
+Status: active

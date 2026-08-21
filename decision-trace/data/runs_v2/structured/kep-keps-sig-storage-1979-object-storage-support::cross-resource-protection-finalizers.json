@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-1979: Object Storage Support\" in kubernetes/enhancements and I'm considering using \"Cross-resource protection finalizers\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the approach of using **Cross-resource protection finalizers** was considered for **KEP-1979: Object Storage Support**.\n\n* **Reason it was not adopted:** The team avoided using cross-resource protection finalizers because manual deletion of resources by users leads to system errors. Instead, they opted to manage cross-resource dependencies using annotations.\n* **Evidence:** `keps/sig-storage/1979-object-storage-support/README.md`",
+  "retrieved": [
+    "kep-keps-sig-storage-1979-object-storage-support::cross-resource-protection-finalizers",
+    "kep-keps-sig-storage-1979-object-storage-support::bucket-creation-annotation",
+    "kep-keps-sig-storage-1979-object-storage-support::automatically-mount-buckets-to-pods",
+    "kep-keps-sig-storage-1979-object-storage-support::bucketaccess-static-provisioning",
+    "kep-keps-sig-storage-1979-object-storage-support::handling-systems-that-cannot-support-multi-bucket-bucketacce"
+  ]
+}

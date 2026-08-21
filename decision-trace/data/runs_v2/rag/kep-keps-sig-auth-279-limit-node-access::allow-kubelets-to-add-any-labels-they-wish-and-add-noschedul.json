@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"Bounding Self-Labeling Kubelets\" in kubernetes/enhancements and I'm considering using \"Allow kubelets to add any labels they wish, and add NoSchedule taints if disallowed labels are added\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the approach **\"Allow kubelets to add any labels they wish, and add NoSchedule taints if disallowed labels are added\"** was considered as an alternative, but it was not adopted for the following reasons:\n\n* **Complexity:** To be robust, the approach would likely require an additional controller to automatically inspect labels and remove the `NoSchedule` taint, which was deemed overly complex.\n* **Lack of label context:** It was difficult to design a tainting scheme that preserved information about which specific labels caused the taint to be added.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET"
+  ]
+}

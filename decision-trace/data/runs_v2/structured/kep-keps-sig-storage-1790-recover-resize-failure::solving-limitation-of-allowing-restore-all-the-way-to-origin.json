@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"Recovery from volume expansion failure\" in kubernetes/enhancements and I'm considering using \"Solving limitation of allowing restore all the way to original size\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, that approach was previously considered for the \"Recovery from volume expansion failure\" design.\n\nIt was not adopted because it remained an accepted limitation of the proposal, which only permits resizing to values strictly higher than the previously registered capacity.\n\n**Evidence:** \n* `keps/sig-storage/1790-recover-resize-failure/README.md`",
+  "retrieved": [
+    "kep-keps-sig-storage-1790-recover-resize-failure::solving-limitation-of-allowing-restore-all-the-way-to-origin",
+    "kep-keps-sig-storage-1790-recover-resize-failure::allow-admins-to-manually-fix-pvcs-which-are-stuck-in-resizin",
+    "kubernetes-kubernetes-revert-127300",
+    "kep-keps-sig-node-5593-configure-the-max-crashloopbackoff-delay::on-success-and-the-10-minute-recovery-threshold",
+    "kubernetes-kubernetes-revert-140448"
+  ]
+}

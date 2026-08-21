@@ -1,0 +1,11 @@
+{
+  "query": "I'm working in kubernetes/kubernetes and I'm planning to reintroduce a change along these lines: \"Extend PostFilterResult with a list of victim Pods\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
+  "response": "Yes, this exact change was previously introduced and then reverted:\n\n* **Prior Attempt & Revert:** Implemented in **PR #136254** and reverted in **PR #137662** (*Decision [kubernetes-kubernetes-revert-136254]*).\n* **Reason for Reversal:** The update was rolled back because delayed preemption was removed from the 1.36 roadmap, which made the additional architectural complexity introduced by the change pointless.",
+  "retrieved": [
+    "kubernetes-kubernetes-revert-136254",
+    "kubernetes-kubernetes-revert-127300",
+    "kubernetes-kubernetes-revert-140448",
+    "kubernetes-kubernetes-revert-126599",
+    "kubernetes-kubernetes-revert-306"
+  ]
+}

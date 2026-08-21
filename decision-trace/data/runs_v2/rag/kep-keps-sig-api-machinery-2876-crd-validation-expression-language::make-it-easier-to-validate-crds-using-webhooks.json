@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-2876: CRD Validation Expression Language\" in kubernetes/enhancements and I'm considering using \"Make it easier to validate CRDs using webhooks\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the approach **\"Make it easier to validate CRDs using webhooks\"** was considered, but it was not adopted for the following reasons:\n\n- **Developer complexity and overhead:** While the community has explored this (e.g., using Rego, Expr, or WebAssembly) and tools like Kubebuilder can automatically create and manage webhooks to run validation and defaulting code (referencing `https://book.kubebuilder.io/cronjob-tutorial/webhook-implementation.html`), exploring this ecosystem and investing in a larger framework is a time-consuming way to solve simple validation needs. Direct access to an expression language within the CRD is far simpler.\n- **Cluster operator overhead:** Cluster operators benefit from installing the fewest webhooks possible.\n- **Independence and version skew issues:** Validation rules coded into webhooks must be registered, upgraded, and rolled back independently of the CRD, leading to potential version skew issues. In contrast, having rules contained directly within the CRD object definition makes CRDs self-contained and easier to author and introspect.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET"
+  ]
+}

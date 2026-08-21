@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-3488: CEL for Admission Control\" in kubernetes/enhancements and I'm considering using \"`/matchRules` subresource\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the **`/matchRules` subresource** approach was considered for **KEP-3488: CEL for Admission Control**, but it was not adopted.\n\n### Why it was not used:\nSubresources did not align with the desired goal and would have introduced substantial engineering and maintenance/upkeep overhead, particularly concerning Custom Resource Definitions (CRDs).\n\n### Evidence:\n* `keps/sig-api-machinery/3488-cel-admission-control/README.md`",
+  "retrieved": [
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::matchrules-subresource",
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::duck-typed-crds",
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::policyconfiguration-kind-with-config-embedded",
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::generate-crds",
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::openapiv3-ref-in-crds"
+  ]
+}

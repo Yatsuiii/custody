@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-5681: Conditional Authorization\" in kubernetes/enhancements and I'm considering using \"Do nothing, force implementers to implement all of this out of tree\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the alternative **\"Do nothing, force implementers to implement all of this out of tree\"** was considered in `keps/sig-auth/5681-conditional-authorization/README.md` and was not adopted due to several drawbacks:\n\n* **Unsafe and confusing authorization handling:** Authorizers would have to fold a conditional allow into a concrete `Allow` in authorization responses. This could easily be misunderstood\u2014for instance, composite authorization of `update` requests turning into `create` requests would not respect conditions, leading to unsafe and unexpected behavior.\n* **Limitations on Constrained Impersonation:** Constrained Impersonation could not be made more expressive.\n* **Webhook reliability issues:** Cluster administrators would be required to install a validating webhook that can never be deleted (which standard admission webhooks can).\n* **Poor visibility and discoverability:** Users would not be able to see their conditions in `SelfSAR`, making features like conditional read policies practically impossible to discover.\n* **Performance/Webhook overhead:** Two webhooks would always be required for every request, even if the condition could be expressed in CEL (which theoretically would not need a webhook).\n* **Non-atomic policy evaluation:** Policy evaluation across the authorization and admission phases would not be atomic, requiring a full re-evaluation of all policies twice.\n* **Limited multi-authorizer support:** Only one conditional authorizer could effectively be supported, rather than multiple within a framework.\n* **Implementation risks:** Without a clear framework and reference implementations, there is a higher risk of incorrect or incompatible implementations.\n* **Lack of internal utility:** Kubernetes itself could not use the capability, despite it being useful.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET"
+  ]
+}

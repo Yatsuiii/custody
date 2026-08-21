@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-5681: Conditional Authorization\" in kubernetes/enhancements and I'm considering using \"Only one ConditionSet exposed as part of SubjectAccessReview status\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, exposing only one `ConditionSet` as part of the `SubjectAccessReview` status was considered in **`keps/sig-auth/5681-conditional-authorization/README.md`** under the section **\"Only one ConditionSet exposed as part of SubjectAccessReview status\"**.\n\nIt was not adopted because:\n- If only a single condition set is exposed, it might make it impossible for a user to understand all the conditions they are subject to for a given request via a `(Self/Local/Standard) SubjectAccessReview`.\n- Specifically, the first conditional response encountered might merely be a \"deny dangerous operations\"-type conditional response. \n- Therefore, the user needs to see all conditional allows and denies until an unconditional response is reached.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET"
+  ]
+}

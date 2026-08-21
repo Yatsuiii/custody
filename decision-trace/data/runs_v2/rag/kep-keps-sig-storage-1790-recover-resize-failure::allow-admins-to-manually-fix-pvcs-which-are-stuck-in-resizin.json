@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"Recovery from volume expansion failure\" in kubernetes/enhancements and I'm considering using \"Allow admins to manually fix PVCs which are stuck in resizing condition\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the approach **\"Allow admins to manually fix PVCs which are stuck in resizing condition\"** was considered as an alternative, but it was not adopted due to the following problems:\n\n1. **Impact on dependent workflows:** Workflows that rely on restarting pods after volume resizing succeeds cannot complete if resizing remains forever stuck (which is the case with the design of the StatefulSet expansion KEP).\n2. **Potential for unusable PVCs:** If a storage type only supports node expansion and the expansion keeps failing, the PVC could become completely unusable and prevent its usage.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET"
+  ]
+}

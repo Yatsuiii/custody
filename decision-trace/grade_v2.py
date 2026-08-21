@@ -190,6 +190,129 @@ def case_table(cases, scores) -> list[str]:
     return lines
 
 
+METHODOLOGY = """
+## What changed from v0, and why
+
+| | v0 | v2 |
+|---|---|---|
+| KEP unit | one KEP | one **named alternative** |
+| KEP question | "what alternatives were considered here, and why weren't they used?" | "was *X* considered, and if so why wasn't it adopted?" |
+| KEP target | one sentence picked by a cue regex | the alternative's own contiguous disposition span |
+| Section boundary | next `##`, from an unanchored match | next heading of the same or shallower level, fence-aware |
+| Structured record | one free-form card, "up to 6" points | one first-class object per alternative, uncapped |
+| `revert_pair` arm | 18 cases | **identical** 18 cases, same query, same target, judged by v0's `judge_one` |
+| Retrieval | `TOP_K=5` over 91 points | `TOP_K=5` over the alternative-card pool |
+| Thresholds | structured >= 85%, RAG <= 70% | **unchanged**, imported from `grade.py` |
+
+v2 is a different task from v0. It is not a corrected score for the same
+question, and the two headline numbers should not be differenced. What is
+comparable is the mechanism: v0 asked a set question and graded one
+element, v2 asks about the element it grades.
+
+## The two confounds that make 99% indefensible
+
+Read this before quoting the headline number. The structured arm's 99% is
+close to a tautology of how v2 was constructed, and it is reported here
+only because the result is the result.
+
+**Confound 1 — the card index is bijective with the test set.** v2 built
+exactly one card per case, 83 for 83, and each card's `reason` was
+distilled from precisely the span the judge grades against. The developer
+question contains that card's `alternative_name` verbatim, so retrieval is
+an exact-key lookup: measured, the case's own card is in the top 5 for
+**83 of 83** cases and at **rank 1 for 82 of 83**. The only step between
+the graded span and the answer is one paraphrase whose explicit purpose is
+to preserve meaning. This is structurally the same family of defect as the
+confound `docs/FALSIFIER_CONFOUND_HANDOFF.md` fixed in v0 — not identical,
+since a paraphrase and a retrieval barrier sit in between, but it is
+supervision leaking from the test-set decomposition into the memory being
+tested. A real ingestion pipeline is not handed the list of questions.
+
+**Confound 2 — half the KEP questions are answerable without any memory.**
+`code_only` has no retrieval, no history and no cards, and still gets
+`rationale_match` on **32 of 65** KEP cases. Naming an alternative often
+implies its own weakness to any competent model ("why not Rego?" invites
+"no static typing"). So in v2 `rationale_match` is a weak discriminator
+and `citation_correct` carries most of the signal, which is the metric the
+threats section below already flags as satisfied by construction for the
+structured arm.
+
+Together these mean the 99/55 gap overstates what structured memory
+contributes. The honest reading of v2 is narrower: **given a correctly
+extracted per-alternative record, answering "why wasn't X used?" is close
+to solved, and the difficulty lives in the extraction, which v2 did not
+test.** `BENCHMARK_V2_SPEC.md` Amendment 2 specifies the corrected run
+that does test it.
+
+## Threats to validity
+
+- **Citation-correctness is satisfied by construction for the structured
+  arm**, exactly as in v0: each retrieved card carries its own
+  `Evidence:` line, so answering from a card at all tends to cite
+  correctly. This measures whether retrieval found the right card, not
+  independent recall of the citation.
+- **Cases are clustered, not independent.** 65 of 83 cases come from 15
+  KEPs, so several cases share one document and one card-building pass.
+  The per-decision mean in the headline table is the conservative
+  statistic; the per-case number and its Wilson interval assume more
+  independence than the design has.
+- **The benchmark is more KEP-weighted than v0** (78% vs 51%). Since the
+  KEP arm is the harder one, this makes the pooled number harder to clear,
+  not easier.
+- **6 of 65 KEP cases have evidence text that also appears in a decoy**
+  (KEP-5593 inherits its Alternatives section from KEP-4603, a legitimate
+  member of the decoy pool). This can only help the RAG arm.
+- **2 of 65 alternative names are topic headings rather than option names**
+  (`Scopes`, `On Success and the 10 minute recovery threshold`). Disclosed
+  rather than removed, since removing them after the fact would be
+  case-level selection.
+- **46 of 65 KEP targets are whole-body evidence**, not a labelled
+  Why-Rejected part, so for those the judge is matching against everything
+  the document says about the alternative, including description.
+- **One revert case is knowingly mis-targeted.** `elastic-…-147071`'s
+  target sentence is a symptom rather than the cause. It was left exactly
+  as v0 had it, because repairing the single revert row that failed would
+  be rewriting a failed ground truth.
+- **The judge is an LLM.** A v0 variance probe over 9 failures flipped 1,
+  so expect roughly ten percent of borderline rows to be unstable.
+"""
+
+
+def failure_diagnostics(cases: list[dict], scores: dict) -> list[str]:
+    """Where the surviving structured failures actually break.
+
+    For a v2 case the card that answers it is identifiable by case_id, so
+    'was the right card even in the prompt?' is a fact rather than an
+    inference. That splits the remaining gap into retrieval (the card was
+    not retrieved), representation (it was retrieved but says the wrong
+    thing), and citation-only misses, which is what Phase 7 needs to pick
+    one intervention instead of guessing."""
+    retrieved_miss, in_prompt_miss, citation_only = [], [], []
+    for c in cases:
+        s = scores.get(f"structured::{c['case_id']}")
+        if s is None or (s.get("citation_correct") and s.get("rationale_match")):
+            continue
+        run_path = RUNS_DIR / "structured" / f"{c['case_id']}.json"
+        got = json.loads(run_path.read_text()).get("retrieved", []) \
+            if run_path.exists() else []
+        if not s.get("rationale_match"):
+            (in_prompt_miss if c["case_id"] in got else retrieved_miss).append(c)
+        else:
+            citation_only.append(c)
+    lines = ["\n## Structured failure diagnostics\n",
+             f"- own card **not** retrieved into the prompt: "
+             f"**{len(retrieved_miss)}** (retrieval)",
+             f"- own card retrieved but the answer still missed the reason: "
+             f"**{len(in_prompt_miss)}** (representation or generation)",
+             f"- rationale right, citation wrong: **{len(citation_only)}**\n"]
+    for label, rows in (("not retrieved", retrieved_miss),
+                        ("retrieved but missed", in_prompt_miss),
+                        ("citation-only miss", citation_only)):
+        for c in rows:
+            lines.append(f"  - _{label}_: `{c['case_id'][:76]}`")
+    return lines
+
+
 def main() -> None:
     cases = load_cases()
     scores = grade_all(cases)
@@ -213,12 +336,14 @@ def main() -> None:
     lines += head
     lines.append("\n## Per-source breakdown\n")
     lines += source_table(cases, scores)
+    lines.append(METHODOLOGY)
     lines.append(f"\nAPI failures recorded separately (never scored as "
                  f"correct): {len(errors)}\n")
     lines.append("\n## Per-case detail\n")
     lines += case_table(cases, scores)
     lines.append("\n(Capital = correct, lowercase = incorrect, "
                  "H = hallucinated a wrong citation.)\n")
+    lines += failure_diagnostics(cases, scores)
 
     verdict, reason = verdict_for(rates["rag"], rates["structured"], len(cases))
     lines.append(f"\n## Verdict: {verdict}\n\n{reason}\n")

@@ -1,0 +1,11 @@
+{
+  "query": "I'm working in kubernetes/kubernetes and I'm planning to reintroduce a change along these lines: \"fix: preserve options after remount for bind mounting\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
+  "response": "Yes, a change with this exact title was previously attempted and subsequently reverted.\n\n* **Prior Attempt & Reversion:** The change was originally introduced in **PR #126599** and reverted in **PR #127899** (*Revert 126599: fix: preserve options after remount for bind mounting*).\n* **Reason for Reversal:** The pull request was rolled back because it introduced regressions that caused automated GCE COS test suites to fail. \n\n**Evidence:** PR #126599 / revert PR #127899",
+  "retrieved": [
+    "kubernetes-kubernetes-revert-126599",
+    "kubernetes-kubernetes-revert-127300",
+    "kubernetes-kubernetes-revert-126794",
+    "kubernetes-kubernetes-revert-140448",
+    "kep-keps-sig-storage-1979-object-storage-support::automatically-mount-buckets-to-pods"
+  ]
+}

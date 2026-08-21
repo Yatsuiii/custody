@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-2876: CRD Validation Expression Language\" in kubernetes/enhancements and I'm considering using \"Rego\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the approach of using **Rego** was evaluated and considered in **KEP-2876: CRD Validation Expression Language** (`keps/sig-api-machinery/2876-crd-validation-expression-language/README.md`).\n\n### Reasons Rego Was Not Adopted:\n\n1. **Lack of sandbox constraints:** Unlike CEL, Rego does not offer the same sandbox constraints needed to run safely and lightweightly directly inside the `kube-apiserver`.\n2. **Lack of type checking:** Rego does not type check code. In contrast, CEL supports pre-parsing and type-checking of expressions, which allows syntax and type errors to be caught at CRD registration time.\n3. **Language complexity/scope:** While Rego's syntax is more extensive, allows larger multi-line programs, and includes a package and module system, CEL was chosen because it is sufficiently lightweight, safe, and has a straightforward, unsurprising grammar. \n4. **Ecosystem & Webhook complexity:** Approaches using Rego in the ecosystem generally rely on webhooks, whereas the goal of this KEP is to provide a simpler, inline expression language directly in CRDs to eliminate the development and operational complexity of webhooks.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET"
+  ]
+}

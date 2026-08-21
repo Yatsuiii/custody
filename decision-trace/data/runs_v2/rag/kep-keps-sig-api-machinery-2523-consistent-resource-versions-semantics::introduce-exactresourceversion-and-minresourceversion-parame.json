@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"Consistent Resource Version Semantics for List\" in kubernetes/enhancements and I'm considering using \"Introduce ExactResourceVersion and MinResourceVersion parameters\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, that approach was considered in the KEP document `keps/sig-api-machinery/2523-consistent-resource-versions-semantics/README.md` under the alternative **\"Introduce ExactResourceVersion and MinResourceVersion parameters\"**.\n\nIt was not adopted due to the following disadvantages:\n\n1. **Increased complexity/confusion:** Because `ResourceVersion` would be deprecated but never actually removed, users would have three options to understand in practice instead of two.\n2. **Poor readability for backward compatibility:** For backward compatibility with older `kube-apiserver` versions that ignore the new parameters, clients would still need to include `ResourceVersion` alongside the new parameters. This would result in cumbersome queries such as `?ResourceVersion=3847&MinResourceVersion=3847`, which is less readable than the chosen alternative (`?ResourceVersion=3847&ResourceVersionMatch=NotOlderThan`).",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET"
+  ]
+}

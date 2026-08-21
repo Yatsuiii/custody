@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-6122: Configurable Scaling Delay with Pod Resource Exposure\" in kubernetes/enhancements and I'm considering using \"Pod-Level Grace Period (Opt-In/Opt-Out Mechanism)\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the \"Pod-Level Grace Period (Opt-In/Opt-Out Mechanism)\" was considered for KEP-6122 (in `keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md`). \n\nProposed by @natasha41575, the idea was to introduce a `scaleDownGracePeriodSeconds` field at the Pod spec level (similar to `terminationGracePeriodSeconds`) to enable an opt-in, per-pod grace period decoupled from specific resource managers.\n\nIt was not adopted for the initial Alpha implementation and was deferred to Alpha2/Beta for the following reasons:\n* **API Changes and Consensus**: It requires changes to the Pod API spec and broader SIG Node consensus.\n* **Faster Iteration in Alpha**: The node-level `scale-delay-time` configuration was chosen for Alpha instead because it enables faster iteration and feedback collection without requiring API modifications. \n* It remains a candidate under evaluation for Beta as a more granular opt-in/opt-out mechanism.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET"
+  ]
+}

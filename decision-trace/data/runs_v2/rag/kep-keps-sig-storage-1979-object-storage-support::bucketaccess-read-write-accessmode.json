@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-1979: Object Storage Support\" in kubernetes/enhancements and I'm considering using \"BucketAccess Read/Write AccessMode\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, this approach was considered in **KEP-1979: Object Storage Support** (`keps/sig-storage/1979-object-storage-support/README.md`) under the section **\"BucketAccess Read/Write AccessMode\"**.\n\nCOSI evaluated three options for implementing read/write access mode controls:\n\n1. **A single read/write permission applying to all data and metadata access:** \n   - *Reason against / Con:* Administrators might want to allow only data read/write for most users without giving them permissions over behavior-modifying metadata.\n2. **A single read/write permission applying only to data access:** \n   - *Reason against / Con:* Drivers would each have to individually implement any desired metadata read/write permissions as `Bucket(Access)Class` parameters.\n3. **Separating permissions into data, object metadata, and bucket metadata:** \n   - *Con:* More complicated for users and COSI maintainers.\n\n### Outcome / Decision\nAfter `v1alpha2` review discussions, the design chose **Option 3** (defining separate `ObjectData`, `ObjectMetadata`, and `BucketMetadata` fields in `BucketAccessModes`), with COSI maintainers observing feedback on this implementation.",
+  "retrieved": [
+    "TARGET",
+    "keps/sig-storage/2485-read-write-once-pod-pv-access-mode/README.md",
+    "TARGET",
+    "keps/sig-storage/2485-read-write-once-pod-pv-access-mode/README.md",
+    "TARGET"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-6122: Configurable Scaling Delay with Pod Resource Exposure\" in kubernetes/enhancements and I'm considering using \"CPU Release Based on Real-Time Usage\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the **\"CPU Release Based on Real-Time Usage\"** approach was considered as an alternative under `keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md`. \n\n### Description of the Approach:\nMonitor CPU utilization inside the container and release the least utilized or idle cores during scale-down.\n\n### Why It Was Rejected:\nThe approach was briefly considered but rejected for the following reasons:\n1. **Deviates from Kubernetes' deterministic model**: It deviates from Kubernetes' deterministic resource management model.\n2. **Unreliable due to fluctuations**: CPU usage fluctuates rapidly, making it an unreliable metric for infrastructure decisions.\n3. **Performance risks**: It risks performance degradation for workloads that depend on specific cache topologies (such as NUMA or L3 caches).",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET"
+  ]
+}

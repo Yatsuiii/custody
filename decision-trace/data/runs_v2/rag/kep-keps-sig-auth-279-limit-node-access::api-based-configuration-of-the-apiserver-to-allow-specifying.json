@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"Bounding Self-Labeling Kubelets\" in kubernetes/enhancements and I'm considering using \"API-based configuration of the apiserver to allow specifying allowed labels\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the approach **\"API-based configuration of the apiserver to allow specifying allowed labels\"** was considered as an alternative, but it was not adopted for the following reasons:\n\n* **Simplicity and consistency:** A fixed set of labels and label prefixes is simpler to reason about and ensures every cluster behaves consistently.\n* **Security:** An API object that controls the allowed labels creates a potential escalation path for a compromised node.",
+  "retrieved": [
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET",
+    "TARGET"
+  ]
+}
