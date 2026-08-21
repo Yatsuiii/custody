@@ -120,6 +120,16 @@ memory = CustodyMemoryBank(downstream=VertexAiMemoryBankService(...))
 
 That is the whole integration.
 
+For a deployed fleet that needs one shared or durable provenance graph, pass the
+existing graph port explicitly without changing the ADK-facing contract:
+
+```python
+memory = CustodyMemoryBank(
+    downstream=VertexAiMemoryBankService(...),
+    provenance_graph=shared_or_firestore_graph,
+)
+```
+
 ## What it costs a compromised tool
 
 A tool your fleet trusted turns out to be compromised. Without a derivation
@@ -219,10 +229,11 @@ git clone https://github.com/Yatsuiii/custody.git && cd custody
 python3.12 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 
-make check     # ruff, then 376 tests. On a genuinely fresh clone with no
+make check     # ruff, then 377 tests. On a genuinely fresh clone with no
                # live proofs run yet, expect "OK (skipped=1)" — one test
                # honestly skips re-judging proof-out/ artifacts that don't
                # exist yet, rather than faking a pass. 0 failures either way.
+make hardening-check  # check + deterministic pre-submission incident/demo loop
 make demo      # the poisoning scenario, with Custody and without
 make cost      # what a compromised tool destroys, with the graph and without
 make revoke    # retroactive revocation across departments, and a replay

@@ -124,6 +124,11 @@ class SessionWriteFailsClosedThroughTheGuardedService(unittest.IsolatedAsyncioTe
         with self.assertRaises(ClientError):
             await service.add_session_to_memory(session)
 
+        # The downstream failed before the memory became durable. The
+        # provenance graph must not advertise a record that cannot be
+        # retrieved or revoked from the memory substrate.
+        self.assertEqual(len(service.graph), 0)
+
 
 class RevokeFailsClosedOnAnUnreachableMemoryBank(unittest.IsolatedAsyncioTestCase):
     async def test_a_revoke_that_cannot_reach_memory_bank_does_not_report_success(self):

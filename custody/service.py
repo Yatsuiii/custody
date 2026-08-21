@@ -220,7 +220,6 @@ class CustodyMemoryService:
         for item in split.quarantined:
             self.quarantine.hold(item)
         self.splits.append(split)
-        self.graph.extend(a.record for a in split.trusted)
 
         writer = getattr(self.downstream, "write_record", None)
         if writer is not None:
@@ -242,6 +241,13 @@ class CustodyMemoryService:
                     events=split.admitted_events,
                 )
             )
+
+        # Publish only after the downstream has accepted every trusted record.
+        # A failed write must not leave a resolvable graph record for memory
+        # that never landed. RecordWriter implementations are expected to make
+        # their per-record writes idempotent, so a retry can complete the
+        # downstream write before this publication happens.
+        self.graph.extend(a.record for a in split.trusted)
         return split
 
     async def search_memory(self, *, app_name: str, user_id: str, query: str):

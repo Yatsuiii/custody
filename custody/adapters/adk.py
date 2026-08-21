@@ -42,6 +42,10 @@ class CustodyMemoryBank(BaseMemoryService):
     downstream: BaseMemoryService
     quarantine: QuarantineStore = field(default_factory=InMemoryQuarantine)
     tools: ToolTrust = field(default_factory=ToolTrust)
+    #: Optional shared/durable provenance state. The default remains a local
+    #: graph for offline use; a deployed fleet can inject FirestoreCustodyGraph
+    #: (or another structural equivalent) without changing the ADK port.
+    provenance_graph: CustodyGraph = field(default_factory=CustodyGraph)
     _guard: CustodyMemoryService = field(init=False)
 
     def __post_init__(self) -> None:
@@ -49,6 +53,7 @@ class CustodyMemoryBank(BaseMemoryService):
             downstream=_SessionRebuilding(self.downstream),
             quarantine=self.quarantine,
             tools=self.tools,
+            graph=self.provenance_graph,
         )
 
     async def add_session_to_memory(self, session: Session) -> None:
