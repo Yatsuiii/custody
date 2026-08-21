@@ -11,9 +11,10 @@ blocked by stale or missing external evidence.
 ## Current freeze result — 2026-08-21
 
 Verdict: **not yet frozen for recording**. The integrated code and all required
-live Fleet proofs are green. One manual browser-console smoke check remains,
-and G5 remains honestly BLOCKED because its real elapsed-time requirement is
-not satisfied.
+live Fleet proofs are green. The local evidence page has been refreshed from
+the fresh artifacts, but the public deployment needs an explicit production
+redeploy before it is current. Browser-console smoke and G5's real elapsed-
+time requirement also remain open.
 
 ### Integration
 
@@ -49,30 +50,35 @@ not satisfied.
 
 ### Deployment
 
-- `make verify-deploy`: PASS, 4/4 checks at
-  `https://custody-incident-cave2.vercel.app`.
-- `/`, `/incident.html`, and `/architecture.html` returned 200 and matched
-  the local build byte-for-byte; `/.env.local` returned 404.
+- `make gui` refreshed the local incident/evidence pages from the fresh
+  `proof-out/` artifacts. Fleet N=25 and F1 now show their 2026-08-21 proof
+  IDs; other unrefreshed proof rows correctly render as stale.
+- `make verify-deploy`: **BLOCKED pending redeploy** — 3/4 checks pass at
+  `https://custody-incident-cave2.vercel.app`; root, incident, and
+  `/.env.local` pass, while public `architecture.html` is the previous build
+  (27270 bytes served versus 27242 locally).
 - `/fleet.html` and `/timeline.html` return 200, but remain static visual
   pages and are not current live-evidence surfaces.
-- Browser-console execution was not available in this environment; it remains
-  a manual pre-recording check. No redeploy was performed.
+- No redeploy was performed: the documented production command is a public
+  write requiring explicit approval. Browser-console execution was not
+  available in this environment and remains a manual pre-recording check.
 
 ### Cold judge dry run
 
 - P0: none found.
-- P1: manual browser-console/UI smoke is still required; G5 remains blocked
-  and must be stated, never presented as passed.
+- P1: production redeploy of the refreshed evidence page and manual
+  browser-console/UI smoke are still required; G5 remains blocked and must be
+  stated, never presented as passed.
 - P2: static fleet/timeline pages should remain visual-only; no code change is
-  justified before recording.
+  justified beyond the narrow evidence refresh already made.
 
 Weighted judge score: **86/100** — Innovation & Operational Utility 36/40,
 Architectural Discipline & Tech Stack 26/30, Demo & Production Readiness
 24/30. Supporting reads: Fleet legitimacy 9/10, multi-agent depth 9/10,
 security/recovery differentiation 10/10, Google stack credibility 8/10,
-memorability 9/10. The single highest-leverage action is the manual browser
-smoke check followed immediately by an unedited recording of the incident
-sequence below.
+memorability 9/10. The single highest-leverage action is to approve the
+documented production redeploy, rerun `make verify-deploy`, perform the manual
+browser smoke check, and then record the incident sequence below.
 
 ### Exact recording sequence
 
@@ -93,7 +99,8 @@ sequence below.
    surgically undo the damage without resetting everything.” State that G5 is
    still BLOCKED on real elapsed time.
 
-READY TO RECORD: **NO — pending the manual browser-console/UI smoke check.**
+READY TO RECORD: **NO — pending production redeploy and manual
+browser-console/UI smoke.**
 
 ## Historical pre-refresh baseline
 
