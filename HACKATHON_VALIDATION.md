@@ -8,7 +8,94 @@ This is the post-hardening validation artifact. It records what is proven
 offline, what is supported by a captured live artifact, and what is currently
 blocked by stale or missing external evidence.
 
-## Result
+## Current freeze result — 2026-08-21
+
+Verdict: **not yet frozen for recording**. The integrated code and all required
+live Fleet proofs are green. One manual browser-console smoke check remains,
+and G5 remains honestly BLOCKED because its real elapsed-time requirement is
+not satisfied.
+
+### Integration
+
+- `origin/feat/memory-provenance` fast-forwarded from `2bb9312` to
+  `b05a14d2dbe915f884932671ccc06d17195652ac`.
+- `origin/hardening/fleet-track-pre-submission` remains at the same commit.
+- No generated `proof-out/` artifacts were committed. The unrelated dirty web,
+  research, and submission files remain outside this hardening diff.
+
+### Offline verification
+
+| Check | Result |
+| --- | --- |
+| `make check` | PASS — ruff clean; 377 tests |
+| `make hardening-check` | PASS |
+| `make incident` | PASS — 32 affected; 575 unrelated memories survive |
+| `make cost` | PASS — 600 records; exact revocation destroys 40 and preserves 560 |
+| `make demo` | PASS — governed export refused; 2/3 events withheld |
+| `make revoke` | PASS — 4 descendants removed; replay removes 0 further |
+| `make isolate` | PASS — cross-department vouches refused |
+| `git diff --check` | PASS |
+
+### Fresh live evidence
+
+| Proof | Fresh result |
+| --- | --- |
+| G1 | PASS — captured `2026-08-21T14:42:40.505264Z`, proof `6ce6b42b843c4cab99566ac70cc0c036`; Cloud Run, Gemini 3.5/Vertex, ADK, and Memory Bank verified |
+| N=25 fleet | PASS — captured `2026-08-21T14:46:28.058572Z`, proof `991d0617ec3b48dc8625da82af1e5ee7`; 25 named workers, sales/finance exact revocation, 23 survivor departments |
+| F1 chain | PASS — captured `2026-08-21T14:47:28.231330Z`, proof `a1a80717b315451dae99d4c27d69d27d`; sales → support → finance, six exact descendants removed, engineering survives |
+| `make fleet-gates` | PASS — 35/35, including independent live rereads |
+| `make chain-gates` | PASS — 21/21, including independent live rereads |
+| `make gates` | 4 PASS, 0 FAIL, 1 BLOCKED; G5 is 1/4 groups and blocked on real elapsed time |
+
+### Deployment
+
+- `make verify-deploy`: PASS, 4/4 checks at
+  `https://custody-incident-cave2.vercel.app`.
+- `/`, `/incident.html`, and `/architecture.html` returned 200 and matched
+  the local build byte-for-byte; `/.env.local` returned 404.
+- `/fleet.html` and `/timeline.html` return 200, but remain static visual
+  pages and are not current live-evidence surfaces.
+- Browser-console execution was not available in this environment; it remains
+  a manual pre-recording check. No redeploy was performed.
+
+### Cold judge dry run
+
+- P0: none found.
+- P1: manual browser-console/UI smoke is still required; G5 remains blocked
+  and must be stated, never presented as passed.
+- P2: static fleet/timeline pages should remain visual-only; no code change is
+  justified before recording.
+
+Weighted judge score: **86/100** — Innovation & Operational Utility 36/40,
+Architectural Discipline & Tech Stack 26/30, Demo & Production Readiness
+24/30. Supporting reads: Fleet legitimacy 9/10, multi-agent depth 9/10,
+security/recovery differentiation 10/10, Google stack credibility 8/10,
+memorability 9/10. The single highest-leverage action is the manual browser
+smoke check followed immediately by an unedited recording of the incident
+sequence below.
+
+### Exact recording sequence
+
+1. Open the Dependency Cartography page and show the heterogeneous fleet and
+   trusted `vendor_portal` source.
+2. Show the machine-readable sales → support → finance lineage, including the
+   clean engineering branch.
+3. Announce delayed discovery of compromise and compute the blast radius:
+   32 affected, 575 unrelated memories preserved.
+4. Revoke exact descendants; show the six-hop chain/affected state disappear
+   while unrelated state remains.
+5. Quickly show `make demo` refusing an export citing untrusted content and
+   replay/idempotency removing nothing further.
+6. Show one fresh live evidence row and the Google stack: ADK, Gemini/Vertex,
+   Memory Bank, Firestore, and the control plane. State the shared
+   process/graph claim boundary honestly.
+7. Say: “Custody can trace a poisoned memory through an AI-agent fleet and
+   surgically undo the damage without resetting everything.” State that G5 is
+   still BLOCKED on real elapsed time.
+
+READY TO RECORD: **NO — pending the manual browser-console/UI smoke check.**
+
+## Historical pre-refresh baseline
 
 Verdict: **needs fresh live proof and a recorded demo before submission; the
 offline implementation is green and the Fleet thesis is stronger.**
