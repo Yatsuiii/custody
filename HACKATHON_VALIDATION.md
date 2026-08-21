@@ -18,9 +18,10 @@ time requirement also remain open.
 
 ### Integration
 
-- `origin/feat/memory-provenance` fast-forwarded from `2bb9312` to
-  `b05a14d2dbe915f884932671ccc06d17195652ac`.
-- `origin/hardening/fleet-track-pre-submission` remains at the same commit.
+- Hardening implementation commit: `b05a14d2dbe915f884932671ccc06d17195652ac`.
+- Current freeze/report commit: `ce281b64b1de50f598ec0d3f64c49fabb711f471`.
+- Both `origin/feat/memory-provenance` and
+  `origin/hardening/fleet-track-pre-submission` point to `ce281b6`.
 - No generated `proof-out/` artifacts were committed. The unrelated dirty web,
   research, and submission files remain outside this hardening diff.
 
