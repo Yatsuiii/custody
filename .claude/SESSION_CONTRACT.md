@@ -4678,3 +4678,33 @@ status confirms only web/fleet.html, web/timeline.html,
 .claude/SESSION_CONTRACT.md, and submission-video/* changed.
 
 Status: complete
+
+## Freeze pass: commit, push, deploy, public smoke (opened 2026-08-21, same session)
+
+Objective: carry the completed Fleet/Timeline UI work (previous section)
+through commit -> push -> deploy -> public verification -> freeze, per
+explicit user instruction this turn. Extends the prior section's Allowed
+files to include `HACKATHON_VALIDATION.md` (the freeze artifact) and the
+deploy action itself (`cd web && vercel deploy --prod --yes`, the
+project's own documented path, `SUBMISSION_HANDOFF.md`'s "ask before
+running it" satisfied by this turn's explicit instruction).
+
+Branch: hardening/fleet-track-pre-submission
+Parent: e6968ef
+
+Non-goals: identical to the prior section — no new features, no backend/
+proof/gate changes, no G5 change.
+
+**Closed 2026-08-21.** Committed `e6968ef` (web/fleet.html,
+web/timeline.html, the pre-existing nav-link diffs in
+web/architecture.html and web/incident.html, .claude/SESSION_CONTRACT.md).
+Pushed to origin. Deployed via `vercel deploy --prod --yes`
+(`dpl_5bX9ewoXimbCHvw3HEnAREX5E5dW`); both public aliases
+(custody-incident.vercel.app, custody-incident-cave2.vercel.app) updated.
+`make verify-deploy` 4/4 PASS; fleet.html/timeline.html independently
+confirmed byte-identical live vs local via curl+cmp (not covered by that
+script's fixed route list). Full public browser smoke test passed with
+zero console errors on every page; G5 still correctly BLOCKED.
+HACKATHON_VALIDATION.md updated with this pass's evidence.
+
+Status: complete

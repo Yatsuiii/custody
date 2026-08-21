@@ -121,6 +121,51 @@ recorded above. No P0 or P1 defects found. Zero code changes made.
 READY TO RECORD: **YES.** Freeze feature development. Record the
 submission. State G5 as BLOCKED on real elapsed time in the recording.
 
+### Fleet/Timeline judge-visualization pass — 2026-08-21
+
+UI-only addition on top of the frozen build, requested to reduce repeated
+Dependency Cartography cuts in the demo video. No Python, backend, proof,
+or gate logic touched.
+
+- `web/fleet.html`: added a `Simulate compromise` / `Restore trusted
+  state` toggle over the page's existing `DEPARTMENT_TOOLS`/
+  `SHARED_DEPTS` data (the same fixture `make fleet-gates` verified
+  35/35). `web/timeline.html`: added a 6-step incident replay (Day 1 →
+  sales → support → Day 16 discovered → blast radius computed → revoked)
+  over the same four lineage hops `incident.html` already embeds
+  verbatim from `scripts/incident.py`.
+- Local QA: both pages opened in a real browser (`python3 -m
+  http.server`), zero console errors, 4 toggle cycles on `fleet.html` and
+  a full forward/backward/overshoot walk of `timeline.html`'s 6 steps —
+  no state leak, no layout overflow at 1920×1080, stat-strip numbers
+  (32 / 3-5 / 575) match `incident.html`'s own embedded data exactly.
+- `make check`: 377/377, unaffected (static HTML/JS only).
+  `git diff --check`: clean.
+- Committed `e6968ef` ("Improve Fleet incident visualization for
+  judging"): `web/fleet.html`, `web/timeline.html` (new), plus the
+  pre-existing single-line nav-link additions in `web/architecture.html`
+  and `web/incident.html` that make the two new pages reachable, and
+  `.claude/SESSION_CONTRACT.md`. Pushed to
+  `hardening/fleet-track-pre-submission`.
+- Redeployed via `cd web && vercel deploy --prod --yes`
+  (`dpl_5bX9ewoXimbCHvw3HEnAREX5E5dW`). `make verify-deploy`: 4/4 PASS.
+  `fleet.html` and `timeline.html` (not covered by that script's fixed
+  route list) independently confirmed byte-identical between the live
+  origin and the local build via direct `curl`+`cmp`. `/.env.local`
+  still 404.
+- Public browser smoke test against
+  `https://custody-incident-cave2.vercel.app`: Fleet Overview trusted →
+  Simulate compromise (2 affected red, 23 preserved green, live) →
+  Trust Lifecycle stepped Day 1 → propagation → Day 16 → blast radius →
+  revoked (live) → Dependency Cartography revoke click (32/3-5/575,
+  live) → Architecture & Evidence (G5 still correctly shown BLOCKED, no
+  claim upgraded). Console clean on every page. No P0/P1 found.
+- G5: unchanged, still honestly BLOCKED on real elapsed time. Not faked,
+  not hidden.
+
+READY TO RECORD: **YES**, unchanged. Freeze is still in effect; only the
+judge-facing visualization layer changed, publicly verified.
+
 ## Historical pre-refresh baseline
 
 Verdict: **needs fresh live proof and a recorded demo before submission; the
