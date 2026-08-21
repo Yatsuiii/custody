@@ -1,7 +1,7 @@
 # DecisionTrace Hackathon Validation
 
 Date: 2026-08-21
-Branch: `hardening/collaborative-pre-submission`
+Branch: `explore/decision-trace-v0` @ `b376cf0`
 Track: All Things Agentic — Collaborative
 
 ## Current architecture
@@ -36,7 +36,7 @@ Relevant implementation evidence:
 
 ## Collaboration test
 
-**Pass for the local hardening branch.** A judge can see four distinct
+**Pass on deployed revision `decision-trace-00008-j9s`.** A judge can see four distinct
 contributions to one answer:
 
 1. Evidence Scout reports which structured decision cards were discovered.
@@ -142,7 +142,7 @@ not a prompt wrapper whose value disappears when the model improves.
 
 ## Collaboration spectacle test
 
-**Pass locally; deployment proof remains.** The smallest safe visible sequence
+**Pass on the deployed build.** The smallest safe visible sequence
 is now:
 
 ```text
@@ -155,9 +155,10 @@ challenger confirms evidence, Gemini explains the approved history, and the
 UI can then persist a new `PROPOSED` reconsideration. The proposal changes
 organizational memory without falsely changing governing truth.
 
-The checked-in branch has not been redeployed to Cloud Run during this
-hardening pass. The existing live URL remains a separate prior revision until
-an authorized deployment and browser recording exercise is performed.
+The final browser run opened the live URL, asked the delayed-preemption
+question, expanded the trace, rendered all four worker names, submitted a real
+reconsideration, and showed `status: PROPOSED` while the governing card stayed
+`REVERTED`. The final public revision is `decision-trace-00008-j9s`.
 
 ## Judge-memory test
 
@@ -170,7 +171,7 @@ an authorized deployment and browser recording exercise is performed.
 Passed:
 
 - `CLOUDSDK_CONFIG=... .venv/bin/python -m pytest app/tests/ -v` — **53
-  passed in 538.96s**, including real Gemini generation/embedding, live
+  passed in 317.24s**, including real Gemini generation/embedding, live
   GitHub ingestion, and a real Firestore round trip.
 - `ruff check --no-cache .` — passed.
 - `python3 -m compileall -q app *.py` — passed.
@@ -190,18 +191,19 @@ Benchmark state deliberately not rerun:
 
 ## Demo Gate
 
-Verdict: **needs final deployment/recording work**
+Verdict: **pass for deployed proof; ready to record**
 
-Proof artifact: local Streamlit UI with the Agent collaboration trace,
-deterministic lifecycle explanation, evidence links, and existing Firestore
-persistence path.
+Proof artifact: deployed Streamlit UI at
+https://decision-trace-742122658452.us-central1.run.app with the Agent
+collaboration trace, deterministic lifecycle explanation, evidence links, and
+Firestore persistence path.
 Setup path: README local-start commands.
 Verification: full 53-test suite above.
 Failure mode: missing evidence or ambiguous lifecycle produces an explicit
 challenge/uncertain result; Vertex/Firestore failures propagate visibly.
-Remaining gate: deploy this branch and record a fresh browser walkthrough;
-the existing architecture PNG is present, but no new UI screenshot/video was
-created in this pass.
+Remaining submission artifact: record the final browser walkthrough. The
+product itself is deployed and browser-verified; no new benchmark or feature
+work is required.
 
 ## Outcome ledger
 
@@ -224,7 +226,7 @@ handoffs.
 Lane: evidence-gated agentic developer tooling.
 Artifact: `app/collaborate.py`, `app/ui.py`, `docs/architecture.md`.
 Acceptance gate: worker handoff test passes and trace is visible in the UI.
-Result: shipped locally; not yet redeployed.
+Result: shipped and browser-verified on revision `decision-trace-00008-j9s`.
 Next action: record the four-stage trace in the submission demo.
 Kill condition: judges cannot distinguish the worker contributions from a
 single unstructured LLM call after the trace is shown.
