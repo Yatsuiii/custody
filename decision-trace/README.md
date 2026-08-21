@@ -154,12 +154,9 @@ changes). The checked-in falsifier evidence remains the frozen n=37 run in
 corpus expansion whose 63 loaded domain records have not yet been rerun and
 must not be used to claim new benchmark numbers.
 
-Run the tests (38 tests — 31 use no mocks, exercising real Gemini/
-embedding calls and, for one, real Firestore against a throwaway
-collection; 7 in `test_failure_paths.py` mock exactly the failure
-condition under test — Gemini timeout, malformed model output, Firestore
-unavailability — since those can't be forced against a real backend on
-demand):
+Run the tests (53 tests, including real Gemini/embedding calls, live GitHub
+ingestion, a real Firestore round trip, and targeted failure-injection tests
+for conditions that cannot be forced against a real backend on demand):
 
 ```bash
 .venv/bin/python -m pytest app/tests/ -v
