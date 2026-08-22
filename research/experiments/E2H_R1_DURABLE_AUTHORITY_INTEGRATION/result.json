@@ -1,0 +1,34 @@
+{
+  "canonical_result_digest": "699c286b604573b3bdefa7782842b194b465faebaa1f30a3160fde2ffa6068f5",
+  "cleanup": {
+    "cleanup_complete": false,
+    "reason": "no writes began; DNS failed during preflight"
+  },
+  "e2g_commit": "bd0fcd3af38b105f326dbe0e4f73149b6da67449",
+  "e2g_result_digest": "05707014de0ed008db4eadd4ab74f7aa21ae530ea4029e2218b448b5fa6e1bac",
+  "environment": {
+    "database": "(default)",
+    "database_class": "Firestore Native",
+    "namespace_prefix": "custody_research_e2h_r1_20260822",
+    "project": "project-988bc9fe-092c-4b32-90c",
+    "region": "us-central1"
+  },
+  "error_type": "RuntimeError",
+  "experiment_id": "E2H_R1_DURABLE_AUTHORITY_INTEGRATION",
+  "first_failed_gate": "FIRESTORE_UNREACHABLE",
+  "leakage_guard": {
+    "runtime_scan": [],
+    "scorer_read_counter_before_actions": 0
+  },
+  "operation_counts": {
+    "deletes": 0,
+    "model_calls": 0,
+    "reads": 0,
+    "writes": 0
+  },
+  "plan_immutable": true,
+  "plan_sha256": "df1f1f3e4e51bf7cc30d0a503fa5eafc8a965c8ca04a49ffcadc6114011e59ea",
+  "preregistration_commit": "a9a2c9d169171bd718684273f37b36a8277daa64",
+  "reason": "REAL_FIRESTORE_NOT_RELIABLY_REACHABLE",
+  "verdict": "INTEGRATION-BLOCKED"
+}
