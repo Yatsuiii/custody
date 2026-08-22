@@ -201,6 +201,39 @@ def test_frozen_resolver_guard_passes():
     freeze.test_frozen_authority_system_is_byte_identical()
 
 
+def test_prospective_runtime_has_no_answer_key_loader():
+    for name in ("authority_prospective.py", "prepare_authority_prospective.py",
+                 "run_authority_prospective.py"):
+        source = (ROOT / name).read_text().casefold()
+        assert "ground_truth" not in source, name
+        assert "acceptable_evidence_sets" not in source, name
+        assert "applicable_failures" not in source, name
+
+
+def test_every_full_context_fits_and_exposes_equivalent_public_fields(corpus):
+    from authority_prospective import full_context, render_artifact
+    from authority_benchmark import visible_checkpoint
+
+    timelines, checkpoints, _, _ = corpus
+    by_timeline = {row["timeline_id"]: row for row in timelines}
+    for cp in checkpoints:
+        visible = visible_checkpoint(by_timeline[cp["timeline_id"]], cp)
+        context = full_context(visible)
+        assert len(context) <= 100_000
+        for artifact in visible.artifacts:
+            rendered = render_artifact(artifact)
+            assert rendered in context
+            assert f"Lifecycle status: {artifact['status']}" in rendered
+            assert f"Authority scope: {', '.join(artifact['scopes'])}" in rendered
+            assert f"Decision role: {artifact['role']}" in rendered
+
+
+def test_dataset_freeze_guard_passes():
+    import test_prospective_dataset_freeze as freeze
+
+    freeze.test_prospective_dataset_is_byte_identical_to_pre_inference_freeze()
+
+
 def test_conditions_use_equivalent_histories_after_preparation(corpus):
     prepared = DATA / "prepared"
     if not prepared.exists():

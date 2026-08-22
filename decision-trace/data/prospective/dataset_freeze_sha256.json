@@ -1,0 +1,13 @@
+{
+  "dataset_commit": "dc2d4a69eef52145723fbc0882489abc7fb75252",
+  "algorithm": "sha256",
+  "files": {
+    "AUTHORITY_PROSPECTIVE_LEDGER.md": "395fe6dd15ba6da8017a6cb3238d1fa24018e850b4d1c529913a4db00c83b8f1",
+    "AUTHORITY_PROSPECTIVE_SPEC.md": "eb53f1e8534ef3f5d6a0b5a3a1a816df10d9e7ef6ed096515ed4b38b7258dd92",
+    "build_authority_prospective_cases.py": "c52f1361e0c26f1789f80bfc4819efa0589fa5b4359ff21bae20036e87acfe01",
+    "data/prospective/checkpoints.jsonl": "3f3e8115e72b1b4880d428ad40f691bc1aa047bacc70e4106a203acb847d49ff",
+    "data/prospective/discovery/source_cache.json": "c12b48af30fd3cd4cd3bffab995d5745c66ef3bd48a0e36b39d4ea543e79824f",
+    "data/prospective/ground_truth.jsonl": "9163b54b93f0ceb919ef1bd2e45becb5452278cefb2f72af6c8593a5bcc7fb3d",
+    "data/prospective/timelines.json": "e7d88612dcdfe9ef030f03b0dc46fc6134884546b530e737dcac7da4ffba4dac"
+  }
+}
