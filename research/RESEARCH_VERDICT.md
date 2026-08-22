@@ -243,7 +243,7 @@ now measured, not inferred: case F / K remain the two load-bearing gaps
 (tool-identity-only trust, and no time-bounded revocation), and this
 experiment addressed the former's evidentiary status, not the latter's.
 
-## Current next highest-leverage action (post-E2A)
+## Current next highest-leverage action (superseded — see E2B addendum below)
 
 Not decided in this session — E2A was scoped, per its own contract and
 the user's explicit non-negotiable rule, to characterize the failure, not
@@ -254,3 +254,55 @@ cheapest next falsification step as adapting TMA-NM's `summarize` channel
 ambiguous, and therefore more informative, EXTERNAL-PASS-ACCIDENTAL-type
 result rather than another clean FAIL — not started here, and any further
 step remains gated on explicit authorization.
+
+## Addendum, 2026-08-22 (continued): E2B result
+
+Full detail in `research/experiments/E2B_TMANM_SUMMARIZE/`. **Verdict:
+EXTERNAL-PASS-ACCIDENTAL**, exactly the informative, ambiguous result
+E2A's own closing note predicted rather than another clean FAIL. TMA-NM's
+`summarize` channel, adapted to cross a real invocation boundary (the
+same-invocation case was deliberately excluded as an unfairly easy case
+Custody already handles), was blocked — but so was a structurally
+identical *benign* paraphrase of a genuinely trusted fact, through the
+identical mechanism (`graph.resolve()`'s exact-hash miss, falling to
+`trust.of("load_memory")` default-deny). The why-trace separated two
+distinct divergence points that had previously been described together as
+one gap: (1) untrusted content never persists in the traceable graph at
+all (a real, working control, but not laundering resistance — it prevents
+later masquerade only by discarding the record entirely), and (2) exact-
+hash matching cannot distinguish a malicious paraphrase from a benign one,
+producing measured collateral damage on legitimate content.
+
+This sharpens, rather than newly discovers, cases D/E in
+`CURRENT_CUSTODY_REDTEAM.md` (already PARTIAL from code reading) — the
+contribution is that "PARTIAL" is now decomposed into a specific,
+measured mechanism and a specific, measured cost, both externally sourced
+rather than self-reasoned. Per this experiment's own non-negotiable rule,
+**no defense was designed, proposed, or implemented**; `custody/` stayed
+byte-identical to the frozen commit throughout, and the suite remained
+381/381.
+
+**Verdict stays RESEARCH-ONLY.** Two externally-validated findings now sit
+alongside the existing K/L gaps: case F (E2A, clean EXTERNAL-FAIL — tool-
+identity trust with no payload inspection) and cases D/E (E2B,
+EXTERNAL-PASS-ACCIDENTAL with measured collateral damage — exact-hash
+matching cannot distinguish malicious from benign transformation, and
+Custody's real "defense" against cross-invocation laundering is an
+accident of its write-time quarantine policy, not a laundering-aware
+mechanism). Together these give the strongest evidentiary picture yet for
+why bounded-interval revocation (case K, still untouched by any
+experiment) would need to sit on top of a materially different derivation
+mechanism than the one Custody has today — not a claim to act on yet, per
+this experiment's scope, but the accumulating basis for one.
+
+## Current next highest-leverage action (post-E2B)
+
+Not decided in this session. `research/experiments/E2B_TMANM_SUMMARIZE/
+RESULT.md` (item 9) notes that the natural positive-control follow-up
+(does exact-match retrieval of a genuinely trusted fact correctly
+preserve trust across the same invocation boundary?) may already be
+covered by an existing unit test
+(`tests/test_graph.py::RetrievalIsAttributedAsACitation`), which is worth
+confirming against this exact scenario's values before deciding whether a
+further adapted experiment is warranted. No further step is authorized by
+this session.
