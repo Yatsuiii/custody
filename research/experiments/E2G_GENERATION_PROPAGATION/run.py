@@ -131,14 +131,12 @@ class RootRef:
     root_record_id: str
     policy_key: PolicyKey
     admitted_at_step: int
-    granting_generation: int
 
     def as_dict(self) -> dict[str, Any]:
         return {
             "root_record_id": self.root_record_id,
             "policy_key": self.policy_key.as_dict(),
             "admitted_at_step": self.admitted_at_step,
-            "granting_generation": self.granting_generation,
         }
 
 
@@ -489,7 +487,7 @@ class G3Mechanism:
         dependency = AuthorityDependency(
             current.key, current.generation, record_id, ACTION_SCOPE
         )
-        root = RootRef(record_id, current.key, step, current.generation)
+        root = RootRef(record_id, current.key, step)
         record = AdmissionRecord(
             record_id=record_id,
             payload_digest=payload_digest(),
