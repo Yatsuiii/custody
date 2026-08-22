@@ -1,0 +1,37 @@
+{
+  "checkpoint_id": "pypi-mirror-split-c4",
+  "timeline_id": "pypi-mirror-split",
+  "question": "What decision currently governs all PyPI mirroring as one undifferentiated policy? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "f173a0e0c5016c30a02007b8777cef1b7ed2149a2baa266c25b5413c39c21296",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-381@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-381",
+      "sequence": 1,
+      "rendered_sha256": "fe8c995ead8dd65f26b88451b7eb6d909fafc725d540c958d7059b5609c42bf8"
+    },
+    {
+      "artifact_id": "PEP-449@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-449",
+      "sequence": 2,
+      "rendered_sha256": "908455f1517dfce0b40dd2413d24d6424b7c2fb7b1fccbcef3e457c1a1fe9ec4"
+    },
+    {
+      "artifact_id": "PEP-464@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-464",
+      "sequence": 3,
+      "rendered_sha256": "7f03a5292144cd7a6dd5edb0710ed900c7f93e2d217483f282ec1097d873df13"
+    }
+  ],
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_id": null,
+    "evidence_ids": [
+      "PEP-381@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "PEP-449@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "PEP-464@b2120d116aa696f409b4d8333c4020ab8f93c9c7"
+    ],
+    "explanation": "PEP-381, which covered general PyPI mirroring infrastructure, is withdrawn. Its authority was divided into narrower independent scopes under PEP-449 and PEP-464, leaving no single governing decision for all PyPI mirroring as one undifferentiated policy.",
+    "raw_response": "```json\n{\"authority_state\":\"NO_GOVERNING_DECISION\",\n \"governing_decision_id\":null,\n \"evidence_ids\":[\"PEP-381@b2120d116aa696f409b4d8333c4020ab8f93c9c7\",\"PEP-449@b2120d116aa696f409b4d8333c4020ab8f93c9c7\",\"PEP-464@b2120d116aa696f409b4d8333c4020ab8f93c9c7\"],\n \"explanation\":\"PEP-381, which covered general PyPI mirroring infrastructure, is withdrawn. Its authority was divided into narrower independent scopes under PEP-449 and PEP-464, leaving no single governing decision for all PyPI mirroring as one undifferentiated policy.\"}\n```"
+  }
+}

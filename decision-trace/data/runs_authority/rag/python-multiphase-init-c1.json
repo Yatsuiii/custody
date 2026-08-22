@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "python-multiphase-init-c1",
+  "timeline_id": "python-multiphase-init",
+  "question": "What decision currently governs python multiphase extension init policy? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "c0d16fcad6465d89e4992a445bf4d049a1e3615d3053e87f180c11430b61272e",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-489@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-489",
+      "sequence": 1,
+      "rendered_sha256": "71adc8ea98f9ad7306ad2a43951de871202a1736e146e2b57506a58d1bb306cf"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-489",
+    "evidence_ids": [
+      "PEP-489@b2120d116aa696f409b4d8333c4020ab8f93c9c7"
+    ],
+    "explanation": "PEP-489 is marked with Final lifecycle status and governs the python-multiphase-extension-init authority scope.",
+    "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\n \"governing_decision_id\":\"PEP-489\",\n \"evidence_ids\":[\"PEP-489@b2120d116aa696f409b4d8333c4020ab8f93c9c7\"],\n \"explanation\":\"PEP-489 is marked with Final lifecycle status and governs the python-multiphase-extension-init authority scope.\"}\n```"
+  }
+}

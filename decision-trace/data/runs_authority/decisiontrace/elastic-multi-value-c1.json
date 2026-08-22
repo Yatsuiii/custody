@@ -1,0 +1,36 @@
+{
+  "checkpoint_id": "elastic-multi-value-c1",
+  "timeline_id": "elastic-multi-value",
+  "question": "What decision currently governs elasticsearch multi value enforcement? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "3547cbbc2e168251b2740213d6b443dce595e4bc2a52adb9aa139047a0cfb34f",
+  "visible_history": [
+    {
+      "artifact_id": "elastic/elasticsearch#147071@42d5c67e1c7d81dad6a2dd8780a8b89f49bc2d4c",
+      "decision_id": "elastic/elasticsearch#147071",
+      "sequence": 1,
+      "rendered_sha256": "01b170d0fc5108598d89f60745a79880c46680522c25dd2b95e8f030f71d096b"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "elastic/elasticsearch#147071",
+    "evidence_ids": [
+      "elastic/elasticsearch#147071"
+    ],
+    "claims": [
+      {
+        "text": "The decision currently governing multi-value enforcement in Elasticsearch is elastic/elasticsearch#147071, which mandates enforcing single values for fields configured with multi_value=no.",
+        "category": "current_active_decision",
+        "decision_id": "elastic/elasticsearch#147071"
+      },
+      {
+        "text": "The authority evidence for this decision is located at https://github.com/elastic/elasticsearch/pull/147071.",
+        "category": "verified_historical_fact",
+        "decision_id": "elastic/elasticsearch#147071"
+      }
+    ],
+    "candidates_considered": [
+      "elastic/elasticsearch#147071"
+    ]
+  }
+}

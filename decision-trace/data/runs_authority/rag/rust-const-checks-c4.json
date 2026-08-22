@@ -1,0 +1,30 @@
+{
+  "checkpoint_id": "rust-const-checks-c4",
+  "timeline_id": "rust-const-checks",
+  "question": "Which explicit rollback decision is authoritative for rust const checks?",
+  "prompt_sha256": "8e588d4749618b964a4967bb99c20c2436ad548dc2e77052ea8210a1f42a6fed",
+  "visible_history": [
+    {
+      "artifact_id": "rust-lang/rust#149375@7f99507f57e6c4aa0dce3daf6a13cca8cd4dd312",
+      "decision_id": "rust-lang/rust#149375",
+      "sequence": 1,
+      "rendered_sha256": "07e205f342c9e6d64aed452a25e042d602596ed0d3763540d7ddf973592b8591"
+    },
+    {
+      "artifact_id": "rust-lang/rust#154930@db99e16ae366e4f167a8fa32d35483d6962a2d6d",
+      "decision_id": "rust-lang/rust#154930",
+      "sequence": 2,
+      "rendered_sha256": "919480c958e4bb66171670a3900922a12ad26e31853938731c2626a85c75d937"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "rust-lang/rust#154930",
+    "evidence_ids": [
+      "rust-lang/rust#154930@db99e16ae366e4f167a8fa32d35483d6962a2d6d",
+      "rust-lang/rust#149375@7f99507f57e6c4aa0dce3daf6a13cca8cd4dd312"
+    ],
+    "explanation": "rust-lang/rust#154930 is merged with REVERT_MERGED status, explicitly reverting rust-lang/rust#149375 in the rust-const-checks authority scope.",
+    "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_id\": \"rust-lang/rust#154930\",\n  \"evidence_ids\": [\n    \"rust-lang/rust#154930@db99e16ae366e4f167a8fa32d35483d6962a2d6d\",\n    \"rust-lang/rust#149375@7f99507f57e6c4aa0dce3daf6a13cca8cd4dd312\"\n  ],\n  \"explanation\": \"rust-lang/rust#154930 is merged with REVERT_MERGED status, explicitly reverting rust-lang/rust#149375 in the rust-const-checks authority scope.\"\n}\n```"
+  }
+}

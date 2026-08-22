@@ -1,0 +1,36 @@
+{
+  "checkpoint_id": "metadata-redesign-c3",
+  "timeline_id": "metadata-redesign",
+  "question": "What decision currently governs Python package metadata after PEP 426 was withdrawn? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "b71c802692e6c4413a142b8cca68b5b92973d5582af4331b7a69e7086d95f50e",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-345@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+      "decision_id": "PEP-345",
+      "sequence": 1,
+      "rendered_sha256": "8038c8a810424cdd0be59980538ed63cb8473da57d1ebcd1aadee981d91d6a3d"
+    },
+    {
+      "artifact_id": "PEP-426@8ae8b612",
+      "decision_id": "PEP-426",
+      "sequence": 2,
+      "rendered_sha256": "60f57054e02a157b780a3dbb7eeaf06ef2ea99a4607a8880cf8b6d0443402423"
+    },
+    {
+      "artifact_id": "PEP-426@0977d33b",
+      "decision_id": "PEP-426",
+      "sequence": 3,
+      "rendered_sha256": "4b375bd52fb4529525a10bc287ff14762717c924938de86710c72bc1e6b3303d"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-345",
+    "evidence_ids": [
+      "PEP-345@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+      "PEP-426@0977d33b"
+    ],
+    "explanation": "PEP-345 is accepted for python package metadata. PEP-426 was only a draft and was subsequently withdrawn without being accepted, leaving PEP-345 as the governing authority.",
+    "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_id\": \"PEP-345\",\n  \"evidence_ids\": [\n    \"PEP-345@a0d411a7e334ddede263fdf9862f06bfc035f21c\",\n    \"PEP-426@0977d33b\"\n  ],\n  \"explanation\": \"PEP-345 is accepted for python package metadata. PEP-426 was only a draft and was subsequently withdrawn without being accepted, leaving PEP-345 as the governing authority.\"\n}\n```"
+  }
+}

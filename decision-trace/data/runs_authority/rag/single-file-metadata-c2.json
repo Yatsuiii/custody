@@ -1,0 +1,30 @@
+{
+  "checkpoint_id": "single-file-metadata-c2",
+  "timeline_id": "single-file-metadata",
+  "question": "What decision currently governs single-file script metadata while both proposals are drafts? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "fdfa3c1b080d6919c1fbcb3e68b9a9aa139f1958a7ad20beef114f3dee43ae39",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-722@08d688fdcafc1557bf7fc53573e5c84b31b78b5d",
+      "decision_id": "PEP-722",
+      "sequence": 1,
+      "rendered_sha256": "9207bc21218574a33fd3971957674824cb50628504f40dd202465fcc8ae351e5"
+    },
+    {
+      "artifact_id": "PEP-723@08d688fdcafc1557bf7fc53573e5c84b31b78b5d",
+      "decision_id": "PEP-723",
+      "sequence": 2,
+      "rendered_sha256": "29a46d2abe67a3d93c67ddb62b8ce309fb32b389fd8db2877b6a1833f3c31d03"
+    }
+  ],
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_id": null,
+    "evidence_ids": [
+      "PEP-723@08d688fdcafc1557bf7fc53573e5c84b31b78b5d",
+      "PEP-722@08d688fdcafc1557bf7fc53573e5c84b31b78b5d"
+    ],
+    "explanation": "Both PEP-722 and PEP-723 are currently in Draft lifecycle status and have not been accepted; draft proposals carry no governing engineering authority.",
+    "raw_response": "```json\n{\n  \"authority_state\": \"NO_GOVERNING_DECISION\",\n  \"governing_decision_id\": null,\n  \"evidence_ids\": [\n    \"PEP-723@08d688fdcafc1557bf7fc53573e5c84b31b78b5d\",\n    \"PEP-722@08d688fdcafc1557bf7fc53573e5c84b31b78b5d\"\n  ],\n  \"explanation\": \"Both PEP-722 and PEP-723 are currently in Draft lifecycle status and have not been accepted; draft proposals carry no governing engineering authority.\"\n}\n```"
+  }
+}

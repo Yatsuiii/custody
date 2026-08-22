@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "metadata-1-1-c1",
+  "timeline_id": "metadata-1-1",
+  "question": "What decision currently governs python metadata 1 1? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "66e88f6b4e27a926140002c99af366db4affb4806719a4b011d688f6579356af",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-241@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+      "decision_id": "PEP-241",
+      "sequence": 1,
+      "rendered_sha256": "34282e2d7301ada1823dd0c90f7fdcf687c8b16a49dbc1d4ef44277d76f3787f"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-241",
+    "evidence_ids": [
+      "PEP-241@a0d411a7e334ddede263fdf9862f06bfc035f21c"
+    ],
+    "explanation": "PEP-241 is accepted with Final lifecycle status and directly covers the python-metadata-1-1 authority scope.",
+    "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_id\": \"PEP-241\",\n  \"evidence_ids\": [\n    \"PEP-241@a0d411a7e334ddede263fdf9862f06bfc035f21c\"\n  ],\n  \"explanation\": \"PEP-241 is accepted with Final lifecycle status and directly covers the python-metadata-1-1 authority scope.\"\n}\n```"
+  }
+}

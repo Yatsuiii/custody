@@ -1,0 +1,54 @@
+{
+  "checkpoint_id": "metadata-redesign-c3",
+  "timeline_id": "metadata-redesign",
+  "question": "What decision currently governs Python package metadata after PEP 426 was withdrawn? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "d4aa1918838b98324505c7747158d68e3ae45b5946b8fd15d82f623d50d7c1ee",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-345@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+      "decision_id": "PEP-345",
+      "sequence": 1,
+      "rendered_sha256": "8038c8a810424cdd0be59980538ed63cb8473da57d1ebcd1aadee981d91d6a3d"
+    },
+    {
+      "artifact_id": "PEP-426@8ae8b612",
+      "decision_id": "PEP-426",
+      "sequence": 2,
+      "rendered_sha256": "60f57054e02a157b780a3dbb7eeaf06ef2ea99a4607a8880cf8b6d0443402423"
+    },
+    {
+      "artifact_id": "PEP-426@0977d33b",
+      "decision_id": "PEP-426",
+      "sequence": 3,
+      "rendered_sha256": "4b375bd52fb4529525a10bc287ff14762717c924938de86710c72bc1e6b3303d"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-426",
+    "evidence_ids": [
+      "PEP-426"
+    ],
+    "claims": [
+      {
+        "text": "PEP 426 notes that its ground-up metadata redesign was withdrawn in favor of the proposal in PEP 566.",
+        "category": "verified_historical_fact",
+        "decision_id": "PEP-426"
+      },
+      {
+        "text": "According to the deterministic lifecycle resolution provided, PEP-426 is marked as currently active with authority evidence at https://github.com/python/peps/blob/0977d33b02920d4619c024b64e35a693220cc3cf/pep-0426.txt.",
+        "category": "current_active_decision",
+        "decision_id": "PEP-426"
+      },
+      {
+        "text": "The retrieved decisions do not include the decision record, details, or authority evidence for PEP 566.",
+        "category": "missing_or_uncertain",
+        "decision_id": null
+      }
+    ],
+    "candidates_considered": [
+      "PEP-426",
+      "PEP-345"
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "checkpoint_id": "metadata-1-2-c3",
+  "timeline_id": "metadata-1-2",
+  "question": "What decision currently governs the Python metadata specification chain? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "ac645148fa5f0ed129d8b75af4c4101ab2033943754739982ae0824059744734",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-241@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+      "decision_id": "PEP-241",
+      "sequence": 1,
+      "rendered_sha256": "f54518f264e93cb9cb37fa89c473903953bfd1e37f57b40d7afa133b1e45d517"
+    },
+    {
+      "artifact_id": "PEP-314@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+      "decision_id": "PEP-314",
+      "sequence": 2,
+      "rendered_sha256": "d9d88005684c2e4a68ef2b9b2c103731a33071f182c76578220d313a3caebe33"
+    },
+    {
+      "artifact_id": "PEP-345@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+      "decision_id": "PEP-345",
+      "sequence": 3,
+      "rendered_sha256": "3ec04bd9e4922378772814299d1d605856e4766b4b037c6f40082240e45f8d66"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-345",
+    "evidence_ids": [
+      "PEP-345@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+      "PEP-314@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+      "PEP-241@a0d411a7e334ddede263fdf9862f06bfc035f21c"
+    ],
+    "explanation": "PEP-345 is accepted and explicitly replaces PEP-314 (which had previously replaced PEP-241) within the python-metadata-chain authority scope.",
+    "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\n \"governing_decision_id\":\"PEP-345\",\n \"evidence_ids\":[\"PEP-345@a0d411a7e334ddede263fdf9862f06bfc035f21c\",\"PEP-314@a0d411a7e334ddede263fdf9862f06bfc035f21c\",\"PEP-241@a0d411a7e334ddede263fdf9862f06bfc035f21c\"],\n \"explanation\":\"PEP-345 is accepted and explicitly replaces PEP-314 (which had previously replaced PEP-241) within the python-metadata-chain authority scope.\"}\n```"
+  }
+}

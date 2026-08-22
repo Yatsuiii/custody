@@ -1,0 +1,48 @@
+{
+  "checkpoint_id": "kubernetes-delayed-preemption-c3",
+  "timeline_id": "kubernetes-delayed-preemption",
+  "question": "What decision currently governs kubernetes delayed preemption after the revert record mentions future work? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "49b29c400209eeadd537585c7143bc586f5eb6d7dae70634dddb8d9555061799",
+  "visible_history": [
+    {
+      "artifact_id": "kubernetes/kubernetes#136254@338a3bcef88f4991cee61ee03105f058b34eb276",
+      "decision_id": "kubernetes/kubernetes#136254",
+      "sequence": 1,
+      "rendered_sha256": "9785caff425eab7dd19042bd75ab29874c41b21e740688449f495cc23df19948"
+    },
+    {
+      "artifact_id": "kubernetes/kubernetes#137662@9874e76ac44442ebfa33c824e2c57bcb9f0d2e5e",
+      "decision_id": "kubernetes/kubernetes#137662",
+      "sequence": 2,
+      "rendered_sha256": "d13349af838e50f136743c1d13a3a8d72b3863f939a72eff440074ca51b1f32f"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "kubernetes/kubernetes#137662",
+    "evidence_ids": [
+      "kubernetes/kubernetes#137662"
+    ],
+    "claims": [
+      {
+        "text": "The currently active decision is kubernetes/kubernetes#137662, which reverted the addition of victim Pods to PostFilterResult (authority evidence: https://github.com/kubernetes/kubernetes/pull/137662).",
+        "category": "current_active_decision",
+        "decision_id": "kubernetes/kubernetes#137662"
+      },
+      {
+        "text": "The change was reverted because delayed preemption was dropped from the WAS work planned for version 1.36 and the extra complexity was deemed unnecessary.",
+        "category": "verified_historical_fact",
+        "decision_id": "kubernetes/kubernetes#137662"
+      },
+      {
+        "text": "Decision kubernetes/kubernetes#136254 originally extended PostFilterResult as a first step toward delayed preemption, but it is now inactive and reverted.",
+        "category": "verified_historical_fact",
+        "decision_id": "kubernetes/kubernetes#136254"
+      }
+    ],
+    "candidates_considered": [
+      "kubernetes/kubernetes#136254",
+      "kubernetes/kubernetes#137662"
+    ]
+  }
+}

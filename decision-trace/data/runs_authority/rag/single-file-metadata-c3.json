@@ -1,0 +1,36 @@
+{
+  "checkpoint_id": "single-file-metadata-c3",
+  "timeline_id": "single-file-metadata",
+  "question": "What decision currently governs single-file script dependency metadata after PEP 722 was rejected? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "010c3a9bb3a55f7fc9c5fae311d282370a6e28524a4539c11694f1dffef68286",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-722@08d688fdcafc1557bf7fc53573e5c84b31b78b5d",
+      "decision_id": "PEP-722",
+      "sequence": 1,
+      "rendered_sha256": "9207bc21218574a33fd3971957674824cb50628504f40dd202465fcc8ae351e5"
+    },
+    {
+      "artifact_id": "PEP-723@08d688fdcafc1557bf7fc53573e5c84b31b78b5d",
+      "decision_id": "PEP-723",
+      "sequence": 2,
+      "rendered_sha256": "29a46d2abe67a3d93c67ddb62b8ce309fb32b389fd8db2877b6a1833f3c31d03"
+    },
+    {
+      "artifact_id": "PEP-722@7e39ae246b29",
+      "decision_id": "PEP-722",
+      "sequence": 3,
+      "rendered_sha256": "abaf457c3eff5a8f46d80a06f2507104a965a305c52fdf982ba4b7a17859d5c6"
+    }
+  ],
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_id": null,
+    "evidence_ids": [
+      "PEP-722@7e39ae246b29",
+      "PEP-723@08d688fdcafc1557bf7fc53573e5c84b31b78b5d"
+    ],
+    "explanation": "PEP 722 is marked as Rejected and PEP 723 remains in Draft status, so there is no accepted governing decision for single-file script dependency metadata.",
+    "raw_response": "```json\n{\"authority_state\":\"NO_GOVERNING_DECISION\",\n \"governing_decision_id\":null,\n \"evidence_ids\":[\"PEP-722@7e39ae246b29\",\"PEP-723@08d688fdcafc1557bf7fc53573e5c84b31b78b5d\"],\n \"explanation\":\"PEP 722 is marked as Rejected and PEP 723 remains in Draft status, so there is no accepted governing decision for single-file script dependency metadata.\"}\n```"
+  }
+}

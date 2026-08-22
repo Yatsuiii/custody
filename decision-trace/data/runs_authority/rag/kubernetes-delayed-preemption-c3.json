@@ -1,0 +1,30 @@
+{
+  "checkpoint_id": "kubernetes-delayed-preemption-c3",
+  "timeline_id": "kubernetes-delayed-preemption",
+  "question": "What decision currently governs kubernetes delayed preemption after the revert record mentions future work? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "53a4ea4e7857aae6d9f9e47d5e9c47c32147a6a750e061374c5fcd4b04de1904",
+  "visible_history": [
+    {
+      "artifact_id": "kubernetes/kubernetes#136254@338a3bcef88f4991cee61ee03105f058b34eb276",
+      "decision_id": "kubernetes/kubernetes#136254",
+      "sequence": 1,
+      "rendered_sha256": "9785caff425eab7dd19042bd75ab29874c41b21e740688449f495cc23df19948"
+    },
+    {
+      "artifact_id": "kubernetes/kubernetes#137662@9874e76ac44442ebfa33c824e2c57bcb9f0d2e5e",
+      "decision_id": "kubernetes/kubernetes#137662",
+      "sequence": 2,
+      "rendered_sha256": "d13349af838e50f136743c1d13a3a8d72b3863f939a72eff440074ca51b1f32f"
+    }
+  ],
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_id": null,
+    "evidence_ids": [
+      "kubernetes/kubernetes#136254@338a3bcef88f4991cee61ee03105f058b34eb276",
+      "kubernetes/kubernetes#137662@9874e76ac44442ebfa33c824e2c57bcb9f0d2e5e"
+    ],
+    "explanation": "PR #136254 introduced delayed preemption but was explicitly reverted by PR #137662 because delayed preemption was dropped, leaving no active governing decision.",
+    "raw_response": "```json\n{\"authority_state\":\"NO_GOVERNING_DECISION\",\n \"governing_decision_id\":null,\n \"evidence_ids\":[\"kubernetes/kubernetes#136254@338a3bcef88f4991cee61ee03105f058b34eb276\",\"kubernetes/kubernetes#137662@9874e76ac44442ebfa33c824e2c57bcb9f0d2e5e\"],\n \"explanation\":\"PR #136254 introduced delayed preemption but was explicitly reverted by PR #137662 because delayed preemption was dropped, leaving no active governing decision.\"}\n```"
+  }
+}

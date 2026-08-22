@@ -1,0 +1,36 @@
+{
+  "checkpoint_id": "annotation-semantics-c5",
+  "timeline_id": "annotation-semantics",
+  "question": "Is there one single decision that governs both annotation-evaluation policy and all implementation details?",
+  "prompt_sha256": "23ce29651843dc317bae6d46baa81a00a87e84722fa068c5cc7da80cb304b172",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-563@e3010cb7d2c4a1aaf285170e49227859386a3316",
+      "decision_id": "PEP-563",
+      "sequence": 1,
+      "rendered_sha256": "085c46e81891d201de33530cba0fa6503123f5663c02c9e27bc7891b6ac69fe3"
+    },
+    {
+      "artifact_id": "PEP-649@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-649",
+      "sequence": 2,
+      "rendered_sha256": "ab15d215e0ff25ee09a0d6b869da5b5e336c208d43185e1ae7af51f3f9890ac4"
+    },
+    {
+      "artifact_id": "PEP-749@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-749",
+      "sequence": 3,
+      "rendered_sha256": "8232ea3806c3d58875bba117fe6903ea6eea2b5f766baf42f289b868935c9226"
+    }
+  ],
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_id": null,
+    "evidence_ids": [
+      "PEP-649@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "PEP-749@b2120d116aa696f409b4d8333c4020ab8f93c9c7"
+    ],
+    "explanation": "PEP-649 governs annotation evaluation policy, whereas PEP-749 governs annotation implementation details as a distinct authority scope, so no single decision governs both.",
+    "raw_response": "```json\n{\"authority_state\":\"NO_GOVERNING_DECISION\",\n \"governing_decision_id\":null,\n \"evidence_ids\":[\"PEP-649@b2120d116aa696f409b4d8333c4020ab8f93c9c7\",\"PEP-749@b2120d116aa696f409b4d8333c4020ab8f93c9c7\"],\n \"explanation\":\"PEP-649 governs annotation evaluation policy, whereas PEP-749 governs annotation implementation details as a distinct authority scope, so no single decision governs both.\"}\n```"
+  }
+}

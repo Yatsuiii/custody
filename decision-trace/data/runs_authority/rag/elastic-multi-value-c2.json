@@ -1,0 +1,30 @@
+{
+  "checkpoint_id": "elastic-multi-value-c2",
+  "timeline_id": "elastic-multi-value",
+  "question": "What decision currently governs elasticsearch multi value enforcement after the explicit revert? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "bef651da120ff8aa7fbd4661141f4af6789650109918fa3ecc94c901c04e4fe1",
+  "visible_history": [
+    {
+      "artifact_id": "elastic/elasticsearch#147071@42d5c67e1c7d81dad6a2dd8780a8b89f49bc2d4c",
+      "decision_id": "elastic/elasticsearch#147071",
+      "sequence": 1,
+      "rendered_sha256": "01b170d0fc5108598d89f60745a79880c46680522c25dd2b95e8f030f71d096b"
+    },
+    {
+      "artifact_id": "elastic/elasticsearch#147360@d3f582051a2756be695eb854a694bd8f71031acd",
+      "decision_id": "elastic/elasticsearch#147360",
+      "sequence": 2,
+      "rendered_sha256": "5e68a4293d50863a3536b23c86bf40896b52562685dcc71ffae3564be2a5aa57"
+    }
+  ],
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_id": null,
+    "evidence_ids": [
+      "elastic/elasticsearch#147071@42d5c67e1c7d81dad6a2dd8780a8b89f49bc2d4c",
+      "elastic/elasticsearch#147360@d3f582051a2756be695eb854a694bd8f71031acd"
+    ],
+    "explanation": "PR #147071 was merged to enforce single values for multi_value=no fields, but was subsequently explicitly reverted by PR #147360, leaving no active governing decision in this authority scope.",
+    "raw_response": "```json\n{\"authority_state\":\"NO_GOVERNING_DECISION\",\n \"governing_decision_id\":null,\n \"evidence_ids\":[\"elastic/elasticsearch#147071@42d5c67e1c7d81dad6a2dd8780a8b89f49bc2d4c\", \"elastic/elasticsearch#147360@d3f582051a2756be695eb854a694bd8f71031acd\"],\n \"explanation\":\"PR #147071 was merged to enforce single values for multi_value=no fields, but was subsequently explicitly reverted by PR #147360, leaving no active governing decision in this authority scope.\"}\n```"
+  }
+}

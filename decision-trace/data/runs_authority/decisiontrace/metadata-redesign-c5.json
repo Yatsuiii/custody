@@ -1,0 +1,62 @@
+{
+  "checkpoint_id": "metadata-redesign-c5",
+  "timeline_id": "metadata-redesign",
+  "question": "Which package-metadata specification is authoritative now?",
+  "prompt_sha256": "92cca72708bf3ce15349ca6ad6e01b0b925ba3e8d05113590c22083b82b16ffe",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-345@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+      "decision_id": "PEP-345",
+      "sequence": 1,
+      "rendered_sha256": "8038c8a810424cdd0be59980538ed63cb8473da57d1ebcd1aadee981d91d6a3d"
+    },
+    {
+      "artifact_id": "PEP-426@8ae8b612",
+      "decision_id": "PEP-426",
+      "sequence": 2,
+      "rendered_sha256": "60f57054e02a157b780a3dbb7eeaf06ef2ea99a4607a8880cf8b6d0443402423"
+    },
+    {
+      "artifact_id": "PEP-426@0977d33b",
+      "decision_id": "PEP-426",
+      "sequence": 3,
+      "rendered_sha256": "4b375bd52fb4529525a10bc287ff14762717c924938de86710c72bc1e6b3303d"
+    },
+    {
+      "artifact_id": "PEP-566@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-566",
+      "sequence": 4,
+      "rendered_sha256": "28d534189fe8856c87c9050112c61313627f3d0b8f620c865f5df2584a831cae"
+    }
+  ],
+  "prediction": {
+    "authority_state": "UNRESOLVED",
+    "governing_decision_id": null,
+    "evidence_ids": [
+      "PEP-426",
+      "PEP-566"
+    ],
+    "claims": [
+      {
+        "text": "PEP-566 (Metadata for Python Software Packages 2.1) is currently active, superseding PEP-345.",
+        "category": "current_active_decision",
+        "decision_id": "PEP-566"
+      },
+      {
+        "text": "PEP-345 (Metadata for Python Software Packages 1.2) is not active and has been superseded by PEP-566.",
+        "category": "verified_historical_fact",
+        "decision_id": "PEP-345"
+      },
+      {
+        "text": "PEP-426 (Metadata for Python Software Packages 2.0) is recorded as currently active as the governing decision in its lineage, though historical rationale notes it was withdrawn in favor of PEP 566.",
+        "category": "current_active_decision",
+        "decision_id": "PEP-426"
+      }
+    ],
+    "candidates_considered": [
+      "PEP-566",
+      "PEP-345",
+      "PEP-426"
+    ]
+  }
+}

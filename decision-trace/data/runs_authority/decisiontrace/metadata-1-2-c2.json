@@ -1,0 +1,48 @@
+{
+  "checkpoint_id": "metadata-1-2-c2",
+  "timeline_id": "metadata-1-2",
+  "question": "What decision currently governs the Python metadata specification chain? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "2ea9a4be9c24c8598cd3d57127f2d78664aa9f97dd3db95ca53c3591052e2b7f",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-241@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+      "decision_id": "PEP-241",
+      "sequence": 1,
+      "rendered_sha256": "f54518f264e93cb9cb37fa89c473903953bfd1e37f57b40d7afa133b1e45d517"
+    },
+    {
+      "artifact_id": "PEP-314@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+      "decision_id": "PEP-314",
+      "sequence": 2,
+      "rendered_sha256": "d9d88005684c2e4a68ef2b9b2c103731a33071f182c76578220d313a3caebe33"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-314",
+    "evidence_ids": [
+      "PEP-314"
+    ],
+    "claims": [
+      {
+        "text": "PEP-314 (Metadata for Python Software Packages 1.1) is the currently active decision governing the Python metadata specification chain, having superseded PEP-241.",
+        "category": "current_active_decision",
+        "decision_id": "PEP-314"
+      },
+      {
+        "text": "The authority evidence for PEP-314 is documented at https://github.com/python/peps/blob/a0d411a7e334ddede263fdf9862f06bfc035f21c/pep-0314.txt.",
+        "category": "verified_historical_fact",
+        "decision_id": "PEP-314"
+      },
+      {
+        "text": "PEP-241 originally specified Metadata for Python Software Packages before being replaced by PEP-314.",
+        "category": "verified_historical_fact",
+        "decision_id": "PEP-241"
+      }
+    ],
+    "candidates_considered": [
+      "PEP-314",
+      "PEP-241"
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "elastic-multi-value-c1",
+  "timeline_id": "elastic-multi-value",
+  "question": "What decision currently governs elasticsearch multi value enforcement? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "80cc489a407cc0724cacb5304695ad001415e05423b7a8f40bffc1a4e229f180",
+  "visible_history": [
+    {
+      "artifact_id": "elastic/elasticsearch#147071@42d5c67e1c7d81dad6a2dd8780a8b89f49bc2d4c",
+      "decision_id": "elastic/elasticsearch#147071",
+      "sequence": 1,
+      "rendered_sha256": "01b170d0fc5108598d89f60745a79880c46680522c25dd2b95e8f030f71d096b"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "elastic/elasticsearch#147071",
+    "evidence_ids": [
+      "elastic/elasticsearch#147071@42d5c67e1c7d81dad6a2dd8780a8b89f49bc2d4c"
+    ],
+    "explanation": "PR elastic/elasticsearch#147071 has been merged with the authority scope elasticsearch-multi-value-enforcement, establishing enforcement of single values for fields configured with multi_value=no.",
+    "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\n \"governing_decision_id\":\"elastic/elasticsearch#147071\",\n \"evidence_ids\":[\"elastic/elasticsearch#147071@42d5c67e1c7d81dad6a2dd8780a8b89f49bc2d4c\"],\n \"explanation\":\"PR elastic/elasticsearch#147071 has been merged with the authority scope elasticsearch-multi-value-enforcement, establishing enforcement of single values for fields configured with multi_value=no.\"}\n```"
+  }
+}

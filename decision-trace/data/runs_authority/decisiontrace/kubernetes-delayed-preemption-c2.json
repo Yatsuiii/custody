@@ -1,0 +1,43 @@
+{
+  "checkpoint_id": "kubernetes-delayed-preemption-c2",
+  "timeline_id": "kubernetes-delayed-preemption",
+  "question": "What decision currently governs kubernetes delayed preemption after the explicit revert? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "7b2fb36ab508908a67767cf51db5304d0bd8591a1e56a6176592f4c987716ed2",
+  "visible_history": [
+    {
+      "artifact_id": "kubernetes/kubernetes#136254@338a3bcef88f4991cee61ee03105f058b34eb276",
+      "decision_id": "kubernetes/kubernetes#136254",
+      "sequence": 1,
+      "rendered_sha256": "9785caff425eab7dd19042bd75ab29874c41b21e740688449f495cc23df19948"
+    },
+    {
+      "artifact_id": "kubernetes/kubernetes#137662@9874e76ac44442ebfa33c824e2c57bcb9f0d2e5e",
+      "decision_id": "kubernetes/kubernetes#137662",
+      "sequence": 2,
+      "rendered_sha256": "d13349af838e50f136743c1d13a3a8d72b3863f939a72eff440074ca51b1f32f"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "kubernetes/kubernetes#137662",
+    "evidence_ids": [
+      "kubernetes/kubernetes#137662"
+    ],
+    "claims": [
+      {
+        "text": "The decision currently governing this lineage is kubernetes/kubernetes#137662, which actively reverts the extension of PostFilterResult with victim pods.",
+        "category": "current_active_decision",
+        "decision_id": "kubernetes/kubernetes#137662"
+      },
+      {
+        "text": "The revert decision kubernetes/kubernetes#137662 is evidenced at https://github.com/kubernetes/kubernetes/pull/137662, rationalized by dropping delayed preemption from planned 1.36 WAS work to eliminate unnecessary complexity.",
+        "category": "verified_historical_fact",
+        "decision_id": "kubernetes/kubernetes#137662"
+      }
+    ],
+    "candidates_considered": [
+      "kubernetes/kubernetes#136254",
+      "kubernetes/kubernetes#137662"
+    ]
+  }
+}

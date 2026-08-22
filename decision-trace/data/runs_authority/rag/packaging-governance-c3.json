@@ -1,0 +1,36 @@
+{
+  "checkpoint_id": "packaging-governance-c3",
+  "timeline_id": "packaging-governance",
+  "question": "What decision currently governs Python packaging governance after a newer discussion? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "aac2aeda60d6d6232bb03acaf3d29f2444ce35f2ddafe5ada979a2393e6368c2",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-609@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-609",
+      "sequence": 1,
+      "rendered_sha256": "d3db0aa76a38bea3d65982a7fe28324f0037af3d541ca0191eb4013997b56907"
+    },
+    {
+      "artifact_id": "PEP-772@e95aa672",
+      "decision_id": "PEP-772",
+      "sequence": 2,
+      "rendered_sha256": "8b06fb5ef50568919ecedce22c8d6050a57beacd628a64638410fcd8272c540e"
+    },
+    {
+      "artifact_id": "PEP-772@850f4f70",
+      "decision_id": "PEP-772",
+      "sequence": 3,
+      "rendered_sha256": "68423dd7a668157e71cc17cb90e2722ef576a8440bf7923dffcc24c5619eef98"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-609",
+    "evidence_ids": [
+      "PEP-609@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "PEP-772@850f4f70"
+    ],
+    "explanation": "PEP-609 remains in Active status for python-packaging-governance. Although PEP-772 proposes to replace PEP-609, it is only in Draft status and is not accepted.",
+    "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\n \"governing_decision_id\":\"PEP-609\",\n \"evidence_ids\":[\"PEP-609@b2120d116aa696f409b4d8333c4020ab8f93c9c7\",\"PEP-772@850f4f70\"],\n \"explanation\":\"PEP-609 remains in Active status for python-packaging-governance. Although PEP-772 proposes to replace PEP-609, it is only in Draft status and is not accepted.\"}\n```"
+  }
+}

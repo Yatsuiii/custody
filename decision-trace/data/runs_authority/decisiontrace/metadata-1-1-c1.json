@@ -1,0 +1,29 @@
+{
+  "checkpoint_id": "metadata-1-1-c1",
+  "timeline_id": "metadata-1-1",
+  "question": "What decision currently governs python metadata 1 1? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "0f4f10b69a2c094aebbfacda11da2a06196e3b05937a8a73a36b147a3d304c2f",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-241@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+      "decision_id": "PEP-241",
+      "sequence": 1,
+      "rendered_sha256": "34282e2d7301ada1823dd0c90f7fdcf687c8b16a49dbc1d4ef44277d76f3787f"
+    }
+  ],
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_id": null,
+    "evidence_ids": [],
+    "claims": [
+      {
+        "text": "The retrieved decisions do not contain information about the decision governing Python metadata 1.1 (PEP-241 specifies Metadata for Python Software Packages version 1.0).",
+        "category": "missing_or_uncertain",
+        "decision_id": null
+      }
+    ],
+    "candidates_considered": [
+      "PEP-241"
+    ]
+  }
+}

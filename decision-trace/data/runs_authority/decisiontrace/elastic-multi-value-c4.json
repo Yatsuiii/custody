@@ -1,0 +1,48 @@
+{
+  "checkpoint_id": "elastic-multi-value-c4",
+  "timeline_id": "elastic-multi-value",
+  "question": "Which explicit rollback decision is authoritative for elasticsearch multi value enforcement?",
+  "prompt_sha256": "5a60816b0876c14d211e97707f680828cb2fdc7326e8cecf58032ef8723aea94",
+  "visible_history": [
+    {
+      "artifact_id": "elastic/elasticsearch#147071@42d5c67e1c7d81dad6a2dd8780a8b89f49bc2d4c",
+      "decision_id": "elastic/elasticsearch#147071",
+      "sequence": 1,
+      "rendered_sha256": "01b170d0fc5108598d89f60745a79880c46680522c25dd2b95e8f030f71d096b"
+    },
+    {
+      "artifact_id": "elastic/elasticsearch#147360@d3f582051a2756be695eb854a694bd8f71031acd",
+      "decision_id": "elastic/elasticsearch#147360",
+      "sequence": 2,
+      "rendered_sha256": "5e68a4293d50863a3536b23c86bf40896b52562685dcc71ffae3564be2a5aa57"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "elastic/elasticsearch#147360",
+    "evidence_ids": [
+      "elastic/elasticsearch#147360"
+    ],
+    "claims": [
+      {
+        "text": "Decision elastic/elasticsearch#147360 explicitly reverted PR #147071 (enforcing single values when multi_value is no) to unblock CI after test failures.",
+        "category": "verified_historical_fact",
+        "decision_id": "elastic/elasticsearch#147360"
+      },
+      {
+        "text": "Decision elastic/elasticsearch#147360 is the currently active and authoritative decision for this lineage.",
+        "category": "current_active_decision",
+        "decision_id": "elastic/elasticsearch#147360"
+      },
+      {
+        "text": "The prior decision elastic/elasticsearch#147071 to enforce single values is inactive and reverted.",
+        "category": "verified_historical_fact",
+        "decision_id": "elastic/elasticsearch#147071"
+      }
+    ],
+    "candidates_considered": [
+      "elastic/elasticsearch#147360",
+      "elastic/elasticsearch#147071"
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "checkpoint_id": "packaging-governance-c4",
+  "timeline_id": "packaging-governance",
+  "question": "What decision currently governs Python packaging governance? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "d6e2f28e1a941802867b09020807d28ec8a7cec99790ca82b86edff6d0df8f7d",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-609@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-609",
+      "sequence": 1,
+      "rendered_sha256": "d3db0aa76a38bea3d65982a7fe28324f0037af3d541ca0191eb4013997b56907"
+    },
+    {
+      "artifact_id": "PEP-772@e95aa672",
+      "decision_id": "PEP-772",
+      "sequence": 2,
+      "rendered_sha256": "8b06fb5ef50568919ecedce22c8d6050a57beacd628a64638410fcd8272c540e"
+    },
+    {
+      "artifact_id": "PEP-772@850f4f70",
+      "decision_id": "PEP-772",
+      "sequence": 3,
+      "rendered_sha256": "68423dd7a668157e71cc17cb90e2722ef576a8440bf7923dffcc24c5619eef98"
+    },
+    {
+      "artifact_id": "PEP-772@7cab606",
+      "decision_id": "PEP-772",
+      "sequence": 4,
+      "rendered_sha256": "6986729df718a621af10647834f684a6446ef2dcf99dbe7e61b27cf14d109329"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-772",
+    "evidence_ids": [
+      "PEP-772"
+    ],
+    "claims": [
+      {
+        "text": "PEP-772 is the currently active decision governing the Python packaging governance process, superseding PEP-609.",
+        "category": "current_active_decision",
+        "decision_id": "PEP-772"
+      },
+      {
+        "text": "Under PEP-772, a Python Packaging Council is established with broad authority over packaging standards, tools, and implementations, with evidence documented at https://github.com/python/peps/blob/7cab60601426/peps/pep-0772.rst.",
+        "category": "verified_historical_fact",
+        "decision_id": "PEP-772"
+      }
+    ],
+    "candidates_considered": [
+      "PEP-609",
+      "PEP-772"
+    ]
+  }
+}

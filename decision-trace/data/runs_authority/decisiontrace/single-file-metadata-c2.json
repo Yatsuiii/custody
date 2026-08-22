@@ -1,0 +1,41 @@
+{
+  "checkpoint_id": "single-file-metadata-c2",
+  "timeline_id": "single-file-metadata",
+  "question": "What decision currently governs single-file script metadata while both proposals are drafts? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "9e33be41170bae2e24abed152a279d5fefd598d6cc9bcdc0f63b91d0d5a25c32",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-722@08d688fdcafc1557bf7fc53573e5c84b31b78b5d",
+      "decision_id": "PEP-722",
+      "sequence": 1,
+      "rendered_sha256": "9207bc21218574a33fd3971957674824cb50628504f40dd202465fcc8ae351e5"
+    },
+    {
+      "artifact_id": "PEP-723@08d688fdcafc1557bf7fc53573e5c84b31b78b5d",
+      "decision_id": "PEP-723",
+      "sequence": 2,
+      "rendered_sha256": "29a46d2abe67a3d93c67ddb62b8ce309fb32b389fd8db2877b6a1833f3c31d03"
+    }
+  ],
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_id": null,
+    "evidence_ids": [],
+    "claims": [
+      {
+        "text": "PEP-723 is the currently active decision governing inline script metadata.",
+        "category": "missing_or_uncertain",
+        "decision_id": null
+      },
+      {
+        "text": "PEP-723 explicitly replaces PEP-722 for inline script metadata/dependency specification, documented at https://github.com/python/peps/blob/08d688fdcafc1557bf7fc53573e5c84b31b78b5d/peps/pep-0723.rst.",
+        "category": "verified_historical_fact",
+        "decision_id": "PEP-723"
+      }
+    ],
+    "candidates_considered": [
+      "PEP-723",
+      "PEP-722"
+    ]
+  }
+}

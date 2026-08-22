@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "pypi-mirror-split-c1",
+  "timeline_id": "pypi-mirror-split",
+  "question": "What decision currently governs PyPI mirroring after PEP 381 was withdrawn? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "1c81733fbdee4fb50f08d1d99b4256547b788a8f4ae9f6f53f07b869375fb2e7",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-381@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-381",
+      "sequence": 1,
+      "rendered_sha256": "fe8c995ead8dd65f26b88451b7eb6d909fafc725d540c958d7059b5609c42bf8"
+    }
+  ],
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_id": null,
+    "evidence_ids": [
+      "PEP-381@b2120d116aa696f409b4d8333c4020ab8f93c9c7"
+    ],
+    "explanation": "PEP 381 has a lifecycle status of Withdrawn and no replacement or alternate governing decision exists in the visible record.",
+    "raw_response": "```json\n{\"authority_state\":\"NO_GOVERNING_DECISION\",\n \"governing_decision_id\":null,\n \"evidence_ids\":[\"PEP-381@b2120d116aa696f409b4d8333c4020ab8f93c9c7\"],\n \"explanation\":\"PEP 381 has a lifecycle status of Withdrawn and no replacement or alternate governing decision exists in the visible record.\"}\n```"
+  }
+}

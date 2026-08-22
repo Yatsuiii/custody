@@ -1,0 +1,43 @@
+{
+  "checkpoint_id": "metadata-1-1-c2",
+  "timeline_id": "metadata-1-1",
+  "question": "What decision currently governs python metadata 1 1? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "b2f043eb33509f638c5ae437c5fb6af03ba62455069ef717dc4ba13d110fb4a5",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-241@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+      "decision_id": "PEP-241",
+      "sequence": 1,
+      "rendered_sha256": "34282e2d7301ada1823dd0c90f7fdcf687c8b16a49dbc1d4ef44277d76f3787f"
+    },
+    {
+      "artifact_id": "PEP-314@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+      "decision_id": "PEP-314",
+      "sequence": 2,
+      "rendered_sha256": "96d4a3510e0a6f34f2aff0154ae22fc05a03625338ea3080fbce1419b0a1ef48"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-314",
+    "evidence_ids": [
+      "PEP-314"
+    ],
+    "claims": [
+      {
+        "text": "PEP-314 currently governs Metadata for Python Software Packages 1.1 and is the active decision.",
+        "category": "current_active_decision",
+        "decision_id": "PEP-314"
+      },
+      {
+        "text": "The authority evidence for PEP-314 is available at https://github.com/python/peps/blob/a0d411a7e334ddede263fdf9862f06bfc035f21c/pep-0314.txt.",
+        "category": "verified_historical_fact",
+        "decision_id": "PEP-314"
+      }
+    ],
+    "candidates_considered": [
+      "PEP-314",
+      "PEP-241"
+    ]
+  }
+}

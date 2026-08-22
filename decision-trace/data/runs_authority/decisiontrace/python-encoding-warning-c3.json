@@ -1,0 +1,61 @@
+{
+  "checkpoint_id": "python-encoding-warning-c3",
+  "timeline_id": "python-encoding-warning",
+  "question": "What decision currently governs python encoding warning policy after the implementation PR was reverted? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "2b849a705db61b93564a3707e52f765ed15256b4bdb9fcc9b6f7ed8b5fecba04",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-597@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-597",
+      "sequence": 1,
+      "rendered_sha256": "0609673d6ded14290725d31459f806afd543c3cadb6d3a008ec0d43f6037f910"
+    },
+    {
+      "artifact_id": "python/cpython#25103@ff3c9739bd69aa8b58007e63c9e40e6708b4761e",
+      "decision_id": "python/cpython#25103",
+      "sequence": 2,
+      "rendered_sha256": "92e017c9bc7575271b6ea460c1679b95ceb2d66d18d54665e3f44de336358529"
+    },
+    {
+      "artifact_id": "python/cpython#25108@cfa176685a5e788bafc7749d7a93f43ea3e4de9f",
+      "decision_id": "python/cpython#25108",
+      "sequence": 3,
+      "rendered_sha256": "9060f3914089e36b42ac7b617a21e9c7e4957abce7e107f0bcf7f9c08ee15d98"
+    }
+  ],
+  "prediction": {
+    "authority_state": "UNRESOLVED",
+    "governing_decision_id": null,
+    "evidence_ids": [
+      "PEP-597",
+      "python/cpython#25108"
+    ],
+    "claims": [
+      {
+        "text": "PEP-597 is the currently active decision governing the optional EncodingWarning policy.",
+        "category": "current_active_decision",
+        "decision_id": "PEP-597"
+      },
+      {
+        "text": "The authority evidence for PEP-597 is located at https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0597.rst where its status is Final.",
+        "category": "verified_historical_fact",
+        "decision_id": "PEP-597"
+      },
+      {
+        "text": "Following the reversion of python/cpython#25103, python/cpython#25108 is the currently active implementation decision.",
+        "category": "current_active_decision",
+        "decision_id": "python/cpython#25108"
+      },
+      {
+        "text": "python/cpython#25108 explicitly reverted python/cpython#25103's change accepting encoding='locale' in binary mode.",
+        "category": "verified_historical_fact",
+        "decision_id": "python/cpython#25108"
+      }
+    ],
+    "candidates_considered": [
+      "PEP-597",
+      "python/cpython#25108",
+      "python/cpython#25103"
+    ]
+  }
+}

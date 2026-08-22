@@ -1,0 +1,36 @@
+{
+  "checkpoint_id": "python-encoding-warning-c1",
+  "timeline_id": "python-encoding-warning",
+  "question": "What decision currently governs python encoding warning policy? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "436ed20b4cd8a8181dd2bd387c0cd67aef212ce2b878895b9a43bfdb3ffe829e",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-597@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-597",
+      "sequence": 1,
+      "rendered_sha256": "0609673d6ded14290725d31459f806afd543c3cadb6d3a008ec0d43f6037f910"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-597",
+    "evidence_ids": [
+      "PEP-597"
+    ],
+    "claims": [
+      {
+        "text": "PEP-597 is the currently active decision governing Python's encoding warning policy, implementing an optional EncodingWarning.",
+        "category": "current_active_decision",
+        "decision_id": "PEP-597"
+      },
+      {
+        "text": "The authority evidence for PEP-597 is recorded at https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0597.rst.",
+        "category": "verified_historical_fact",
+        "decision_id": "PEP-597"
+      }
+    ],
+    "candidates_considered": [
+      "PEP-597"
+    ]
+  }
+}

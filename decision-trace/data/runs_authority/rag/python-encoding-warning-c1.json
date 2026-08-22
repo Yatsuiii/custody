@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "python-encoding-warning-c1",
+  "timeline_id": "python-encoding-warning",
+  "question": "What decision currently governs python encoding warning policy? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "fccb9c6373be29872aefa61424899f130f608d7702d0416602b519b9b64072ee",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-597@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-597",
+      "sequence": 1,
+      "rendered_sha256": "0609673d6ded14290725d31459f806afd543c3cadb6d3a008ec0d43f6037f910"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-597",
+    "evidence_ids": [
+      "PEP-597@b2120d116aa696f409b4d8333c4020ab8f93c9c7"
+    ],
+    "explanation": "PEP-597 is marked as Final and currently governs the Python encoding warning policy scope.",
+    "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_id\": \"PEP-597\",\n  \"evidence_ids\": [\n    \"PEP-597@b2120d116aa696f409b4d8333c4020ab8f93c9c7\"\n  ],\n  \"explanation\": \"PEP-597 is marked as Final and currently governs the Python encoding warning policy scope.\"\n}\n```"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "checkpoint_id": "rust-str-as-str-c2",
+  "timeline_id": "rust-str-as-str",
+  "question": "What decision currently governs rust str as str stability after the explicit revert? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "a7fca89729f6eca04314cf911a8788d6a87be55dcfa6127bb61508ac977b93f9",
+  "visible_history": [
+    {
+      "artifact_id": "rust-lang/rust#151603@a919df8b1b3c250f14a41d879013c870a0477b20",
+      "decision_id": "rust-lang/rust#151603",
+      "sequence": 1,
+      "rendered_sha256": "53d2535aabec795102e1a5f74881f9171084d0c8146d1219251bcdaf0e24f08f"
+    },
+    {
+      "artifact_id": "rust-lang/rust#152963@867a480232dcf6429e4ca78cc6b7a6c4ead0f560",
+      "decision_id": "rust-lang/rust#152963",
+      "sequence": 2,
+      "rendered_sha256": "f510521f6884c084faee94791c29c7c265915a37518f68f0b2ec2c05c2e0446c"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "rust-lang/rust#152963",
+    "evidence_ids": [
+      "rust-lang/rust#152963@867a480232dcf6429e4ca78cc6b7a6c4ead0f560",
+      "rust-lang/rust#151603@a919df8b1b3c250f14a41d879013c870a0477b20"
+    ],
+    "explanation": "rust-lang/rust#152963 was merged to explicitly revert the stabilization in rust-lang/rust#151603, making it the governing decision for the rust-str-as-str-stability authority scope.",
+    "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\n \"governing_decision_id\":\"rust-lang/rust#152963\",\n \"evidence_ids\":[\"rust-lang/rust#152963@867a480232dcf6429e4ca78cc6b7a6c4ead0f560\",\"rust-lang/rust#151603@a919df8b1b3c250f14a41d879013c870a0477b20\"],\n \"explanation\":\"rust-lang/rust#152963 was merged to explicitly revert the stabilization in rust-lang/rust#151603, making it the governing decision for the rust-str-as-str-stability authority scope.\"}\n```"
+  }
+}

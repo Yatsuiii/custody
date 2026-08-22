@@ -1,0 +1,30 @@
+{
+  "checkpoint_id": "metadata-redesign-c2",
+  "timeline_id": "metadata-redesign",
+  "question": "What decision currently governs Python package metadata while PEP 426 is still a draft? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "3a0dd8065fd99d7c036b8608997b9aa144cc2f4f69b5f82e0eab060c5f6bec0f",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-345@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+      "decision_id": "PEP-345",
+      "sequence": 1,
+      "rendered_sha256": "8038c8a810424cdd0be59980538ed63cb8473da57d1ebcd1aadee981d91d6a3d"
+    },
+    {
+      "artifact_id": "PEP-426@8ae8b612",
+      "decision_id": "PEP-426",
+      "sequence": 2,
+      "rendered_sha256": "60f57054e02a157b780a3dbb7eeaf06ef2ea99a4607a8880cf8b6d0443402423"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-345",
+    "evidence_ids": [
+      "PEP-345@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+      "PEP-426@8ae8b612"
+    ],
+    "explanation": "PEP-345 holds ACCEPTED lifecycle status for python-package-metadata. While PEP-426 proposes replacing PEP-345, it remains in DRAFT status and is not yet authoritative.",
+    "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\n \"governing_decision_id\":\"PEP-345\",\n \"evidence_ids\":[\"PEP-345@a0d411a7e334ddede263fdf9862f06bfc035f21c\",\"PEP-426@8ae8b612\"],\n \"explanation\":\"PEP-345 holds ACCEPTED lifecycle status for python-package-metadata. While PEP-426 proposes replacing PEP-345, it remains in DRAFT status and is not yet authoritative.\"}\n```"
+  }
+}

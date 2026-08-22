@@ -1,0 +1,36 @@
+{
+  "checkpoint_id": "kubernetes-delayed-preemption-c1",
+  "timeline_id": "kubernetes-delayed-preemption",
+  "question": "What decision currently governs kubernetes delayed preemption? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "50dc81c49efb6a06453924c88cf7420b94cc98890389b2ab74c8b28d04135e68",
+  "visible_history": [
+    {
+      "artifact_id": "kubernetes/kubernetes#136254@338a3bcef88f4991cee61ee03105f058b34eb276",
+      "decision_id": "kubernetes/kubernetes#136254",
+      "sequence": 1,
+      "rendered_sha256": "9785caff425eab7dd19042bd75ab29874c41b21e740688449f495cc23df19948"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "kubernetes/kubernetes#136254",
+    "evidence_ids": [
+      "kubernetes/kubernetes#136254"
+    ],
+    "claims": [
+      {
+        "text": "The currently active decision governing the initial delayed preemption mechanism is kubernetes/kubernetes#136254, which extends PostFilterResult with a list of victim Pods.",
+        "category": "current_active_decision",
+        "decision_id": "kubernetes/kubernetes#136254"
+      },
+      {
+        "text": "The authority evidence for decision kubernetes/kubernetes#136254 is located at https://github.com/kubernetes/kubernetes/pull/136254.",
+        "category": "verified_historical_fact",
+        "decision_id": "kubernetes/kubernetes#136254"
+      }
+    ],
+    "candidates_considered": [
+      "kubernetes/kubernetes#136254"
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "rust-const-checks-c1",
+  "timeline_id": "rust-const-checks",
+  "question": "What decision currently governs rust const checks? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "34e096043e6bb05ac1f3f1f1deb3a8841ff5cf2e2c190240de4b708792017204",
+  "visible_history": [
+    {
+      "artifact_id": "rust-lang/rust#149375@7f99507f57e6c4aa0dce3daf6a13cca8cd4dd312",
+      "decision_id": "rust-lang/rust#149375",
+      "sequence": 1,
+      "rendered_sha256": "07e205f342c9e6d64aed452a25e042d602596ed0d3763540d7ddf973592b8591"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "rust-lang/rust#149375",
+    "evidence_ids": [
+      "rust-lang/rust#149375@7f99507f57e6c4aa0dce3daf6a13cca8cd4dd312"
+    ],
+    "explanation": "rust-lang/rust#149375 is merged and explicitly governs the rust-const-checks authority scope without subsequent superseding decisions.",
+    "raw_response": "```json\n{\n \"authority_state\": \"GOVERNING\",\n \"governing_decision_id\": \"rust-lang/rust#149375\",\n \"evidence_ids\": [\n  \"rust-lang/rust#149375@7f99507f57e6c4aa0dce3daf6a13cca8cd4dd312\"\n ],\n \"explanation\": \"rust-lang/rust#149375 is merged and explicitly governs the rust-const-checks authority scope without subsequent superseding decisions.\"\n}\n```"
+  }
+}

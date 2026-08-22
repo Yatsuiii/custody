@@ -1,0 +1,61 @@
+{
+  "checkpoint_id": "annotation-semantics-c5",
+  "timeline_id": "annotation-semantics",
+  "question": "Is there one single decision that governs both annotation-evaluation policy and all implementation details?",
+  "prompt_sha256": "a865d5edaf36e9bcfcc9a66fb67dbbc5af64845c8071d56908a38894e132d699",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-563@e3010cb7d2c4a1aaf285170e49227859386a3316",
+      "decision_id": "PEP-563",
+      "sequence": 1,
+      "rendered_sha256": "085c46e81891d201de33530cba0fa6503123f5663c02c9e27bc7891b6ac69fe3"
+    },
+    {
+      "artifact_id": "PEP-649@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-649",
+      "sequence": 2,
+      "rendered_sha256": "ab15d215e0ff25ee09a0d6b869da5b5e336c208d43185e1ae7af51f3f9890ac4"
+    },
+    {
+      "artifact_id": "PEP-749@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-749",
+      "sequence": 3,
+      "rendered_sha256": "8232ea3806c3d58875bba117fe6903ea6eea2b5f766baf42f289b868935c9226"
+    }
+  ],
+  "prediction": {
+    "authority_state": "UNRESOLVED",
+    "governing_decision_id": null,
+    "evidence_ids": [
+      "PEP-649",
+      "PEP-749"
+    ],
+    "claims": [
+      {
+        "text": "PEP-649 is currently active and governs the deferred evaluation of annotations using descriptors, superseding PEP-563.",
+        "category": "current_active_decision",
+        "decision_id": "PEP-649"
+      },
+      {
+        "text": "PEP-749 is currently active and specifically governs the implementation of PEP 649.",
+        "category": "current_active_decision",
+        "decision_id": "PEP-749"
+      },
+      {
+        "text": "PEP-563 was the earlier accepted approach for postponed evaluation of annotations, but it has been superseded.",
+        "category": "verified_historical_fact",
+        "decision_id": "PEP-563"
+      },
+      {
+        "text": "There is no single governing decision for both policy and implementation; PEP-649 defines the annotation-evaluation mechanism while PEP-749 addresses implementation details.",
+        "category": "missing_or_uncertain",
+        "decision_id": null
+      }
+    ],
+    "candidates_considered": [
+      "PEP-563",
+      "PEP-749",
+      "PEP-649"
+    ]
+  }
+}

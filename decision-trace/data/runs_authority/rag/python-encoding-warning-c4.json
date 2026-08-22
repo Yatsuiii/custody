@@ -1,0 +1,37 @@
+{
+  "checkpoint_id": "python-encoding-warning-c4",
+  "timeline_id": "python-encoding-warning",
+  "question": "Did the code revert replace the accepted python encoding warning policy; what governs now?",
+  "prompt_sha256": "83876389f5c417fb4b9aa30d60634007aeae2d2ed82957c15207451ea313560b",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-597@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-597",
+      "sequence": 1,
+      "rendered_sha256": "0609673d6ded14290725d31459f806afd543c3cadb6d3a008ec0d43f6037f910"
+    },
+    {
+      "artifact_id": "python/cpython#25103@ff3c9739bd69aa8b58007e63c9e40e6708b4761e",
+      "decision_id": "python/cpython#25103",
+      "sequence": 2,
+      "rendered_sha256": "92e017c9bc7575271b6ea460c1679b95ceb2d66d18d54665e3f44de336358529"
+    },
+    {
+      "artifact_id": "python/cpython#25108@cfa176685a5e788bafc7749d7a93f43ea3e4de9f",
+      "decision_id": "python/cpython#25108",
+      "sequence": 3,
+      "rendered_sha256": "9060f3914089e36b42ac7b617a21e9c7e4957abce7e107f0bcf7f9c08ee15d98"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-597",
+    "evidence_ids": [
+      "PEP-597@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "python/cpython#25108@cfa176685a5e788bafc7749d7a93f43ea3e4de9f",
+      "python/cpython#25103@ff3c9739bd69aa8b58007e63c9e40e6708b4761e"
+    ],
+    "explanation": "PEP-597 is accepted with Final status. The code revert in PR python/cpython#25108 reverted an implementation PR (python/cpython#25103), but a code revert does not withdraw or replace the governing PEP policy.",
+    "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\n \"governing_decision_id\":\"PEP-597\",\n \"evidence_ids\":[\"PEP-597@b2120d116aa696f409b4d8333c4020ab8f93c9c7\",\"python/cpython#25108@cfa176685a5e788bafc7749d7a93f43ea3e4de9f\",\"python/cpython#25103@ff3c9739bd69aa8b58007e63c9e40e6708b4761e\"],\n \"explanation\":\"PEP-597 is accepted with Final status. The code revert in PR python/cpython#25108 reverted an implementation PR (python/cpython#25103), but a code revert does not withdraw or replace the governing PEP policy.\"}\n```"
+  }
+}

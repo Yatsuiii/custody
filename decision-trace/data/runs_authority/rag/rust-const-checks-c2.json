@@ -1,0 +1,30 @@
+{
+  "checkpoint_id": "rust-const-checks-c2",
+  "timeline_id": "rust-const-checks",
+  "question": "What decision currently governs rust const checks after the explicit revert? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "4907b7eefe5accab97460379ded1468bbcf6cac35326af8ef1b9f1eccc9c45de",
+  "visible_history": [
+    {
+      "artifact_id": "rust-lang/rust#149375@7f99507f57e6c4aa0dce3daf6a13cca8cd4dd312",
+      "decision_id": "rust-lang/rust#149375",
+      "sequence": 1,
+      "rendered_sha256": "07e205f342c9e6d64aed452a25e042d602596ed0d3763540d7ddf973592b8591"
+    },
+    {
+      "artifact_id": "rust-lang/rust#154930@db99e16ae366e4f167a8fa32d35483d6962a2d6d",
+      "decision_id": "rust-lang/rust#154930",
+      "sequence": 2,
+      "rendered_sha256": "919480c958e4bb66171670a3900922a12ad26e31853938731c2626a85c75d937"
+    }
+  ],
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_id": null,
+    "evidence_ids": [
+      "rust-lang/rust#149375@7f99507f57e6c4aa0dce3daf6a13cca8cd4dd312",
+      "rust-lang/rust#154930@db99e16ae366e4f167a8fa32d35483d6962a2d6d"
+    ],
+    "explanation": "PR #149375 introduced basic const checks during type checking, but was explicitly reverted by PR #154930, leaving no active governing decision in the visible history.",
+    "raw_response": "```json\n{\"authority_state\":\"NO_GOVERNING_DECISION\",\n \"governing_decision_id\":null,\n \"evidence_ids\":[\"rust-lang/rust#149375@7f99507f57e6c4aa0dce3daf6a13cca8cd4dd312\", \"rust-lang/rust#154930@db99e16ae366e4f167a8fa32d35483d6962a2d6d\"],\n \"explanation\":\"PR #149375 introduced basic const checks during type checking, but was explicitly reverted by PR #154930, leaving no active governing decision in the visible history.\"}\n```"
+  }
+}

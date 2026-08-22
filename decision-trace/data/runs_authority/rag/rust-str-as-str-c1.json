@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "rust-str-as-str-c1",
+  "timeline_id": "rust-str-as-str",
+  "question": "What decision currently governs rust str as str stability? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "cd4a2f192bd3a88593cbebd85700e995db1a96dcadb5bb4af0e86a33415a1b69",
+  "visible_history": [
+    {
+      "artifact_id": "rust-lang/rust#151603@a919df8b1b3c250f14a41d879013c870a0477b20",
+      "decision_id": "rust-lang/rust#151603",
+      "sequence": 1,
+      "rendered_sha256": "53d2535aabec795102e1a5f74881f9171084d0c8146d1219251bcdaf0e24f08f"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "rust-lang/rust#151603",
+    "evidence_ids": [
+      "rust-lang/rust#151603@a919df8b1b3c250f14a41d879013c870a0477b20"
+    ],
+    "explanation": "PR #151603 was merged to stabilize `str_as_str` (closing tracking issue #130366), establishing authoritative stability for the `rust-str-as-str-stability` scope.",
+    "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\n \"governing_decision_id\":\"rust-lang/rust#151603\",\n \"evidence_ids\":[\"rust-lang/rust#151603@a919df8b1b3c250f14a41d879013c870a0477b20\"],\n \"explanation\":\"PR #151603 was merged to stabilize `str_as_str` (closing tracking issue #130366), establishing authoritative stability for the `rust-str-as-str-stability` scope.\"}\n```"
+  }
+}

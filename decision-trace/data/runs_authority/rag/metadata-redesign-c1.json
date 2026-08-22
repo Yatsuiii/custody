@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "metadata-redesign-c1",
+  "timeline_id": "metadata-redesign",
+  "question": "What decision currently governs Python package metadata? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "bbecb9e691f72f1a50d53ff2a775c37eceb322a2822e15f48a16d64589ff472d",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-345@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+      "decision_id": "PEP-345",
+      "sequence": 1,
+      "rendered_sha256": "8038c8a810424cdd0be59980538ed63cb8473da57d1ebcd1aadee981d91d6a3d"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-345",
+    "evidence_ids": [
+      "PEP-345@a0d411a7e334ddede263fdf9862f06bfc035f21c"
+    ],
+    "explanation": "PEP-345 is explicitly accepted under the python-package-metadata scope with no superseding or withdrawing artifacts present.",
+    "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\n \"governing_decision_id\":\"PEP-345\",\n \"evidence_ids\":[\"PEP-345@a0d411a7e334ddede263fdf9862f06bfc035f21c\"],\n \"explanation\":\"PEP-345 is explicitly accepted under the python-package-metadata scope with no superseding or withdrawing artifacts present.\"}\n```"
+  }
+}

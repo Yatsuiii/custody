@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "annotation-semantics-c1",
+  "timeline_id": "annotation-semantics",
+  "question": "What decision currently governs annotation evaluation semantics? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "6b11e85b1f959da8f981b5fafdd675d62cda8d820409e701bf6e4f98e0a532bd",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-563@e3010cb7d2c4a1aaf285170e49227859386a3316",
+      "decision_id": "PEP-563",
+      "sequence": 1,
+      "rendered_sha256": "085c46e81891d201de33530cba0fa6503123f5663c02c9e27bc7891b6ac69fe3"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-563",
+    "evidence_ids": [
+      "PEP-563@e3010cb7d2c4a1aaf285170e49227859386a3316"
+    ],
+    "explanation": "PEP-563 is explicitly accepted with the authority scope 'annotation-evaluation-policy' and no superseding or withdrawing decisions exist in the visible history.",
+    "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\n \"governing_decision_id\":\"PEP-563\",\n \"evidence_ids\":[\"PEP-563@e3010cb7d2c4a1aaf285170e49227859386a3316\"],\n \"explanation\":\"PEP-563 is explicitly accepted with the authority scope 'annotation-evaluation-policy' and no superseding or withdrawing decisions exist in the visible history.\"}\n```"
+  }
+}

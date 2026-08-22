@@ -1,0 +1,3629 @@
+{
+  "conditions": {
+    "decisiontrace": {
+      "governing_accuracy": {
+        "numerator": 47,
+        "denominator": 61,
+        "rate": 0.7704918032786885,
+        "wilson95": [
+          0.6508635609254849,
+          0.858068976211168
+        ]
+      },
+      "evidence_correctness": {
+        "numerator": 53,
+        "denominator": 61,
+        "rate": 0.8688524590163934,
+        "wilson95": [
+          0.761978875735935,
+          0.932020038541319
+        ]
+      },
+      "combined_accuracy": {
+        "numerator": 46,
+        "denominator": 61,
+        "rate": 0.7540983606557377,
+        "wilson95": [
+          0.6331533709421812,
+          0.8449347700043716
+        ]
+      },
+      "stale_decision_rate": {
+        "numerator": 0,
+        "denominator": 61,
+        "rate": 0.0,
+        "wilson95": [
+          0,
+          0.05924591620194442
+        ]
+      },
+      "false_authority_rate": {
+        "numerator": 2,
+        "denominator": 61,
+        "rate": 0.03278688524590164,
+        "wilson95": [
+          0.009037700815687874,
+          0.11189700776645692
+        ]
+      },
+      "proposal_promoted_rate": {
+        "numerator": 0,
+        "denominator": 5,
+        "rate": 0.0,
+        "wilson95": [
+          0,
+          0.43449149475208104
+        ]
+      },
+      "revert_miss_rate": {
+        "numerator": 0,
+        "denominator": 14,
+        "rate": 0.0,
+        "wilson95": [
+          0,
+          0.21531701192718142
+        ]
+      },
+      "supersession_miss_rate": {
+        "numerator": 0,
+        "denominator": 13,
+        "rate": 0.0,
+        "wilson95": [
+          0,
+          0.22810184305529166
+        ]
+      },
+      "api_parse_failures": {
+        "numerator": 0,
+        "denominator": 61
+      },
+      "failure_counts": {
+        "PROPOSAL_PROMOTED": 2,
+        "MISSING_CORRECT_DECISION": 4,
+        "PARALLEL_DECISION_COLLAPSE": 7,
+        "EVIDENCE_ERROR": 1,
+        "UNSUPPORTED_AUTHORITY": 1
+      },
+      "consistency": {
+        "numerator": 10,
+        "denominator": 10,
+        "rate": 1.0
+      }
+    },
+    "rag": {
+      "governing_accuracy": {
+        "numerator": 52,
+        "denominator": 61,
+        "rate": 0.8524590163934426,
+        "wilson95": [
+          0.7427653049810489,
+          0.920389213106105
+        ]
+      },
+      "evidence_correctness": {
+        "numerator": 54,
+        "denominator": 61,
+        "rate": 0.8852459016393442,
+        "wilson95": [
+          0.7815546169010973,
+          0.9432886935662569
+        ]
+      },
+      "combined_accuracy": {
+        "numerator": 48,
+        "denominator": 61,
+        "rate": 0.7868852459016393,
+        "wilson95": [
+          0.6687734610328795,
+          0.8710034722938738
+        ]
+      },
+      "stale_decision_rate": {
+        "numerator": 0,
+        "denominator": 61,
+        "rate": 0.0,
+        "wilson95": [
+          0,
+          0.05924591620194442
+        ]
+      },
+      "false_authority_rate": {
+        "numerator": 0,
+        "denominator": 61,
+        "rate": 0.0,
+        "wilson95": [
+          0,
+          0.05924591620194442
+        ]
+      },
+      "proposal_promoted_rate": {
+        "numerator": 0,
+        "denominator": 5,
+        "rate": 0.0,
+        "wilson95": [
+          0,
+          0.43449149475208104
+        ]
+      },
+      "revert_miss_rate": {
+        "numerator": 0,
+        "denominator": 14,
+        "rate": 0.0,
+        "wilson95": [
+          0,
+          0.21531701192718142
+        ]
+      },
+      "supersession_miss_rate": {
+        "numerator": 0,
+        "denominator": 13,
+        "rate": 0.0,
+        "wilson95": [
+          0,
+          0.22810184305529166
+        ]
+      },
+      "api_parse_failures": {
+        "numerator": 0,
+        "denominator": 61
+      },
+      "failure_counts": {
+        "EVIDENCE_ERROR": 4,
+        "PARALLEL_DECISION_COLLAPSE": 3,
+        "MISSING_CORRECT_DECISION": 6
+      },
+      "consistency": {
+        "numerator": 7,
+        "denominator": 10,
+        "rate": 0.7
+      }
+    }
+  },
+  "breakdown": {
+    "decisiontrace": {
+      "scenario": {
+        "conflicting_evidence": {
+          "numerator": 3,
+          "denominator": 5,
+          "rate": 0.6,
+          "wilson95": [
+            0.23071993220883708,
+            0.8823817688407467
+          ]
+        },
+        "implementation_revert_policy_survives": {
+          "numerator": 3,
+          "denominator": 8,
+          "rate": 0.375,
+          "wilson95": [
+            0.13684175946152105,
+            0.6942621454161981
+          ]
+        },
+        "mention_without_supersession": {
+          "numerator": 1,
+          "denominator": 5,
+          "rate": 0.2,
+          "wilson95": [
+            0.03622316096978745,
+            0.6244717358814613
+          ]
+        },
+        "multi_hop_supersession": {
+          "numerator": 3,
+          "denominator": 5,
+          "rate": 0.6,
+          "wilson95": [
+            0.23071993220883708,
+            0.8823817688407467
+          ]
+        },
+        "parallel_decisions": {
+          "numerator": 10,
+          "denominator": 12,
+          "rate": 0.8333333333333334,
+          "wilson95": [
+            0.5519636426153274,
+            0.9530358523851776
+          ]
+        },
+        "proposal_after_current": {
+          "numerator": 8,
+          "denominator": 9,
+          "rate": 0.8888888888888888,
+          "wilson95": [
+            0.5649937852319399,
+            0.9801096286728695
+          ]
+        },
+        "revert_after_supersession": {
+          "numerator": 15,
+          "denominator": 15,
+          "rate": 1.0,
+          "wilson95": [
+            0.7961107336956521,
+            1
+          ]
+        },
+        "simple_supersession": {
+          "numerator": 8,
+          "denominator": 11,
+          "rate": 0.7272727272727273,
+          "wilson95": [
+            0.4343497069897537,
+            0.9025411942607853
+          ]
+        }
+      },
+      "repository": {
+        "elastic/elasticsearch": {
+          "numerator": 4,
+          "denominator": 4,
+          "rate": 1.0,
+          "wilson95": [
+            0.5100999795960008,
+            1
+          ]
+        },
+        "kubernetes/kubernetes": {
+          "numerator": 4,
+          "denominator": 4,
+          "rate": 1.0,
+          "wilson95": [
+            0.5100999795960008,
+            1
+          ]
+        },
+        "python/peps": {
+          "numerator": 28,
+          "denominator": 37,
+          "rate": 0.7567567567567568,
+          "wilson95": [
+            0.5988239750929105,
+            0.8663879656733671
+          ]
+        },
+        "python/peps + python/cpython": {
+          "numerator": 3,
+          "denominator": 8,
+          "rate": 0.375,
+          "wilson95": [
+            0.13684175946152105,
+            0.6942621454161981
+          ]
+        },
+        "rust-lang/rust": {
+          "numerator": 8,
+          "denominator": 8,
+          "rate": 1.0,
+          "wilson95": [
+            0.6755843804891231,
+            1
+          ]
+        }
+      },
+      "composition": {
+        "fully_real": {
+          "numerator": 23,
+          "denominator": 28,
+          "rate": 0.8214285714285714,
+          "wilson95": [
+            0.644082084514089,
+            0.9212161417056989
+          ]
+        },
+        "hybrid": {
+          "numerator": 24,
+          "denominator": 33,
+          "rate": 0.7272727272727273,
+          "wilson95": [
+            0.5578211674561319,
+            0.849327273436772
+          ]
+        }
+      },
+      "position": {
+        "final": {
+          "numerator": 23,
+          "denominator": 32,
+          "rate": 0.71875,
+          "wilson95": [
+            0.546251630618882,
+            0.8443559315435214
+          ]
+        },
+        "intermediate": {
+          "numerator": 24,
+          "denominator": 29,
+          "rate": 0.8275862068965517,
+          "wilson95": [
+            0.6545119942718488,
+            0.9240225472852007
+          ]
+        }
+      }
+    },
+    "rag": {
+      "scenario": {
+        "conflicting_evidence": {
+          "numerator": 2,
+          "denominator": 5,
+          "rate": 0.4,
+          "wilson95": [
+            0.1176182311592533,
+            0.769280067791163
+          ]
+        },
+        "implementation_revert_policy_survives": {
+          "numerator": 8,
+          "denominator": 8,
+          "rate": 1.0,
+          "wilson95": [
+            0.6755843804891231,
+            1
+          ]
+        },
+        "mention_without_supersession": {
+          "numerator": 5,
+          "denominator": 5,
+          "rate": 1.0,
+          "wilson95": [
+            0.5655085052479191,
+            1
+          ]
+        },
+        "multi_hop_supersession": {
+          "numerator": 5,
+          "denominator": 5,
+          "rate": 1.0,
+          "wilson95": [
+            0.5655085052479191,
+            1
+          ]
+        },
+        "parallel_decisions": {
+          "numerator": 9,
+          "denominator": 12,
+          "rate": 0.75,
+          "wilson95": [
+            0.46768966087934005,
+            0.9110599603710386
+          ]
+        },
+        "proposal_after_current": {
+          "numerator": 9,
+          "denominator": 9,
+          "rate": 1.0,
+          "wilson95": [
+            0.7008472464490407,
+            1
+          ]
+        },
+        "revert_after_supersession": {
+          "numerator": 9,
+          "denominator": 15,
+          "rate": 0.6,
+          "wilson95": [
+            0.357464427565077,
+            0.8017577191740534
+          ]
+        },
+        "simple_supersession": {
+          "numerator": 11,
+          "denominator": 11,
+          "rate": 1.0,
+          "wilson95": [
+            0.7411599827511859,
+            1
+          ]
+        }
+      },
+      "repository": {
+        "elastic/elasticsearch": {
+          "numerator": 2,
+          "denominator": 4,
+          "rate": 0.5,
+          "wilson95": [
+            0.15003570882017148,
+            0.8499642911798285
+          ]
+        },
+        "kubernetes/kubernetes": {
+          "numerator": 2,
+          "denominator": 4,
+          "rate": 0.5,
+          "wilson95": [
+            0.15003570882017148,
+            0.8499642911798285
+          ]
+        },
+        "python/peps": {
+          "numerator": 34,
+          "denominator": 37,
+          "rate": 0.918918918918919,
+          "wilson95": [
+            0.7869900750149847,
+            0.9720399336036787
+          ]
+        },
+        "python/peps + python/cpython": {
+          "numerator": 8,
+          "denominator": 8,
+          "rate": 1.0,
+          "wilson95": [
+            0.6755843804891231,
+            1
+          ]
+        },
+        "rust-lang/rust": {
+          "numerator": 6,
+          "denominator": 8,
+          "rate": 0.75,
+          "wilson95": [
+            0.40926987910258916,
+            0.9285223111419724
+          ]
+        }
+      },
+      "composition": {
+        "fully_real": {
+          "numerator": 22,
+          "denominator": 28,
+          "rate": 0.7857142857142857,
+          "wilson95": [
+            0.6046105292072612,
+            0.8978767829881058
+          ]
+        },
+        "hybrid": {
+          "numerator": 30,
+          "denominator": 33,
+          "rate": 0.9090909090909091,
+          "wilson95": [
+            0.7642705646564897,
+            0.968596628950737
+          ]
+        }
+      },
+      "position": {
+        "final": {
+          "numerator": 23,
+          "denominator": 32,
+          "rate": 0.71875,
+          "wilson95": [
+            0.546251630618882,
+            0.8443559315435214
+          ]
+        },
+        "intermediate": {
+          "numerator": 29,
+          "denominator": 29,
+          "rate": 1.0,
+          "wilson95": [
+            0.8830264055344442,
+            1
+          ]
+        }
+      }
+    }
+  },
+  "paired_bootstrap": {
+    "accuracy_difference": -0.08051174751906444,
+    "accuracy_difference_90ci": [
+      -0.25,
+      0.0847457627118644
+    ],
+    "stale_false_difference": 0.03281661893588721,
+    "stale_false_difference_90ci": [
+      0.0,
+      0.06779661016949153
+    ]
+  },
+  "decisiontrace_mechanisms": {
+    "generation": 11,
+    "deterministic resolver": 3,
+    "lifecycle representation": 1
+  },
+  "all_rows": {
+    "decisiontrace": [
+      {
+        "checkpoint_id": "metadata-redesign-c1",
+        "timeline_id": "metadata-redesign",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "proposal_after_current"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-345",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-345",
+        "predicted_evidence": [
+          "PEP-345"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "metadata-redesign-c2",
+        "timeline_id": "metadata-redesign",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "proposal_after_current"
+        ],
+        "applicable": [
+          "PROPOSAL_PROMOTED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-345",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-345",
+        "predicted_evidence": [
+          "PEP-345"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "metadata-redesign-c3",
+        "timeline_id": "metadata-redesign",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "proposal_after_current"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-345",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-426",
+        "predicted_evidence": [
+          "PEP-426"
+        ],
+        "authority_correct": false,
+        "evidence_correct": false,
+        "combined_correct": false,
+        "failure": "PROPOSAL_PROMOTED",
+        "mechanism": "generation"
+      },
+      {
+        "checkpoint_id": "metadata-redesign-c4",
+        "timeline_id": "metadata-redesign",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "simple_supersession"
+        ],
+        "applicable": [
+          "STALE_DECISION",
+          "SUPERSESSION_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-566",
+        "predicted_state": "UNRESOLVED",
+        "predicted_id": null,
+        "predicted_evidence": [
+          "PEP-426",
+          "PEP-566"
+        ],
+        "authority_correct": false,
+        "evidence_correct": true,
+        "combined_correct": false,
+        "failure": "MISSING_CORRECT_DECISION",
+        "mechanism": "generation"
+      },
+      {
+        "checkpoint_id": "metadata-redesign-c5",
+        "timeline_id": "metadata-redesign",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "simple_supersession"
+        ],
+        "applicable": [
+          "STALE_DECISION",
+          "SUPERSESSION_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-566",
+        "predicted_state": "UNRESOLVED",
+        "predicted_id": null,
+        "predicted_evidence": [
+          "PEP-426",
+          "PEP-566"
+        ],
+        "authority_correct": false,
+        "evidence_correct": true,
+        "combined_correct": false,
+        "failure": "MISSING_CORRECT_DECISION",
+        "mechanism": "generation"
+      },
+      {
+        "checkpoint_id": "manylinux-policy-c1",
+        "timeline_id": "manylinux-policy",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "parallel_decisions"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-513",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-513",
+        "predicted_evidence": [
+          "PEP-513"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "manylinux-policy-c2",
+        "timeline_id": "manylinux-policy",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "parallel_decisions"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-571",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-571",
+        "predicted_evidence": [
+          "PEP-571"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "manylinux-policy-c3",
+        "timeline_id": "manylinux-policy",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "parallel_decisions"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-599",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-599",
+        "predicted_evidence": [
+          "PEP-599"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "manylinux-policy-c4",
+        "timeline_id": "manylinux-policy",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "multi_hop_supersession",
+          "parallel_decisions"
+        ],
+        "applicable": [
+          "SUPERSESSION_MISSED",
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-600",
+        "predicted_state": "UNRESOLVED",
+        "predicted_id": null,
+        "predicted_evidence": [],
+        "authority_correct": false,
+        "evidence_correct": false,
+        "combined_correct": false,
+        "failure": "PARALLEL_DECISION_COLLAPSE",
+        "mechanism": "deterministic resolver"
+      },
+      {
+        "checkpoint_id": "manylinux-policy-c5",
+        "timeline_id": "manylinux-policy",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "multi_hop_supersession"
+        ],
+        "applicable": [
+          "SUPERSESSION_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-600",
+        "predicted_state": "UNRESOLVED",
+        "predicted_id": null,
+        "predicted_evidence": [],
+        "authority_correct": false,
+        "evidence_correct": false,
+        "combined_correct": false,
+        "failure": "MISSING_CORRECT_DECISION",
+        "mechanism": "deterministic resolver"
+      },
+      {
+        "checkpoint_id": "metadata-1-1-c1",
+        "timeline_id": "metadata-1-1",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "simple_supersession"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-241",
+        "predicted_state": "NO_GOVERNING_DECISION",
+        "predicted_id": null,
+        "predicted_evidence": [],
+        "authority_correct": false,
+        "evidence_correct": false,
+        "combined_correct": false,
+        "failure": "MISSING_CORRECT_DECISION",
+        "mechanism": "generation"
+      },
+      {
+        "checkpoint_id": "metadata-1-1-c2",
+        "timeline_id": "metadata-1-1",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "simple_supersession"
+        ],
+        "applicable": [
+          "STALE_DECISION",
+          "SUPERSESSION_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-314",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-314",
+        "predicted_evidence": [
+          "PEP-314"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "metadata-1-1-c3",
+        "timeline_id": "metadata-1-1",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "simple_supersession"
+        ],
+        "applicable": [
+          "STALE_DECISION",
+          "SUPERSESSION_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-314",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-314",
+        "predicted_evidence": [
+          "PEP-314"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "metadata-1-2-c1",
+        "timeline_id": "metadata-1-2",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "multi_hop_supersession"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-241",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-241",
+        "predicted_evidence": [
+          "PEP-241"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "metadata-1-2-c2",
+        "timeline_id": "metadata-1-2",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "multi_hop_supersession"
+        ],
+        "applicable": [
+          "STALE_DECISION",
+          "SUPERSESSION_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-314",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-314",
+        "predicted_evidence": [
+          "PEP-314"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "metadata-1-2-c3",
+        "timeline_id": "metadata-1-2",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "multi_hop_supersession"
+        ],
+        "applicable": [
+          "STALE_DECISION",
+          "SUPERSESSION_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-345",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-345",
+        "predicted_evidence": [
+          "PEP-345"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "manylinux-unified-c1",
+        "timeline_id": "manylinux-unified",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "simple_supersession"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-513",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-513",
+        "predicted_evidence": [
+          "PEP-513"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "manylinux-unified-c2",
+        "timeline_id": "manylinux-unified",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "simple_supersession"
+        ],
+        "applicable": [
+          "STALE_DECISION",
+          "SUPERSESSION_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-600",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-600",
+        "predicted_evidence": [
+          "PEP-600"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "manylinux-unified-c3",
+        "timeline_id": "manylinux-unified",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "simple_supersession"
+        ],
+        "applicable": [
+          "STALE_DECISION",
+          "SUPERSESSION_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-600",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-600",
+        "predicted_evidence": [
+          "PEP-600"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "packaging-governance-c1",
+        "timeline_id": "packaging-governance",
+        "repository": "python/peps",
+        "composition": "fully_real",
+        "position": "intermediate",
+        "scenarios": [
+          "proposal_after_current"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-609",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-609",
+        "predicted_evidence": [
+          "PEP-609"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "packaging-governance-c2",
+        "timeline_id": "packaging-governance",
+        "repository": "python/peps",
+        "composition": "fully_real",
+        "position": "intermediate",
+        "scenarios": [
+          "proposal_after_current"
+        ],
+        "applicable": [
+          "PROPOSAL_PROMOTED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-609",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-609",
+        "predicted_evidence": [
+          "PEP-609"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "packaging-governance-c3",
+        "timeline_id": "packaging-governance",
+        "repository": "python/peps",
+        "composition": "fully_real",
+        "position": "intermediate",
+        "scenarios": [
+          "proposal_after_current",
+          "mention_without_supersession"
+        ],
+        "applicable": [
+          "PROPOSAL_PROMOTED",
+          "RECENCY_CONFUSION"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-609",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-609",
+        "predicted_evidence": [
+          "PEP-609"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "packaging-governance-c4",
+        "timeline_id": "packaging-governance",
+        "repository": "python/peps",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "simple_supersession"
+        ],
+        "applicable": [
+          "STALE_DECISION",
+          "SUPERSESSION_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-772",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-772",
+        "predicted_evidence": [
+          "PEP-772"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "single-file-metadata-c1",
+        "timeline_id": "single-file-metadata",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "proposal_after_current"
+        ],
+        "applicable": [
+          "UNSUPPORTED_AUTHORITY"
+        ],
+        "expected_state": "NO_GOVERNING_DECISION",
+        "expected_id": null,
+        "predicted_state": "NO_GOVERNING_DECISION",
+        "predicted_id": null,
+        "predicted_evidence": [],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "single-file-metadata-c2",
+        "timeline_id": "single-file-metadata",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "proposal_after_current"
+        ],
+        "applicable": [
+          "PROPOSAL_PROMOTED",
+          "UNSUPPORTED_AUTHORITY"
+        ],
+        "expected_state": "NO_GOVERNING_DECISION",
+        "expected_id": null,
+        "predicted_state": "NO_GOVERNING_DECISION",
+        "predicted_id": null,
+        "predicted_evidence": [],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "single-file-metadata-c3",
+        "timeline_id": "single-file-metadata",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "conflicting_evidence"
+        ],
+        "applicable": [
+          "UNSUPPORTED_AUTHORITY"
+        ],
+        "expected_state": "NO_GOVERNING_DECISION",
+        "expected_id": null,
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-722",
+        "predicted_evidence": [
+          "PEP-722"
+        ],
+        "authority_correct": false,
+        "evidence_correct": false,
+        "combined_correct": false,
+        "failure": "PROPOSAL_PROMOTED",
+        "mechanism": "generation"
+      },
+      {
+        "checkpoint_id": "single-file-metadata-c4",
+        "timeline_id": "single-file-metadata",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "simple_supersession"
+        ],
+        "applicable": [
+          "SUPERSESSION_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-723",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-723",
+        "predicted_evidence": [
+          "PEP-723"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "annotation-semantics-c1",
+        "timeline_id": "annotation-semantics",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "parallel_decisions"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-563",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-563",
+        "predicted_evidence": [
+          "PEP-563"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "annotation-semantics-c2",
+        "timeline_id": "annotation-semantics",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "simple_supersession"
+        ],
+        "applicable": [
+          "STALE_DECISION",
+          "SUPERSESSION_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-649",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-649",
+        "predicted_evidence": [
+          "PEP-649"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "annotation-semantics-c3",
+        "timeline_id": "annotation-semantics",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "parallel_decisions"
+        ],
+        "applicable": [
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-649",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-649",
+        "predicted_evidence": [
+          "PEP-649"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "annotation-semantics-c4",
+        "timeline_id": "annotation-semantics",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "parallel_decisions"
+        ],
+        "applicable": [
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-749",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-749",
+        "predicted_evidence": [
+          "PEP-749"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "annotation-semantics-c5",
+        "timeline_id": "annotation-semantics",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "parallel_decisions",
+          "conflicting_evidence"
+        ],
+        "applicable": [
+          "UNSUPPORTED_AUTHORITY",
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "UNRESOLVED",
+        "expected_id": null,
+        "predicted_state": "UNRESOLVED",
+        "predicted_id": null,
+        "predicted_evidence": [
+          "PEP-649",
+          "PEP-749"
+        ],
+        "authority_correct": true,
+        "evidence_correct": false,
+        "combined_correct": false,
+        "failure": "EVIDENCE_ERROR",
+        "mechanism": "lifecycle representation"
+      },
+      {
+        "checkpoint_id": "pypi-mirror-split-c1",
+        "timeline_id": "pypi-mirror-split",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "conflicting_evidence"
+        ],
+        "applicable": [
+          "UNSUPPORTED_AUTHORITY"
+        ],
+        "expected_state": "NO_GOVERNING_DECISION",
+        "expected_id": null,
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-381",
+        "predicted_evidence": [
+          "PEP-381"
+        ],
+        "authority_correct": false,
+        "evidence_correct": false,
+        "combined_correct": false,
+        "failure": "UNSUPPORTED_AUTHORITY",
+        "mechanism": "generation"
+      },
+      {
+        "checkpoint_id": "pypi-mirror-split-c2",
+        "timeline_id": "pypi-mirror-split",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "parallel_decisions"
+        ],
+        "applicable": [
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-449",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-449",
+        "predicted_evidence": [
+          "PEP-449"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "pypi-mirror-split-c3",
+        "timeline_id": "pypi-mirror-split",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "parallel_decisions"
+        ],
+        "applicable": [
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-464",
+        "predicted_state": "UNRESOLVED",
+        "predicted_id": null,
+        "predicted_evidence": [],
+        "authority_correct": false,
+        "evidence_correct": false,
+        "combined_correct": false,
+        "failure": "PARALLEL_DECISION_COLLAPSE",
+        "mechanism": "deterministic resolver"
+      },
+      {
+        "checkpoint_id": "pypi-mirror-split-c4",
+        "timeline_id": "pypi-mirror-split",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "parallel_decisions",
+          "conflicting_evidence"
+        ],
+        "applicable": [
+          "UNSUPPORTED_AUTHORITY",
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "UNRESOLVED",
+        "expected_id": null,
+        "predicted_state": "UNRESOLVED",
+        "predicted_id": null,
+        "predicted_evidence": [],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "pypi-mirror-split-c5",
+        "timeline_id": "pypi-mirror-split",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "parallel_decisions",
+          "conflicting_evidence"
+        ],
+        "applicable": [
+          "UNSUPPORTED_AUTHORITY",
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "UNRESOLVED",
+        "expected_id": null,
+        "predicted_state": "UNRESOLVED",
+        "predicted_id": null,
+        "predicted_evidence": [],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "rust-str-as-str-c1",
+        "timeline_id": "rust-str-as-str",
+        "repository": "rust-lang/rust",
+        "composition": "fully_real",
+        "position": "intermediate",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "rust-lang/rust#151603",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "rust-lang/rust#151603",
+        "predicted_evidence": [
+          "rust-lang/rust#151603"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "rust-str-as-str-c2",
+        "timeline_id": "rust-str-as-str",
+        "repository": "rust-lang/rust",
+        "composition": "fully_real",
+        "position": "intermediate",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [
+          "REVERT_MISSED",
+          "STALE_DECISION"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "rust-lang/rust#152963",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "rust-lang/rust#152963",
+        "predicted_evidence": [
+          "rust-lang/rust#152963"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "rust-str-as-str-c3",
+        "timeline_id": "rust-str-as-str",
+        "repository": "rust-lang/rust",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "proposal_after_current"
+        ],
+        "applicable": [
+          "PROPOSAL_PROMOTED",
+          "REVERT_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "rust-lang/rust#152963",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "rust-lang/rust#152963",
+        "predicted_evidence": [
+          "rust-lang/rust#152963"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "rust-str-as-str-c4",
+        "timeline_id": "rust-str-as-str",
+        "repository": "rust-lang/rust",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [
+          "REVERT_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "rust-lang/rust#152963",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "rust-lang/rust#152963",
+        "predicted_evidence": [
+          "rust-lang/rust#152963"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "rust-const-checks-c1",
+        "timeline_id": "rust-const-checks",
+        "repository": "rust-lang/rust",
+        "composition": "fully_real",
+        "position": "intermediate",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "rust-lang/rust#149375",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "rust-lang/rust#149375",
+        "predicted_evidence": [
+          "rust-lang/rust#149375"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "rust-const-checks-c2",
+        "timeline_id": "rust-const-checks",
+        "repository": "rust-lang/rust",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [
+          "REVERT_MISSED",
+          "STALE_DECISION"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "rust-lang/rust#154930",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "rust-lang/rust#154930",
+        "predicted_evidence": [
+          "rust-lang/rust#154930"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "rust-const-checks-c3",
+        "timeline_id": "rust-const-checks",
+        "repository": "rust-lang/rust",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [
+          "RECENCY_CONFUSION",
+          "REVERT_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "rust-lang/rust#154930",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "rust-lang/rust#154930",
+        "predicted_evidence": [
+          "rust-lang/rust#154930"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "rust-const-checks-c4",
+        "timeline_id": "rust-const-checks",
+        "repository": "rust-lang/rust",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [
+          "REVERT_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "rust-lang/rust#154930",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "rust-lang/rust#154930",
+        "predicted_evidence": [
+          "rust-lang/rust#154930"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "kubernetes-delayed-preemption-c1",
+        "timeline_id": "kubernetes-delayed-preemption",
+        "repository": "kubernetes/kubernetes",
+        "composition": "fully_real",
+        "position": "intermediate",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "kubernetes/kubernetes#136254",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "kubernetes/kubernetes#136254",
+        "predicted_evidence": [
+          "kubernetes/kubernetes#136254"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "kubernetes-delayed-preemption-c2",
+        "timeline_id": "kubernetes-delayed-preemption",
+        "repository": "kubernetes/kubernetes",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [
+          "REVERT_MISSED",
+          "STALE_DECISION"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "kubernetes/kubernetes#137662",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "kubernetes/kubernetes#137662",
+        "predicted_evidence": [
+          "kubernetes/kubernetes#137662"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "kubernetes-delayed-preemption-c3",
+        "timeline_id": "kubernetes-delayed-preemption",
+        "repository": "kubernetes/kubernetes",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [
+          "RECENCY_CONFUSION",
+          "REVERT_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "kubernetes/kubernetes#137662",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "kubernetes/kubernetes#137662",
+        "predicted_evidence": [
+          "kubernetes/kubernetes#137662"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "kubernetes-delayed-preemption-c4",
+        "timeline_id": "kubernetes-delayed-preemption",
+        "repository": "kubernetes/kubernetes",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [
+          "REVERT_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "kubernetes/kubernetes#137662",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "kubernetes/kubernetes#137662",
+        "predicted_evidence": [
+          "kubernetes/kubernetes#137662"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "elastic-multi-value-c1",
+        "timeline_id": "elastic-multi-value",
+        "repository": "elastic/elasticsearch",
+        "composition": "fully_real",
+        "position": "intermediate",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "elastic/elasticsearch#147071",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "elastic/elasticsearch#147071",
+        "predicted_evidence": [
+          "elastic/elasticsearch#147071"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "elastic-multi-value-c2",
+        "timeline_id": "elastic-multi-value",
+        "repository": "elastic/elasticsearch",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [
+          "REVERT_MISSED",
+          "STALE_DECISION"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "elastic/elasticsearch#147360",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "elastic/elasticsearch#147360",
+        "predicted_evidence": [
+          "elastic/elasticsearch#147360"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "elastic-multi-value-c3",
+        "timeline_id": "elastic-multi-value",
+        "repository": "elastic/elasticsearch",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [
+          "RECENCY_CONFUSION",
+          "REVERT_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "elastic/elasticsearch#147360",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "elastic/elasticsearch#147360",
+        "predicted_evidence": [
+          "elastic/elasticsearch#147360"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "elastic-multi-value-c4",
+        "timeline_id": "elastic-multi-value",
+        "repository": "elastic/elasticsearch",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [
+          "REVERT_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "elastic/elasticsearch#147360",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "elastic/elasticsearch#147360",
+        "predicted_evidence": [
+          "elastic/elasticsearch#147360"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "python-encoding-warning-c1",
+        "timeline_id": "python-encoding-warning",
+        "repository": "python/peps + python/cpython",
+        "composition": "fully_real",
+        "position": "intermediate",
+        "scenarios": [
+          "implementation_revert_policy_survives"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-597",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-597",
+        "predicted_evidence": [
+          "PEP-597"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "python-encoding-warning-c2",
+        "timeline_id": "python-encoding-warning",
+        "repository": "python/peps + python/cpython",
+        "composition": "fully_real",
+        "position": "intermediate",
+        "scenarios": [
+          "implementation_revert_policy_survives"
+        ],
+        "applicable": [
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-597",
+        "predicted_state": "UNRESOLVED",
+        "predicted_id": null,
+        "predicted_evidence": [
+          "PEP-597",
+          "python/cpython#25103"
+        ],
+        "authority_correct": false,
+        "evidence_correct": true,
+        "combined_correct": false,
+        "failure": "PARALLEL_DECISION_COLLAPSE",
+        "mechanism": "generation"
+      },
+      {
+        "checkpoint_id": "python-encoding-warning-c3",
+        "timeline_id": "python-encoding-warning",
+        "repository": "python/peps + python/cpython",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "implementation_revert_policy_survives",
+          "mention_without_supersession"
+        ],
+        "applicable": [
+          "REVERT_MISSED",
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-597",
+        "predicted_state": "UNRESOLVED",
+        "predicted_id": null,
+        "predicted_evidence": [
+          "PEP-597",
+          "python/cpython#25108"
+        ],
+        "authority_correct": false,
+        "evidence_correct": true,
+        "combined_correct": false,
+        "failure": "PARALLEL_DECISION_COLLAPSE",
+        "mechanism": "generation"
+      },
+      {
+        "checkpoint_id": "python-encoding-warning-c4",
+        "timeline_id": "python-encoding-warning",
+        "repository": "python/peps + python/cpython",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "implementation_revert_policy_survives",
+          "mention_without_supersession"
+        ],
+        "applicable": [
+          "RECENCY_CONFUSION",
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-597",
+        "predicted_state": "UNRESOLVED",
+        "predicted_id": null,
+        "predicted_evidence": [
+          "PEP-597",
+          "python/cpython#25108"
+        ],
+        "authority_correct": false,
+        "evidence_correct": true,
+        "combined_correct": false,
+        "failure": "PARALLEL_DECISION_COLLAPSE",
+        "mechanism": "generation"
+      },
+      {
+        "checkpoint_id": "python-multiphase-init-c1",
+        "timeline_id": "python-multiphase-init",
+        "repository": "python/peps + python/cpython",
+        "composition": "fully_real",
+        "position": "intermediate",
+        "scenarios": [
+          "implementation_revert_policy_survives"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-489",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-489",
+        "predicted_evidence": [
+          "PEP-489"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "python-multiphase-init-c2",
+        "timeline_id": "python-multiphase-init",
+        "repository": "python/peps + python/cpython",
+        "composition": "fully_real",
+        "position": "intermediate",
+        "scenarios": [
+          "implementation_revert_policy_survives"
+        ],
+        "applicable": [
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-489",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-489",
+        "predicted_evidence": [
+          "PEP-489"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "python-multiphase-init-c3",
+        "timeline_id": "python-multiphase-init",
+        "repository": "python/peps + python/cpython",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "implementation_revert_policy_survives",
+          "mention_without_supersession"
+        ],
+        "applicable": [
+          "REVERT_MISSED",
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-489",
+        "predicted_state": "UNRESOLVED",
+        "predicted_id": null,
+        "predicted_evidence": [
+          "PEP-489",
+          "python/cpython#19128"
+        ],
+        "authority_correct": false,
+        "evidence_correct": true,
+        "combined_correct": false,
+        "failure": "PARALLEL_DECISION_COLLAPSE",
+        "mechanism": "generation"
+      },
+      {
+        "checkpoint_id": "python-multiphase-init-c4",
+        "timeline_id": "python-multiphase-init",
+        "repository": "python/peps + python/cpython",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "implementation_revert_policy_survives",
+          "mention_without_supersession"
+        ],
+        "applicable": [
+          "RECENCY_CONFUSION",
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-489",
+        "predicted_state": "UNRESOLVED",
+        "predicted_id": null,
+        "predicted_evidence": [
+          "PEP-489",
+          "python/cpython#19128"
+        ],
+        "authority_correct": false,
+        "evidence_correct": true,
+        "combined_correct": false,
+        "failure": "PARALLEL_DECISION_COLLAPSE",
+        "mechanism": "generation"
+      }
+    ],
+    "rag": [
+      {
+        "checkpoint_id": "metadata-redesign-c1",
+        "timeline_id": "metadata-redesign",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "proposal_after_current"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-345",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-345",
+        "predicted_evidence": [
+          "PEP-345"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "metadata-redesign-c2",
+        "timeline_id": "metadata-redesign",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "proposal_after_current"
+        ],
+        "applicable": [
+          "PROPOSAL_PROMOTED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-345",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-345",
+        "predicted_evidence": [
+          "PEP-345",
+          "PEP-426"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "metadata-redesign-c3",
+        "timeline_id": "metadata-redesign",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "proposal_after_current"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-345",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-345",
+        "predicted_evidence": [
+          "PEP-345",
+          "PEP-426"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "metadata-redesign-c4",
+        "timeline_id": "metadata-redesign",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "simple_supersession"
+        ],
+        "applicable": [
+          "STALE_DECISION",
+          "SUPERSESSION_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-566",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-566",
+        "predicted_evidence": [
+          "PEP-566"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "metadata-redesign-c5",
+        "timeline_id": "metadata-redesign",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "simple_supersession"
+        ],
+        "applicable": [
+          "STALE_DECISION",
+          "SUPERSESSION_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-566",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-566",
+        "predicted_evidence": [
+          "PEP-345",
+          "PEP-426",
+          "PEP-566"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "manylinux-policy-c1",
+        "timeline_id": "manylinux-policy",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "parallel_decisions"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-513",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-513",
+        "predicted_evidence": [
+          "PEP-513"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "manylinux-policy-c2",
+        "timeline_id": "manylinux-policy",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "parallel_decisions"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-571",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-571",
+        "predicted_evidence": [
+          "PEP-571"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "manylinux-policy-c3",
+        "timeline_id": "manylinux-policy",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "parallel_decisions"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-599",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-599",
+        "predicted_evidence": [
+          "PEP-599"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "manylinux-policy-c4",
+        "timeline_id": "manylinux-policy",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "multi_hop_supersession",
+          "parallel_decisions"
+        ],
+        "applicable": [
+          "SUPERSESSION_MISSED",
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-600",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-600",
+        "predicted_evidence": [
+          "PEP-600"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "manylinux-policy-c5",
+        "timeline_id": "manylinux-policy",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "multi_hop_supersession"
+        ],
+        "applicable": [
+          "SUPERSESSION_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-600",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-600",
+        "predicted_evidence": [
+          "PEP-600"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "metadata-1-1-c1",
+        "timeline_id": "metadata-1-1",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "simple_supersession"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-241",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-241",
+        "predicted_evidence": [
+          "PEP-241"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "metadata-1-1-c2",
+        "timeline_id": "metadata-1-1",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "simple_supersession"
+        ],
+        "applicable": [
+          "STALE_DECISION",
+          "SUPERSESSION_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-314",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-314",
+        "predicted_evidence": [
+          "PEP-241",
+          "PEP-314"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "metadata-1-1-c3",
+        "timeline_id": "metadata-1-1",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "simple_supersession"
+        ],
+        "applicable": [
+          "STALE_DECISION",
+          "SUPERSESSION_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-314",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-314",
+        "predicted_evidence": [
+          "PEP-241",
+          "PEP-314"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "metadata-1-2-c1",
+        "timeline_id": "metadata-1-2",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "multi_hop_supersession"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-241",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-241",
+        "predicted_evidence": [
+          "PEP-241"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "metadata-1-2-c2",
+        "timeline_id": "metadata-1-2",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "multi_hop_supersession"
+        ],
+        "applicable": [
+          "STALE_DECISION",
+          "SUPERSESSION_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-314",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-314",
+        "predicted_evidence": [
+          "PEP-241",
+          "PEP-314"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "metadata-1-2-c3",
+        "timeline_id": "metadata-1-2",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "multi_hop_supersession"
+        ],
+        "applicable": [
+          "STALE_DECISION",
+          "SUPERSESSION_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-345",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-345",
+        "predicted_evidence": [
+          "PEP-241",
+          "PEP-314",
+          "PEP-345"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "manylinux-unified-c1",
+        "timeline_id": "manylinux-unified",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "simple_supersession"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-513",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-513",
+        "predicted_evidence": [
+          "PEP-513"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "manylinux-unified-c2",
+        "timeline_id": "manylinux-unified",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "simple_supersession"
+        ],
+        "applicable": [
+          "STALE_DECISION",
+          "SUPERSESSION_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-600",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-600",
+        "predicted_evidence": [
+          "PEP-513",
+          "PEP-600"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "manylinux-unified-c3",
+        "timeline_id": "manylinux-unified",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "simple_supersession"
+        ],
+        "applicable": [
+          "STALE_DECISION",
+          "SUPERSESSION_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-600",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-600",
+        "predicted_evidence": [
+          "PEP-513",
+          "PEP-600"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "packaging-governance-c1",
+        "timeline_id": "packaging-governance",
+        "repository": "python/peps",
+        "composition": "fully_real",
+        "position": "intermediate",
+        "scenarios": [
+          "proposal_after_current"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-609",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-609",
+        "predicted_evidence": [
+          "PEP-609"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "packaging-governance-c2",
+        "timeline_id": "packaging-governance",
+        "repository": "python/peps",
+        "composition": "fully_real",
+        "position": "intermediate",
+        "scenarios": [
+          "proposal_after_current"
+        ],
+        "applicable": [
+          "PROPOSAL_PROMOTED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-609",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-609",
+        "predicted_evidence": [
+          "PEP-609",
+          "PEP-772"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "packaging-governance-c3",
+        "timeline_id": "packaging-governance",
+        "repository": "python/peps",
+        "composition": "fully_real",
+        "position": "intermediate",
+        "scenarios": [
+          "proposal_after_current",
+          "mention_without_supersession"
+        ],
+        "applicable": [
+          "PROPOSAL_PROMOTED",
+          "RECENCY_CONFUSION"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-609",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-609",
+        "predicted_evidence": [
+          "PEP-609",
+          "PEP-772"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "packaging-governance-c4",
+        "timeline_id": "packaging-governance",
+        "repository": "python/peps",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "simple_supersession"
+        ],
+        "applicable": [
+          "STALE_DECISION",
+          "SUPERSESSION_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-772",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-772",
+        "predicted_evidence": [
+          "PEP-609",
+          "PEP-772"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "single-file-metadata-c1",
+        "timeline_id": "single-file-metadata",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "proposal_after_current"
+        ],
+        "applicable": [
+          "UNSUPPORTED_AUTHORITY"
+        ],
+        "expected_state": "NO_GOVERNING_DECISION",
+        "expected_id": null,
+        "predicted_state": "NO_GOVERNING_DECISION",
+        "predicted_id": null,
+        "predicted_evidence": [
+          "PEP-722"
+        ],
+        "authority_correct": true,
+        "evidence_correct": false,
+        "combined_correct": false,
+        "failure": "EVIDENCE_ERROR",
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "single-file-metadata-c2",
+        "timeline_id": "single-file-metadata",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "proposal_after_current"
+        ],
+        "applicable": [
+          "PROPOSAL_PROMOTED",
+          "UNSUPPORTED_AUTHORITY"
+        ],
+        "expected_state": "NO_GOVERNING_DECISION",
+        "expected_id": null,
+        "predicted_state": "NO_GOVERNING_DECISION",
+        "predicted_id": null,
+        "predicted_evidence": [
+          "PEP-722",
+          "PEP-723"
+        ],
+        "authority_correct": true,
+        "evidence_correct": false,
+        "combined_correct": false,
+        "failure": "EVIDENCE_ERROR",
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "single-file-metadata-c3",
+        "timeline_id": "single-file-metadata",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "conflicting_evidence"
+        ],
+        "applicable": [
+          "UNSUPPORTED_AUTHORITY"
+        ],
+        "expected_state": "NO_GOVERNING_DECISION",
+        "expected_id": null,
+        "predicted_state": "NO_GOVERNING_DECISION",
+        "predicted_id": null,
+        "predicted_evidence": [
+          "PEP-722",
+          "PEP-723"
+        ],
+        "authority_correct": true,
+        "evidence_correct": false,
+        "combined_correct": false,
+        "failure": "EVIDENCE_ERROR",
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "single-file-metadata-c4",
+        "timeline_id": "single-file-metadata",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "simple_supersession"
+        ],
+        "applicable": [
+          "SUPERSESSION_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-723",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-723",
+        "predicted_evidence": [
+          "PEP-723"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "annotation-semantics-c1",
+        "timeline_id": "annotation-semantics",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "parallel_decisions"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-563",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-563",
+        "predicted_evidence": [
+          "PEP-563"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "annotation-semantics-c2",
+        "timeline_id": "annotation-semantics",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "simple_supersession"
+        ],
+        "applicable": [
+          "STALE_DECISION",
+          "SUPERSESSION_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-649",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-649",
+        "predicted_evidence": [
+          "PEP-649"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "annotation-semantics-c3",
+        "timeline_id": "annotation-semantics",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "parallel_decisions"
+        ],
+        "applicable": [
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-649",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-649",
+        "predicted_evidence": [
+          "PEP-563",
+          "PEP-649"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "annotation-semantics-c4",
+        "timeline_id": "annotation-semantics",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "parallel_decisions"
+        ],
+        "applicable": [
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-749",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-749",
+        "predicted_evidence": [
+          "PEP-749"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "annotation-semantics-c5",
+        "timeline_id": "annotation-semantics",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "parallel_decisions",
+          "conflicting_evidence"
+        ],
+        "applicable": [
+          "UNSUPPORTED_AUTHORITY",
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "UNRESOLVED",
+        "expected_id": null,
+        "predicted_state": "NO_GOVERNING_DECISION",
+        "predicted_id": null,
+        "predicted_evidence": [
+          "PEP-649",
+          "PEP-749"
+        ],
+        "authority_correct": false,
+        "evidence_correct": false,
+        "combined_correct": false,
+        "failure": "PARALLEL_DECISION_COLLAPSE",
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "pypi-mirror-split-c1",
+        "timeline_id": "pypi-mirror-split",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "conflicting_evidence"
+        ],
+        "applicable": [
+          "UNSUPPORTED_AUTHORITY"
+        ],
+        "expected_state": "NO_GOVERNING_DECISION",
+        "expected_id": null,
+        "predicted_state": "NO_GOVERNING_DECISION",
+        "predicted_id": null,
+        "predicted_evidence": [
+          "PEP-381"
+        ],
+        "authority_correct": true,
+        "evidence_correct": false,
+        "combined_correct": false,
+        "failure": "EVIDENCE_ERROR",
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "pypi-mirror-split-c2",
+        "timeline_id": "pypi-mirror-split",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "intermediate",
+        "scenarios": [
+          "parallel_decisions"
+        ],
+        "applicable": [
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-449",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-449",
+        "predicted_evidence": [
+          "PEP-449"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "pypi-mirror-split-c3",
+        "timeline_id": "pypi-mirror-split",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "parallel_decisions"
+        ],
+        "applicable": [
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-464",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-464",
+        "predicted_evidence": [
+          "PEP-464"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "pypi-mirror-split-c4",
+        "timeline_id": "pypi-mirror-split",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "parallel_decisions",
+          "conflicting_evidence"
+        ],
+        "applicable": [
+          "UNSUPPORTED_AUTHORITY",
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "UNRESOLVED",
+        "expected_id": null,
+        "predicted_state": "NO_GOVERNING_DECISION",
+        "predicted_id": null,
+        "predicted_evidence": [
+          "PEP-381",
+          "PEP-449",
+          "PEP-464"
+        ],
+        "authority_correct": false,
+        "evidence_correct": false,
+        "combined_correct": false,
+        "failure": "PARALLEL_DECISION_COLLAPSE",
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "pypi-mirror-split-c5",
+        "timeline_id": "pypi-mirror-split",
+        "repository": "python/peps",
+        "composition": "hybrid",
+        "position": "final",
+        "scenarios": [
+          "parallel_decisions",
+          "conflicting_evidence"
+        ],
+        "applicable": [
+          "UNSUPPORTED_AUTHORITY",
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "UNRESOLVED",
+        "expected_id": null,
+        "predicted_state": "NO_GOVERNING_DECISION",
+        "predicted_id": null,
+        "predicted_evidence": [
+          "PEP-381",
+          "PEP-449",
+          "PEP-464"
+        ],
+        "authority_correct": false,
+        "evidence_correct": false,
+        "combined_correct": false,
+        "failure": "PARALLEL_DECISION_COLLAPSE",
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "rust-str-as-str-c1",
+        "timeline_id": "rust-str-as-str",
+        "repository": "rust-lang/rust",
+        "composition": "fully_real",
+        "position": "intermediate",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "rust-lang/rust#151603",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "rust-lang/rust#151603",
+        "predicted_evidence": [
+          "rust-lang/rust#151603"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "rust-str-as-str-c2",
+        "timeline_id": "rust-str-as-str",
+        "repository": "rust-lang/rust",
+        "composition": "fully_real",
+        "position": "intermediate",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [
+          "REVERT_MISSED",
+          "STALE_DECISION"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "rust-lang/rust#152963",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "rust-lang/rust#152963",
+        "predicted_evidence": [
+          "rust-lang/rust#151603",
+          "rust-lang/rust#152963"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "rust-str-as-str-c3",
+        "timeline_id": "rust-str-as-str",
+        "repository": "rust-lang/rust",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "proposal_after_current"
+        ],
+        "applicable": [
+          "PROPOSAL_PROMOTED",
+          "REVERT_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "rust-lang/rust#152963",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "rust-lang/rust#152963",
+        "predicted_evidence": [
+          "rust-lang/rust#151603",
+          "rust-lang/rust#152963",
+          "rust-lang/rust#152971"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "rust-str-as-str-c4",
+        "timeline_id": "rust-str-as-str",
+        "repository": "rust-lang/rust",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [
+          "REVERT_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "rust-lang/rust#152963",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "rust-lang/rust#152963",
+        "predicted_evidence": [
+          "rust-lang/rust#151603",
+          "rust-lang/rust#152963"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "rust-const-checks-c1",
+        "timeline_id": "rust-const-checks",
+        "repository": "rust-lang/rust",
+        "composition": "fully_real",
+        "position": "intermediate",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "rust-lang/rust#149375",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "rust-lang/rust#149375",
+        "predicted_evidence": [
+          "rust-lang/rust#149375"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "rust-const-checks-c2",
+        "timeline_id": "rust-const-checks",
+        "repository": "rust-lang/rust",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [
+          "REVERT_MISSED",
+          "STALE_DECISION"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "rust-lang/rust#154930",
+        "predicted_state": "NO_GOVERNING_DECISION",
+        "predicted_id": null,
+        "predicted_evidence": [
+          "rust-lang/rust#149375",
+          "rust-lang/rust#154930"
+        ],
+        "authority_correct": false,
+        "evidence_correct": true,
+        "combined_correct": false,
+        "failure": "MISSING_CORRECT_DECISION",
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "rust-const-checks-c3",
+        "timeline_id": "rust-const-checks",
+        "repository": "rust-lang/rust",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [
+          "RECENCY_CONFUSION",
+          "REVERT_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "rust-lang/rust#154930",
+        "predicted_state": "NO_GOVERNING_DECISION",
+        "predicted_id": null,
+        "predicted_evidence": [
+          "rust-lang/rust#149375",
+          "rust-lang/rust#154930"
+        ],
+        "authority_correct": false,
+        "evidence_correct": true,
+        "combined_correct": false,
+        "failure": "MISSING_CORRECT_DECISION",
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "rust-const-checks-c4",
+        "timeline_id": "rust-const-checks",
+        "repository": "rust-lang/rust",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [
+          "REVERT_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "rust-lang/rust#154930",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "rust-lang/rust#154930",
+        "predicted_evidence": [
+          "rust-lang/rust#149375",
+          "rust-lang/rust#154930"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "kubernetes-delayed-preemption-c1",
+        "timeline_id": "kubernetes-delayed-preemption",
+        "repository": "kubernetes/kubernetes",
+        "composition": "fully_real",
+        "position": "intermediate",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "kubernetes/kubernetes#136254",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "kubernetes/kubernetes#136254",
+        "predicted_evidence": [
+          "kubernetes/kubernetes#136254"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "kubernetes-delayed-preemption-c2",
+        "timeline_id": "kubernetes-delayed-preemption",
+        "repository": "kubernetes/kubernetes",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [
+          "REVERT_MISSED",
+          "STALE_DECISION"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "kubernetes/kubernetes#137662",
+        "predicted_state": "NO_GOVERNING_DECISION",
+        "predicted_id": null,
+        "predicted_evidence": [
+          "kubernetes/kubernetes#136254",
+          "kubernetes/kubernetes#137662"
+        ],
+        "authority_correct": false,
+        "evidence_correct": true,
+        "combined_correct": false,
+        "failure": "MISSING_CORRECT_DECISION",
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "kubernetes-delayed-preemption-c3",
+        "timeline_id": "kubernetes-delayed-preemption",
+        "repository": "kubernetes/kubernetes",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [
+          "RECENCY_CONFUSION",
+          "REVERT_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "kubernetes/kubernetes#137662",
+        "predicted_state": "NO_GOVERNING_DECISION",
+        "predicted_id": null,
+        "predicted_evidence": [
+          "kubernetes/kubernetes#136254",
+          "kubernetes/kubernetes#137662"
+        ],
+        "authority_correct": false,
+        "evidence_correct": true,
+        "combined_correct": false,
+        "failure": "MISSING_CORRECT_DECISION",
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "kubernetes-delayed-preemption-c4",
+        "timeline_id": "kubernetes-delayed-preemption",
+        "repository": "kubernetes/kubernetes",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [
+          "REVERT_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "kubernetes/kubernetes#137662",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "kubernetes/kubernetes#137662",
+        "predicted_evidence": [
+          "kubernetes/kubernetes#136254",
+          "kubernetes/kubernetes#137662"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "elastic-multi-value-c1",
+        "timeline_id": "elastic-multi-value",
+        "repository": "elastic/elasticsearch",
+        "composition": "fully_real",
+        "position": "intermediate",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "elastic/elasticsearch#147071",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "elastic/elasticsearch#147071",
+        "predicted_evidence": [
+          "elastic/elasticsearch#147071"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "elastic-multi-value-c2",
+        "timeline_id": "elastic-multi-value",
+        "repository": "elastic/elasticsearch",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [
+          "REVERT_MISSED",
+          "STALE_DECISION"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "elastic/elasticsearch#147360",
+        "predicted_state": "NO_GOVERNING_DECISION",
+        "predicted_id": null,
+        "predicted_evidence": [
+          "elastic/elasticsearch#147071",
+          "elastic/elasticsearch#147360"
+        ],
+        "authority_correct": false,
+        "evidence_correct": true,
+        "combined_correct": false,
+        "failure": "MISSING_CORRECT_DECISION",
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "elastic-multi-value-c3",
+        "timeline_id": "elastic-multi-value",
+        "repository": "elastic/elasticsearch",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [
+          "RECENCY_CONFUSION",
+          "REVERT_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "elastic/elasticsearch#147360",
+        "predicted_state": "NO_GOVERNING_DECISION",
+        "predicted_id": null,
+        "predicted_evidence": [
+          "elastic/elasticsearch#147071",
+          "elastic/elasticsearch#147360"
+        ],
+        "authority_correct": false,
+        "evidence_correct": true,
+        "combined_correct": false,
+        "failure": "MISSING_CORRECT_DECISION",
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "elastic-multi-value-c4",
+        "timeline_id": "elastic-multi-value",
+        "repository": "elastic/elasticsearch",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "revert_after_supersession"
+        ],
+        "applicable": [
+          "REVERT_MISSED"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "elastic/elasticsearch#147360",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "elastic/elasticsearch#147360",
+        "predicted_evidence": [
+          "elastic/elasticsearch#147071",
+          "elastic/elasticsearch#147360"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "python-encoding-warning-c1",
+        "timeline_id": "python-encoding-warning",
+        "repository": "python/peps + python/cpython",
+        "composition": "fully_real",
+        "position": "intermediate",
+        "scenarios": [
+          "implementation_revert_policy_survives"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-597",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-597",
+        "predicted_evidence": [
+          "PEP-597"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "python-encoding-warning-c2",
+        "timeline_id": "python-encoding-warning",
+        "repository": "python/peps + python/cpython",
+        "composition": "fully_real",
+        "position": "intermediate",
+        "scenarios": [
+          "implementation_revert_policy_survives"
+        ],
+        "applicable": [
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-597",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-597",
+        "predicted_evidence": [
+          "PEP-597",
+          "python/cpython#25103"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "python-encoding-warning-c3",
+        "timeline_id": "python-encoding-warning",
+        "repository": "python/peps + python/cpython",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "implementation_revert_policy_survives",
+          "mention_without_supersession"
+        ],
+        "applicable": [
+          "REVERT_MISSED",
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-597",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-597",
+        "predicted_evidence": [
+          "PEP-597",
+          "python/cpython#25108"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "python-encoding-warning-c4",
+        "timeline_id": "python-encoding-warning",
+        "repository": "python/peps + python/cpython",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "implementation_revert_policy_survives",
+          "mention_without_supersession"
+        ],
+        "applicable": [
+          "RECENCY_CONFUSION",
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-597",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-597",
+        "predicted_evidence": [
+          "PEP-597",
+          "python/cpython#25103",
+          "python/cpython#25108"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "python-multiphase-init-c1",
+        "timeline_id": "python-multiphase-init",
+        "repository": "python/peps + python/cpython",
+        "composition": "fully_real",
+        "position": "intermediate",
+        "scenarios": [
+          "implementation_revert_policy_survives"
+        ],
+        "applicable": [],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-489",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-489",
+        "predicted_evidence": [
+          "PEP-489"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "python-multiphase-init-c2",
+        "timeline_id": "python-multiphase-init",
+        "repository": "python/peps + python/cpython",
+        "composition": "fully_real",
+        "position": "intermediate",
+        "scenarios": [
+          "implementation_revert_policy_survives"
+        ],
+        "applicable": [
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-489",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-489",
+        "predicted_evidence": [
+          "PEP-489",
+          "python/cpython#19084"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "python-multiphase-init-c3",
+        "timeline_id": "python-multiphase-init",
+        "repository": "python/peps + python/cpython",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "implementation_revert_policy_survives",
+          "mention_without_supersession"
+        ],
+        "applicable": [
+          "REVERT_MISSED",
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-489",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-489",
+        "predicted_evidence": [
+          "PEP-489",
+          "python/cpython#19084",
+          "python/cpython#19128"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      },
+      {
+        "checkpoint_id": "python-multiphase-init-c4",
+        "timeline_id": "python-multiphase-init",
+        "repository": "python/peps + python/cpython",
+        "composition": "fully_real",
+        "position": "final",
+        "scenarios": [
+          "implementation_revert_policy_survives",
+          "mention_without_supersession"
+        ],
+        "applicable": [
+          "RECENCY_CONFUSION",
+          "PARALLEL_DECISION_COLLAPSE"
+        ],
+        "expected_state": "GOVERNING",
+        "expected_id": "PEP-489",
+        "predicted_state": "GOVERNING",
+        "predicted_id": "PEP-489",
+        "predicted_evidence": [
+          "PEP-489",
+          "python/cpython#19084",
+          "python/cpython#19128"
+        ],
+        "authority_correct": true,
+        "evidence_correct": true,
+        "combined_correct": true,
+        "failure": null,
+        "mechanism": null
+      }
+    ]
+  }
+}

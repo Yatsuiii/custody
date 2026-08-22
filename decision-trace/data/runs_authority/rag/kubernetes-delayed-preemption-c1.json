@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "kubernetes-delayed-preemption-c1",
+  "timeline_id": "kubernetes-delayed-preemption",
+  "question": "What decision currently governs kubernetes delayed preemption? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "de5c76a8ca6e169bd481c60ac28de31a8dd51a3b62c8d61959702f9c41a7f45d",
+  "visible_history": [
+    {
+      "artifact_id": "kubernetes/kubernetes#136254@338a3bcef88f4991cee61ee03105f058b34eb276",
+      "decision_id": "kubernetes/kubernetes#136254",
+      "sequence": 1,
+      "rendered_sha256": "9785caff425eab7dd19042bd75ab29874c41b21e740688449f495cc23df19948"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "kubernetes/kubernetes#136254",
+    "evidence_ids": [
+      "kubernetes/kubernetes#136254@338a3bcef88f4991cee61ee03105f058b34eb276"
+    ],
+    "explanation": "PR kubernetes/kubernetes#136254 is merged and establishes the active governing authority for kubernetes delayed preemption within this scope.",
+    "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\n \"governing_decision_id\":\"kubernetes/kubernetes#136254\",\n \"evidence_ids\":[\"kubernetes/kubernetes#136254@338a3bcef88f4991cee61ee03105f058b34eb276\"],\n \"explanation\":\"PR kubernetes/kubernetes#136254 is merged and establishes the active governing authority for kubernetes delayed preemption within this scope.\"}\n```"
+  }
+}

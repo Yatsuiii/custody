@@ -1,0 +1,48 @@
+{
+  "checkpoint_id": "elastic-multi-value-c2",
+  "timeline_id": "elastic-multi-value",
+  "question": "What decision currently governs elasticsearch multi value enforcement after the explicit revert? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "c11ff641ce84d22ad30a9ac0a08f6219756cab9b31b31b79417b17ea1783f479",
+  "visible_history": [
+    {
+      "artifact_id": "elastic/elasticsearch#147071@42d5c67e1c7d81dad6a2dd8780a8b89f49bc2d4c",
+      "decision_id": "elastic/elasticsearch#147071",
+      "sequence": 1,
+      "rendered_sha256": "01b170d0fc5108598d89f60745a79880c46680522c25dd2b95e8f030f71d096b"
+    },
+    {
+      "artifact_id": "elastic/elasticsearch#147360@d3f582051a2756be695eb854a694bd8f71031acd",
+      "decision_id": "elastic/elasticsearch#147360",
+      "sequence": 2,
+      "rendered_sha256": "5e68a4293d50863a3536b23c86bf40896b52562685dcc71ffae3564be2a5aa57"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "elastic/elasticsearch#147360",
+    "evidence_ids": [
+      "elastic/elasticsearch#147360"
+    ],
+    "claims": [
+      {
+        "text": "The currently active decision is elastic/elasticsearch#147360, which reverted the enforcement of single values when multi_value is no, supported by authority evidence at https://github.com/elastic/elasticsearch/pull/147360.",
+        "category": "current_active_decision",
+        "decision_id": "elastic/elasticsearch#147360"
+      },
+      {
+        "text": "Decision elastic/elasticsearch#147360 was implemented to revert PR #147071 in order to unblock CI after test failures.",
+        "category": "verified_historical_fact",
+        "decision_id": "elastic/elasticsearch#147360"
+      },
+      {
+        "text": "Decision elastic/elasticsearch#147071 originally attempted to enforce single values for fields configured with multi_value=no, but it is reverted and no longer active.",
+        "category": "verified_historical_fact",
+        "decision_id": "elastic/elasticsearch#147071"
+      }
+    ],
+    "candidates_considered": [
+      "elastic/elasticsearch#147360",
+      "elastic/elasticsearch#147071"
+    ]
+  }
+}

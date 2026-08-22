@@ -1,0 +1,37 @@
+{
+  "checkpoint_id": "pypi-mirror-split-c5",
+  "timeline_id": "pypi-mirror-split",
+  "question": "Can one authoritative decision govern both mirror discovery and authenticity?",
+  "prompt_sha256": "9565b324c58a835063539d2c38db3750f300340d0ddb07772cb6584c18ec571a",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-381@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-381",
+      "sequence": 1,
+      "rendered_sha256": "fe8c995ead8dd65f26b88451b7eb6d909fafc725d540c958d7059b5609c42bf8"
+    },
+    {
+      "artifact_id": "PEP-449@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-449",
+      "sequence": 2,
+      "rendered_sha256": "908455f1517dfce0b40dd2413d24d6424b7c2fb7b1fccbcef3e457c1a1fe9ec4"
+    },
+    {
+      "artifact_id": "PEP-464@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-464",
+      "sequence": 3,
+      "rendered_sha256": "7f03a5292144cd7a6dd5edb0710ed900c7f93e2d217483f282ec1097d873df13"
+    }
+  ],
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_id": null,
+    "evidence_ids": [
+      "PEP-381@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "PEP-449@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "PEP-464@b2120d116aa696f409b4d8333c4020ab8f93c9c7"
+    ],
+    "explanation": "PEP-381 is withdrawn, and authority for PyPI mirroring is split across two separate final decisions with distinct authority scopes: PEP-449 for mirror discovery and PEP-464 for mirror authenticity. No single decision governs both scopes.",
+    "raw_response": "```json\n{\"authority_state\":\"NO_GOVERNING_DECISION\",\n \"governing_decision_id\":null,\n \"evidence_ids\":[\"PEP-381@b2120d116aa696f409b4d8333c4020ab8f93c9c7\",\"PEP-449@b2120d116aa696f409b4d8333c4020ab8f93c9c7\",\"PEP-464@b2120d116aa696f409b4d8333c4020ab8f93c9c7\"],\n \"explanation\":\"PEP-381 is withdrawn, and authority for PyPI mirroring is split across two separate final decisions with distinct authority scopes: PEP-449 for mirror discovery and PEP-464 for mirror authenticity. No single decision governs both scopes.\"}\n```"
+  }
+}

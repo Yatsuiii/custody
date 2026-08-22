@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "metadata-1-2-c1",
+  "timeline_id": "metadata-1-2",
+  "question": "What decision currently governs the Python metadata specification chain? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "95aedd2c1a566b634eed146a603c3ce10a638184517ab6f9deee85c5ba9fc038",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-241@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+      "decision_id": "PEP-241",
+      "sequence": 1,
+      "rendered_sha256": "f54518f264e93cb9cb37fa89c473903953bfd1e37f57b40d7afa133b1e45d517"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-241",
+    "evidence_ids": [
+      "PEP-241@a0d411a7e334ddede263fdf9862f06bfc035f21c"
+    ],
+    "explanation": "PEP-241 holds Final lifecycle status for the python-metadata-chain scope with no subsequent superseding or modifying artifacts in the visible history.",
+    "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\n \"governing_decision_id\":\"PEP-241\",\n \"evidence_ids\":[\"PEP-241@a0d411a7e334ddede263fdf9862f06bfc035f21c\"],\n \"explanation\":\"PEP-241 holds Final lifecycle status for the python-metadata-chain scope with no subsequent superseding or modifying artifacts in the visible history.\"}\n```"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "manylinux-policy-c1",
+  "timeline_id": "manylinux-policy",
+  "question": "What decision currently governs the manylinux1 tag? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "039b3293c5e4e2846dd6f18a9b3e200a9f512e4badc1763a426014d5bedf3962",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-513@9f3a93dc85318aa5adafc232ff50e8cc858cd642",
+      "decision_id": "PEP-513",
+      "sequence": 1,
+      "rendered_sha256": "af3023287db207c5753c2c4f6131eda6d1cd5fb2a35b2738163ae2f7ee4713f0"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-513",
+    "evidence_ids": [
+      "PEP-513@9f3a93dc85318aa5adafc232ff50e8cc858cd642"
+    ],
+    "explanation": "PEP-513 holds an Active lifecycle status with explicit authority scope over the manylinux1 tag.",
+    "raw_response": "```json\n{\n \"authority_state\": \"GOVERNING\",\n \"governing_decision_id\": \"PEP-513\",\n \"evidence_ids\": [\n  \"PEP-513@9f3a93dc85318aa5adafc232ff50e8cc858cd642\"\n ],\n \"explanation\": \"PEP-513 holds an Active lifecycle status with explicit authority scope over the manylinux1 tag.\"\n}\n```"
+  }
+}

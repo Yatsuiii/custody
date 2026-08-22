@@ -1,0 +1,48 @@
+{
+  "checkpoint_id": "pypi-mirror-split-c2",
+  "timeline_id": "pypi-mirror-split",
+  "question": "What decision currently governs PyPI mirror discovery and naming? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "702742e82962e017bb8676387cc8da3074c95d6d1285f2244631e89cbc99168a",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-381@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-381",
+      "sequence": 1,
+      "rendered_sha256": "fe8c995ead8dd65f26b88451b7eb6d909fafc725d540c958d7059b5609c42bf8"
+    },
+    {
+      "artifact_id": "PEP-449@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-449",
+      "sequence": 2,
+      "rendered_sha256": "908455f1517dfce0b40dd2413d24d6424b7c2fb7b1fccbcef3e457c1a1fe9ec4"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-449",
+    "evidence_ids": [
+      "PEP-449"
+    ],
+    "claims": [
+      {
+        "text": "PEP-449 ('Removal of the PyPI Mirror Auto Discovery and Naming Scheme') is the currently active decision governing PyPI mirror discovery and naming.",
+        "category": "current_active_decision",
+        "decision_id": "PEP-449"
+      },
+      {
+        "text": "PEP-449 replaced and superseded PEP-381 ('Mirroring infrastructure for PyPI'), which is now withdrawn.",
+        "category": "verified_historical_fact",
+        "decision_id": "PEP-449"
+      },
+      {
+        "text": "The official authority evidence for PEP-449 is hosted at https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0449.rst.",
+        "category": "verified_historical_fact",
+        "decision_id": "PEP-449"
+      }
+    ],
+    "candidates_considered": [
+      "PEP-449",
+      "PEP-381"
+    ]
+  }
+}

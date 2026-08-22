@@ -1,0 +1,48 @@
+{
+  "checkpoint_id": "metadata-redesign-c2",
+  "timeline_id": "metadata-redesign",
+  "question": "What decision currently governs Python package metadata while PEP 426 is still a draft? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "ea7150c09bed405c15d956e90416c8c9292ba43571d0361689e8dffc61ab1717",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-345@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+      "decision_id": "PEP-345",
+      "sequence": 1,
+      "rendered_sha256": "8038c8a810424cdd0be59980538ed63cb8473da57d1ebcd1aadee981d91d6a3d"
+    },
+    {
+      "artifact_id": "PEP-426@8ae8b612",
+      "decision_id": "PEP-426",
+      "sequence": 2,
+      "rendered_sha256": "60f57054e02a157b780a3dbb7eeaf06ef2ea99a4607a8880cf8b6d0443402423"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-345",
+    "evidence_ids": [
+      "PEP-345"
+    ],
+    "claims": [
+      {
+        "text": "PEP-345 (Metadata for Python Software Packages 1.2) is the currently active decision governing Python package metadata.",
+        "category": "current_active_decision",
+        "decision_id": "PEP-345"
+      },
+      {
+        "text": "PEP-345 has an Accepted status with authority evidence located at https://github.com/python/peps/blob/a0d411a7e334ddede263fdf9862f06bfc035f21c/pep-0345.txt.",
+        "category": "verified_historical_fact",
+        "decision_id": "PEP-345"
+      },
+      {
+        "text": "PEP-426 proposes Metadata for Python Software Packages 2.0 to replace PEP-345, but remains in Draft status.",
+        "category": "verified_historical_fact",
+        "decision_id": "PEP-426"
+      }
+    ],
+    "candidates_considered": [
+      "PEP-426",
+      "PEP-345"
+    ]
+  }
+}

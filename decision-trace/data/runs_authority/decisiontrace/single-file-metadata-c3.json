@@ -1,0 +1,54 @@
+{
+  "checkpoint_id": "single-file-metadata-c3",
+  "timeline_id": "single-file-metadata",
+  "question": "What decision currently governs single-file script dependency metadata after PEP 722 was rejected? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "a5758e1053bb390df154374bd5473cee4f23299ea2dbcd7a7ace650e6a4fec29",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-722@08d688fdcafc1557bf7fc53573e5c84b31b78b5d",
+      "decision_id": "PEP-722",
+      "sequence": 1,
+      "rendered_sha256": "9207bc21218574a33fd3971957674824cb50628504f40dd202465fcc8ae351e5"
+    },
+    {
+      "artifact_id": "PEP-723@08d688fdcafc1557bf7fc53573e5c84b31b78b5d",
+      "decision_id": "PEP-723",
+      "sequence": 2,
+      "rendered_sha256": "29a46d2abe67a3d93c67ddb62b8ce309fb32b389fd8db2877b6a1833f3c31d03"
+    },
+    {
+      "artifact_id": "PEP-722@7e39ae246b29",
+      "decision_id": "PEP-722",
+      "sequence": 3,
+      "rendered_sha256": "abaf457c3eff5a8f46d80a06f2507104a965a305c52fdf982ba4b7a17859d5c6"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-722",
+    "evidence_ids": [
+      "PEP-722"
+    ],
+    "claims": [
+      {
+        "text": "According to the resolved lifecycle status, PEP-722 is currently active as the governing decision for single-file script dependency specification, with authority evidence at https://github.com/python/peps/blob/7e39ae246b29/peps/pep-0722.rst.",
+        "category": "current_active_decision",
+        "decision_id": "PEP-722"
+      },
+      {
+        "text": "PEP 722 was historically recorded with a status of Rejected in the PEP source document.",
+        "category": "verified_historical_fact",
+        "decision_id": "PEP-722"
+      },
+      {
+        "text": "PEP-723 ('Inline script metadata') was drafted to replace PEP 722 (evidence at https://github.com/python/peps/blob/08d688fdcafc1557bf7fc53573e5c84b31b78b5d/peps/pep-0723.rst), but is marked as not active/superseded/reverted in the resolved status.",
+        "category": "verified_historical_fact",
+        "decision_id": "PEP-723"
+      }
+    ],
+    "candidates_considered": [
+      "PEP-722",
+      "PEP-723"
+    ]
+  }
+}

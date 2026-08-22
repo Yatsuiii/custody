@@ -1,0 +1,36 @@
+{
+  "checkpoint_id": "rust-str-as-str-c1",
+  "timeline_id": "rust-str-as-str",
+  "question": "What decision currently governs rust str as str stability? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "7433abb7130833d140dcdd74154a409c432a082fc358cc9ddda93ce33133262b",
+  "visible_history": [
+    {
+      "artifact_id": "rust-lang/rust#151603@a919df8b1b3c250f14a41d879013c870a0477b20",
+      "decision_id": "rust-lang/rust#151603",
+      "sequence": 1,
+      "rendered_sha256": "53d2535aabec795102e1a5f74881f9171084d0c8146d1219251bcdaf0e24f08f"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "rust-lang/rust#151603",
+    "evidence_ids": [
+      "rust-lang/rust#151603"
+    ],
+    "claims": [
+      {
+        "text": "The decision governing the stabilization of str_as_str is rust-lang/rust#151603, which is currently active.",
+        "category": "current_active_decision",
+        "decision_id": "rust-lang/rust#151603"
+      },
+      {
+        "text": "The authority evidence for this decision is https://github.com/rust-lang/rust/pull/151603, which closes tracking issue #130366.",
+        "category": "verified_historical_fact",
+        "decision_id": "rust-lang/rust#151603"
+      }
+    ],
+    "candidates_considered": [
+      "rust-lang/rust#151603"
+    ]
+  }
+}

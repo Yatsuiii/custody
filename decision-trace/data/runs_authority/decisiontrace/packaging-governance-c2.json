@@ -1,0 +1,48 @@
+{
+  "checkpoint_id": "packaging-governance-c2",
+  "timeline_id": "packaging-governance",
+  "question": "What decision currently governs Python packaging governance while PEP 772 is a draft? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "6b80daf8150fe2681a685cc66492a84b66fa983e65deb870dd67e31b50ad85c2",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-609@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-609",
+      "sequence": 1,
+      "rendered_sha256": "d3db0aa76a38bea3d65982a7fe28324f0037af3d541ca0191eb4013997b56907"
+    },
+    {
+      "artifact_id": "PEP-772@e95aa672",
+      "decision_id": "PEP-772",
+      "sequence": 2,
+      "rendered_sha256": "8b06fb5ef50568919ecedce22c8d6050a57beacd628a64638410fcd8272c540e"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-609",
+    "evidence_ids": [
+      "PEP-609"
+    ],
+    "claims": [
+      {
+        "text": "PEP-609 is the currently active decision governing Python Packaging Authority Governance.",
+        "category": "current_active_decision",
+        "decision_id": "PEP-609"
+      },
+      {
+        "text": "The authority evidence for PEP-609 is documented at https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0609.rst.",
+        "category": "verified_historical_fact",
+        "decision_id": "PEP-609"
+      },
+      {
+        "text": "PEP-772 is currently in Draft status and proposes establishing a Python Packaging Council to replace PEP-609.",
+        "category": "verified_historical_fact",
+        "decision_id": "PEP-772"
+      }
+    ],
+    "candidates_considered": [
+      "PEP-772",
+      "PEP-609"
+    ]
+  }
+}

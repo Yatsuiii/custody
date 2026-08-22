@@ -1,0 +1,36 @@
+{
+  "checkpoint_id": "packaging-governance-c1",
+  "timeline_id": "packaging-governance",
+  "question": "What decision currently governs Python packaging governance? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "9c1bdc4b0c80a0558ce09bb511c27009dfed908d6290a679def69a8e14fb7762",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-609@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-609",
+      "sequence": 1,
+      "rendered_sha256": "d3db0aa76a38bea3d65982a7fe28324f0037af3d541ca0191eb4013997b56907"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-609",
+    "evidence_ids": [
+      "PEP-609"
+    ],
+    "claims": [
+      {
+        "text": "PEP-609 (Python Packaging Authority Governance) is the decision that currently governs Python Packaging Authority governance.",
+        "category": "current_active_decision",
+        "decision_id": "PEP-609"
+      },
+      {
+        "text": "The authority evidence for PEP-609 is located at https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0609.rst.",
+        "category": "verified_historical_fact",
+        "decision_id": "PEP-609"
+      }
+    ],
+    "candidates_considered": [
+      "PEP-609"
+    ]
+  }
+}

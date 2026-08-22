@@ -1,0 +1,41 @@
+{
+  "checkpoint_id": "single-file-metadata-c4",
+  "timeline_id": "single-file-metadata",
+  "question": "What decision currently governs single-file script metadata? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "eb92230725a29069a848277dcf8f48b207ffe91eb839ab7e06507a5238be9f55",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-722@08d688fdcafc1557bf7fc53573e5c84b31b78b5d",
+      "decision_id": "PEP-722",
+      "sequence": 1,
+      "rendered_sha256": "9207bc21218574a33fd3971957674824cb50628504f40dd202465fcc8ae351e5"
+    },
+    {
+      "artifact_id": "PEP-723@08d688fdcafc1557bf7fc53573e5c84b31b78b5d",
+      "decision_id": "PEP-723",
+      "sequence": 2,
+      "rendered_sha256": "29a46d2abe67a3d93c67ddb62b8ce309fb32b389fd8db2877b6a1833f3c31d03"
+    },
+    {
+      "artifact_id": "PEP-722@7e39ae246b29",
+      "decision_id": "PEP-722",
+      "sequence": 3,
+      "rendered_sha256": "abaf457c3eff5a8f46d80a06f2507104a965a305c52fdf982ba4b7a17859d5c6"
+    },
+    {
+      "artifact_id": "PEP-723@928d64",
+      "decision_id": "PEP-723",
+      "sequence": 4,
+      "rendered_sha256": "1b4dbb889e1e83274bf44446ffae332a9877a033b868b968ff1f0514df5d544f"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-723",
+    "evidence_ids": [
+      "PEP-723@928d64"
+    ],
+    "explanation": "PEP-723 is accepted and marked as Final for the single-file-script-metadata scope, explicitly replacing PEP-722.",
+    "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\n \"governing_decision_id\":\"PEP-723\",\n \"evidence_ids\":[\"PEP-723@928d64\"],\n \"explanation\":\"PEP-723 is accepted and marked as Final for the single-file-script-metadata scope, explicitly replacing PEP-722.\"}\n```"
+  }
+}
