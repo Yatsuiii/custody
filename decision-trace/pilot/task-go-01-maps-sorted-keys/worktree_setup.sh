@@ -13,9 +13,9 @@
 # of which are already present, unmodified, in any installed Go 1.23+
 # GOROOT — only the package under test itself needs to be swapped in.
 #
-# Usage: ./worktree_setup.sh <target_dir>
-# Re-running with the same target_dir wipes and recreates it (deterministic
-# reset). Requires network access on first run (git fetch of the pinned
+# Usage: ./worktree_setup.sh <new_target_dir> <new_go_cache_dir>
+# Existing paths are refused so setup cannot destroy another replay.
+# Requires network access on first run (git fetch of the pinned
 # commit); no Go module downloads are needed since `maps` has no external
 # dependencies.
 
@@ -24,14 +24,21 @@ set -euo pipefail
 PINNED_SHA="56ebf80e57db9f61981fc0636fc6419dc6f68eda"  # tag go1.25.1
 REPO_URL="https://github.com/golang/go.git"
 
-if [ $# -ne 1 ]; then
-  echo "usage: $0 <target_dir>" >&2
+if [ $# -ne 2 ]; then
+  echo "usage: $0 <new_target_dir> <new_go_cache_dir>" >&2
   exit 1
 fi
 TARGET_DIR="$1"
+GO_CACHE="$2"
 
-rm -rf "$TARGET_DIR"
-mkdir -p "$TARGET_DIR"
+for path in "$TARGET_DIR" "$GO_CACHE"; do
+  if [ -e "$path" ]; then
+    echo "path already exists; choose new isolated paths: $path" >&2
+    exit 1
+  fi
+done
+
+mkdir -p "$TARGET_DIR" "$GO_CACHE"
 cd "$TARGET_DIR"
 
 git init -q
@@ -66,6 +73,9 @@ with open(os.path.join(target_dir, "overlay.json"), "w") as fh:
     json.dump({"Replace": mapping}, fh, indent=2)
 PYEOF
 
+GOWORK=off GOCACHE="$GO_CACHE" go test -overlay="$TARGET_DIR/overlay.json" maps
+
 echo "Worktree ready at $TARGET_DIR (pinned $PINNED_SHA)."
+echo "Go build cache ready at $GO_CACHE."
 echo "Verify with:"
-echo "  cd $TARGET_DIR && GOWORK=off go test -overlay=$TARGET_DIR/overlay.json maps"
+echo "  cd $TARGET_DIR && GOWORK=off GOCACHE=$GO_CACHE go test -overlay=$TARGET_DIR/overlay.json maps"

@@ -162,3 +162,18 @@ strikes label interpolation as out of scope, two maintainer comments agree to
 exclude it, and the merged implementation RFC omits label evaluation while
 describing attribute-expression evaluation. It is not accepted until a small
 real code path and discriminating grader pass.
+
+### Deep-validation checkpoint 3
+
+| Candidate | Result | Evidence-producing work |
+|---|---|---|
+| C29 OpenTofu | ACCEPT | Fresh pre-implementation pin; applied Go AST plus parser behavior; full leaf-package tests; fresh setup and A/B replay; A `(true,true,true)`, B `(true,true,false)`. |
+| C32 axum | ACCEPT | Fresh pre-merge pin; compiled public-contract and no-socket HTTP behavior probe; focused Rust unit tests; fresh setup and A/B replay; A `(true,true,true)`, B `(true,true,false)`. |
+| C23 PyPI mirrors | REJECT `NO_EXECUTABLE_TASK` | Full PEP 381/449/464 authority scopes inspected. The independent removals preserve mirroring, but no bounded target yielded two positive code patches; no clone or patch was forced. |
+| C35 axum yanked release | REJECT `PATCH_DOES_NOT_CHANGE` | Issue #3190 and the 0.8.2/0.8.3 release records inspected. The authority transition is at package-release level while the source tree was not reverted, so a pinned coding patch cannot discriminate it. |
+
+The late C35 deepening makes 35 serious ledger rows. C14 repeats the salvaged
+Django task #9 and C18 repeats the salvaged storage candidate #13, so the
+scientifically relevant count is **33 distinct authority histories**, not an
+inflated 35. Eleven finalists were deeply validated in this continuation.
+Seven NEW tasks survive; the exposed Kubernetes pilot remains excluded.

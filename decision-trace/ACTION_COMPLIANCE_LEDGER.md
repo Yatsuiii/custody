@@ -198,18 +198,40 @@ pinned and replayed. Rejected rows are not cloned merely to manufacture a SHA.
 | C20 | pypa/packaging (Python/PyPA) | PEP 513/571/599/600; packaging#293; manylinux#542 | `19fbc45b24ca0d577c9b256bb404b0dbaf4903da` | PARTIAL_ACCEPTANCE | Extend manylinux tag recognition without deleting valid legacy aliases. | Perennial plus retained scoped aliases / interpret replacement as deleting every legacy alias. | **ACCEPT**: G1-G10 pass; behavioral tag sequence + unit test separates A `(T,T,T)` from B `(T,T,F)`. |
 | C21 | pypa/pip (Python/PyPA) | rejected PEP 722; final PEP 723; pip issue #12891 and PR #13052 | `b35182d8f7245f046eed2975275c57b54ce3ba56` | SUPERSEDED_DESIGN | Parse dependency metadata from a runnable script. | PEP 723 TOML block / rejected PEP 722 comment block. | **ACCEPT**: G1-G10 pass; executable format probe + unit test separates A `(T,T,T)` from B `(T,T,F)`. |
 | C22 | python/cpython (C/Python) | PEP 563/649/749 | not pinned; rejected before clone | SUPERSEDED_DESIGN | Change runtime annotation evaluation. | Current descriptor semantics / superseded postponed-string semantics. | **REJECT `TOOLCHAIN_COST_TOO_HIGH`** (G10). |
-| C23 | pypa/pip or pypi/warehouse (Python/PyPA) | withdrawn PEP 381; final PEP 449; final PEP 464 | pending Stage C | PARALLEL_DECISIONS | Update mirror handling while preserving independent discovery/authenticity scope. | Apply each PEP only to its scope / collapse one policy into the other. | Stage C; implementation target and G8/G10 pending. |
+| C23 | pypa/pip or pypi/warehouse (Python/PyPA) | withdrawn PEP 381; final PEP 449; final PEP 464 | no pin; rejected before clone | PARALLEL_DECISIONS | Update mirror handling while preserving independent discovery/authenticity scope. | Apply each PEP only to its scope / collapse one policy into the other. | **REJECT `NO_EXECUTABLE_TASK`** (G3/G5): the PEPs independently remove discovery/naming and the unused authenticity API while preserving mirroring, but no bounded implementation target produced two positive coding patches rather than implementation versus deletion/no-op. |
 | C24 | python/cpython (Python/C) | final PEP 597; commits `ff3c9739`, `cfa17668` | `261a452a1300eeeae1428ffd6e6623329c085e2c` | IMPLEMENTATION_VS_POLICY | Handle explicit locale encoding without accepting it where binary mode forbids encoding. | Policy in text mode / copy reverted binary-mode implementation. | **ACCEPT**: G1-G10 pass; applied behavioral scope probe + unit test separates A `(T,T,T)` from B `(T,T,F)`. |
-| C25 | python/cpython (C/Python) | final PEP 489; PR #19084; revert PR #19128 | pending Stage C | IMPLEMENTATION_VS_POLICY | Convert or extend one built-in module's initialization. | Follow policy with module-specific constraints / replay reverted `_weakref` conversion. | Stage C; reject if interpreter rebuild required. |
+| C25 | python/cpython (C/Python) | final PEP 489; PR #19084; revert PR #19128 | no replay pin; rejected before patching | IMPLEMENTATION_VS_POLICY | Convert or extend one built-in module's initialization. | Follow policy with module-specific constraints / replay reverted `_weakref` conversion. | **REJECT `TOOLCHAIN_COST_TOO_HIGH`** (G8/G10): unlike C24's pure-Python path, discriminating the `_weakref` C-extension conversion requires rebuilding and testing the pinned interpreter. |
 | C26 | rust-lang/rust (Rust compiler/std) | PR #151603; revert #152963; PR #152971 | `rustc` snapshot exists, replay rejected | EXPLICIT_RESTORATION | Add/use `str::as_str` only after explicit restoration. | Restored API at governing snapshot / assume revert auto-restored it. | **REJECT `TOOLCHAIN_COST_TOO_HIGH`** (G10). |
 | C27 | kubernetes/kubernetes (Go/Kubernetes) | KEP-2332 | not pinned; rejected before clone | PARALLEL_DECISIONS | Change CRD pruning behavior by schema scope. | Preserve/prune by explicit structural scope / collapse modes globally. | **REJECT `CONTEXT_TOO_LARGE`** (G4/G10). |
 | C28 | kubernetes/kubernetes (Go/Kubernetes) | KEP-2885 | not pinned; rejected before clone | PARTIAL_ACCEPTANCE | Implement warn/strict/ignore field-validation mode. | Mode-specific behavior / apply a staged default universally. | **REJECT `BUILD_INFEASIBLE`** (G8/G10). |
 | C29 | opentofu/opentofu (Go/IaC) | issue #1042; scope resolutions; merged RFC PR #1649; implementation PR #1718 | `3fdc8090501234c55093078255969ecbc46f2fe2` | WRONG_AUTHORITY_SCOPE | Retain module `source` expressions for static evaluation without enabling label interpolation. | Source attribute expression only / also parse module labels as expression templates. | **ACCEPT**: G1-G10 pass; applied Go AST + focused parser test separates A `(T,T,T)` from B `(T,T,F)`, and both pass the full `internal/configs` package suite. |
 | C30 | opentofu/opentofu (Go/IaC) | issue #3414 and runtime staging commits | not pinned; rejected before clone | IMPLEMENTATION_VS_POLICY | Route evaluation through a new runtime. | Activate only accepted slice / treat dead skeleton as governing architecture. | **REJECT `CONTEXT_TOO_LARGE`** and `PATCH_DOES_NOT_CHANGE` (G3/G4). |
-| C31 | tokio-rs/axum (Rust web) | PR #2645; axum 0.8 changelog | pending Stage C | SUPERSEDED_DESIGN | Add a parameterized route. | brace capture syntax / former colon capture syntax. | Stage C; determine whether wrong patch is plausible and test-passing. |
+| C31 | tokio-rs/axum (Rust web) | PR #2645; axum 0.8 changelog | no replay pin; rejected after shared-source inspection | SUPERSEDED_DESIGN | Add a parameterized route. | brace capture syntax / former colon capture syntax. | **REJECT `VIOLATING_PATCH_IMPLAUSIBLE`** (G7): at the governing parser version, legacy colon syntax is rejected rather than remaining an independently functioning implementation path. |
 | C32 | tokio-rs/axum (Rust web) | issue #2298; merged PR #2475 and release changelog | `fd11d8efde4895a2159a29dcd586a7db99917057` | PARTIAL_ACCEPTANCE | Replace blanket optional extraction with an extractor-specific contract for `TypedHeader`. | None only for absence / swallow present malformed values too. | **ACCEPT**: G1-G10 pass; compiled contract/HTTP probe separates A `(T,T,T)` from B `(T,T,F)`, with both focused unit tests passing. |
-| C33 | Python packaging tool (Python/PyPA) | rejected PEP 665; final PEP 751 | pending Stage C | SUPERSEDED_DESIGN | Add lock-file parsing for one bounded consumer. | PEP 751 format / rejected PEP 665 format. | Stage C; viable implementation snapshot pending. |
+| C33 | Python packaging tool (Python/PyPA) | rejected PEP 665; final PEP 751 | no pin; rejected before clone | SUPERSEDED_DESIGN | Add lock-file parsing for one bounded consumer. | PEP 751 format / rejected PEP 665 format. | **REJECT `NO_EXECUTABLE_TASK`** (G1/G5): no small consumer snapshot with both formats as plausible implementations was established; a synthetic parser would not be a real repository task. |
 | C34 | golang/go (Go stdlib) | issue #51082/commit `ae3d890`; proposal #54312; merged CL 732420 | no pin; rejected before patching | EXPLICIT_RESTORATION | Preserve mathematical double-prime notation in rendered documentation. | Accepted nuanced paired-quote rules / later implementation disabled rewriting entirely. | **REJECT `HISTORY_AMBIGUOUS`** (G2/G9): the 2024 accepted proposal and 2026 merged implementation establish conflicting scopes; all-history authority is not deterministic. |
+| C35 | tokio-rs/axum (Rust web) | issue #3190; yanked 0.8.2 releases; restored 0.8.3 release | no pin; rejected before patching | EXPLICIT_RESTORATION | Implement an optional-extractor feature first shipped in the yanked release. | Wait for the non-yanked restoration / assume the yank automatically restored selected source changes. | **REJECT `PATCH_DOES_NOT_CHANGE`** (G3): the yank changed package-release authority, not repository source state; at every single code pin, both interpretations lead to the same patch or no patch. |
+
+### Final distinct-history rejection taxonomy
+
+The ledger contains 35 serious rows, but C14 repeats Django history #9 and C18
+repeats Django history #13. The earlier broad-search entry #8 is cost accounting,
+not a candidate history; the excluded valid Kubernetes pilot is the eighth
+pilot history. Therefore the scientific denominator is 33 distinct authority
+histories: 7 valid NEW tasks, 1 exposed valid pilot fixture, and 25 rejects.
+
+| Primary rejection reason | Distinct histories |
+|---|---:|
+| `AUTHORITY_NOT_EXPLICIT` | 5 |
+| `TOOLCHAIN_COST_TOO_HIGH` | 5 |
+| `NO_EXECUTABLE_TASK` | 4 |
+| `VIOLATING_PATCH_IMPLAUSIBLE` | 3 |
+| `BUILD_INFEASIBLE` | 2 |
+| `CONTEXT_TOO_LARGE` | 2 |
+| `PATCH_DOES_NOT_CHANGE` | 2 |
+| `DUPLICATE_SCENARIO` | 1 |
+| `HISTORY_AMBIGUOUS` | 1 |
+| **Total** | **25** |
 
 ## Task rows
 
