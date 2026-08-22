@@ -1,7 +1,7 @@
 # E2E Policy-Misclassification Result
 
 Final verdict: **POLICY-FAIL-CONTAINED**.
-Canonical result digest: `d8811ff7d3bcce9e046682f6b3b9636112755f98de8dcb57debd9449b9840f1d`.
+Canonical result digest: `b11eb1d44d26bc47d7ed3090fd27903c899633767b4d9e19c72ac0f8fa631470`.
 
 The result is generated from `result.json`; the report does not select the verdict.
 

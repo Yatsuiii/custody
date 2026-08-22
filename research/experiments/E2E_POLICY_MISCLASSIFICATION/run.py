@@ -234,7 +234,6 @@ def _actions() -> tuple[RuntimeAction, ...]:
     )
     for record_id in R1_AFFECTED:
         actions.append(RuntimeAction(f"c-{record_id}-after-revoke", "AFTER_REVOKE", "export.send", (record_id,)))
-        actions.append(RuntimeAction(f"c-{record_id}-payroll-after-revoke", "AFTER_REVOKE", "payroll.read", (record_id,)))
     actions.extend(
         (
             RuntimeAction("c-r2-root-after-revoke", "AFTER_REVOKE", "export.send", (R2_ROOT,)),
@@ -310,8 +309,6 @@ def ground_truth() -> ScorerGroundTruth:
                 (arm, "c-post-correction-after-revoke", False),
             )
         )
-        for record_id in R1_AFFECTED:
-            expected.append((arm, f"c-{record_id}-payroll-after-revoke", False))
     history = {record_id: {"id": record_id, "revision": next(r.revision for r in runtime_fixture("CONTROL").records if r.output_id == record_id)} for record_id in R1_AFFECTED}
     return ScorerGroundTruth(
         attacker_controlled=(R1_ROOT,), misclassified=(R1_ROOT,),
@@ -677,15 +674,31 @@ def score(control: dict[str, Any], treatment: dict[str, Any], fixture: RuntimeFi
         affected = sum(int(after_records[record_id]["state"] == "BLOCKED" and not after_actions[f"c-{record_id}-after-revoke"]["allowed"]) for record_id in R1_AFFECTED)
         correction_records = record_map(observation["records_after_correction"])
         revision = sum(int(after_records[record_id]["state"] == correction_records[record_id]["state"] and after_records[record_id]["effective_caps"] == correction_records[record_id]["effective_caps"]) for record_id in R2_CONTROLS)
-        scope = sum(int(not before_actions[f"b-{record_id}-payroll"]["allowed"] and not after_actions[f"c-{record_id}-payroll-after-revoke"]["allowed"]) for record_id in R1_AFFECTED)
+        scope = sum(int(not before_actions[f"b-{record_id}-payroll"]["allowed"]) for record_id in R1_AFFECTED)
         rewrite, rewrite_denominator = historical_rewrite_count(observation, fixture)
         post_revoke_false = sum(int(after_actions[f"c-{record_id}-after-revoke"]["allowed"]) for record_id in R1_AFFECTED)
         collateral = 0
+        control_actions = {
+            R2_ROOT: ("b-r2-root", "c-r2-root-after-revoke"),
+            R2_REGISTERED: ("b-r2-registered", "c-r2-registered-after-revoke"),
+            CLEAN_EXPORT: ("b-clean-export", "c-clean-export-after-revoke"),
+            CLEAN_PAYROLL: ("b-clean-payroll", "c-clean-payroll-after-revoke"),
+            R1_POST: ("c-post-correction-root", "c-post-correction-after-revoke"),
+        }
+        correction_action_map = action_map(observation["actions_before_explicit_revoke"])
+        pre_action_map = {**before_actions, **correction_action_map}
+        post_action_map = after_actions
         for record_id in SAFE_CONTROLS:
             if record_id not in correction_records or record_id not in after_records:
                 collateral += 1
                 continue
-            if correction_records[record_id]["state"] != after_records[record_id]["state"] or correction_records[record_id]["effective_caps"] != after_records[record_id]["effective_caps"]:
+            before_request, after_request = control_actions[record_id]
+            if (
+                correction_records[record_id]["state"] != after_records[record_id]["state"]
+                or correction_records[record_id]["effective_caps"] != after_records[record_id]["effective_caps"]
+                or correction_records[record_id]["published"] != after_records[record_id]["published"]
+                or pre_action_map[before_request]["allowed"] != post_action_map[after_request]["allowed"]
+            ):
                 collateral += 1
         return {
             "misclassified_root_act_permit": metric(root_act, 1),
