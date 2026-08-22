@@ -1,0 +1,25 @@
+{
+  "status": "invalid",
+  "final_verdict": "BENCHMARK INVALID — FIX BEFORE CONCLUDING",
+  "frozen_inputs_modified": false,
+  "systems_rerun": false,
+  "affected_checkpoints": [
+    "python-paramspec-implementation-c2",
+    "swift-coroutine-accessors-c2"
+  ],
+  "defect": "UNRESOLVED versus NO_GOVERNING_DECISION was adjudicated inconsistently based on accepted authority in a parallel scope, aligning two labels with the resolver fallback rather than exact-scope source semantics.",
+  "frozen_key_score": {
+    "decisiontrace": "98/101",
+    "primary_rag": "94/101",
+    "difference_points": 3.960396039603953,
+    "paired_90ci_points": [
+      1.0416666666666667,
+      6.862745098039216
+    ]
+  },
+  "sensitivity_not_rescoring": {
+    "decisiontrace": "96/101",
+    "primary_rag": "96/101",
+    "difference_points": 0.0
+  }
+}
