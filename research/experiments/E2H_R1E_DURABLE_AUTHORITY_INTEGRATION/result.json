@@ -1,0 +1,2802 @@
+{
+  "actions": {
+    "A": {
+      "action_scope": "export.send",
+      "allowed": true,
+      "dependency_checks": [
+        {
+          "action_scope": "export.send",
+          "current_generation": 1,
+          "fresh": true,
+          "granting_generation": 1,
+          "policy_key": {
+            "action_scope": "export.send",
+            "department": "finance",
+            "operation": "vendor_lookup",
+            "revision": "R1",
+            "source": "vendor_lookup"
+          },
+          "root_record_id": "R_OLD"
+        },
+        {
+          "action_scope": "export.send",
+          "current_generation": 1,
+          "fresh": true,
+          "granting_generation": 1,
+          "policy_key": {
+            "action_scope": "export.send",
+            "department": "custody",
+            "operation": "registered",
+            "revision": "R1",
+            "source": "transform"
+          },
+          "root_record_id": "C_CHILD"
+        }
+      ],
+      "effective_cap": "ACT",
+      "reason": "CURRENT_GENERATION_MATCH",
+      "record_id": "C_CHILD",
+      "trace": {
+        "action_scope": "export.send",
+        "allowed": true,
+        "bound_cap": "ACT",
+        "cached_generations": {},
+        "dependencies": [
+          {
+            "action_scope": "export.send",
+            "current_generation": 1,
+            "fresh": true,
+            "granting_generation": 1,
+            "policy_key": {
+              "action_scope": "export.send",
+              "department": "finance",
+              "operation": "vendor_lookup",
+              "revision": "R1",
+              "source": "vendor_lookup"
+            },
+            "root_record_id": "R_OLD"
+          },
+          {
+            "action_scope": "export.send",
+            "current_generation": 1,
+            "fresh": true,
+            "granting_generation": 1,
+            "policy_key": {
+              "action_scope": "export.send",
+              "department": "custody",
+              "operation": "registered",
+              "revision": "R1",
+              "source": "transform"
+            },
+            "root_record_id": "C_CHILD"
+          }
+        ],
+        "direct_parents": [
+          "R_OLD"
+        ],
+        "effective_cap": "ACT",
+        "final_authoritative_generations": {
+          "ba4a0a432af5bdf5858f3b6908bc6420": 1,
+          "f5e3c8c89658a8f035f7a2797c9dd8fe": 1
+        },
+        "operation_policy": {
+          "bound_generation": 1,
+          "current_generation": 1,
+          "fresh": true
+        },
+        "reason": "CURRENT_GENERATION_MATCH",
+        "record_id": "C_CHILD",
+        "support_roots": [
+          "R_OLD"
+        ],
+        "transform_cap": "ACT"
+      }
+    },
+    "B": {
+      "action_scope": "export.send",
+      "allowed": false,
+      "dependency_checks": [
+        {
+          "action_scope": "export.send",
+          "current_generation": 2,
+          "fresh": false,
+          "granting_generation": 1,
+          "policy_key": {
+            "action_scope": "export.send",
+            "department": "finance",
+            "operation": "vendor_lookup",
+            "revision": "R1",
+            "source": "vendor_lookup"
+          },
+          "root_record_id": "R_OLD"
+        },
+        {
+          "action_scope": "export.send",
+          "current_generation": 1,
+          "fresh": true,
+          "granting_generation": 1,
+          "policy_key": {
+            "action_scope": "export.send",
+            "department": "custody",
+            "operation": "registered",
+            "revision": "R1",
+            "source": "transform"
+          },
+          "root_record_id": "C_CHILD"
+        }
+      ],
+      "effective_cap": "NONE",
+      "reason": "STALE_AUTHORITY_DEPENDENCY",
+      "record_id": "C_CHILD",
+      "trace": {
+        "action_scope": "export.send",
+        "allowed": false,
+        "bound_cap": "ACT",
+        "cached_generations": {},
+        "dependencies": [
+          {
+            "action_scope": "export.send",
+            "current_generation": 2,
+            "fresh": false,
+            "granting_generation": 1,
+            "policy_key": {
+              "action_scope": "export.send",
+              "department": "finance",
+              "operation": "vendor_lookup",
+              "revision": "R1",
+              "source": "vendor_lookup"
+            },
+            "root_record_id": "R_OLD"
+          },
+          {
+            "action_scope": "export.send",
+            "current_generation": 1,
+            "fresh": true,
+            "granting_generation": 1,
+            "policy_key": {
+              "action_scope": "export.send",
+              "department": "custody",
+              "operation": "registered",
+              "revision": "R1",
+              "source": "transform"
+            },
+            "root_record_id": "C_CHILD"
+          }
+        ],
+        "direct_parents": [
+          "R_OLD"
+        ],
+        "effective_cap": "NONE",
+        "final_authoritative_generations": {},
+        "operation_policy": {
+          "bound_generation": 1,
+          "current_generation": 1,
+          "fresh": true
+        },
+        "reason": "STALE_AUTHORITY_DEPENDENCY",
+        "record_id": "C_CHILD",
+        "support_roots": [
+          "R_OLD"
+        ],
+        "transform_cap": "ACT"
+      }
+    },
+    "C": {
+      "action_scope": "export.send",
+      "allowed": false,
+      "effective_cap": "NONE",
+      "reason": "MISSING_ENVELOPE",
+      "record_id": "C_CRASH",
+      "trace": {
+        "record_id": "C_CRASH"
+      }
+    },
+    "C_PRE_RETRY": {
+      "action_scope": "export.send",
+      "allowed": false,
+      "effective_cap": "NONE",
+      "reason": "MISSING_ENVELOPE",
+      "record_id": "C_CRASH",
+      "trace": {
+        "record_id": "C_CRASH"
+      }
+    },
+    "D": {
+      "action_scope": "export.send",
+      "allowed": false,
+      "dependency_checks": [
+        {
+          "action_scope": "export.send",
+          "current_generation": 1,
+          "fresh": true,
+          "granting_generation": 1,
+          "policy_key": {
+            "action_scope": "export.send",
+            "department": "finance",
+            "operation": "vendor_lookup",
+            "revision": "R1",
+            "source": "vendor_lookup"
+          },
+          "root_record_id": "R_OLD"
+        },
+        {
+          "action_scope": "export.send",
+          "current_generation": 1,
+          "fresh": true,
+          "granting_generation": 1,
+          "policy_key": {
+            "action_scope": "export.send",
+            "department": "custody",
+            "operation": "registered",
+            "revision": "R1",
+            "source": "transform"
+          },
+          "root_record_id": "C_CHILD"
+        }
+      ],
+      "effective_cap": "NONE",
+      "reason": "STALE_AUTHORITY_DEPENDENCY",
+      "record_id": "C_CHILD",
+      "trace": {
+        "action_scope": "export.send",
+        "allowed": false,
+        "bound_cap": "ACT",
+        "cached_generations": {},
+        "dependencies": [
+          {
+            "action_scope": "export.send",
+            "current_generation": 1,
+            "fresh": true,
+            "granting_generation": 1,
+            "policy_key": {
+              "action_scope": "export.send",
+              "department": "finance",
+              "operation": "vendor_lookup",
+              "revision": "R1",
+              "source": "vendor_lookup"
+            },
+            "root_record_id": "R_OLD"
+          },
+          {
+            "action_scope": "export.send",
+            "current_generation": 1,
+            "fresh": true,
+            "granting_generation": 1,
+            "policy_key": {
+              "action_scope": "export.send",
+              "department": "custody",
+              "operation": "registered",
+              "revision": "R1",
+              "source": "transform"
+            },
+            "root_record_id": "C_CHILD"
+          }
+        ],
+        "direct_parents": [
+          "R_OLD"
+        ],
+        "effective_cap": "NONE",
+        "final_authoritative_generations": {
+          "ba4a0a432af5bdf5858f3b6908bc6420": 2,
+          "f5e3c8c89658a8f035f7a2797c9dd8fe": 1
+        },
+        "operation_policy": {
+          "bound_generation": 1,
+          "current_generation": 1,
+          "fresh": true
+        },
+        "reason": "STALE_AUTHORITY_DEPENDENCY",
+        "record_id": "C_CHILD",
+        "support_roots": [
+          "R_OLD"
+        ],
+        "transform_cap": "ACT"
+      }
+    },
+    "E": {
+      "action_scope": "export.send",
+      "allowed": false,
+      "dependency_checks": [
+        {
+          "action_scope": "export.send",
+          "current_generation": 1,
+          "fresh": true,
+          "granting_generation": 1,
+          "policy_key": {
+            "action_scope": "export.send",
+            "department": "finance",
+            "operation": "vendor_lookup",
+            "revision": "R1",
+            "source": "vendor_lookup"
+          },
+          "root_record_id": "R_OLD"
+        },
+        {
+          "action_scope": "export.send",
+          "current_generation": 1,
+          "fresh": true,
+          "granting_generation": 1,
+          "policy_key": {
+            "action_scope": "export.send",
+            "department": "custody",
+            "operation": "registered",
+            "revision": "R1",
+            "source": "transform"
+          },
+          "root_record_id": "C_CHILD"
+        }
+      ],
+      "effective_cap": "NONE",
+      "reason": "STALE_AUTHORITY_DEPENDENCY",
+      "record_id": "C_CHILD",
+      "trace": {
+        "action_scope": "export.send",
+        "allowed": false,
+        "bound_cap": "ACT",
+        "cached_generations": {
+          "ba4a0a432af5bdf5858f3b6908bc6420": 1
+        },
+        "dependencies": [
+          {
+            "action_scope": "export.send",
+            "current_generation": 1,
+            "fresh": true,
+            "granting_generation": 1,
+            "policy_key": {
+              "action_scope": "export.send",
+              "department": "finance",
+              "operation": "vendor_lookup",
+              "revision": "R1",
+              "source": "vendor_lookup"
+            },
+            "root_record_id": "R_OLD"
+          },
+          {
+            "action_scope": "export.send",
+            "current_generation": 1,
+            "fresh": true,
+            "granting_generation": 1,
+            "policy_key": {
+              "action_scope": "export.send",
+              "department": "custody",
+              "operation": "registered",
+              "revision": "R1",
+              "source": "transform"
+            },
+            "root_record_id": "C_CHILD"
+          }
+        ],
+        "direct_parents": [
+          "R_OLD"
+        ],
+        "effective_cap": "NONE",
+        "final_authoritative_generations": {
+          "ba4a0a432af5bdf5858f3b6908bc6420": 2,
+          "f5e3c8c89658a8f035f7a2797c9dd8fe": 1
+        },
+        "operation_policy": {
+          "bound_generation": 1,
+          "current_generation": 1,
+          "fresh": true
+        },
+        "reason": "STALE_AUTHORITY_DEPENDENCY",
+        "record_id": "C_CHILD",
+        "support_roots": [
+          "R_OLD"
+        ],
+        "transform_cap": "ACT"
+      }
+    },
+    "F": {
+      "action_scope": "export.send",
+      "allowed": false,
+      "dependency_checks": [
+        {
+          "action_scope": "export.send",
+          "current_generation": 2,
+          "fresh": true,
+          "granting_generation": 2,
+          "policy_key": {
+            "action_scope": "export.send",
+            "department": "finance",
+            "operation": "vendor_lookup",
+            "revision": "R1",
+            "source": "vendor_lookup"
+          },
+          "root_record_id": "F_DUP"
+        }
+      ],
+      "effective_cap": "INFORM",
+      "reason": "CAP_BELOW_ACT",
+      "record_id": "F_DUP",
+      "trace": {
+        "action_scope": "export.send",
+        "allowed": false,
+        "bound_cap": "INFORM",
+        "cached_generations": {},
+        "dependencies": [
+          {
+            "action_scope": "export.send",
+            "current_generation": 2,
+            "fresh": true,
+            "granting_generation": 2,
+            "policy_key": {
+              "action_scope": "export.send",
+              "department": "finance",
+              "operation": "vendor_lookup",
+              "revision": "R1",
+              "source": "vendor_lookup"
+            },
+            "root_record_id": "F_DUP"
+          }
+        ],
+        "direct_parents": [],
+        "effective_cap": "INFORM",
+        "final_authoritative_generations": {},
+        "operation_policy": {
+          "bound_generation": 2,
+          "current_generation": 2,
+          "fresh": true
+        },
+        "reason": "CAP_BELOW_ACT",
+        "record_id": "F_DUP",
+        "support_roots": [
+          "F_DUP"
+        ],
+        "transform_cap": "ACT"
+      }
+    },
+    "G": {
+      "action_scope": "export.send",
+      "allowed": false,
+      "dependency_checks": [
+        {
+          "action_scope": "export.send",
+          "current_generation": 1,
+          "fresh": true,
+          "granting_generation": 1,
+          "policy_key": {
+            "action_scope": "export.send",
+            "department": "custody",
+            "operation": "registered",
+            "revision": "R1",
+            "source": "transform"
+          },
+          "root_record_id": "C_MIX"
+        },
+        {
+          "action_scope": "export.send",
+          "current_generation": 2,
+          "fresh": false,
+          "granting_generation": 1,
+          "policy_key": {
+            "action_scope": "export.send",
+            "department": "finance",
+            "operation": "vendor_lookup",
+            "revision": "R1",
+            "source": "vendor_lookup"
+          },
+          "root_record_id": "R_OLD"
+        },
+        {
+          "action_scope": "export.send",
+          "current_generation": 1,
+          "fresh": true,
+          "granting_generation": 1,
+          "policy_key": {
+            "action_scope": "export.send",
+            "department": "finance",
+            "operation": "clean_registry",
+            "revision": "R1",
+            "source": "clean_registry"
+          },
+          "root_record_id": "R_CLEAN"
+        }
+      ],
+      "effective_cap": "NONE",
+      "reason": "STALE_AUTHORITY_DEPENDENCY",
+      "record_id": "C_MIX",
+      "trace": {
+        "action_scope": "export.send",
+        "allowed": false,
+        "bound_cap": "ACT",
+        "cached_generations": {},
+        "dependencies": [
+          {
+            "action_scope": "export.send",
+            "current_generation": 1,
+            "fresh": true,
+            "granting_generation": 1,
+            "policy_key": {
+              "action_scope": "export.send",
+              "department": "custody",
+              "operation": "registered",
+              "revision": "R1",
+              "source": "transform"
+            },
+            "root_record_id": "C_MIX"
+          },
+          {
+            "action_scope": "export.send",
+            "current_generation": 2,
+            "fresh": false,
+            "granting_generation": 1,
+            "policy_key": {
+              "action_scope": "export.send",
+              "department": "finance",
+              "operation": "vendor_lookup",
+              "revision": "R1",
+              "source": "vendor_lookup"
+            },
+            "root_record_id": "R_OLD"
+          },
+          {
+            "action_scope": "export.send",
+            "current_generation": 1,
+            "fresh": true,
+            "granting_generation": 1,
+            "policy_key": {
+              "action_scope": "export.send",
+              "department": "finance",
+              "operation": "clean_registry",
+              "revision": "R1",
+              "source": "clean_registry"
+            },
+            "root_record_id": "R_CLEAN"
+          }
+        ],
+        "direct_parents": [
+          "R_OLD",
+          "R_CLEAN"
+        ],
+        "effective_cap": "NONE",
+        "final_authoritative_generations": {},
+        "operation_policy": {
+          "bound_generation": 1,
+          "current_generation": 1,
+          "fresh": true
+        },
+        "reason": "STALE_AUTHORITY_DEPENDENCY",
+        "record_id": "C_MIX",
+        "support_roots": [
+          "R_CLEAN",
+          "R_OLD"
+        ],
+        "transform_cap": "ACT"
+      }
+    },
+    "H_NEW": {
+      "action_scope": "export.send",
+      "allowed": true,
+      "dependency_checks": [
+        {
+          "action_scope": "export.send",
+          "current_generation": 1,
+          "fresh": true,
+          "granting_generation": 1,
+          "policy_key": {
+            "action_scope": "export.send",
+            "department": "custody",
+            "operation": "registered",
+            "revision": "R1",
+            "source": "transform"
+          },
+          "root_record_id": "C_NEW"
+        },
+        {
+          "action_scope": "export.send",
+          "current_generation": 3,
+          "fresh": true,
+          "granting_generation": 3,
+          "policy_key": {
+            "action_scope": "export.send",
+            "department": "finance",
+            "operation": "vendor_lookup",
+            "revision": "R1",
+            "source": "vendor_lookup"
+          },
+          "root_record_id": "R_NEW"
+        }
+      ],
+      "effective_cap": "ACT",
+      "reason": "CURRENT_GENERATION_MATCH",
+      "record_id": "C_NEW",
+      "trace": {
+        "action_scope": "export.send",
+        "allowed": true,
+        "bound_cap": "ACT",
+        "cached_generations": {},
+        "dependencies": [
+          {
+            "action_scope": "export.send",
+            "current_generation": 1,
+            "fresh": true,
+            "granting_generation": 1,
+            "policy_key": {
+              "action_scope": "export.send",
+              "department": "custody",
+              "operation": "registered",
+              "revision": "R1",
+              "source": "transform"
+            },
+            "root_record_id": "C_NEW"
+          },
+          {
+            "action_scope": "export.send",
+            "current_generation": 3,
+            "fresh": true,
+            "granting_generation": 3,
+            "policy_key": {
+              "action_scope": "export.send",
+              "department": "finance",
+              "operation": "vendor_lookup",
+              "revision": "R1",
+              "source": "vendor_lookup"
+            },
+            "root_record_id": "R_NEW"
+          }
+        ],
+        "direct_parents": [
+          "R_NEW"
+        ],
+        "effective_cap": "ACT",
+        "final_authoritative_generations": {
+          "ba4a0a432af5bdf5858f3b6908bc6420": 3,
+          "f5e3c8c89658a8f035f7a2797c9dd8fe": 1
+        },
+        "operation_policy": {
+          "bound_generation": 1,
+          "current_generation": 1,
+          "fresh": true
+        },
+        "reason": "CURRENT_GENERATION_MATCH",
+        "record_id": "C_NEW",
+        "support_roots": [
+          "R_NEW"
+        ],
+        "transform_cap": "ACT"
+      }
+    },
+    "H_OLD": {
+      "action_scope": "export.send",
+      "allowed": false,
+      "dependency_checks": [
+        {
+          "action_scope": "export.send",
+          "current_generation": 3,
+          "fresh": false,
+          "granting_generation": 1,
+          "policy_key": {
+            "action_scope": "export.send",
+            "department": "finance",
+            "operation": "vendor_lookup",
+            "revision": "R1",
+            "source": "vendor_lookup"
+          },
+          "root_record_id": "R_OLD"
+        },
+        {
+          "action_scope": "export.send",
+          "current_generation": 1,
+          "fresh": true,
+          "granting_generation": 1,
+          "policy_key": {
+            "action_scope": "export.send",
+            "department": "custody",
+            "operation": "registered",
+            "revision": "R1",
+            "source": "transform"
+          },
+          "root_record_id": "C_CHILD"
+        }
+      ],
+      "effective_cap": "NONE",
+      "reason": "STALE_AUTHORITY_DEPENDENCY",
+      "record_id": "C_CHILD",
+      "trace": {
+        "action_scope": "export.send",
+        "allowed": false,
+        "bound_cap": "ACT",
+        "cached_generations": {},
+        "dependencies": [
+          {
+            "action_scope": "export.send",
+            "current_generation": 3,
+            "fresh": false,
+            "granting_generation": 1,
+            "policy_key": {
+              "action_scope": "export.send",
+              "department": "finance",
+              "operation": "vendor_lookup",
+              "revision": "R1",
+              "source": "vendor_lookup"
+            },
+            "root_record_id": "R_OLD"
+          },
+          {
+            "action_scope": "export.send",
+            "current_generation": 1,
+            "fresh": true,
+            "granting_generation": 1,
+            "policy_key": {
+              "action_scope": "export.send",
+              "department": "custody",
+              "operation": "registered",
+              "revision": "R1",
+              "source": "transform"
+            },
+            "root_record_id": "C_CHILD"
+          }
+        ],
+        "direct_parents": [
+          "R_OLD"
+        ],
+        "effective_cap": "NONE",
+        "final_authoritative_generations": {},
+        "operation_policy": {
+          "bound_generation": 1,
+          "current_generation": 1,
+          "fresh": true
+        },
+        "reason": "STALE_AUTHORITY_DEPENDENCY",
+        "record_id": "C_CHILD",
+        "support_roots": [
+          "R_OLD"
+        ],
+        "transform_cap": "ACT"
+      }
+    },
+    "INCOMPLETE": {
+      "action_scope": "export.send",
+      "allowed": false,
+      "effective_cap": "NONE",
+      "reason": "INCOMPLETE_ADMISSION",
+      "record_id": "FAULT_INCOMPLETE",
+      "trace": {
+        "record_id": "FAULT_INCOMPLETE"
+      }
+    },
+    "MISSING_DEPENDENCY": {
+      "action_scope": "export.send",
+      "allowed": false,
+      "effective_cap": "NONE",
+      "reason": "MISSING_DEPENDENCY",
+      "record_id": "FAULT_MISSING_DEP",
+      "trace": {
+        "record_id": "FAULT_MISSING_DEP"
+      }
+    },
+    "MISSING_ENVELOPE": {
+      "action_scope": "export.send",
+      "allowed": false,
+      "effective_cap": "NONE",
+      "reason": "MISSING_ENVELOPE",
+      "record_id": "FAULT_MISSING_ENVELOPE",
+      "trace": {
+        "record_id": "FAULT_MISSING_ENVELOPE"
+      }
+    },
+    "MISSING_ROOT": {
+      "action_scope": "export.send",
+      "allowed": false,
+      "effective_cap": "NONE",
+      "reason": "MISSING_SUPPORT_ROOT",
+      "record_id": "FAULT_MISSING_ROOT",
+      "trace": {
+        "record_id": "FAULT_MISSING_ROOT"
+      }
+    },
+    "POLICY_READ_FAILURE": {
+      "action_scope": "export.send",
+      "allowed": false,
+      "effective_cap": "NONE",
+      "reason": "POLICY_READ_FAILURE",
+      "record_id": "C_NEW",
+      "trace": {
+        "record_id": "C_NEW"
+      }
+    },
+    "UNRELATED": {
+      "action_scope": "export.send",
+      "allowed": true,
+      "dependency_checks": [
+        {
+          "action_scope": "export.send",
+          "current_generation": 1,
+          "fresh": true,
+          "granting_generation": 1,
+          "policy_key": {
+            "action_scope": "export.send",
+            "department": "custody",
+            "operation": "registered",
+            "revision": "R1",
+            "source": "transform"
+          },
+          "root_record_id": "C_NEW"
+        },
+        {
+          "action_scope": "export.send",
+          "current_generation": 3,
+          "fresh": true,
+          "granting_generation": 3,
+          "policy_key": {
+            "action_scope": "export.send",
+            "department": "finance",
+            "operation": "vendor_lookup",
+            "revision": "R1",
+            "source": "vendor_lookup"
+          },
+          "root_record_id": "R_NEW"
+        }
+      ],
+      "effective_cap": "ACT",
+      "reason": "CURRENT_GENERATION_MATCH",
+      "record_id": "C_NEW",
+      "trace": {
+        "action_scope": "export.send",
+        "allowed": true,
+        "bound_cap": "ACT",
+        "cached_generations": {},
+        "dependencies": [
+          {
+            "action_scope": "export.send",
+            "current_generation": 1,
+            "fresh": true,
+            "granting_generation": 1,
+            "policy_key": {
+              "action_scope": "export.send",
+              "department": "custody",
+              "operation": "registered",
+              "revision": "R1",
+              "source": "transform"
+            },
+            "root_record_id": "C_NEW"
+          },
+          {
+            "action_scope": "export.send",
+            "current_generation": 3,
+            "fresh": true,
+            "granting_generation": 3,
+            "policy_key": {
+              "action_scope": "export.send",
+              "department": "finance",
+              "operation": "vendor_lookup",
+              "revision": "R1",
+              "source": "vendor_lookup"
+            },
+            "root_record_id": "R_NEW"
+          }
+        ],
+        "direct_parents": [
+          "R_NEW"
+        ],
+        "effective_cap": "ACT",
+        "final_authoritative_generations": {
+          "ba4a0a432af5bdf5858f3b6908bc6420": 3,
+          "f5e3c8c89658a8f035f7a2797c9dd8fe": 1
+        },
+        "operation_policy": {
+          "bound_generation": 1,
+          "current_generation": 1,
+          "fresh": true
+        },
+        "reason": "CURRENT_GENERATION_MATCH",
+        "record_id": "C_NEW",
+        "support_roots": [
+          "R_NEW"
+        ],
+        "transform_cap": "ACT"
+      }
+    },
+    "UNRELATED_CLEAN": {
+      "action_scope": "export.send",
+      "allowed": true,
+      "dependency_checks": [
+        {
+          "action_scope": "export.send",
+          "current_generation": 1,
+          "fresh": true,
+          "granting_generation": 1,
+          "policy_key": {
+            "action_scope": "export.send",
+            "department": "finance",
+            "operation": "clean_registry",
+            "revision": "R1",
+            "source": "clean_registry"
+          },
+          "root_record_id": "R_CLEAN"
+        }
+      ],
+      "effective_cap": "ACT",
+      "reason": "CURRENT_GENERATION_MATCH",
+      "record_id": "R_CLEAN",
+      "trace": {
+        "action_scope": "export.send",
+        "allowed": true,
+        "bound_cap": "ACT",
+        "cached_generations": {},
+        "dependencies": [
+          {
+            "action_scope": "export.send",
+            "current_generation": 1,
+            "fresh": true,
+            "granting_generation": 1,
+            "policy_key": {
+              "action_scope": "export.send",
+              "department": "finance",
+              "operation": "clean_registry",
+              "revision": "R1",
+              "source": "clean_registry"
+            },
+            "root_record_id": "R_CLEAN"
+          }
+        ],
+        "direct_parents": [],
+        "effective_cap": "ACT",
+        "final_authoritative_generations": {
+          "d9f5d9393ddd4ed360c76635223b083d": 1
+        },
+        "operation_policy": {
+          "bound_generation": 1,
+          "current_generation": 1,
+          "fresh": true
+        },
+        "reason": "CURRENT_GENERATION_MATCH",
+        "record_id": "R_CLEAN",
+        "support_roots": [
+          "R_CLEAN"
+        ],
+        "transform_cap": "ACT"
+      }
+    }
+  },
+  "barrier_traces": [
+    {
+      "event": "P_SEEDED_G1",
+      "id": 1
+    },
+    {
+      "event": "E2H_A_G_DECISION",
+      "id": 2
+    },
+    {
+      "event": "W_ADMISSION_STAGED",
+      "id": 3
+    },
+    {
+      "event": "C_POST_KILL_GATEWAY_DENY",
+      "id": 31
+    },
+    {
+      "event": "C_STATE_INSPECTION_COMPLETE",
+      "id": 32
+    },
+    {
+      "attempt": 1,
+      "event": "C_RECOVERY_ATTEMPT",
+      "id": 33
+    },
+    {
+      "attempt": 1,
+      "event": "C_RECOVERY_CONTENTION",
+      "id": 101
+    },
+    {
+      "attempt": 2,
+      "event": "C_RECOVERY_ATTEMPT",
+      "id": 34
+    },
+    {
+      "attempt": 2,
+      "event": "C_RECOVERY_CONTENTION",
+      "id": 102
+    },
+    {
+      "attempt": 3,
+      "event": "C_RECOVERY_ATTEMPT",
+      "id": 35
+    },
+    {
+      "attempt": 3,
+      "event": "C_RECOVERY_CONTENTION",
+      "id": 103
+    },
+    {
+      "event": "C_RECOVERY_LIVENESS_FAIL",
+      "id": 33
+    },
+    {
+      "event": "G_READ_COMPLETE",
+      "id": 4
+    },
+    {
+      "event": "W1_CAPTURED_G1",
+      "id": 5
+    },
+    {
+      "event": "P_POLICY_COMMITTED_2",
+      "id": 6
+    },
+    {
+      "event": "G_FINAL_READ_AND_DECISION",
+      "id": 7
+    },
+    {
+      "event": "PRIMARY_ACTIONS_COMPLETE",
+      "id": 8
+    }
+  ],
+  "canonical_result_digest": "857bc75833067612ff3f8b77d49d59728dfd4c5adfc3c9ed554ff1c5a25280ae",
+  "cleanup": {
+    "cleanup_complete": true,
+    "run1": {
+      "complete": true,
+      "deleted": {
+        "custody_research_e2h_r1e_20260822_controls": 0,
+        "custody_research_e2h_r1e_20260822_dependencies": 12,
+        "custody_research_e2h_r1e_20260822_envelopes": 10,
+        "custody_research_e2h_r1e_20260822_policies": 6
+      },
+      "final_counts": {
+        "custody_research_e2h_r1e_20260822_controls": 0,
+        "custody_research_e2h_r1e_20260822_dependencies": 0,
+        "custody_research_e2h_r1e_20260822_envelopes": 0,
+        "custody_research_e2h_r1e_20260822_policies": 0
+      }
+    },
+    "run2": {
+      "complete": true,
+      "deleted": {
+        "custody_research_e2h_r1e_20260822_controls": 0,
+        "custody_research_e2h_r1e_20260822_dependencies": 12,
+        "custody_research_e2h_r1e_20260822_envelopes": 10,
+        "custody_research_e2h_r1e_20260822_policies": 6
+      },
+      "final_counts": {
+        "custody_research_e2h_r1e_20260822_controls": 0,
+        "custody_research_e2h_r1e_20260822_dependencies": 0,
+        "custody_research_e2h_r1e_20260822_envelopes": 0,
+        "custody_research_e2h_r1e_20260822_policies": 0
+      }
+    }
+  },
+  "crash_recovery": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "error_class": "Aborted",
+        "status": "RECOVERY_CONTENTION",
+        "status_code": "ABORTED"
+      },
+      {
+        "attempt": 2,
+        "error_class": "Aborted",
+        "status": "RECOVERY_CONTENTION",
+        "status_code": "ABORTED"
+      },
+      {
+        "attempt": 3,
+        "error_class": "Aborted",
+        "status": "RECOVERY_CONTENTION",
+        "status_code": "ABORTED"
+      }
+    ],
+    "completed": false,
+    "contention_events": [
+      {
+        "attempt": 1,
+        "error_class": "Aborted",
+        "status": "ABORTED"
+      },
+      {
+        "attempt": 2,
+        "error_class": "Aborted",
+        "status": "ABORTED"
+      },
+      {
+        "attempt": 3,
+        "error_class": "Aborted",
+        "status": "ABORTED"
+      }
+    ],
+    "deadline_seconds": 90.0,
+    "elapsed_seconds": 90.000172,
+    "gateway_checks": [
+      {
+        "action": {
+          "action_scope": "export.send",
+          "allowed": false,
+          "effective_cap": "NONE",
+          "reason": "MISSING_ENVELOPE",
+          "record_id": "C_CRASH",
+          "trace": {
+            "record_id": "C_CRASH"
+          }
+        },
+        "phase": "IMMEDIATE_POST_KILL"
+      },
+      {
+        "action": {
+          "action_scope": "export.send",
+          "allowed": false,
+          "effective_cap": "NONE",
+          "reason": "MISSING_ENVELOPE",
+          "record_id": "C_CRASH",
+          "trace": {
+            "record_id": "C_CRASH"
+          }
+        },
+        "attempt": 1,
+        "phase": "AFTER_CONTENTION"
+      },
+      {
+        "action": {
+          "action_scope": "export.send",
+          "allowed": false,
+          "effective_cap": "NONE",
+          "reason": "MISSING_ENVELOPE",
+          "record_id": "C_CRASH",
+          "trace": {
+            "record_id": "C_CRASH"
+          }
+        },
+        "attempt": 2,
+        "phase": "AFTER_CONTENTION"
+      },
+      {
+        "action": {
+          "action_scope": "export.send",
+          "allowed": false,
+          "effective_cap": "NONE",
+          "reason": "MISSING_ENVELOPE",
+          "record_id": "C_CRASH",
+          "trace": {
+            "record_id": "C_CRASH"
+          }
+        },
+        "attempt": 3,
+        "phase": "AFTER_CONTENTION"
+      }
+    ],
+    "liveness_failure": true,
+    "post_kill_inspection": {
+      "dependencies": [],
+      "dependency_count": 0,
+      "envelope_exists": false,
+      "envelope_state": null,
+      "policies": {
+        "18c8a1ed1d9148815568747b3afdeaec": {
+          "caps": {
+            "export.send": "ACT"
+          },
+          "generation": 1,
+          "policy_key": {
+            "action_scope": "export.send",
+            "department": "custody",
+            "operation": "identity_relay",
+            "revision": "R1",
+            "source": "transform"
+          },
+          "role": "ORIGIN",
+          "version": "transform-v1"
+        },
+        "28748265890e8311311f27562f2d9de1": {
+          "caps": {
+            "export.send": "ACT"
+          },
+          "generation": 1,
+          "policy_key": {
+            "action_scope": "export.send",
+            "department": "custody",
+            "operation": "freeform",
+            "revision": "R1",
+            "source": "transform"
+          },
+          "role": "ORIGIN",
+          "version": "transform-v1"
+        },
+        "86c4ac2f04d1fa4c7b4e3a5263a60428": {
+          "caps": {
+            "export.send": "ACT"
+          },
+          "generation": 5,
+          "policy_key": {
+            "action_scope": "export.send",
+            "department": "finance",
+            "operation": "payroll_lookup",
+            "revision": "R9",
+            "source": "payroll_lookup"
+          },
+          "role": "ORIGIN",
+          "version": "payroll-v5"
+        },
+        "ba4a0a432af5bdf5858f3b6908bc6420": {
+          "caps": {
+            "export.send": "ACT"
+          },
+          "generation": 1,
+          "policy_key": {
+            "action_scope": "export.send",
+            "department": "finance",
+            "operation": "vendor_lookup",
+            "revision": "R1",
+            "source": "vendor_lookup"
+          },
+          "role": "ORIGIN",
+          "version": "v1"
+        },
+        "d9f5d9393ddd4ed360c76635223b083d": {
+          "caps": {
+            "export.send": "ACT"
+          },
+          "generation": 1,
+          "policy_key": {
+            "action_scope": "export.send",
+            "department": "finance",
+            "operation": "clean_registry",
+            "revision": "R1",
+            "source": "clean_registry"
+          },
+          "role": "ORIGIN",
+          "version": "clean-v1"
+        },
+        "f5e3c8c89658a8f035f7a2797c9dd8fe": {
+          "caps": {
+            "export.send": "ACT"
+          },
+          "generation": 1,
+          "policy_key": {
+            "action_scope": "export.send",
+            "department": "custody",
+            "operation": "registered",
+            "revision": "R1",
+            "source": "transform"
+          },
+          "role": "ORIGIN",
+          "version": "transform-v1"
+        }
+      },
+      "record_id": "C_CRASH"
+    },
+    "post_kill_partial_records": 0
+  },
+  "dependencies": [
+    {
+      "action_scope": "export.send",
+      "granting_generation": 1,
+      "policy_key": {
+        "action_scope": "export.send",
+        "department": "custody",
+        "operation": "registered",
+        "revision": "R1",
+        "source": "transform"
+      },
+      "record_id": "C_CHILD",
+      "root_record_id": "C_CHILD"
+    },
+    {
+      "action_scope": "export.send",
+      "granting_generation": 1,
+      "policy_key": {
+        "action_scope": "export.send",
+        "department": "custody",
+        "operation": "registered",
+        "revision": "R1",
+        "source": "transform"
+      },
+      "record_id": "C_MIX",
+      "root_record_id": "C_MIX"
+    },
+    {
+      "action_scope": "export.send",
+      "granting_generation": 1,
+      "policy_key": {
+        "action_scope": "export.send",
+        "department": "custody",
+        "operation": "registered",
+        "revision": "R1",
+        "source": "transform"
+      },
+      "record_id": "C_NEW",
+      "root_record_id": "C_NEW"
+    },
+    {
+      "action_scope": "export.send",
+      "granting_generation": 1,
+      "policy_key": {
+        "action_scope": "export.send",
+        "department": "finance",
+        "operation": "clean_registry",
+        "revision": "R1",
+        "source": "clean_registry"
+      },
+      "record_id": "C_MIX",
+      "root_record_id": "R_CLEAN"
+    },
+    {
+      "action_scope": "export.send",
+      "granting_generation": 1,
+      "policy_key": {
+        "action_scope": "export.send",
+        "department": "finance",
+        "operation": "clean_registry",
+        "revision": "R1",
+        "source": "clean_registry"
+      },
+      "record_id": "R_CLEAN",
+      "root_record_id": "R_CLEAN"
+    },
+    {
+      "action_scope": "export.send",
+      "granting_generation": 1,
+      "policy_key": {
+        "action_scope": "export.send",
+        "department": "finance",
+        "operation": "vendor_lookup",
+        "revision": "R1",
+        "source": "vendor_lookup"
+      },
+      "record_id": "C_CHILD",
+      "root_record_id": "R_OLD"
+    },
+    {
+      "action_scope": "export.send",
+      "granting_generation": 1,
+      "policy_key": {
+        "action_scope": "export.send",
+        "department": "finance",
+        "operation": "vendor_lookup",
+        "revision": "R1",
+        "source": "vendor_lookup"
+      },
+      "record_id": "C_MIX",
+      "root_record_id": "R_OLD"
+    },
+    {
+      "action_scope": "export.send",
+      "granting_generation": 1,
+      "policy_key": {
+        "action_scope": "export.send",
+        "department": "finance",
+        "operation": "vendor_lookup",
+        "revision": "R1",
+        "source": "vendor_lookup"
+      },
+      "record_id": "FAULT_MISSING_ROOT",
+      "root_record_id": "E2H-MISSING-ROOT"
+    },
+    {
+      "action_scope": "export.send",
+      "granting_generation": 1,
+      "policy_key": {
+        "action_scope": "export.send",
+        "department": "finance",
+        "operation": "vendor_lookup",
+        "revision": "R1",
+        "source": "vendor_lookup"
+      },
+      "record_id": "R_OLD",
+      "root_record_id": "R_OLD"
+    },
+    {
+      "action_scope": "export.send",
+      "granting_generation": 2,
+      "policy_key": {
+        "action_scope": "export.send",
+        "department": "finance",
+        "operation": "vendor_lookup",
+        "revision": "R1",
+        "source": "vendor_lookup"
+      },
+      "record_id": "F_DUP",
+      "root_record_id": "F_DUP"
+    },
+    {
+      "action_scope": "export.send",
+      "granting_generation": 3,
+      "policy_key": {
+        "action_scope": "export.send",
+        "department": "finance",
+        "operation": "vendor_lookup",
+        "revision": "R1",
+        "source": "vendor_lookup"
+      },
+      "record_id": "C_NEW",
+      "root_record_id": "R_NEW"
+    },
+    {
+      "action_scope": "export.send",
+      "granting_generation": 3,
+      "policy_key": {
+        "action_scope": "export.send",
+        "department": "finance",
+        "operation": "vendor_lookup",
+        "revision": "R1",
+        "source": "vendor_lookup"
+      },
+      "record_id": "R_NEW",
+      "root_record_id": "R_NEW"
+    }
+  ],
+  "durable_records": {
+    "C_CHILD": {
+      "admission_state": "COMMITTED",
+      "bound_caps": {
+        "export.send": "ACT"
+      },
+      "direct_parent_ids": [
+        "R_OLD"
+      ],
+      "own_granting_generation": 1,
+      "own_policy_key": {
+        "action_scope": "export.send",
+        "department": "custody",
+        "operation": "registered",
+        "revision": "R1",
+        "source": "transform"
+      },
+      "own_policy_version": "transform-v1",
+      "payload_digest": "2145d422350bd7b87db28fe137ec949f1657ed9a2df3c228f865b73e98793c7c",
+      "record_id": "C_CHILD",
+      "support_root_ids": [
+        "R_OLD"
+      ],
+      "transform_class": "REGISTERED"
+    },
+    "C_MIX": {
+      "admission_state": "COMMITTED",
+      "bound_caps": {
+        "export.send": "ACT"
+      },
+      "direct_parent_ids": [
+        "R_OLD",
+        "R_CLEAN"
+      ],
+      "own_granting_generation": 1,
+      "own_policy_key": {
+        "action_scope": "export.send",
+        "department": "custody",
+        "operation": "registered",
+        "revision": "R1",
+        "source": "transform"
+      },
+      "own_policy_version": "transform-v1",
+      "payload_digest": "2145d422350bd7b87db28fe137ec949f1657ed9a2df3c228f865b73e98793c7c",
+      "record_id": "C_MIX",
+      "support_root_ids": [
+        "R_CLEAN",
+        "R_OLD"
+      ],
+      "transform_class": "REGISTERED"
+    },
+    "C_NEW": {
+      "admission_state": "COMMITTED",
+      "bound_caps": {
+        "export.send": "ACT"
+      },
+      "direct_parent_ids": [
+        "R_NEW"
+      ],
+      "own_granting_generation": 1,
+      "own_policy_key": {
+        "action_scope": "export.send",
+        "department": "custody",
+        "operation": "registered",
+        "revision": "R1",
+        "source": "transform"
+      },
+      "own_policy_version": "transform-v1",
+      "payload_digest": "2145d422350bd7b87db28fe137ec949f1657ed9a2df3c228f865b73e98793c7c",
+      "record_id": "C_NEW",
+      "support_root_ids": [
+        "R_NEW"
+      ],
+      "transform_class": "REGISTERED"
+    },
+    "FAULT_INCOMPLETE": {
+      "admission_state": "INCOMPLETE",
+      "bound_caps": {
+        "export.send": "ACT"
+      },
+      "direct_parent_ids": [],
+      "own_granting_generation": 1,
+      "own_policy_key": {
+        "action_scope": "export.send",
+        "department": "finance",
+        "operation": "vendor_lookup",
+        "revision": "R1",
+        "source": "vendor_lookup"
+      },
+      "own_policy_version": "fault",
+      "payload_digest": "2145d422350bd7b87db28fe137ec949f1657ed9a2df3c228f865b73e98793c7c",
+      "record_id": "FAULT_INCOMPLETE",
+      "support_root_ids": [
+        "FAULT_INCOMPLETE"
+      ],
+      "transform_class": "REGISTERED"
+    },
+    "FAULT_MISSING_DEP": {
+      "admission_state": "COMMITTED",
+      "bound_caps": {
+        "export.send": "ACT"
+      },
+      "direct_parent_ids": [],
+      "own_granting_generation": 1,
+      "own_policy_key": {
+        "action_scope": "export.send",
+        "department": "finance",
+        "operation": "vendor_lookup",
+        "revision": "R1",
+        "source": "vendor_lookup"
+      },
+      "own_policy_version": "fault",
+      "payload_digest": "2145d422350bd7b87db28fe137ec949f1657ed9a2df3c228f865b73e98793c7c",
+      "record_id": "FAULT_MISSING_DEP",
+      "support_root_ids": [
+        "FAULT_MISSING_DEP"
+      ],
+      "transform_class": "REGISTERED"
+    },
+    "FAULT_MISSING_ROOT": {
+      "admission_state": "COMMITTED",
+      "bound_caps": {
+        "export.send": "ACT"
+      },
+      "direct_parent_ids": [],
+      "own_granting_generation": 1,
+      "own_policy_key": {
+        "action_scope": "export.send",
+        "department": "finance",
+        "operation": "vendor_lookup",
+        "revision": "R1",
+        "source": "vendor_lookup"
+      },
+      "own_policy_version": "fault",
+      "payload_digest": "2145d422350bd7b87db28fe137ec949f1657ed9a2df3c228f865b73e98793c7c",
+      "record_id": "FAULT_MISSING_ROOT",
+      "support_root_ids": [
+        "FAULT_MISSING_ROOT"
+      ],
+      "transform_class": "REGISTERED"
+    },
+    "F_DUP": {
+      "admission_state": "COMMITTED",
+      "bound_caps": {
+        "export.send": "INFORM"
+      },
+      "direct_parent_ids": [],
+      "own_granting_generation": 2,
+      "own_policy_key": {
+        "action_scope": "export.send",
+        "department": "finance",
+        "operation": "vendor_lookup",
+        "revision": "R1",
+        "source": "vendor_lookup"
+      },
+      "own_policy_version": "v2",
+      "payload_digest": "2145d422350bd7b87db28fe137ec949f1657ed9a2df3c228f865b73e98793c7c",
+      "record_id": "F_DUP",
+      "support_root_ids": [
+        "F_DUP"
+      ],
+      "transform_class": "REGISTERED"
+    },
+    "R_CLEAN": {
+      "admission_state": "COMMITTED",
+      "bound_caps": {
+        "export.send": "ACT"
+      },
+      "direct_parent_ids": [],
+      "own_granting_generation": 1,
+      "own_policy_key": {
+        "action_scope": "export.send",
+        "department": "finance",
+        "operation": "clean_registry",
+        "revision": "R1",
+        "source": "clean_registry"
+      },
+      "own_policy_version": "clean-v1",
+      "payload_digest": "2145d422350bd7b87db28fe137ec949f1657ed9a2df3c228f865b73e98793c7c",
+      "record_id": "R_CLEAN",
+      "support_root_ids": [
+        "R_CLEAN"
+      ],
+      "transform_class": "REGISTERED"
+    },
+    "R_NEW": {
+      "admission_state": "COMMITTED",
+      "bound_caps": {
+        "export.send": "ACT"
+      },
+      "direct_parent_ids": [],
+      "own_granting_generation": 3,
+      "own_policy_key": {
+        "action_scope": "export.send",
+        "department": "finance",
+        "operation": "vendor_lookup",
+        "revision": "R1",
+        "source": "vendor_lookup"
+      },
+      "own_policy_version": "v3",
+      "payload_digest": "2145d422350bd7b87db28fe137ec949f1657ed9a2df3c228f865b73e98793c7c",
+      "record_id": "R_NEW",
+      "support_root_ids": [
+        "R_NEW"
+      ],
+      "transform_class": "REGISTERED"
+    },
+    "R_OLD": {
+      "admission_state": "COMMITTED",
+      "bound_caps": {
+        "export.send": "ACT"
+      },
+      "direct_parent_ids": [],
+      "own_granting_generation": 1,
+      "own_policy_key": {
+        "action_scope": "export.send",
+        "department": "finance",
+        "operation": "vendor_lookup",
+        "revision": "R1",
+        "source": "vendor_lookup"
+      },
+      "own_policy_version": "v1",
+      "payload_digest": "2145d422350bd7b87db28fe137ec949f1657ed9a2df3c228f865b73e98793c7c",
+      "record_id": "R_OLD",
+      "support_root_ids": [
+        "R_OLD"
+      ],
+      "transform_class": "REGISTERED"
+    }
+  },
+  "e2g_commit": "bd0fcd3af38b105f326dbe0e4f73149b6da67449",
+  "e2g_result_digest": "05707014de0ed008db4eadd4ab74f7aa21ae530ea4029e2218b448b5fa6e1bac",
+  "environment": {
+    "database": "(default)",
+    "database_class": "Firestore Native",
+    "final_collection_counts": {
+      "custody_research_e2h_r1e_20260822_controls": 0,
+      "custody_research_e2h_r1e_20260822_dependencies": 0,
+      "custody_research_e2h_r1e_20260822_envelopes": 0,
+      "custody_research_e2h_r1e_20260822_policies": 0
+    },
+    "initial_collection_counts": {
+      "custody_research_e2h_r1e_20260822_controls": 0,
+      "custody_research_e2h_r1e_20260822_dependencies": 0,
+      "custody_research_e2h_r1e_20260822_envelopes": 0,
+      "custody_research_e2h_r1e_20260822_policies": 0
+    },
+    "namespace_prefix": "custody_research_e2h_r1e_20260822",
+    "production_isolation_check": true,
+    "project": "project-988bc9fe-092c-4b32-90c",
+    "region": "us-central1"
+  },
+  "experiment_id": "E2H_R1E_DURABLE_AUTHORITY_INTEGRATION",
+  "experiment_source_digest": "efe30ed3d6341ea6dac68bd5d0cea3e4f40d8825bea95870f7c0521bba5db59d",
+  "first_failed_gate": "recovery_completed_within_bound",
+  "fixture_digest": "3b026adca7c6a42d221f902f8f087952a75d2b1f71d9fd24b8b89e51f4a4b4d2",
+  "ground_truth_digest": "e40af45c73cff118173fb1c84559003dce2a2a122efd53ed476e0ffe4c8ba63b",
+  "immutability": {
+    "historical_rewrite_count": {
+      "denominator": 6,
+      "numerator": 0,
+      "value": 0.0
+    },
+    "primary_envelopes": [
+      "R_OLD",
+      "C_CHILD",
+      "R_CLEAN",
+      "C_MIX",
+      "R_NEW",
+      "C_NEW"
+    ]
+  },
+  "leakage_guard": {
+    "mechanism_integrity": {
+      "constructor_rejects_ground_truth": true,
+      "mechanism_forbidden_source_tokens": [],
+      "mechanism_scorer_reference": false,
+      "variant_security_branch": false
+    },
+    "runtime_scan": [],
+    "scorer_read_counter_before_actions": 0
+  },
+  "metrics": {
+    "audit_trace_complete": {
+      "denominator": 8,
+      "numerator": 8,
+      "value": 1.0
+    },
+    "authority_dependency_recall_after_restart": {
+      "denominator": 2,
+      "numerator": 2,
+      "value": 1.0
+    },
+    "duplicate_authoritative_envelopes": {
+      "denominator": 1,
+      "numerator": 0,
+      "value": 0.0
+    },
+    "durable_control_allows": {
+      "denominator": 1,
+      "numerator": 1,
+      "value": 1.0
+    },
+    "fail_closed_missing_state": {
+      "denominator": 5,
+      "numerator": 5,
+      "value": 1.0
+    },
+    "gateway_race_false_act_permits": {
+      "denominator": 1,
+      "numerator": 0,
+      "value": 0.0
+    },
+    "historical_rewrite_count": {
+      "denominator": 6,
+      "numerator": 0,
+      "value": 0.0
+    },
+    "immediate_post_kill_false_act_permits": {
+      "denominator": 1,
+      "numerator": 0,
+      "value": 0.0
+    },
+    "legitimate_refresh_allows": {
+      "denominator": 1,
+      "numerator": 1,
+      "value": 1.0
+    },
+    "multi_parent_recall_after_restart": {
+      "denominator": 1,
+      "numerator": 1,
+      "value": 1.0
+    },
+    "partial_admission_false_act_permits": {
+      "denominator": 1,
+      "numerator": 0,
+      "value": 0.0
+    },
+    "post_kill_partial_authoritative_records": {
+      "denominator": 1,
+      "numerator": 0,
+      "value": 0.0
+    },
+    "post_policy_change_false_act_permits": {
+      "denominator": 5,
+      "numerator": 0,
+      "value": 0.0
+    },
+    "post_restart_dependency_recall": {
+      "denominator": 2,
+      "numerator": 2,
+      "value": 1.0
+    },
+    "recovery_completed_within_bound": {
+      "denominator": 1,
+      "numerator": 0,
+      "value": 0.0
+    },
+    "recovery_contention_events": {
+      "denominator": 1,
+      "numerator": 3,
+      "value": 3.0
+    },
+    "recovery_contention_false_act_permits": {
+      "denominator": 3,
+      "numerator": 0,
+      "value": 0.0
+    },
+    "recovery_duplicate_envelopes": {
+      "denominator": 1,
+      "numerator": 0,
+      "value": 0.0
+    },
+    "recovery_historical_rewrites": {
+      "denominator": 1,
+      "numerator": 0,
+      "value": 0.0
+    },
+    "reproducible_event_trace": {
+      "denominator": 1,
+      "numerator": 1,
+      "value": 1.0
+    },
+    "retry_conflicts_correct": {
+      "denominator": 1,
+      "numerator": 1,
+      "value": 1.0
+    },
+    "stale_cache_false_act_permits": {
+      "denominator": 1,
+      "numerator": 0,
+      "value": 0.0
+    }
+  },
+  "missing_state_probes": {
+    "INCOMPLETE": {
+      "action_scope": "export.send",
+      "allowed": false,
+      "effective_cap": "NONE",
+      "reason": "INCOMPLETE_ADMISSION",
+      "record_id": "FAULT_INCOMPLETE",
+      "trace": {
+        "record_id": "FAULT_INCOMPLETE"
+      }
+    },
+    "MISSING_DEPENDENCY": {
+      "action_scope": "export.send",
+      "allowed": false,
+      "effective_cap": "NONE",
+      "reason": "MISSING_DEPENDENCY",
+      "record_id": "FAULT_MISSING_DEP",
+      "trace": {
+        "record_id": "FAULT_MISSING_DEP"
+      }
+    },
+    "MISSING_ENVELOPE": {
+      "action_scope": "export.send",
+      "allowed": false,
+      "effective_cap": "NONE",
+      "reason": "MISSING_ENVELOPE",
+      "record_id": "FAULT_MISSING_ENVELOPE",
+      "trace": {
+        "record_id": "FAULT_MISSING_ENVELOPE"
+      }
+    },
+    "MISSING_ROOT": {
+      "action_scope": "export.send",
+      "allowed": false,
+      "effective_cap": "NONE",
+      "reason": "MISSING_SUPPORT_ROOT",
+      "record_id": "FAULT_MISSING_ROOT",
+      "trace": {
+        "record_id": "FAULT_MISSING_ROOT"
+      }
+    },
+    "POLICY_READ_FAILURE": {
+      "action_scope": "export.send",
+      "allowed": false,
+      "effective_cap": "NONE",
+      "reason": "POLICY_READ_FAILURE",
+      "record_id": "C_NEW",
+      "trace": {
+        "record_id": "C_NEW"
+      }
+    }
+  },
+  "operation_counts": {
+    "model_calls": 0,
+    "run1": {
+      "deletes": 28,
+      "reads": 199,
+      "writes": 31
+    },
+    "run2": {
+      "deletes": 28,
+      "reads": 199,
+      "writes": 31
+    }
+  },
+  "plan_immutable": true,
+  "plan_sha256": "d4a3b9e2115b6716c90503e482f240eba41e88190ae136f48a56891154037e7e",
+  "policy_snapshots": {
+    "clean": {
+      "caps": {
+        "export.send": "ACT"
+      },
+      "generation": 1,
+      "policy_key": {
+        "action_scope": "export.send",
+        "department": "finance",
+        "operation": "clean_registry",
+        "revision": "R1",
+        "source": "clean_registry"
+      },
+      "role": "ORIGIN",
+      "version": "clean-v1"
+    },
+    "freeform": {
+      "caps": {
+        "export.send": "ACT"
+      },
+      "generation": 1,
+      "policy_key": {
+        "action_scope": "export.send",
+        "department": "custody",
+        "operation": "freeform",
+        "revision": "R1",
+        "source": "transform"
+      },
+      "role": "ORIGIN",
+      "version": "transform-v1"
+    },
+    "identity": {
+      "caps": {
+        "export.send": "ACT"
+      },
+      "generation": 1,
+      "policy_key": {
+        "action_scope": "export.send",
+        "department": "custody",
+        "operation": "identity_relay",
+        "revision": "R1",
+        "source": "transform"
+      },
+      "role": "ORIGIN",
+      "version": "transform-v1"
+    },
+    "payroll_g5": {
+      "caps": {
+        "export.send": "ACT"
+      },
+      "generation": 5,
+      "policy_key": {
+        "action_scope": "export.send",
+        "department": "finance",
+        "operation": "payroll_lookup",
+        "revision": "R9",
+        "source": "payroll_lookup"
+      },
+      "role": "ORIGIN",
+      "version": "payroll-v5"
+    },
+    "registered": {
+      "caps": {
+        "export.send": "ACT"
+      },
+      "generation": 1,
+      "policy_key": {
+        "action_scope": "export.send",
+        "department": "custody",
+        "operation": "registered",
+        "revision": "R1",
+        "source": "transform"
+      },
+      "role": "ORIGIN",
+      "version": "transform-v1"
+    },
+    "vendor_v1": {
+      "caps": {
+        "export.send": "ACT"
+      },
+      "generation": 1,
+      "policy_key": {
+        "action_scope": "export.send",
+        "department": "finance",
+        "operation": "vendor_lookup",
+        "revision": "R1",
+        "source": "vendor_lookup"
+      },
+      "role": "ORIGIN",
+      "version": "v1"
+    },
+    "vendor_v2": {
+      "caps": {
+        "export.send": "INFORM"
+      },
+      "generation": 2,
+      "policy_key": {
+        "action_scope": "export.send",
+        "department": "finance",
+        "operation": "vendor_lookup",
+        "revision": "R1",
+        "source": "vendor_lookup"
+      },
+      "role": "RELAY",
+      "version": "v2"
+    },
+    "vendor_v3": {
+      "caps": {
+        "export.send": "ACT"
+      },
+      "generation": 3,
+      "policy_key": {
+        "action_scope": "export.send",
+        "department": "finance",
+        "operation": "vendor_lookup",
+        "revision": "R1",
+        "source": "vendor_lookup"
+      },
+      "role": "ORIGIN",
+      "version": "v3"
+    }
+  },
+  "preregistration_commit": "ce5c8b172d70e537c0c60e3bced9b6670f7bb92b",
+  "process_model": {
+    "gateway": "independent OS process G",
+    "ground_truth_in_processes": false,
+    "policy": "independent OS process P",
+    "writer": "independent OS process W"
+  },
+  "reproducibility": {
+    "event_trace_match": {
+      "denominator": 1,
+      "numerator": 1,
+      "value": 1.0
+    },
+    "independent_runs": 2
+  },
+  "schema": {
+    "authoritative_read": "direct DocumentReference.get",
+    "controls": "custody_research_e2h_r1e_20260822_controls",
+    "dependencies": "custody_research_e2h_r1e_20260822_dependencies",
+    "envelopes": "custody_research_e2h_r1e_20260822_envelopes",
+    "policies": "custody_research_e2h_r1e_20260822_policies",
+    "transaction": "Firestore pessimistic transaction"
+  },
+  "variants": {
+    "A": {
+      "actions": [
+        {
+          "action_scope": "export.send",
+          "allowed": true,
+          "dependency_checks": [
+            {
+              "action_scope": "export.send",
+              "current_generation": 1,
+              "fresh": true,
+              "granting_generation": 1,
+              "policy_key": {
+                "action_scope": "export.send",
+                "department": "finance",
+                "operation": "vendor_lookup",
+                "revision": "R1",
+                "source": "vendor_lookup"
+              },
+              "root_record_id": "R_OLD"
+            },
+            {
+              "action_scope": "export.send",
+              "current_generation": 1,
+              "fresh": true,
+              "granting_generation": 1,
+              "policy_key": {
+                "action_scope": "export.send",
+                "department": "custody",
+                "operation": "registered",
+                "revision": "R1",
+                "source": "transform"
+              },
+              "root_record_id": "C_CHILD"
+            }
+          ],
+          "effective_cap": "ACT",
+          "reason": "CURRENT_GENERATION_MATCH",
+          "record_id": "C_CHILD",
+          "trace": {
+            "action_scope": "export.send",
+            "allowed": true,
+            "bound_cap": "ACT",
+            "cached_generations": {},
+            "dependencies": [
+              {
+                "action_scope": "export.send",
+                "current_generation": 1,
+                "fresh": true,
+                "granting_generation": 1,
+                "policy_key": {
+                  "action_scope": "export.send",
+                  "department": "finance",
+                  "operation": "vendor_lookup",
+                  "revision": "R1",
+                  "source": "vendor_lookup"
+                },
+                "root_record_id": "R_OLD"
+              },
+              {
+                "action_scope": "export.send",
+                "current_generation": 1,
+                "fresh": true,
+                "granting_generation": 1,
+                "policy_key": {
+                  "action_scope": "export.send",
+                  "department": "custody",
+                  "operation": "registered",
+                  "revision": "R1",
+                  "source": "transform"
+                },
+                "root_record_id": "C_CHILD"
+              }
+            ],
+            "direct_parents": [
+              "R_OLD"
+            ],
+            "effective_cap": "ACT",
+            "final_authoritative_generations": {
+              "ba4a0a432af5bdf5858f3b6908bc6420": 1,
+              "f5e3c8c89658a8f035f7a2797c9dd8fe": 1
+            },
+            "operation_policy": {
+              "bound_generation": 1,
+              "current_generation": 1,
+              "fresh": true
+            },
+            "reason": "CURRENT_GENERATION_MATCH",
+            "record_id": "C_CHILD",
+            "support_roots": [
+              "R_OLD"
+            ],
+            "transform_cap": "ACT"
+          }
+        }
+      ]
+    },
+    "B": {
+      "actions": [
+        {
+          "action_scope": "export.send",
+          "allowed": false,
+          "dependency_checks": [
+            {
+              "action_scope": "export.send",
+              "current_generation": 2,
+              "fresh": false,
+              "granting_generation": 1,
+              "policy_key": {
+                "action_scope": "export.send",
+                "department": "finance",
+                "operation": "vendor_lookup",
+                "revision": "R1",
+                "source": "vendor_lookup"
+              },
+              "root_record_id": "R_OLD"
+            },
+            {
+              "action_scope": "export.send",
+              "current_generation": 1,
+              "fresh": true,
+              "granting_generation": 1,
+              "policy_key": {
+                "action_scope": "export.send",
+                "department": "custody",
+                "operation": "registered",
+                "revision": "R1",
+                "source": "transform"
+              },
+              "root_record_id": "C_CHILD"
+            }
+          ],
+          "effective_cap": "NONE",
+          "reason": "STALE_AUTHORITY_DEPENDENCY",
+          "record_id": "C_CHILD",
+          "trace": {
+            "action_scope": "export.send",
+            "allowed": false,
+            "bound_cap": "ACT",
+            "cached_generations": {},
+            "dependencies": [
+              {
+                "action_scope": "export.send",
+                "current_generation": 2,
+                "fresh": false,
+                "granting_generation": 1,
+                "policy_key": {
+                  "action_scope": "export.send",
+                  "department": "finance",
+                  "operation": "vendor_lookup",
+                  "revision": "R1",
+                  "source": "vendor_lookup"
+                },
+                "root_record_id": "R_OLD"
+              },
+              {
+                "action_scope": "export.send",
+                "current_generation": 1,
+                "fresh": true,
+                "granting_generation": 1,
+                "policy_key": {
+                  "action_scope": "export.send",
+                  "department": "custody",
+                  "operation": "registered",
+                  "revision": "R1",
+                  "source": "transform"
+                },
+                "root_record_id": "C_CHILD"
+              }
+            ],
+            "direct_parents": [
+              "R_OLD"
+            ],
+            "effective_cap": "NONE",
+            "final_authoritative_generations": {},
+            "operation_policy": {
+              "bound_generation": 1,
+              "current_generation": 1,
+              "fresh": true
+            },
+            "reason": "STALE_AUTHORITY_DEPENDENCY",
+            "record_id": "C_CHILD",
+            "support_roots": [
+              "R_OLD"
+            ],
+            "transform_cap": "ACT"
+          }
+        }
+      ]
+    },
+    "C": {
+      "actions": [
+        {
+          "action_scope": "export.send",
+          "allowed": false,
+          "effective_cap": "NONE",
+          "reason": "MISSING_ENVELOPE",
+          "record_id": "C_CRASH",
+          "trace": {
+            "record_id": "C_CRASH"
+          }
+        }
+      ]
+    },
+    "D": {
+      "actions": [
+        {
+          "action_scope": "export.send",
+          "allowed": false,
+          "dependency_checks": [
+            {
+              "action_scope": "export.send",
+              "current_generation": 1,
+              "fresh": true,
+              "granting_generation": 1,
+              "policy_key": {
+                "action_scope": "export.send",
+                "department": "finance",
+                "operation": "vendor_lookup",
+                "revision": "R1",
+                "source": "vendor_lookup"
+              },
+              "root_record_id": "R_OLD"
+            },
+            {
+              "action_scope": "export.send",
+              "current_generation": 1,
+              "fresh": true,
+              "granting_generation": 1,
+              "policy_key": {
+                "action_scope": "export.send",
+                "department": "custody",
+                "operation": "registered",
+                "revision": "R1",
+                "source": "transform"
+              },
+              "root_record_id": "C_CHILD"
+            }
+          ],
+          "effective_cap": "NONE",
+          "reason": "STALE_AUTHORITY_DEPENDENCY",
+          "record_id": "C_CHILD",
+          "trace": {
+            "action_scope": "export.send",
+            "allowed": false,
+            "bound_cap": "ACT",
+            "cached_generations": {},
+            "dependencies": [
+              {
+                "action_scope": "export.send",
+                "current_generation": 1,
+                "fresh": true,
+                "granting_generation": 1,
+                "policy_key": {
+                  "action_scope": "export.send",
+                  "department": "finance",
+                  "operation": "vendor_lookup",
+                  "revision": "R1",
+                  "source": "vendor_lookup"
+                },
+                "root_record_id": "R_OLD"
+              },
+              {
+                "action_scope": "export.send",
+                "current_generation": 1,
+                "fresh": true,
+                "granting_generation": 1,
+                "policy_key": {
+                  "action_scope": "export.send",
+                  "department": "custody",
+                  "operation": "registered",
+                  "revision": "R1",
+                  "source": "transform"
+                },
+                "root_record_id": "C_CHILD"
+              }
+            ],
+            "direct_parents": [
+              "R_OLD"
+            ],
+            "effective_cap": "NONE",
+            "final_authoritative_generations": {
+              "ba4a0a432af5bdf5858f3b6908bc6420": 2,
+              "f5e3c8c89658a8f035f7a2797c9dd8fe": 1
+            },
+            "operation_policy": {
+              "bound_generation": 1,
+              "current_generation": 1,
+              "fresh": true
+            },
+            "reason": "STALE_AUTHORITY_DEPENDENCY",
+            "record_id": "C_CHILD",
+            "support_roots": [
+              "R_OLD"
+            ],
+            "transform_cap": "ACT"
+          }
+        }
+      ]
+    },
+    "E": {
+      "actions": [
+        {
+          "action_scope": "export.send",
+          "allowed": false,
+          "dependency_checks": [
+            {
+              "action_scope": "export.send",
+              "current_generation": 1,
+              "fresh": true,
+              "granting_generation": 1,
+              "policy_key": {
+                "action_scope": "export.send",
+                "department": "finance",
+                "operation": "vendor_lookup",
+                "revision": "R1",
+                "source": "vendor_lookup"
+              },
+              "root_record_id": "R_OLD"
+            },
+            {
+              "action_scope": "export.send",
+              "current_generation": 1,
+              "fresh": true,
+              "granting_generation": 1,
+              "policy_key": {
+                "action_scope": "export.send",
+                "department": "custody",
+                "operation": "registered",
+                "revision": "R1",
+                "source": "transform"
+              },
+              "root_record_id": "C_CHILD"
+            }
+          ],
+          "effective_cap": "NONE",
+          "reason": "STALE_AUTHORITY_DEPENDENCY",
+          "record_id": "C_CHILD",
+          "trace": {
+            "action_scope": "export.send",
+            "allowed": false,
+            "bound_cap": "ACT",
+            "cached_generations": {
+              "ba4a0a432af5bdf5858f3b6908bc6420": 1
+            },
+            "dependencies": [
+              {
+                "action_scope": "export.send",
+                "current_generation": 1,
+                "fresh": true,
+                "granting_generation": 1,
+                "policy_key": {
+                  "action_scope": "export.send",
+                  "department": "finance",
+                  "operation": "vendor_lookup",
+                  "revision": "R1",
+                  "source": "vendor_lookup"
+                },
+                "root_record_id": "R_OLD"
+              },
+              {
+                "action_scope": "export.send",
+                "current_generation": 1,
+                "fresh": true,
+                "granting_generation": 1,
+                "policy_key": {
+                  "action_scope": "export.send",
+                  "department": "custody",
+                  "operation": "registered",
+                  "revision": "R1",
+                  "source": "transform"
+                },
+                "root_record_id": "C_CHILD"
+              }
+            ],
+            "direct_parents": [
+              "R_OLD"
+            ],
+            "effective_cap": "NONE",
+            "final_authoritative_generations": {
+              "ba4a0a432af5bdf5858f3b6908bc6420": 2,
+              "f5e3c8c89658a8f035f7a2797c9dd8fe": 1
+            },
+            "operation_policy": {
+              "bound_generation": 1,
+              "current_generation": 1,
+              "fresh": true
+            },
+            "reason": "STALE_AUTHORITY_DEPENDENCY",
+            "record_id": "C_CHILD",
+            "support_roots": [
+              "R_OLD"
+            ],
+            "transform_cap": "ACT"
+          }
+        }
+      ]
+    },
+    "F": {
+      "actions": [
+        {
+          "action_scope": "export.send",
+          "allowed": false,
+          "dependency_checks": [
+            {
+              "action_scope": "export.send",
+              "current_generation": 2,
+              "fresh": true,
+              "granting_generation": 2,
+              "policy_key": {
+                "action_scope": "export.send",
+                "department": "finance",
+                "operation": "vendor_lookup",
+                "revision": "R1",
+                "source": "vendor_lookup"
+              },
+              "root_record_id": "F_DUP"
+            }
+          ],
+          "effective_cap": "INFORM",
+          "reason": "CAP_BELOW_ACT",
+          "record_id": "F_DUP",
+          "trace": {
+            "action_scope": "export.send",
+            "allowed": false,
+            "bound_cap": "INFORM",
+            "cached_generations": {},
+            "dependencies": [
+              {
+                "action_scope": "export.send",
+                "current_generation": 2,
+                "fresh": true,
+                "granting_generation": 2,
+                "policy_key": {
+                  "action_scope": "export.send",
+                  "department": "finance",
+                  "operation": "vendor_lookup",
+                  "revision": "R1",
+                  "source": "vendor_lookup"
+                },
+                "root_record_id": "F_DUP"
+              }
+            ],
+            "direct_parents": [],
+            "effective_cap": "INFORM",
+            "final_authoritative_generations": {},
+            "operation_policy": {
+              "bound_generation": 2,
+              "current_generation": 2,
+              "fresh": true
+            },
+            "reason": "CAP_BELOW_ACT",
+            "record_id": "F_DUP",
+            "support_roots": [
+              "F_DUP"
+            ],
+            "transform_cap": "ACT"
+          }
+        }
+      ]
+    },
+    "G": {
+      "actions": [
+        {
+          "action_scope": "export.send",
+          "allowed": false,
+          "dependency_checks": [
+            {
+              "action_scope": "export.send",
+              "current_generation": 1,
+              "fresh": true,
+              "granting_generation": 1,
+              "policy_key": {
+                "action_scope": "export.send",
+                "department": "custody",
+                "operation": "registered",
+                "revision": "R1",
+                "source": "transform"
+              },
+              "root_record_id": "C_MIX"
+            },
+            {
+              "action_scope": "export.send",
+              "current_generation": 2,
+              "fresh": false,
+              "granting_generation": 1,
+              "policy_key": {
+                "action_scope": "export.send",
+                "department": "finance",
+                "operation": "vendor_lookup",
+                "revision": "R1",
+                "source": "vendor_lookup"
+              },
+              "root_record_id": "R_OLD"
+            },
+            {
+              "action_scope": "export.send",
+              "current_generation": 1,
+              "fresh": true,
+              "granting_generation": 1,
+              "policy_key": {
+                "action_scope": "export.send",
+                "department": "finance",
+                "operation": "clean_registry",
+                "revision": "R1",
+                "source": "clean_registry"
+              },
+              "root_record_id": "R_CLEAN"
+            }
+          ],
+          "effective_cap": "NONE",
+          "reason": "STALE_AUTHORITY_DEPENDENCY",
+          "record_id": "C_MIX",
+          "trace": {
+            "action_scope": "export.send",
+            "allowed": false,
+            "bound_cap": "ACT",
+            "cached_generations": {},
+            "dependencies": [
+              {
+                "action_scope": "export.send",
+                "current_generation": 1,
+                "fresh": true,
+                "granting_generation": 1,
+                "policy_key": {
+                  "action_scope": "export.send",
+                  "department": "custody",
+                  "operation": "registered",
+                  "revision": "R1",
+                  "source": "transform"
+                },
+                "root_record_id": "C_MIX"
+              },
+              {
+                "action_scope": "export.send",
+                "current_generation": 2,
+                "fresh": false,
+                "granting_generation": 1,
+                "policy_key": {
+                  "action_scope": "export.send",
+                  "department": "finance",
+                  "operation": "vendor_lookup",
+                  "revision": "R1",
+                  "source": "vendor_lookup"
+                },
+                "root_record_id": "R_OLD"
+              },
+              {
+                "action_scope": "export.send",
+                "current_generation": 1,
+                "fresh": true,
+                "granting_generation": 1,
+                "policy_key": {
+                  "action_scope": "export.send",
+                  "department": "finance",
+                  "operation": "clean_registry",
+                  "revision": "R1",
+                  "source": "clean_registry"
+                },
+                "root_record_id": "R_CLEAN"
+              }
+            ],
+            "direct_parents": [
+              "R_OLD",
+              "R_CLEAN"
+            ],
+            "effective_cap": "NONE",
+            "final_authoritative_generations": {},
+            "operation_policy": {
+              "bound_generation": 1,
+              "current_generation": 1,
+              "fresh": true
+            },
+            "reason": "STALE_AUTHORITY_DEPENDENCY",
+            "record_id": "C_MIX",
+            "support_roots": [
+              "R_CLEAN",
+              "R_OLD"
+            ],
+            "transform_cap": "ACT"
+          }
+        }
+      ]
+    },
+    "H_NEW": {
+      "actions": [
+        {
+          "action_scope": "export.send",
+          "allowed": true,
+          "dependency_checks": [
+            {
+              "action_scope": "export.send",
+              "current_generation": 1,
+              "fresh": true,
+              "granting_generation": 1,
+              "policy_key": {
+                "action_scope": "export.send",
+                "department": "custody",
+                "operation": "registered",
+                "revision": "R1",
+                "source": "transform"
+              },
+              "root_record_id": "C_NEW"
+            },
+            {
+              "action_scope": "export.send",
+              "current_generation": 3,
+              "fresh": true,
+              "granting_generation": 3,
+              "policy_key": {
+                "action_scope": "export.send",
+                "department": "finance",
+                "operation": "vendor_lookup",
+                "revision": "R1",
+                "source": "vendor_lookup"
+              },
+              "root_record_id": "R_NEW"
+            }
+          ],
+          "effective_cap": "ACT",
+          "reason": "CURRENT_GENERATION_MATCH",
+          "record_id": "C_NEW",
+          "trace": {
+            "action_scope": "export.send",
+            "allowed": true,
+            "bound_cap": "ACT",
+            "cached_generations": {},
+            "dependencies": [
+              {
+                "action_scope": "export.send",
+                "current_generation": 1,
+                "fresh": true,
+                "granting_generation": 1,
+                "policy_key": {
+                  "action_scope": "export.send",
+                  "department": "custody",
+                  "operation": "registered",
+                  "revision": "R1",
+                  "source": "transform"
+                },
+                "root_record_id": "C_NEW"
+              },
+              {
+                "action_scope": "export.send",
+                "current_generation": 3,
+                "fresh": true,
+                "granting_generation": 3,
+                "policy_key": {
+                  "action_scope": "export.send",
+                  "department": "finance",
+                  "operation": "vendor_lookup",
+                  "revision": "R1",
+                  "source": "vendor_lookup"
+                },
+                "root_record_id": "R_NEW"
+              }
+            ],
+            "direct_parents": [
+              "R_NEW"
+            ],
+            "effective_cap": "ACT",
+            "final_authoritative_generations": {
+              "ba4a0a432af5bdf5858f3b6908bc6420": 3,
+              "f5e3c8c89658a8f035f7a2797c9dd8fe": 1
+            },
+            "operation_policy": {
+              "bound_generation": 1,
+              "current_generation": 1,
+              "fresh": true
+            },
+            "reason": "CURRENT_GENERATION_MATCH",
+            "record_id": "C_NEW",
+            "support_roots": [
+              "R_NEW"
+            ],
+            "transform_cap": "ACT"
+          }
+        }
+      ]
+    },
+    "H_OLD": {
+      "actions": [
+        {
+          "action_scope": "export.send",
+          "allowed": false,
+          "dependency_checks": [
+            {
+              "action_scope": "export.send",
+              "current_generation": 3,
+              "fresh": false,
+              "granting_generation": 1,
+              "policy_key": {
+                "action_scope": "export.send",
+                "department": "finance",
+                "operation": "vendor_lookup",
+                "revision": "R1",
+                "source": "vendor_lookup"
+              },
+              "root_record_id": "R_OLD"
+            },
+            {
+              "action_scope": "export.send",
+              "current_generation": 1,
+              "fresh": true,
+              "granting_generation": 1,
+              "policy_key": {
+                "action_scope": "export.send",
+                "department": "custody",
+                "operation": "registered",
+                "revision": "R1",
+                "source": "transform"
+              },
+              "root_record_id": "C_CHILD"
+            }
+          ],
+          "effective_cap": "NONE",
+          "reason": "STALE_AUTHORITY_DEPENDENCY",
+          "record_id": "C_CHILD",
+          "trace": {
+            "action_scope": "export.send",
+            "allowed": false,
+            "bound_cap": "ACT",
+            "cached_generations": {},
+            "dependencies": [
+              {
+                "action_scope": "export.send",
+                "current_generation": 3,
+                "fresh": false,
+                "granting_generation": 1,
+                "policy_key": {
+                  "action_scope": "export.send",
+                  "department": "finance",
+                  "operation": "vendor_lookup",
+                  "revision": "R1",
+                  "source": "vendor_lookup"
+                },
+                "root_record_id": "R_OLD"
+              },
+              {
+                "action_scope": "export.send",
+                "current_generation": 1,
+                "fresh": true,
+                "granting_generation": 1,
+                "policy_key": {
+                  "action_scope": "export.send",
+                  "department": "custody",
+                  "operation": "registered",
+                  "revision": "R1",
+                  "source": "transform"
+                },
+                "root_record_id": "C_CHILD"
+              }
+            ],
+            "direct_parents": [
+              "R_OLD"
+            ],
+            "effective_cap": "NONE",
+            "final_authoritative_generations": {},
+            "operation_policy": {
+              "bound_generation": 1,
+              "current_generation": 1,
+              "fresh": true
+            },
+            "reason": "STALE_AUTHORITY_DEPENDENCY",
+            "record_id": "C_CHILD",
+            "support_roots": [
+              "R_OLD"
+            ],
+            "transform_cap": "ACT"
+          }
+        }
+      ]
+    }
+  },
+  "verdict": "INTEGRATION-FAIL-CONTAINED"
+}
