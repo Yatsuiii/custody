@@ -1,0 +1,10 @@
+{
+  "protocol_commit": "d8fefb85020aff1021268d0d8b78279e1db75536",
+  "algorithm": "sha256",
+  "files": {
+    "authority_prospective.py": "0ff4a96b53222dc38ec94071c539f37438620643c9ae452a2b41af5b0a69dde4",
+    "prepare_authority_prospective.py": "16c857538460c7ef4f1f37581630658d034d4d2ed23f44839605849bcad52989",
+    "run_authority_prospective.py": "43ffb72de9947cc9a12e69d58314664aa35dd6eb648e903e88ff8e98bbde2b45",
+    "vertex.py": "713c12bb6ec602e97e3ddecc8ea1bee4e51d390a2987a3896ca61ed8b17d150c"
+  }
+}
