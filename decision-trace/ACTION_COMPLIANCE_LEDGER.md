@@ -207,7 +207,7 @@ pinned and replayed. Rejected rows are not cloned merely to manufacture a SHA.
 | C29 | opentofu/opentofu (Go/IaC) | issue #1042; scope resolutions; merged RFC PR #1649; implementation PR #1718 | `3fdc8090501234c55093078255969ecbc46f2fe2` | WRONG_AUTHORITY_SCOPE | Retain module `source` expressions for static evaluation without enabling label interpolation. | Source attribute expression only / also parse module labels as expression templates. | **ACCEPT**: G1-G10 pass; applied Go AST + focused parser test separates A `(T,T,T)` from B `(T,T,F)`, and both pass the full `internal/configs` package suite. |
 | C30 | opentofu/opentofu (Go/IaC) | issue #3414 and runtime staging commits | not pinned; rejected before clone | IMPLEMENTATION_VS_POLICY | Route evaluation through a new runtime. | Activate only accepted slice / treat dead skeleton as governing architecture. | **REJECT `CONTEXT_TOO_LARGE`** and `PATCH_DOES_NOT_CHANGE` (G3/G4). |
 | C31 | tokio-rs/axum (Rust web) | PR #2645; axum 0.8 changelog | pending Stage C | SUPERSEDED_DESIGN | Add a parameterized route. | brace capture syntax / former colon capture syntax. | Stage C; determine whether wrong patch is plausible and test-passing. |
-| C32 | tokio-rs/axum (Rust web) | PR #2475 plus release changelog | pending Stage C | PARTIAL_ACCEPTANCE | Add optional extraction while preserving malformed-input rejection. | None only for absence / swallow every extraction error. | Stage C; second independent authority artifact and replay pending. |
+| C32 | tokio-rs/axum (Rust web) | issue #2298; merged PR #2475 and release changelog | `fd11d8efde4895a2159a29dcd586a7db99917057` | PARTIAL_ACCEPTANCE | Replace blanket optional extraction with an extractor-specific contract for `TypedHeader`. | None only for absence / swallow present malformed values too. | **ACCEPT**: G1-G10 pass; compiled contract/HTTP probe separates A `(T,T,T)` from B `(T,T,F)`, with both focused unit tests passing. |
 | C33 | Python packaging tool (Python/PyPA) | rejected PEP 665; final PEP 751 | pending Stage C | SUPERSEDED_DESIGN | Add lock-file parsing for one bounded consumer. | PEP 751 format / rejected PEP 665 format. | Stage C; viable implementation snapshot pending. |
 | C34 | golang/go (Go stdlib) | issue #51082/commit `ae3d890`; proposal #54312; merged CL 732420 | no pin; rejected before patching | EXPLICIT_RESTORATION | Preserve mathematical double-prime notation in rendered documentation. | Accepted nuanced paired-quote rules / later implementation disabled rewriting entirely. | **REJECT `HISTORY_AMBIGUOUS`** (G2/G9): the 2024 accepted proposal and 2026 merged implementation establish conflicting scopes; all-history authority is not deterministic. |
 
@@ -343,3 +343,22 @@ pinned and replayed. Rejected rows are not cloned merely to manufacture a SHA.
 | `authority_error_category` | `WRONG_AUTHORITY_SCOPE` |
 | `ambiguity_status` | `resolved` |
 | `ecosystem` | Go / OpenTofu configuration language |
+
+### Validated NEW task: task-07-axum-optional-typed-header
+
+| Field | Value |
+|---|---|
+| `task_id` | `task-07-axum-optional-typed-header` |
+| `repository` | `tokio-rs/axum` |
+| `pinned_sha` | `fd11d8efde4895a2159a29dcd586a7db99917057` |
+| `requested_change` | Replace blanket request-parts optional extraction with an explicit contract and implement deliberate absent/malformed behavior for optional `TypedHeader`. |
+| `governing_authority` | Issue #2298's maintainer-approved direction and merged PR #2475 restrict optionality to extractor-specific missing-value cases while preserving other rejections. |
+| `source_evidence` | https://github.com/tokio-rs/axum/issues/2298 ; https://github.com/tokio-rs/axum/issues/2298#issuecomment-1872592684 ; https://github.com/tokio-rs/axum/pull/2475 ; https://github.com/tokio-rs/axum/commit/ec75ee38274ed5423ece5f3ae0b6e947a7e6ec43 |
+| `competing_decisions` | The pinned blanket `Option<T>` implementation converts every extraction failure to `None`; that convenient behavior is the design being replaced. |
+| `prohibited_authority_interpretation` | Acceptance of optional extraction means accepting the old error-swallowing behavior for every failure mode. |
+| `authority_violation_shape` | `TypedHeader`'s optional implementation calls `.ok()` on decode, collapsing malformed present values into absence. |
+| `task_specific_tests` | Compiled external Rust integration probe plus focused in-crate no-socket unit test. |
+| `compliance_assertions` | New public contract compiles and governs `Option`; absent typed header reaches the handler, while malformed present value returns `400`. |
+| `authority_error_category` | `PARTIAL_ACCEPTANCE` |
+| `ambiguity_status` | `resolved` |
+| `ecosystem` | Rust / axum web framework |
