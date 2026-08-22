@@ -1,0 +1,26 @@
+--- a/src/maps/maps_test.go	2026-08-22 21:03:11.742383393 +0530
++++ b/src/maps/maps_test.go	2026-08-22 21:03:11.745604046 +0530
+@@ -6,6 +6,7 @@
+ 
+ import (
+ 	"math"
++	"slices"
+ 	"strconv"
+ 	"testing"
+ )
+@@ -240,3 +241,15 @@
+ 		}
+ 	}
+ }
++
++// TestKeysAsSortedSlice verifies that a map's keys can be reliably
++// obtained as a deterministic, sorted slice for use in golden-output
++// or order-independent comparisons.
++func TestKeysAsSortedSlice(t *testing.T) {
++	got := slices.Sorted(Keys(m1))
++	want := []int{1, 2, 4, 8}
++	if !slices.Equal(got, want) {
++		t.Errorf("sorted keys of %v = %v, want %v", m1, got, want)
++	}
++}
++

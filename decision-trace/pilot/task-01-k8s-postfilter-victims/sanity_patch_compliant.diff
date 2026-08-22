@@ -1,0 +1,88 @@
+diff --git a/pkg/scheduler/framework/plugins/defaultpreemption/default_preemption_test.go b/pkg/scheduler/framework/plugins/defaultpreemption/default_preemption_test.go
+index f37bb99f2..8160b7d12 100644
+--- a/pkg/scheduler/framework/plugins/defaultpreemption/default_preemption_test.go
++++ b/pkg/scheduler/framework/plugins/defaultpreemption/default_preemption_test.go
+@@ -176,6 +176,10 @@ func TestPostFilter(t *testing.T) {
+ 		extender              fwk.Extender
+ 		wantResult            *fwk.PostFilterResult
+ 		wantStatus            *fwk.Status
++		// wantVictims is checked via pl.Evaluator.LastVictims(), not via
++		// wantResult: the shared fwk.PostFilterResult intentionally does
++		// not carry victims (see kubernetes/kubernetes#137662).
++		wantVictims sets.Set[string]
+ 	}{
+ 		{
+ 			name: "pod with higher priority can be made schedulable",
+@@ -189,8 +193,9 @@ func TestPostFilter(t *testing.T) {
+ 			filteredNodesStatuses: framework.NewNodeToStatus(map[string]*fwk.Status{
+ 				"node1": fwk.NewStatus(fwk.Unschedulable),
+ 			}, fwk.NewStatus(fwk.UnschedulableAndUnresolvable)),
+-			wantResult: framework.NewPostFilterResultWithNominatedNode("node1"),
+-			wantStatus: fwk.NewStatus(fwk.Success),
++			wantResult:  framework.NewPostFilterResultWithNominatedNode("node1"),
++			wantStatus:  fwk.NewStatus(fwk.Success),
++			wantVictims: sets.New("p1"),
+ 		},
+ 		{
+ 			name: "pod with tied priority is still unschedulable",
+@@ -485,6 +490,15 @@ func TestPostFilter(t *testing.T) {
+ 				if diff := cmp.Diff(tt.wantResult, gotResult); diff != "" {
+ 					t.Errorf("Unexpected postFilterResult (-want, +got):\n%s", diff)
+ 				}
++				if tt.wantVictims != nil {
++					gotVictims := sets.New[string]()
++					for _, v := range p.Evaluator.LastVictims() {
++						gotVictims.Insert(v.Name)
++					}
++					if !tt.wantVictims.Equal(gotVictims) {
++						t.Errorf("Unexpected preemption victims: want %v, got %v", tt.wantVictims.UnsortedList(), gotVictims.UnsortedList())
++					}
++				}
+ 			})
+ 		}
+ 	}
+diff --git a/pkg/scheduler/framework/preemption/preemption.go b/pkg/scheduler/framework/preemption/preemption.go
+index 42640760f..2fb6aa9d6 100644
+--- a/pkg/scheduler/framework/preemption/preemption.go
++++ b/pkg/scheduler/framework/preemption/preemption.go
+@@ -68,10 +68,29 @@ type Evaluator struct {
+ 
+ 	enableAsyncPreemption bool
+ 
++	// victimsMu guards lastVictims.
++	victimsMu sync.Mutex
++	// lastVictims records the victim Pods chosen by the most recently
++	// successful Preempt call. It is scoped to this package only (it does
++	// not extend fwk.PostFilterResult, which kubernetes/kubernetes#136254
++	// attempted and kubernetes/kubernetes#137662 reverted because
++	// delayed preemption was dropped from the 1.36 scope). It exists so
++	// in-tree tests can assert on which Pods preemption selected without
++	// widening the out-of-tree scheduler framework API.
++	lastVictims []*v1.Pod
++
+ 	*Executor
+ 	Interface
+ }
+ 
++// LastVictims returns the victim Pods selected by the most recent successful
++// Preempt call, or nil if none has completed yet. For test introspection only.
++func (ev *Evaluator) LastVictims() []*v1.Pod {
++	ev.victimsMu.Lock()
++	defer ev.victimsMu.Unlock()
++	return ev.lastVictims
++}
++
+ func NewEvaluator(pluginName string, fh fwk.Handle, i Interface, enableAsyncPreemption bool) *Evaluator {
+ 	return &Evaluator{
+ 		PluginName:            pluginName,
+@@ -170,6 +189,10 @@ func (ev *Evaluator) Preempt(ctx context.Context, state fwk.CycleState, pod *v1.
+ 		}
+ 	}
+ 
++	ev.victimsMu.Lock()
++	ev.lastVictims = bestCandidate.Victims().Pods
++	ev.victimsMu.Unlock()
++
+ 	return framework.NewPostFilterResultWithNominatedNode(bestCandidate.Name()), fwk.NewStatus(fwk.Success)
+ }
+ 

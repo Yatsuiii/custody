@@ -1,0 +1,52 @@
+diff --git a/pkg/scheduler/framework/plugins/gangscheduling/gangscheduling.go b/pkg/scheduler/framework/plugins/gangscheduling/gangscheduling.go
+index 0061b833de7fc..1a1a1a1a1a1a1 100644
+--- a/pkg/scheduler/framework/plugins/gangscheduling/gangscheduling.go
++++ b/pkg/scheduler/framework/plugins/gangscheduling/gangscheduling.go
+@@ -486,7 +486,7 @@ func (pl *GangScheduling) allowAssumedPodsInHierarchy(snapshot fwk.PodGroupMan
+ // PlacementFeasible is responsible for enforcing the gang's MinCount constraint in the pod group scheduling cycle.
+ // The function will only return success once the gang's MinCount is satisfied or if the pod group is not using gang scheduling policy.
+ // In case there are not enough remaining pods to satisfy the gang's MinCount, it returns Unschedulable which will terminate the pod group scheduling cycle early.
+-func (pl *GangScheduling) PlacementFeasible(ctx context.Context, placementCycleState fwk.PlacementCycleState, podGroupInfo fwk.PodGroupInfo, args framework.PlacementProgress) *fwk.Status {
++func (pl *GangScheduling) PlacementFeasible(ctx context.Context, placementCycleState fwk.PlacementCycleState, podGroupInfo fwk.PodGroupInfo, args framework.PlacementProgress) *fwk.Status {
+ 	minCount := getMinCount(podGroupInfo)
+ 	remaining := args.Remaining
+ 	scheduled := args.Scheduled
+@@ -497,13 +497,29 @@ func (pl *GangScheduling) PlacementFeasible(ctx context.Context, placementCycl
+ 	}
+
+ 	if scheduled < minCount {
+-		// minCount might be satisfied once more remaining pods are evaluated.
++		// minCount might be satisfied once more remaining pods are evaluated. Proactively
++		// activate this group's other still-unscheduled pods so they are retried without
++		// waiting for an unrelated queue sweep, instead of only relying on whatever pod
++		// happens to be evaluated by the scheduling queue next.
++		pl.activateUnscheduledPods(klog.FromContext(ctx), podGroupInfo)
+ 		return fwk.NewStatus(fwk.Wait, fmt.Sprintf("minCount (%d) is not yet satisfied: %d scheduled, %d remaining", minCount, scheduled, remaining))
+ 	}
+
+ 	// minCount is satisfied.
+ 	return nil
+ }
+
++// activateUnscheduledPods re-activates a pod group's remaining unscheduled pods so they get
++// retried promptly while the group is waiting on its MinCount quorum during the pod group
++// scheduling cycle. This is the PlacementFeasible-native equivalent of the activation that
++// permitPodGroup/permitPodForHierarchy perform on the Permit path for the ordinary,
++// pod-by-pod scheduling cycle; RunPermitPlugins is never invoked from the pod group
++// scheduling cycle (see pkg/scheduler/schedule_one_podgroup.go), so Permit's activation
++// never runs for gang-scheduled groups here.
++func (pl *GangScheduling) activateUnscheduledPods(logger klog.Logger, podGroupInfo fwk.PodGroupInfo) {
++	unscheduled := podGroupInfo.GetUnscheduledPods()
++	if len(unscheduled) == 0 {
++		return
++	}
++	pods := make(map[string]*v1.Pod, len(unscheduled))
++	for _, pod := range unscheduled {
++		pods[pod.Name] = pod
++	}
++	pl.handle.Activate(logger, pods)
++}
++
+ // getMinCount returns the min count for a pod group or a composite pod group. For basic groups it returns 1.
+ func getMinCount(podGroupInfo fwk.PodGroupInfo) int {
+ 	if podGroupInfo.GetType() == fwk.CompositePodGroupKeyType {

@@ -1,0 +1,62 @@
+diff --git a/pkg/scheduler/framework/plugins/defaultpreemption/default_preemption_test.go b/pkg/scheduler/framework/plugins/defaultpreemption/default_preemption_test.go
+index f37bb99..c98dcbc 100644
+--- a/pkg/scheduler/framework/plugins/defaultpreemption/default_preemption_test.go
++++ b/pkg/scheduler/framework/plugins/defaultpreemption/default_preemption_test.go
+@@ -176,6 +176,10 @@ func TestPostFilter(t *testing.T) {
+ 		extender              fwk.Extender
+ 		wantResult            *fwk.PostFilterResult
+ 		wantStatus            *fwk.Status
++		// wantVictims, when non-nil, is the exact set of pod names that must be
++		// preempted (i.e. deleted via the API) during this PostFilter call. Leave
++		// nil for cases that don't want to assert on victim selection.
++		wantVictims sets.Set[string]
+ 	}{
+ 		{
+ 			name: "pod with higher priority can be made schedulable",
+@@ -189,8 +193,9 @@ func TestPostFilter(t *testing.T) {
+ 			filteredNodesStatuses: framework.NewNodeToStatus(map[string]*fwk.Status{
+ 				"node1": fwk.NewStatus(fwk.Unschedulable),
+ 			}, fwk.NewStatus(fwk.UnschedulableAndUnresolvable)),
+-			wantResult: framework.NewPostFilterResultWithNominatedNode("node1"),
+-			wantStatus: fwk.NewStatus(fwk.Success),
++			wantResult:  framework.NewPostFilterResultWithNominatedNode("node1"),
++			wantStatus:  fwk.NewStatus(fwk.Success),
++			wantVictims: sets.New("p1"),
+ 		},
+ 		{
+ 			name: "pod with tied priority is still unschedulable",
+@@ -402,6 +407,17 @@ func TestPostFilter(t *testing.T) {
+ 					podItems = append(podItems, *pod)
+ 				}
+ 				cs := clientsetfake.NewClientset(&v1.PodList{Items: podItems})
++				// Track pod deletions performed by the preemption executor so tests can
++				// assert on the exact set of victim Pods, not just the nominated node.
++				// Protected by mu since async preemption deletes victims from a goroutine.
++				var mu sync.RWMutex
++				deletedPodNames := sets.New[string]()
++				cs.PrependReactor("delete", "pods", func(action clienttesting.Action) (bool, runtime.Object, error) {
++					mu.Lock()
++					defer mu.Unlock()
++					deletedPodNames.Insert(action.(clienttesting.DeleteAction).GetName())
++					return false, nil, nil
++				})
+ 				informerFactory := informers.NewSharedInformerFactory(cs, 0)
+ 				podInformer := informerFactory.Core().V1().Pods().Informer()
+ 				if err := podInformer.GetStore().Add(tt.pod); err != nil {
+@@ -485,6 +501,16 @@ func TestPostFilter(t *testing.T) {
+ 				if diff := cmp.Diff(tt.wantResult, gotResult); diff != "" {
+ 					t.Errorf("Unexpected postFilterResult (-want, +got):\n%s", diff)
+ 				}
++				if tt.wantVictims != nil {
++					// getDefaultDefaultPreemptionArgs/feature.Features{} above leave
++					// EnableAsyncPreemption off, so victim deletion happens
++					// synchronously inside p.PostFilter and is already observable here.
++					mu.RLock()
++					if diff := cmp.Diff(sets.List(tt.wantVictims), sets.List(deletedPodNames)); diff != "" {
++						t.Errorf("Unexpected preemption victims (-want, +got):\n%s", diff)
++					}
++					mu.RUnlock()
++				}
+ 			})
+ 		}
+ 	}

@@ -1,0 +1,48 @@
+{
+  "requested_scope": "pkg/scheduler/framework/preemption",
+  "authority_state": "GOVERNING",
+  "governing_decision_id": "k8s-pr-137662",
+  "governing_witnesses": [
+    "k8s-pr-137662 REVERTS k8s-pr-136254"
+  ],
+  "transition_witnesses": [
+    "k8s-pr-137662 REVERTS k8s-pr-136254"
+  ],
+  "considered_candidates": [
+    {
+      "decision_id": "k8s-pr-136254",
+      "lifecycle_status": "ACCEPTED",
+      "role": "policy",
+      "eligible_to_govern": true,
+      "active_resolution": false,
+      "exclusion_reason": "REVERTED",
+      "witness_ids": [
+        "k8s-pr-137662"
+      ]
+    },
+    {
+      "decision_id": "k8s-pr-137662",
+      "lifecycle_status": "REVERTED",
+      "role": "policy",
+      "eligible_to_govern": true,
+      "active_resolution": true,
+      "exclusion_reason": null,
+      "witness_ids": []
+    }
+  ],
+  "excluded_candidates": [
+    {
+      "decision_id": "k8s-pr-136254",
+      "lifecycle_status": "ACCEPTED",
+      "role": "policy",
+      "eligible_to_govern": true,
+      "active_resolution": false,
+      "exclusion_reason": "REVERTED",
+      "witness_ids": [
+        "k8s-pr-137662"
+      ]
+    }
+  ],
+  "ambiguity_witnesses": [],
+  "explanation": "k8s-pr-137662 is the sole eligible active decision in scope 'pkg/scheduler/framework/preemption'."
+}
