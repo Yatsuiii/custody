@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "elastic-multi-value-c1",
+  "timeline_id": "elastic-multi-value",
+  "question": "What decision currently governs elasticsearch multi value enforcement? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "1bc83cf7653c90f15fa0d2cd857b1f81eeefd25e1c953c96e6ff83fc0ec804c0",
+  "visible_history": [
+    {
+      "artifact_id": "elastic/elasticsearch#147071@42d5c67e1c7d81dad6a2dd8780a8b89f49bc2d4c",
+      "decision_id": "elastic/elasticsearch#147071",
+      "sequence": 1,
+      "rendered_sha256": "01b170d0fc5108598d89f60745a79880c46680522c25dd2b95e8f030f71d096b"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "elastic/elasticsearch#147071",
+    "evidence_ids": [
+      "elastic/elasticsearch#147071"
+    ],
+    "resolver_explanation": "elastic/elasticsearch#147071 is the sole eligible active decision in scope 'elasticsearch-multi-value-enforcement'.",
+    "model_explanation": "The governing decision is elastic/elasticsearch#147071 (https://github.com/elastic/elasticsearch/pull/147071), as it is the sole eligible active decision in scope to enforce single values for fields configured with multi_value=no."
+  }
+}

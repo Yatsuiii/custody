@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "rust-const-checks-c1",
+  "timeline_id": "rust-const-checks",
+  "question": "What decision currently governs rust const checks? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "79463de429f8f5b0302f6cf79db480a1ba2d637fc8715b9d53ea78fe1ebd5e75",
+  "visible_history": [
+    {
+      "artifact_id": "rust-lang/rust#149375@7f99507f57e6c4aa0dce3daf6a13cca8cd4dd312",
+      "decision_id": "rust-lang/rust#149375",
+      "sequence": 1,
+      "rendered_sha256": "07e205f342c9e6d64aed452a25e042d602596ed0d3763540d7ddf973592b8591"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "rust-lang/rust#149375",
+    "evidence_ids": [
+      "rust-lang/rust#149375"
+    ],
+    "resolver_explanation": "rust-lang/rust#149375 is the sole eligible active decision in scope 'rust-const-checks'.",
+    "model_explanation": "The decision rust-lang/rust#149375 (https://github.com/rust-lang/rust/pull/149375) governs the 'rust-const-checks' scope as the sole eligible active decision for performing basic const checks during type checking."
+  }
+}

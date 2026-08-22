@@ -1,0 +1,29 @@
+{
+  "checkpoint_id": "elastic-multi-value-c2",
+  "timeline_id": "elastic-multi-value",
+  "question": "What decision currently governs elasticsearch multi value enforcement after the explicit revert? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "7d3acd3d566b8030b76b4ce94818acceffacff22397077a20b5f5a809dcc744e",
+  "visible_history": [
+    {
+      "artifact_id": "elastic/elasticsearch#147071@42d5c67e1c7d81dad6a2dd8780a8b89f49bc2d4c",
+      "decision_id": "elastic/elasticsearch#147071",
+      "sequence": 1,
+      "rendered_sha256": "01b170d0fc5108598d89f60745a79880c46680522c25dd2b95e8f030f71d096b"
+    },
+    {
+      "artifact_id": "elastic/elasticsearch#147360@d3f582051a2756be695eb854a694bd8f71031acd",
+      "decision_id": "elastic/elasticsearch#147360",
+      "sequence": 2,
+      "rendered_sha256": "5e68a4293d50863a3536b23c86bf40896b52562685dcc71ffae3564be2a5aa57"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "elastic/elasticsearch#147360",
+    "evidence_ids": [
+      "elastic/elasticsearch#147360"
+    ],
+    "resolver_explanation": "elastic/elasticsearch#147360 is the sole eligible active decision in scope 'elasticsearch-multi-value-enforcement'.",
+    "model_explanation": "`elastic/elasticsearch#147360` (https://github.com/elastic/elasticsearch/pull/147360) is the governing decision because it is the sole active decision in scope 'elasticsearch-multi-value-enforcement' after reverting #147071 to unblock CI."
+  }
+}

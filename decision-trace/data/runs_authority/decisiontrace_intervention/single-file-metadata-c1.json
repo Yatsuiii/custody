@@ -1,0 +1,21 @@
+{
+  "checkpoint_id": "single-file-metadata-c1",
+  "timeline_id": "single-file-metadata",
+  "question": "What decision currently governs single-file script dependency metadata? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "f1b0716a6260c3b23b89aa1e89a6a4300b7139cb39f300ba3b78ffc87c54ab70",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-722@08d688fdcafc1557bf7fc53573e5c84b31b78b5d",
+      "decision_id": "PEP-722",
+      "sequence": 1,
+      "rendered_sha256": "9207bc21218574a33fd3971957674824cb50628504f40dd202465fcc8ae351e5"
+    }
+  ],
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_id": null,
+    "evidence_ids": [],
+    "resolver_explanation": "No visible accepted or implemented decision is eligible to govern.",
+    "model_explanation": "No governing decision exists for single-file script dependency metadata because no visible accepted or implemented decision is eligible to govern."
+  }
+}

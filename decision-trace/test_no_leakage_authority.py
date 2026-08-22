@@ -84,6 +84,30 @@ def test_prepared_prompts_have_equivalent_visible_histories(corpus):
         assert [h["artifact_id"] for h in expected_history] == [h["artifact_id"] for h in prepared["visible_history"]]
 
 
+def test_baseline_run_rows_match_frozen_prepared_prompts(corpus):
+    _, checkpoints, _=corpus
+    runs=bench.RUNS_DIR
+    if not runs.joinpath("decisiontrace").exists():
+        pytest.skip("baseline has not run")
+    for checkpoint in checkpoints:
+        cid=checkpoint["checkpoint_id"]
+        prepared=json.loads((bench.AUTHORITY_DIR/"prepared"/f"{cid}.json").read_text())
+        for condition,arm in (("decisiontrace","structured"),("rag","rag")):
+            row=json.loads((runs/condition/f"{cid}.json").read_text())
+            assert row["prompt_sha256"]==prepared[arm]["prompt_sha256"]
+            assert row["visible_history"]==prepared["visible_history"]
+
+
+def test_intervention_reused_rag_bytes_from_frozen_baseline():
+    rag_paths=subprocess.check_output(
+        ["git","ls-tree","-r","--name-only","0db0305","--",
+         "decision-trace/data/runs_authority/rag"],text=True).splitlines()
+    for repo_path in rag_paths:
+        relative=repo_path.removeprefix("decision-trace/")
+        frozen=subprocess.check_output(["git","show",f"0db0305:{repo_path}"])
+        assert Path(relative).read_bytes()==frozen
+
+
 def test_evidence_quotes_are_public_substrings(corpus):
     timelines, checkpoints, _=corpus
     by_t={t["timeline_id"]:t for t in timelines}

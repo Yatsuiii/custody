@@ -1,0 +1,29 @@
+{
+  "checkpoint_id": "manylinux-unified-c2",
+  "timeline_id": "manylinux-unified",
+  "question": "What decision currently governs manylinux policy? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "df3bfc155556f0d6cc013e0478730769ae79d78b046fb8bbc9219f46f97ee39f",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-513@9f3a93dc85318aa5adafc232ff50e8cc858cd642",
+      "decision_id": "PEP-513",
+      "sequence": 1,
+      "rendered_sha256": "0eb71a3f4b3f75cacdf3c3b7cade9e9c35d8847d4706dcfdc84b47b22afebb15"
+    },
+    {
+      "artifact_id": "PEP-600@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-600",
+      "sequence": 2,
+      "rendered_sha256": "6683775ddc20ebf3089874cbd3cc2205cce6468f13cb1e08db60e3874d6334a3"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-600",
+    "evidence_ids": [
+      "PEP-600"
+    ],
+    "resolver_explanation": "PEP-600 is the sole eligible active decision in scope 'manylinux-policy'.",
+    "model_explanation": "PEP-600 currently governs manylinux policy as the sole eligible active decision in scope 'manylinux-policy' with Final status."
+  }
+}

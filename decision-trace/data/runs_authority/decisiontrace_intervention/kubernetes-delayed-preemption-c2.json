@@ -1,0 +1,29 @@
+{
+  "checkpoint_id": "kubernetes-delayed-preemption-c2",
+  "timeline_id": "kubernetes-delayed-preemption",
+  "question": "What decision currently governs kubernetes delayed preemption after the explicit revert? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "df09df00bb4522c1823126c6d9271b10862e0ee7e90a779af42adc9cb3203cd0",
+  "visible_history": [
+    {
+      "artifact_id": "kubernetes/kubernetes#136254@338a3bcef88f4991cee61ee03105f058b34eb276",
+      "decision_id": "kubernetes/kubernetes#136254",
+      "sequence": 1,
+      "rendered_sha256": "9785caff425eab7dd19042bd75ab29874c41b21e740688449f495cc23df19948"
+    },
+    {
+      "artifact_id": "kubernetes/kubernetes#137662@9874e76ac44442ebfa33c824e2c57bcb9f0d2e5e",
+      "decision_id": "kubernetes/kubernetes#137662",
+      "sequence": 2,
+      "rendered_sha256": "d13349af838e50f136743c1d13a3a8d72b3863f939a72eff440074ca51b1f32f"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "kubernetes/kubernetes#137662",
+    "evidence_ids": [
+      "kubernetes/kubernetes#137662"
+    ],
+    "resolver_explanation": "kubernetes/kubernetes#137662 is the sole eligible active decision in scope 'kubernetes-delayed-preemption'.",
+    "model_explanation": "kubernetes/kubernetes#137662 is the governing decision as it is the sole active decision in scope, reverting #136254 because delayed preemption was dropped from the planned 1.36 WAS work due to unnecessary complexity."
+  }
+}

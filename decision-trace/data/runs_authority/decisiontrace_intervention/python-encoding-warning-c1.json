@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "python-encoding-warning-c1",
+  "timeline_id": "python-encoding-warning",
+  "question": "What decision currently governs python encoding warning policy? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "61ae8662c8cb094ea46b7fbe30239e7ef9da0e10ae79e32450179f98f17d5e8f",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-597@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-597",
+      "sequence": 1,
+      "rendered_sha256": "0609673d6ded14290725d31459f806afd543c3cadb6d3a008ec0d43f6037f910"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-597",
+    "evidence_ids": [
+      "PEP-597"
+    ],
+    "resolver_explanation": "PEP-597 is the sole eligible active decision in scope 'python-encoding-warning'.",
+    "model_explanation": "PEP-597 (\"Add optional EncodingWarning\", Status: Final) is the sole active decision currently governing Python encoding warning policy."
+  }
+}

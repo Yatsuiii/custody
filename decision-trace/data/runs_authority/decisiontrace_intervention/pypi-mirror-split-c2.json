@@ -1,0 +1,29 @@
+{
+  "checkpoint_id": "pypi-mirror-split-c2",
+  "timeline_id": "pypi-mirror-split",
+  "question": "What decision currently governs PyPI mirror discovery and naming? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "160d4681d6f6973bf8d6c20293e6ce8db71813cf2241dd16eef4c33b0d45c13f",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-381@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-381",
+      "sequence": 1,
+      "rendered_sha256": "fe8c995ead8dd65f26b88451b7eb6d909fafc725d540c958d7059b5609c42bf8"
+    },
+    {
+      "artifact_id": "PEP-449@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-449",
+      "sequence": 2,
+      "rendered_sha256": "908455f1517dfce0b40dd2413d24d6424b7c2fb7b1fccbcef3e457c1a1fe9ec4"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-449",
+    "evidence_ids": [
+      "PEP-449"
+    ],
+    "resolver_explanation": "PEP-449 is the sole eligible active decision in scope 'pypi-mirror-discovery'.",
+    "model_explanation": "PEP-449 is the governing decision as it is the sole eligible active decision with Final status in the 'pypi-mirror-discovery' scope (evidence: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0449.rst)."
+  }
+}

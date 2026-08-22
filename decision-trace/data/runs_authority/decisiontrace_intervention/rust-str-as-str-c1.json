@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "rust-str-as-str-c1",
+  "timeline_id": "rust-str-as-str",
+  "question": "What decision currently governs rust str as str stability? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "2883c59dc9caed23062cc745ecce7f242073092aa786b5c9040c72fdc5288e8c",
+  "visible_history": [
+    {
+      "artifact_id": "rust-lang/rust#151603@a919df8b1b3c250f14a41d879013c870a0477b20",
+      "decision_id": "rust-lang/rust#151603",
+      "sequence": 1,
+      "rendered_sha256": "53d2535aabec795102e1a5f74881f9171084d0c8146d1219251bcdaf0e24f08f"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "rust-lang/rust#151603",
+    "evidence_ids": [
+      "rust-lang/rust#151603"
+    ],
+    "resolver_explanation": "rust-lang/rust#151603 is the sole eligible active decision in scope 'rust-str-as-str-stability'.",
+    "model_explanation": "The decision rust-lang/rust#151603 (https://github.com/rust-lang/rust/pull/151603) currently governs the 'rust-str-as-str-stability' scope as the sole eligible active decision stabilizing `str_as_str`."
+  }
+}

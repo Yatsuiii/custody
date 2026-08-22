@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "metadata-1-1-c1",
+  "timeline_id": "metadata-1-1",
+  "question": "What decision currently governs python metadata 1 1? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "214cd9fc48bda6b76a141e1fc156f3b0a3ab1b34e573fc46154899ef0bf99593",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-241@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+      "decision_id": "PEP-241",
+      "sequence": 1,
+      "rendered_sha256": "34282e2d7301ada1823dd0c90f7fdcf687c8b16a49dbc1d4ef44277d76f3787f"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-241",
+    "evidence_ids": [
+      "PEP-241"
+    ],
+    "resolver_explanation": "PEP-241 is the sole eligible active decision in scope 'python-metadata-1-1'.",
+    "model_explanation": "PEP-241 governs python-metadata-1-1 as the sole eligible active Final decision, as documented at https://github.com/python/peps/blob/a0d411a7e334ddede263fdf9862f06bfc035f21c/pep-0241.txt."
+  }
+}

@@ -26,12 +26,13 @@ def normalize_id(value, artifact_map):
     return artifact_map.get(value,value) if isinstance(value,str) else None
 
 
-def primary_failure(gt, pred, proposed_ids):
+def primary_failure(gt, pred, proposed_ids, terminal_ids):
     state, expected=gt["expected_state"],gt["expected_decision_id"]
     pstate,pid=pred["authority_state"],pred["governing_decision_id"]
     applicable=set(gt["applicable_failures"])
     if pstate==state and pid==expected: return None
     if pstate=="GOVERNING" and pid in proposed_ids: return "PROPOSAL_PROMOTED"
+    if pstate=="GOVERNING" and pid in terminal_ids: return "UNSUPPORTED_AUTHORITY"
     if pstate=="GOVERNING" and state != "GOVERNING": return "UNSUPPORTED_AUTHORITY"
     if "REVERT_MISSED" in applicable and pstate=="GOVERNING": return "REVERT_MISSED"
     if "SUPERSESSION_MISSED" in applicable and pstate=="GOVERNING": return "SUPERSESSION_MISSED"
@@ -68,7 +69,10 @@ def grade_condition(condition, timelines, checkpoints, truth):
         visible=[a for a in timeline_map[checkpoint["timeline_id"]]["artifacts"]
                  if a["sequence"]<=checkpoint["visible_through"]]
         amap={a["artifact_id"]:a["decision_id"] for a in visible}
-        proposed={a["decision_id"] for a in visible if a["status"] in {"DRAFT","OPEN"}}
+        latest={}
+        for artifact in visible: latest[artifact["decision_id"]]=artifact["status"]
+        proposed={did for did,status in latest.items() if status in {"DRAFT","OPEN"}}
+        terminal={did for did,status in latest.items() if status in {"WITHDRAWN","REJECTED"}}
         pred["governing_decision_id"]=normalize_id(pred.get("governing_decision_id"),amap)
         pred["evidence_ids"]=sorted({normalize_id(x,amap) for x in pred.get("evidence_ids",[]) if normalize_id(x,amap)})
         authority=(pred["authority_state"]==gt["expected_state"] and
@@ -76,7 +80,7 @@ def grade_condition(condition, timelines, checkpoints, truth):
         expected_evidence=set(gt["expected_evidence_ids"])
         evidence=(expected_evidence.issubset(pred["evidence_ids"])
                   if expected_evidence else not pred["evidence_ids"])
-        failure=primary_failure(gt,pred,proposed)
+        failure=primary_failure(gt,pred,proposed,terminal)
         if authority and not evidence: failure="EVIDENCE_ERROR"
         prepared=json.loads((AUTHORITY_DIR/"prepared"/f"{cid}.json").read_text())
         mechanism=(mechanism_for(gt,pred,prepared,failure)
@@ -109,8 +113,14 @@ def error_rate(rows, failure, applicable=None):
 
 
 def summarize(rows):
-    false=sum(r["predicted_state"]=="GOVERNING" and r["expected_state"]!="GOVERNING" for r in rows)
-    stale=sum(r["failure"] in {"STALE_DECISION","REVERT_MISSED","SUPERSESSION_MISSED"} for r in rows)
+    false=sum(r["predicted_state"]=="GOVERNING" and not r["authority_correct"] for r in rows)
+    stale=sum(r["failure"]=="STALE_DECISION" for r in rows)
+    def applicable_miss(label):
+        base=[r for r in rows if label in r["applicable"]]
+        missed=sum(not r["authority_correct"] for r in base)
+        return {"numerator":missed,"denominator":len(base),
+                "rate":missed/len(base) if base else 0,
+                "wilson95":wilson(missed,len(base))}
     metrics={
         "governing_accuracy":rate(rows,"authority_correct"),
         "evidence_correctness":rate(rows,"evidence_correct"),
@@ -118,8 +128,8 @@ def summarize(rows):
         "stale_decision_rate":{"numerator":stale,"denominator":len(rows),"rate":stale/len(rows),"wilson95":wilson(stale,len(rows))},
         "false_authority_rate":{"numerator":false,"denominator":len(rows),"rate":false/len(rows),"wilson95":wilson(false,len(rows))},
         "proposal_promoted_rate":error_rate(rows,"PROPOSAL_PROMOTED","PROPOSAL_PROMOTED"),
-        "revert_miss_rate":error_rate(rows,"REVERT_MISSED","REVERT_MISSED"),
-        "supersession_miss_rate":error_rate(rows,"SUPERSESSION_MISSED","SUPERSESSION_MISSED"),
+        "revert_miss_rate":applicable_miss("REVERT_MISSED"),
+        "supersession_miss_rate":applicable_miss("SUPERSESSION_MISSED"),
         "api_parse_failures":{"numerator":sum(r["predicted_state"] in {"API_ERROR","PARSE_ERROR"} for r in rows),"denominator":len(rows)},
         "failure_counts":dict(Counter(r["failure"] for r in rows if r["failure"])),
     }

@@ -1,0 +1,29 @@
+{
+  "checkpoint_id": "python-encoding-warning-c2",
+  "timeline_id": "python-encoding-warning",
+  "question": "What decision currently governs python encoding warning policy after its implementation merged? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "a4b707492501449650ad36d3ed59408fafb5e480a523f38c47ce6e913e6f025f",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-597@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-597",
+      "sequence": 1,
+      "rendered_sha256": "0609673d6ded14290725d31459f806afd543c3cadb6d3a008ec0d43f6037f910"
+    },
+    {
+      "artifact_id": "python/cpython#25103@ff3c9739bd69aa8b58007e63c9e40e6708b4761e",
+      "decision_id": "python/cpython#25103",
+      "sequence": 2,
+      "rendered_sha256": "92e017c9bc7575271b6ea460c1679b95ceb2d66d18d54665e3f44de336358529"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-597",
+    "evidence_ids": [
+      "PEP-597"
+    ],
+    "resolver_explanation": "PEP-597 is the sole eligible active decision in scope 'python-encoding-warning'.",
+    "model_explanation": "PEP-597 is the governing decision because it is the sole eligible active decision in the 'python-encoding-warning' scope with Final status (https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0597.rst)."
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "checkpoint_id": "single-file-metadata-c4",
+  "timeline_id": "single-file-metadata",
+  "question": "What decision currently governs single-file script metadata? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "931bc70137d7e0c289b932a4434b816bbb3dd8239c246dcb78ce90878488f029",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-722@08d688fdcafc1557bf7fc53573e5c84b31b78b5d",
+      "decision_id": "PEP-722",
+      "sequence": 1,
+      "rendered_sha256": "9207bc21218574a33fd3971957674824cb50628504f40dd202465fcc8ae351e5"
+    },
+    {
+      "artifact_id": "PEP-723@08d688fdcafc1557bf7fc53573e5c84b31b78b5d",
+      "decision_id": "PEP-723",
+      "sequence": 2,
+      "rendered_sha256": "29a46d2abe67a3d93c67ddb62b8ce309fb32b389fd8db2877b6a1833f3c31d03"
+    },
+    {
+      "artifact_id": "PEP-722@7e39ae246b29",
+      "decision_id": "PEP-722",
+      "sequence": 3,
+      "rendered_sha256": "abaf457c3eff5a8f46d80a06f2507104a965a305c52fdf982ba4b7a17859d5c6"
+    },
+    {
+      "artifact_id": "PEP-723@928d64",
+      "decision_id": "PEP-723",
+      "sequence": 4,
+      "rendered_sha256": "1b4dbb889e1e83274bf44446ffae332a9877a033b868b968ff1f0514df5d544f"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-723",
+    "evidence_ids": [
+      "PEP-723"
+    ],
+    "resolver_explanation": "PEP-723 is the sole eligible active decision in scope 'single-file-script-metadata'.",
+    "model_explanation": "PEP-723 (\"Inline script metadata\") is the governing decision for single-file script metadata as the sole active Final PEP in this scope (https://github.com/python/peps/blob/928d64/peps/pep-0723.rst)."
+  }
+}

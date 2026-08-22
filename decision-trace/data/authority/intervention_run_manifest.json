@@ -1,0 +1,6 @@
+{
+  "model": "gemini-3.7-flash",
+  "generation_calls": 61,
+  "errors": [],
+  "intervention": "scope/status/role-aware deterministic authority resolver"
+}

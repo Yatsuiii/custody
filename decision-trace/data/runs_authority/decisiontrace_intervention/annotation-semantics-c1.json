@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "annotation-semantics-c1",
+  "timeline_id": "annotation-semantics",
+  "question": "What decision currently governs annotation evaluation semantics? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "bc11d565077b7b099895fd09d58ea35f599b1476055c9093251b9e0d43b303c2",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-563@e3010cb7d2c4a1aaf285170e49227859386a3316",
+      "decision_id": "PEP-563",
+      "sequence": 1,
+      "rendered_sha256": "085c46e81891d201de33530cba0fa6503123f5663c02c9e27bc7891b6ac69fe3"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-563",
+    "evidence_ids": [
+      "PEP-563"
+    ],
+    "resolver_explanation": "PEP-563 is the sole eligible active decision in scope 'annotation-evaluation-policy'.",
+    "model_explanation": "PEP-563 (Postponed Evaluation of Annotations) is the governing decision for annotation evaluation semantics as the sole active Accepted PEP in this scope (https://github.com/python/peps/blob/e3010cb7d2c4a1aaf285170e49227859386a3316/pep-0563.rst)."
+  }
+}

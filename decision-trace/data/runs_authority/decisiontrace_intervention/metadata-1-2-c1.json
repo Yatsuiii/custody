@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "metadata-1-2-c1",
+  "timeline_id": "metadata-1-2",
+  "question": "What decision currently governs the Python metadata specification chain? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "be10fa575b13c9c0e2e8f41fd7550c44126a798cd27cb57261c74f2933868595",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-241@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+      "decision_id": "PEP-241",
+      "sequence": 1,
+      "rendered_sha256": "f54518f264e93cb9cb37fa89c473903953bfd1e37f57b40d7afa133b1e45d517"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-241",
+    "evidence_ids": [
+      "PEP-241"
+    ],
+    "resolver_explanation": "PEP-241 is the sole eligible active decision in scope 'python-metadata-chain'.",
+    "model_explanation": "PEP-241 (\"Metadata for Python Software Packages\", Status: Final) currently governs the 'python-metadata-chain' scope as the sole eligible active decision (https://github.com/python/peps/blob/a0d411a7e334ddede263fdf9862f06bfc035f21c/pep-0241.txt)."
+  }
+}

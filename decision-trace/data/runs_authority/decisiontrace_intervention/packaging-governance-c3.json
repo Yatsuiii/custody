@@ -1,0 +1,35 @@
+{
+  "checkpoint_id": "packaging-governance-c3",
+  "timeline_id": "packaging-governance",
+  "question": "What decision currently governs Python packaging governance after a newer discussion? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "9b489a7208ac9d26f5868807870b931179800b413141509fbbe62214193d195e",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-609@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-609",
+      "sequence": 1,
+      "rendered_sha256": "d3db0aa76a38bea3d65982a7fe28324f0037af3d541ca0191eb4013997b56907"
+    },
+    {
+      "artifact_id": "PEP-772@e95aa672",
+      "decision_id": "PEP-772",
+      "sequence": 2,
+      "rendered_sha256": "8b06fb5ef50568919ecedce22c8d6050a57beacd628a64638410fcd8272c540e"
+    },
+    {
+      "artifact_id": "PEP-772@850f4f70",
+      "decision_id": "PEP-772",
+      "sequence": 3,
+      "rendered_sha256": "68423dd7a668157e71cc17cb90e2722ef576a8440bf7923dffcc24c5619eef98"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-609",
+    "evidence_ids": [
+      "PEP-609"
+    ],
+    "resolver_explanation": "PEP-609 is the sole eligible active decision in scope 'python-packaging-governance'.",
+    "model_explanation": "PEP-609 is the governing decision as it is the sole eligible active decision defining Python Packaging Authority governance."
+  }
+}

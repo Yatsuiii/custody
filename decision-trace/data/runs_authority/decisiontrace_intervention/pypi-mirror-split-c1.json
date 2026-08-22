@@ -1,0 +1,21 @@
+{
+  "checkpoint_id": "pypi-mirror-split-c1",
+  "timeline_id": "pypi-mirror-split",
+  "question": "What decision currently governs PyPI mirroring after PEP 381 was withdrawn? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "dfd3cba4e9c528fe823d4ac69b7f7be3f78e5c5d9851be43476c212e4d70bdcf",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-381@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-381",
+      "sequence": 1,
+      "rendered_sha256": "fe8c995ead8dd65f26b88451b7eb6d909fafc725d540c958d7059b5609c42bf8"
+    }
+  ],
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_id": null,
+    "evidence_ids": [],
+    "resolver_explanation": "No visible accepted or implemented decision is eligible to govern.",
+    "model_explanation": "There is no visible accepted or implemented decision eligible to govern PyPI mirroring after the withdrawal of PEP 381."
+  }
+}

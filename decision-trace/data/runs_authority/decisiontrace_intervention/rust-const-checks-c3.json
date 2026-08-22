@@ -1,0 +1,29 @@
+{
+  "checkpoint_id": "rust-const-checks-c3",
+  "timeline_id": "rust-const-checks",
+  "question": "What decision currently governs rust const checks after the revert record mentions future work? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "9ffdf55592b62ea69aebbc1dbcb1efc9f85fe34396dc68c6fc6b28c40d2f3d85",
+  "visible_history": [
+    {
+      "artifact_id": "rust-lang/rust#149375@7f99507f57e6c4aa0dce3daf6a13cca8cd4dd312",
+      "decision_id": "rust-lang/rust#149375",
+      "sequence": 1,
+      "rendered_sha256": "07e205f342c9e6d64aed452a25e042d602596ed0d3763540d7ddf973592b8591"
+    },
+    {
+      "artifact_id": "rust-lang/rust#154930@db99e16ae366e4f167a8fa32d35483d6962a2d6d",
+      "decision_id": "rust-lang/rust#154930",
+      "sequence": 2,
+      "rendered_sha256": "919480c958e4bb66171670a3900922a12ad26e31853938731c2626a85c75d937"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "rust-lang/rust#154930",
+    "evidence_ids": [
+      "rust-lang/rust#154930"
+    ],
+    "resolver_explanation": "rust-lang/rust#154930 is the sole eligible active decision in scope 'rust-const-checks'.",
+    "model_explanation": "Decision rust-lang/rust#154930 (https://github.com/rust-lang/rust/pull/154930) currently governs because it is the sole eligible active decision in scope 'rust-const-checks' following the revert of #149375."
+  }
+}

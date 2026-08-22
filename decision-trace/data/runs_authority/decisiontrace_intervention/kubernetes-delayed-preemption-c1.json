@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "kubernetes-delayed-preemption-c1",
+  "timeline_id": "kubernetes-delayed-preemption",
+  "question": "What decision currently governs kubernetes delayed preemption? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "33014f9ceb73a6c0f190cdca66f47b7c6c302c174c484416fb2c8a0906e2ecaf",
+  "visible_history": [
+    {
+      "artifact_id": "kubernetes/kubernetes#136254@338a3bcef88f4991cee61ee03105f058b34eb276",
+      "decision_id": "kubernetes/kubernetes#136254",
+      "sequence": 1,
+      "rendered_sha256": "9785caff425eab7dd19042bd75ab29874c41b21e740688449f495cc23df19948"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "kubernetes/kubernetes#136254",
+    "evidence_ids": [
+      "kubernetes/kubernetes#136254"
+    ],
+    "resolver_explanation": "kubernetes/kubernetes#136254 is the sole eligible active decision in scope 'kubernetes-delayed-preemption'.",
+    "model_explanation": "Decision kubernetes/kubernetes#136254 (https://github.com/kubernetes/kubernetes/pull/136254) currently governs Kubernetes delayed preemption as the sole eligible active decision initiating the mechanism."
+  }
+}

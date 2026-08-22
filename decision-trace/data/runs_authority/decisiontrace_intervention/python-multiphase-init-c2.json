@@ -1,0 +1,29 @@
+{
+  "checkpoint_id": "python-multiphase-init-c2",
+  "timeline_id": "python-multiphase-init",
+  "question": "What decision currently governs python multiphase extension init policy after its implementation merged? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "7992855896428ea0fbe589193562b58e14499502510a50bae18228a9bd06fc89",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-489@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-489",
+      "sequence": 1,
+      "rendered_sha256": "71adc8ea98f9ad7306ad2a43951de871202a1736e146e2b57506a58d1bb306cf"
+    },
+    {
+      "artifact_id": "python/cpython#19084@8334f30a74abcf7e469b901afc307887aa85a888",
+      "decision_id": "python/cpython#19084",
+      "sequence": 2,
+      "rendered_sha256": "085160be83a40bdb5aea6add13aaeb82422753465b19afa0be2545730c68da17"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-489",
+    "evidence_ids": [
+      "PEP-489"
+    ],
+    "resolver_explanation": "PEP-489 is the sole eligible active decision in scope 'python-multiphase-extension-init'.",
+    "model_explanation": "PEP-489 is the governing decision for the 'python-multiphase-extension-init' scope because it is the sole eligible active decision with Final status."
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "checkpoint_id": "metadata-1-2-c3",
+  "timeline_id": "metadata-1-2",
+  "question": "What decision currently governs the Python metadata specification chain? Return the public decision ID and its authority evidence.",
+  "prompt_sha256": "3bad8e6ead5907e61c7b7b6cee9606748620ad5a925f2e10af1d4d23bd1be9eb",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-241@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+      "decision_id": "PEP-241",
+      "sequence": 1,
+      "rendered_sha256": "f54518f264e93cb9cb37fa89c473903953bfd1e37f57b40d7afa133b1e45d517"
+    },
+    {
+      "artifact_id": "PEP-314@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+      "decision_id": "PEP-314",
+      "sequence": 2,
+      "rendered_sha256": "d9d88005684c2e4a68ef2b9b2c103731a33071f182c76578220d313a3caebe33"
+    },
+    {
+      "artifact_id": "PEP-345@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+      "decision_id": "PEP-345",
+      "sequence": 3,
+      "rendered_sha256": "3ec04bd9e4922378772814299d1d605856e4766b4b037c6f40082240e45f8d66"
+    }
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_id": "PEP-345",
+    "evidence_ids": [
+      "PEP-345"
+    ],
+    "resolver_explanation": "PEP-345 is the sole eligible active decision in scope 'python-metadata-chain'.",
+    "model_explanation": "PEP-345 governs the Python metadata specification chain as the sole eligible active decision with Accepted status replacing PEP 314 (https://github.com/python/peps/blob/a0d411a7e334ddede263fdf9862f06bfc035f21c/pep-0345.txt)."
+  }
+}
