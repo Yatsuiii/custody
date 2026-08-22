@@ -11,7 +11,7 @@ import numpy as np
 
 from authority_benchmark import AUTHORITY_DIR, RUNS_DIR, load_public, read_jsonl
 
-CONDITIONS = ("decisiontrace", "rag")
+CONDITIONS = ("decisiontrace", "rag", "decisiontrace_intervention")
 
 
 def wilson(k, n, z=1.96):
@@ -159,12 +159,15 @@ def paired_bootstrap(dt, rag, samples=10_000, seed=20260822):
 
 def main():
     timelines,checkpoints=load_public(); truth={g["checkpoint_id"]:g for g in read_jsonl(AUTHORITY_DIR/"ground_truth.jsonl")}
-    rows={c:grade_condition(c,timelines,checkpoints,truth) for c in CONDITIONS}
+    available=[c for c in CONDITIONS if (RUNS_DIR/c).exists()]
+    rows={c:grade_condition(c,timelines,checkpoints,truth) for c in available}
     summary={"conditions":{c:summarize(rows[c]) for c in CONDITIONS},
              "breakdown":{c:{"scenario":breakdown(rows[c],"scenarios"),"repository":breakdown(rows[c],"repository"),"composition":breakdown(rows[c],"composition"),"position":breakdown(rows[c],"position")} for c in CONDITIONS},
              "paired_bootstrap":paired_bootstrap(rows["decisiontrace"],rows["rag"]),
              "decisiontrace_mechanisms":dict(Counter(r["mechanism"] for r in rows["decisiontrace"] if r["mechanism"])),
              "all_rows":rows}
+    if "decisiontrace_intervention" in rows:
+        summary["intervention_paired_bootstrap"]=paired_bootstrap(rows["decisiontrace_intervention"],rows["rag"])
     (AUTHORITY_DIR/"baseline_scores.json").write_text(json.dumps(summary,indent=2)+"\n")
     print(json.dumps({k:v for k,v in summary.items() if k!="all_rows"},indent=2))
 

@@ -41,6 +41,13 @@ def test_adapter_module_cannot_name_or_open_answer_key():
     assert "GROUND_TRUTH_PATH" not in adapter
 
 
+def test_intervention_resolver_cannot_read_answer_key():
+    source=(Path(__file__).parent/"app"/"authority.py").read_text().lower()
+    assert "ground_truth" not in source
+    assert "scenario_types" not in source
+    assert "applicable_failures" not in source
+
+
 def test_questions_do_not_disclose_hidden_status_or_answer(corpus):
     timelines, checkpoints, truth=corpus
     by_t={t["timeline_id"]:t for t in timelines}
