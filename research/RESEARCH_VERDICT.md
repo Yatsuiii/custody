@@ -204,9 +204,53 @@ is deterministic.
 **Verdict stays RESEARCH-ONLY.** This was evidence collection only, not
 authorization to build the case-C adapter, and E4/E6 remain unstarted.
 
-## Current next highest-leverage action (post-E2)
+## Current next highest-leverage action (superseded — see E2A addendum below)
 
 Not yet decided in this session — E2 was scoped as evidence collection
 only, per its own contract. The registry (`EXPERIMENT_REGISTRY.md`) now
 names the case-C adapter as the best-supported next concrete step if and
 when a further step is explicitly authorized.
+
+## Addendum, 2026-08-22 (continued): E2A result
+
+Full detail in `research/experiments/E2A_TMANM_TOOL_ECHO/`. **Verdict:
+EXTERNAL-FAIL.** TMA-NM's actual published `tool_echo` laundering
+construction, transcribed (not reimplemented) from the pinned repo and
+run through a translation-layer adapter against real, unmodified
+`take_custody`/`CustodyGraph`/`ExportGateway`, confirms case F exactly as
+the code-reading red-team predicted: the attacker's value obtained
+identical `TRUSTED`/`instruction_eligible()` standing to a genuinely
+trusted control value and cleared `ExportGateway` with no denial. The
+why-trace attributes this to one line (`origin.py:325`), not several
+interacting mechanisms, and a second control confirmed Custody's revision
+mechanism provides no *write-time* protection even against an
+already-known-compromised revision.
+
+This is not a new finding — it is the same finding as case F, now carrying
+stronger evidentiary weight: an externally-sourced, published-attack-
+construction-derived, measured result, rather than this project's own
+synthetic reasoning about itself. Per this experiment's own non-negotiable
+rule, **no defense was designed, proposed, or implemented in response**;
+Custody's production code was verified byte-identical to the frozen E0/E1
+commit throughout (`git diff --stat custody/` empty), and the full test
+suite remained 381/381.
+
+**Verdict stays RESEARCH-ONLY.** Nothing about the standing verdict
+changes — this experiment strengthens the evidentiary basis for a claim
+already made, it does not open a new question or close the thesis. The
+"strongest failure in current Custody" answer in prior FINAL RESPONSEs is
+now measured, not inferred: case F / K remain the two load-bearing gaps
+(tool-identity-only trust, and no time-bounded revocation), and this
+experiment addressed the former's evidentiary status, not the latter's.
+
+## Current next highest-leverage action (post-E2A)
+
+Not decided in this session — E2A was scoped, per its own contract and
+the user's explicit non-negotiable rule, to characterize the failure, not
+propose next steps beyond naming one candidate falsification target.
+`research/experiments/E2A_TMANM_TOOL_ECHO/RESULT.md` (item 8) names the
+cheapest next falsification step as adapting TMA-NM's `summarize` channel
+(cases A/B) the same way, since it is predicted to produce a more
+ambiguous, and therefore more informative, EXTERNAL-PASS-ACCIDENTAL-type
+result rather than another clean FAIL — not started here, and any further
+step remains gated on explicit authorization.

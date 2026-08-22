@@ -1,74 +1,78 @@
-Objective: E0/E1 (complete) plus E2 evidence-collection only. E2: determine
-whether TMA-NM (arXiv:2606.24322) has a real, verifiable, reproducible
-released implementation/benchmark, whether it runs, what laundering
-attacks it actually implements in code (not just paper prose), and whether
-it could feasibly be adapted to test current Custody — without building
-that adapter, without spending money on LLM API calls, and without
-starting any Custody 2.0 architecture, trust epochs, or new benchmark.
+Objective: E0/E1/E2 complete and frozen (commit 31bd1b0 on
+research/e0-e1-multiparent-lineage). This phase, E2A: run ONE external
+attack (TMA-NM's tool_echo construction) against UNCHANGED current
+Custody, through a translation-layer adapter outside production code.
+Measure PASS/FAIL. Do not fix, defend against, or otherwise modify
+Custody's security semantics after seeing the result. No trust epochs, no
+Custody 2.0, no OpenRouter/LLM calls.
 
-Branch: research/e0-e1-multiparent-lineage
-Parent: research/memory-poisoning-thesis (docs-only research audit branch),
-        which itself sits on hardening/fleet-track-pre-submission
+Branch: research/e2a-tmanm-tool-echo
+Parent: research/e0-e1-multiparent-lineage @ 31bd1b03c544a3fd2626491c5596694586cf3416
+        (frozen E0/E1/E2 commit), which sits on
+        research/memory-poisoning-thesis, which sits on
+        hardening/fleet-track-pre-submission
         (the hackathon/shipping branch — MUST NOT be modified by this work).
 
 Allowed files:
-- research/experiments/E0_CURRENT_LINEAGE_REPRO/ (done, do not modify)
-- research/experiments/E1_MULTIPARENT_LINEAGE/ (done, do not modify)
-- research/experiments/E2_TMANM_REPRO/PLAN.md
-- research/experiments/E2_TMANM_REPRO/SOURCE_AUDIT.md
-- research/experiments/E2_TMANM_REPRO/REPRODUCTION.md
-- research/experiments/E2_TMANM_REPRO/ATTACK_MATRIX.md
-- research/experiments/E2_TMANM_REPRO/CUSTODY_ADAPTER_MAP.md
-- research/experiments/E2_TMANM_REPRO/RESULT.md
-- research/RELATED_WORK_AUDIT.md (append/correct TMA-NM section only)
-- research/NOVELTY_MATRIX.md (append E2 findings only)
-- research/EXPERIMENT_REGISTRY.md (update E2 row only)
-- research/RESEARCH_VERDICT.md (append E2 outcome, do not rewrite prior sections)
+- research/experiments/E2A_TMANM_TOOL_ECHO/PLAN.md
+- research/experiments/E2A_TMANM_TOOL_ECHO/ADAPTER_SPEC.md
+- research/experiments/E2A_TMANM_TOOL_ECHO/RESULT.md
+- research/experiments/E2A_TMANM_TOOL_ECHO/WHY_TRACE.md
+- research/experiments/E2A_TMANM_TOOL_ECHO/attack.py (the adapter script;
+  imports custody.* read-only, never edits it)
+- research/CURRENT_CUSTODY_REDTEAM.md (update case F only, with measured result)
+- research/EXPERIMENT_REGISTRY.md (update/add E2A row only)
+- research/RESEARCH_VERDICT.md (append E2A outcome only)
+- research/NOVELTY_MATRIX.md (only if the empirical result changes a claim)
 - .claude/SESSION_CONTRACT.md
-- External clone at $SCRATCHPAD/mem-inv-bench (outside the Custody tree,
-  read-only reproduction target, not part of this repo)
 
 Non-goals:
-- No Custody 2.0 architecture, trust epochs, interval revocation, or any
-  edit to custody/*.py, tests/*.py, live/, scripts/, web/.
-- No new benchmark (that is a possible E4, gated on this experiment's own
-  verdict, not started here).
-- No spending money on LLM API calls (no OPENROUTER_API_KEY is configured;
-  do not obtain or use one without explicit authorization). The offline,
-  no-cost parts of the external repo may be run; anything requiring
-  OpenRouter credentials is a documented BLOCKED item, not worked around.
-- Do not modify the cloned external repository's code to make results look
-  better; environment-only fixes must be logged with before/after, per the
-  user's instruction, and none were needed here.
+- No edit to any file under custody/ (production code stays byte-identical
+  to the frozen E0/E1 commit for the entire duration of this experiment).
+- No defense implementation, no semantic Custody change, regardless of
+  what the attack shows — characterize the failure, do not fix it.
+- No trust epochs, no Custody 2.0, no new benchmark beyond this one
+  adapted scenario.
+- No OpenRouter/LLM calls — this experiment is explicitly scoped to not
+  need one (Custody's own decision path is deterministic).
+- Do not hard-code the adapter/test to force a predetermined outcome; the
+  attack construction must be built first, then run once, unmodified.
 - No commit/push unless explicitly authorized.
 
-Baseline: E0/E1 already complete (FOUNDATION-SURVIVES), 381/381 tests
-passing, untouched by this phase.
+Baseline: E0/E1/E2 frozen at commit 31bd1b0. `python -m unittest discover
+tests` = 381/381 before this phase and must remain 381/381 after it (no
+production code touched).
 
 Acceptance gates:
-1. TMA-NM's exact primary-source metadata (title, author, date, version)
-   independently confirmed via direct arXiv fetch, not inferred.
-2. Official repository confirmed to exist via ground-truth GitHub API
-   (`gh api`), not just an AI-summarized page fetch, and pinned to an
-   exact commit SHA.
-3. The smallest official, no-cost reproduction command actually executed
-   and its real output recorded (PASS/PARTIAL/BLOCKED/FAIL).
-4. All 10 attack classes (A-J) classified against the actual source code
-   read, not paper prose, with file citations.
-5. Adapter feasibility map answers all 8 questions per implemented attack,
-   without building the adapter.
-6. Final verdict is exactly one of EXTERNAL-HARNESS-READY/-PARTIAL/
-   -BLOCKED/-ABSENT.
+1. TMA-NM's tool_echo semantics documented from the pinned repo's actual
+   source (`code/laundering.py`), quoted, not paraphrased from memory of
+   the earlier E2 pass.
+2. The adapter translates TMA-NM's tool_echo item into a real ADK-shaped
+   event sequence and runs it through real, unmodified
+   `custody.origin.take_custody` / `custody.graph.CustodyGraph` /
+   `custody.action.ExportGateway` — not a parallel toy reimplementation.
+3. All three required states (Control 1 benign-trusted, Control 2
+   untrusted-malicious, Attack trusted-tool-echo) actually executed, with
+   real captured output, before any interpretation is written.
+4. Success criterion (authority laundered = admitted AND action-authorized
+   with the same standing a genuine trusted value would have) defined in
+   PLAN.md before attack.py is run, not adjusted after seeing output.
+5. WHY_TRACE.md shows the full decision chain (event -> origin
+   classification -> trust lookup -> record -> admission -> action
+   decision) for the attack case, distinguishing correct defense from
+   accidental blocking from laundering.
+6. Final verdict is exactly one of EXTERNAL-FAIL / EXTERNAL-PASS-CORRECT /
+   EXTERNAL-PASS-ACCIDENTAL / ADAPTER-INVALID.
 
-Verification: `gh api repos/yedidel/mem-inv-bench` output and `git log -1`
-inside the clone confirm the pinned commit; reproduction commands' exact
-stdout is quoted in REPRODUCTION.md; `git status` in the Custody repo
-shows no changes outside the allowed list.
+Verification: `attack.py`'s actual stdout is captured verbatim into
+RESULT.md/WHY_TRACE.md; `git diff` against the frozen E0/E1 commit shows
+zero changes under custody/; `python -m unittest discover tests` reports
+381/381 after this phase, confirming no production drift.
 
-Status: complete. E2 verdict: EXTERNAL-HARNESS-PARTIAL. TMA-NM repo
-verified real (ground-truth gh api), pinned at 63f1359d677e, offline
-formal reproduction PASSED with no fix needed. LLM-backed empirical runs
-BLOCKED (no OpenRouter key, no spend). 6/10 attack classes adaptable to
-Custody as pure harness plumbing; D and J not present in TMA-NM. No
-production code changed beyond E1's existing origin.py/test_origin.py
-diff. Hackathon branch untouched.
+Status: complete. E2A verdict: EXTERNAL-FAIL. TMA-NM's real tool_echo
+attack, transcribed from the pinned repo, laundered authority through
+current Custody's ExportGateway with no denial. Why-trace attributes it
+to origin.py:325 (trust.of(runtime_name), payload never inspected). Zero
+production code touched (git diff --stat custody/ empty); 381/381 suite
+unchanged before and after. No defense implemented. Uncommitted pending
+user review.
