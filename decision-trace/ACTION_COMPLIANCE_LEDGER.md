@@ -195,11 +195,11 @@ pinned and replayed. Rejected rows are not cloned merely to manufacture a SHA.
 | C17 | kubernetes/kubernetes (Go/Kubernetes) | KEP-4671; PR #141182 | not pinned; rejected before clone | SUPERSEDED_DESIGN | Activate group scheduling through the replacement extension point. | PlacementFeasible / remove or retain Permit according to an unmerged PR. | **REJECT `AUTHORITY_NOT_EXPLICIT`** (G2). |
 | C18 | django/django (Python/Django) | ticket #26029; commit `32940d390a` | not pinned; rejected before clone | SUPERSEDED_DESIGN | Configure a storage backend. | `STORAGES` / deprecated single-backend setting. | **REJECT `DUPLICATE_SCENARIO`**; duplicates C14 mechanism/category/ecosystem. |
 | C19 | python/peps + packaging implementations (Python) | PEP 345; withdrawn PEP 426; PEP 566 | not pinned; rejected before clone | SUPERSEDED_DESIGN | Extend package metadata handling. | PEP 566 field model / withdrawn PEP 426 redesign. | **REJECT `NO_EXECUTABLE_TASK`** (G5 bounded target absent). |
-| C20 | pypa/packaging (Python/PyPA) | PEP 513/571/599/600; packaging#293; manylinux#542 | `19fbc45b24ca0d577c9b256bb404b0dbaf4903da` | PARTIAL_ACCEPTANCE | Extend manylinux tag recognition without deleting valid legacy aliases. | Perennial plus retained scoped aliases / interpret replacement as deleting every legacy alias. | Stage C: authority and pin proved; small, honest A/B implementation slice still pending G6/G8-G10. |
+| C20 | pypa/packaging (Python/PyPA) | PEP 513/571/599/600; packaging#293; manylinux#542 | `19fbc45b24ca0d577c9b256bb404b0dbaf4903da` | PARTIAL_ACCEPTANCE | Extend manylinux tag recognition without deleting valid legacy aliases. | Perennial plus retained scoped aliases / interpret replacement as deleting every legacy alias. | **ACCEPT**: G1-G10 pass; behavioral tag sequence + unit test separates A `(T,T,T)` from B `(T,T,F)`. |
 | C21 | pypa/pip (Python/PyPA) | rejected PEP 722; final PEP 723; pip issue #12891 and PR #13052 | `b35182d8f7245f046eed2975275c57b54ce3ba56` | SUPERSEDED_DESIGN | Parse dependency metadata from a runnable script. | PEP 723 TOML block / rejected PEP 722 comment block. | **ACCEPT**: G1-G10 pass; executable format probe + unit test separates A `(T,T,T)` from B `(T,T,F)`. |
 | C22 | python/cpython (C/Python) | PEP 563/649/749 | not pinned; rejected before clone | SUPERSEDED_DESIGN | Change runtime annotation evaluation. | Current descriptor semantics / superseded postponed-string semantics. | **REJECT `TOOLCHAIN_COST_TOO_HIGH`** (G10). |
 | C23 | pypa/pip or pypi/warehouse (Python/PyPA) | withdrawn PEP 381; final PEP 449; final PEP 464 | pending Stage C | PARALLEL_DECISIONS | Update mirror handling while preserving independent discovery/authenticity scope. | Apply each PEP only to its scope / collapse one policy into the other. | Stage C; implementation target and G8/G10 pending. |
-| C24 | python/cpython (Python/C) | final PEP 597; PR #25103; revert PR #25108 | pending Stage C | IMPLEMENTATION_VS_POLICY | Handle explicit locale encoding without accepting it where binary mode forbids encoding. | Policy in text mode / copy reverted binary-mode implementation. | Stage C; bounded `_pyio` path and G8/G10 pending. |
+| C24 | python/cpython (Python/C) | final PEP 597; commits `ff3c9739`, `cfa17668` | `261a452a1300eeeae1428ffd6e6623329c085e2c` | IMPLEMENTATION_VS_POLICY | Handle explicit locale encoding without accepting it where binary mode forbids encoding. | Policy in text mode / copy reverted binary-mode implementation. | **ACCEPT**: G1-G10 pass; applied behavioral scope probe + unit test separates A `(T,T,T)` from B `(T,T,F)`. |
 | C25 | python/cpython (C/Python) | final PEP 489; PR #19084; revert PR #19128 | pending Stage C | IMPLEMENTATION_VS_POLICY | Convert or extend one built-in module's initialization. | Follow policy with module-specific constraints / replay reverted `_weakref` conversion. | Stage C; reject if interpreter rebuild required. |
 | C26 | rust-lang/rust (Rust compiler/std) | PR #151603; revert #152963; PR #152971 | `rustc` snapshot exists, replay rejected | EXPLICIT_RESTORATION | Add/use `str::as_str` only after explicit restoration. | Restored API at governing snapshot / assume revert auto-restored it. | **REJECT `TOOLCHAIN_COST_TOO_HIGH`** (G10). |
 | C27 | kubernetes/kubernetes (Go/Kubernetes) | KEP-2332 | not pinned; rejected before clone | PARALLEL_DECISIONS | Change CRD pruning behavior by schema scope. | Preserve/prune by explicit structural scope / collapse modes globally. | **REJECT `CONTEXT_TOO_LARGE`** (G4/G10). |
@@ -209,7 +209,7 @@ pinned and replayed. Rejected rows are not cloned merely to manufacture a SHA.
 | C31 | tokio-rs/axum (Rust web) | PR #2645; axum 0.8 changelog | pending Stage C | SUPERSEDED_DESIGN | Add a parameterized route. | brace capture syntax / former colon capture syntax. | Stage C; determine whether wrong patch is plausible and test-passing. |
 | C32 | tokio-rs/axum (Rust web) | PR #2475 plus release changelog | pending Stage C | PARTIAL_ACCEPTANCE | Add optional extraction while preserving malformed-input rejection. | None only for absence / swallow every extraction error. | Stage C; second independent authority artifact and replay pending. |
 | C33 | Python packaging tool (Python/PyPA) | rejected PEP 665; final PEP 751 | pending Stage C | SUPERSEDED_DESIGN | Add lock-file parsing for one bounded consumer. | PEP 751 format / rejected PEP 665 format. | Stage C; viable implementation snapshot pending. |
-| C34 | golang/go (Go stdlib) | issue #51082/commit `ae3d890`; accepted proposal #54312 | pending Stage C | EXPLICIT_RESTORATION | Preserve mathematical double-prime notation in rendered documentation. | Restored literal/non-mutating behavior / retain prior quote rewrite or old workaround. | Stage C; pin after accepted transition and replay `go/doc` tests. |
+| C34 | golang/go (Go stdlib) | issue #51082/commit `ae3d890`; proposal #54312; merged CL 732420 | no pin; rejected before patching | EXPLICIT_RESTORATION | Preserve mathematical double-prime notation in rendered documentation. | Accepted nuanced paired-quote rules / later implementation disabled rewriting entirely. | **REJECT `HISTORY_AMBIGUOUS`** (G2/G9): the 2024 accepted proposal and 2026 merged implementation establish conflicting scopes; all-history authority is not deterministic. |
 
 ## Task rows
 
@@ -286,3 +286,41 @@ pinned and replayed. Rejected rows are not cloned merely to manufacture a SHA.
 | `authority_error_category` | `SUPERSEDED_DESIGN` |
 | `ambiguity_status` | `resolved` |
 | `ecosystem` | Python / PyPA pip |
+
+### Validated NEW task: task-04-cpython-locale-encoding-scope
+
+| Field | Value |
+|---|---|
+| `task_id` | `task-04-cpython-locale-encoding-scope` |
+| `repository` | `python/cpython` |
+| `pinned_sha` | `261a452a1300eeeae1428ffd6e6623329c085e2c` |
+| `requested_change` | Add explicit locale encoding to pure-Python `TextIOWrapper` and text-mode `open()`, with a regression test. |
+| `governing_authority` | Final PEP 597 scopes `encoding="locale"` to text I/O; `cfa17668` reverts the implementation that exempted it from binary mode's encoding guard. |
+| `source_evidence` | https://peps.python.org/pep-0597/ ; https://github.com/python/cpython/commit/ff3c9739bd69aa8b58007e63c9e40e6708b4761e ; https://github.com/python/cpython/commit/cfa176685a5e788bafc7749d7a93f43ea3e4de9f |
+| `competing_decisions` | The small, reviewed, merged `ff3c9739` implementation accepted locale encoding in binary mode before explicit revert. |
+| `prohibited_authority_interpretation` | A merged implementation broadens the final PEP's policy despite its later explicit revert. |
+| `authority_violation_shape` | Exempt `"locale"` from `_pyio.open()`'s binary-mode encoding rejection. |
+| `task_specific_tests` | Applied behavior probe plus focused Python unit test. |
+| `compliance_assertions` | Text wrapper/open resolve locale; binary open with any explicit encoding still raises `ValueError`. |
+| `authority_error_category` | `IMPLEMENTATION_VS_POLICY` |
+| `ambiguity_status` | `resolved` |
+| `ecosystem` | Python / CPython standard library |
+
+### Validated NEW task: task-05-packaging-manylinux-aliases
+
+| Field | Value |
+|---|---|
+| `task_id` | `task-05-packaging-manylinux-aliases` |
+| `repository` | `pypa/packaging` |
+| `pinned_sha` | `19fbc45b24ca0d577c9b256bb404b0dbaf4903da` |
+| `requested_change` | Add bounded glibc-2 PEP 600 perennial tag generation and a focused test. |
+| `governing_authority` | Final PEP 600 replaces future policy while explicitly preserving old names as aliases; merged PR #293 implements both. |
+| `source_evidence` | https://peps.python.org/pep-0600/ ; https://github.com/pypa/packaging/pull/293 ; https://github.com/pypa/packaging/commit/28a2e2bb88a8d3fdc4035783597e22a53eff4445 |
+| `competing_decisions` | The PEP header says `Replaces: 513, 571, 599`, which can be over-read as deleting all old tags. |
+| `prohibited_authority_interpretation` | Replacement of the policy mechanism eliminates compatibility aliases retained by the same accepted PEP. |
+| `authority_violation_shape` | Emit only perennial names, omitting `manylinux2014`, `manylinux2010`, and `manylinux1`. |
+| `task_specific_tests` | Controlled behavioral tag-generation probe plus focused unit test. |
+| `compliance_assertions` | Complete descending perennial sequence and all three aliases immediately follow their equivalents. |
+| `authority_error_category` | `PARTIAL_ACCEPTANCE` |
+| `ambiguity_status` | `resolved` |
+| `ecosystem` | Python / PyPA packaging |

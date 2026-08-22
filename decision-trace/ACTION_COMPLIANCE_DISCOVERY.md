@@ -147,3 +147,18 @@ Deep-validation queue, in cost order:
 No benchmark arm, coding agent, subagent, or model-generated patch was used.
 The three accepted tasks use hand-built sanity patches only. C16 was rejected
 instead of repairing its authority premise after fixture construction.
+
+### Deep-validation checkpoint 2
+
+| Candidate | Result | Evidence-producing work |
+|---|---|---|
+| C20 packaging | ACCEPT | Fresh pre-merge pin; bounded PEP 600 implementation; behavioral sequence grader and unit test; A `(true,true,true)`, B `(true,true,false)`. |
+| C24 CPython | ACCEPT | Fresh sparse pre-implementation pin; pure-Python behavior probe and unit test; A `(true,true,true)`, B `(true,true,false)`. |
+| C34 Go doc | REJECT `HISTORY_AMBIGUOUS` | Primary issue comments and merged Gerrit CL inspected; accepted 2024 policy and 2026 implementation conflict. No clone, patch, or test. |
+| C29 OpenTofu | CONTINUE | Accepted issue, merged design RFC, implementation PR, and pre-implementation pin established; bounded patch/replay still pending. |
+
+The OpenTofu candidate's scope evidence is unusually explicit: issue #1042
+strikes label interpolation as out of scope, two maintainer comments agree to
+exclude it, and the merged implementation RFC omits label evaluation while
+describing attribute-expression evaluation. It is not accepted until a small
+real code path and discriminating grader pass.
