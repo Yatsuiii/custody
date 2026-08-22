@@ -1,0 +1,19 @@
+{
+  "base_commit": "8cbf14d7b809722d5c4f0fb89202317fa8681df3",
+  "algorithm": "sha256",
+  "files": {
+    "AUTHORITY_INTERVENTION.md": "ae9bdfb0d7e5ff00a83807518cb33c81bc771a8432b4629052e4bb013e7d8322",
+    "app/authority.py": "e969de3d8bc07febb2d480ed6465740bd28f928c5acf6caa03df76c5542ade71",
+    "app/collaborate.py": "f64f0c7d773c1650483ae4f5749bf6a749fcb3ca37c2613bff09778a8f27209d",
+    "app/graph.py": "7400eaabcf4c2bbe4af304c2c5ab9459dbc5dea4e754f9d5ff4c0c1ccc98ffb9",
+    "app/ingest.py": "ce601a05ef76316520303bc3cc497a16d2baa4141f68c8bd1b35fb16eed4bdc5",
+    "app/memory.py": "e6d6c5977aa3e26fa99b6562b69e6a445cccb8da1a116c94814940069b28c30f",
+    "app/models.py": "7e2cc4ab6b428b0dc9e7cee7a6b43dc2fa6c3144643346665a2407710d6f905c",
+    "app/retrieval.py": "8113e6832037ca4ba5a6c0214ab88e90c5800932bb6310eac6a46ceeb896114f",
+    "app/store.py": "06809a97fd9c8286133e247538b8689855732890a2857a0f2fded5bb73e1625e",
+    "app/tests/test_authority.py": "3c20f6f8344e9503f993887458efda41a43163d609e1b54044c499999cdbac7d",
+    "authority_benchmark.py": "7740f3c4346d587c8ee42a80be57c6d2ed9d21cda2d81a2d295c5e606f098715",
+    "run_authority_intervention.py": "655ca0e9eee728b5642f5a56990c91a4a5c1a1a01716d2785bbb74d64581d1e2",
+    "vertex.py": "713c12bb6ec602e97e3ddecc8ea1bee4e51d390a2987a3896ca61ed8b17d150c"
+  }
+}
