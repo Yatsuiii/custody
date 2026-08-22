@@ -1552,4 +1552,42 @@ mutations; `pytest test_no_leakage.py test_no_leakage_v2.py -q`;
 gives numerator/denominator for every score and the verdict from the
 unchanged verdict_for().
 
-Status: active
+Status: complete
+
+Result: the 76% plateau was benchmark semantics, not capability. Of the 9
+structured failures, 7 are benchmark-label or task mismatch (4 targets that
+are not a rejected-alternative rationale at all, 3 that are one arbitrary
+target among several the broad query equally invites), 2 are card coverage,
+and 0 are retrieval, generation or judge noise as a primary cause. In all 9
+the model used every card point it was given, naming a mean of 4.4 real
+rejected alternatives per failing KEP answer and scoring zero for all of
+them.
+
+Two mining defects found and reproduced by audit_v0_failures.py:
+ALTERNATIVES_SECTION_RE is unanchored, so on KEP-1205 it matched the last
+two hashes of a level-5 heading and ran 6914 characters into Design
+Details, where the target was then picked on the word "rejected" meaning
+HTTP requests were rejected; and reextract_kep_quotes.py keeps the old
+loose-regex quote whenever no rejection-cue sentence is found, so the
+round-3 fix reached 10 of 19 rows, not 19.
+
+v2 rebuilt the KEP arm as one targeted question per named alternative, 83
+cases over 33 decisions, preregistered before any generation. It returned
+structured 99% and a GO that turned out to be a near-tautology: 83 cards
+for 83 cases, own card at rank 1 in 82 of 83. v2.1 rebuilt the store by
+unsupervised ingestion (108 records, no sight of the question list) and
+structured fell to 87%. v2.2 then removed a handicap on the other arm:
+run_rag had indexed the answer-bearing document as {"id": "TARGET"} while
+every decoy kept its real identifier, so RAG could not cite the one
+document that mattered. Relabelling it moved RAG's KEP citation from 49%
+to 95%.
+
+Final, both arms fair: rag_labelled 89% (74/83), structured_ingested 87%
+(72/83), code_only 10% (8/83). verdict_for() returns CAUTION, one point
+below KILL. The structured-versus-RAG advantage this falsifier exists to
+demonstrate is not demonstrated; v0's apparent gap was two artifacts
+pointing in opposite directions.
+
+v0 is byte-identical to 1c33d3d. Leakage gates 456 passed. Committed on
+research/decisiontrace-plateau through ddada00. Nothing merged, pushed or
+deployed.

@@ -94,7 +94,21 @@ Verification:
 - Final report states numerator/denominator for every score and the
   verdict computed by the unchanged `verdict_for()`.
 
-Status: active
+Status: complete
+
+Result: the plateau was benchmark semantics. 7 of the 9 structured
+failures are benchmark-label or task mismatch, 2 are card coverage, 0 are
+retrieval, generation or judge noise as a primary cause. Two mining
+defects proved and made reproducible. v2 re-posed the KEP arm as one
+targeted question per named alternative (83 cases, 33 decisions,
+preregistered). Its 99% turned out to be a bijective key lookup; v2.1
+rebuilt the store by unsupervised ingestion and got 87%; v2.2 removed a
+labelling handicap on RAG and RAG went to 89%. Final: rag_labelled 89%
+(74/83), structured_ingested 87% (72/83), code_only 10% (8/83), verdict
+CAUTION one point below KILL. The structured-versus-RAG advantage is not
+demonstrated. v0 byte-identical, 456 leakage assertions passing, work
+committed on `research/decisiontrace-plateau` through ddada00, nothing
+merged, pushed or deployed.
 
 ---
 
