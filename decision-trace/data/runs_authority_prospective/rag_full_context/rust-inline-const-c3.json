@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "rust-inline-const-c3",
+  "timeline_id": "rust-inline-const",
+  "condition": "rag_full_context",
+  "prompt_sha256": "8ace07b0eb5d20091d345b70e7c906b05c3758a02ea9d24fb26b18e78a6256da",
+  "source_artifact_ids": [
+    "RFC-2203@merged",
+    "RFC-2920@open",
+    "RFC-2920@current-authority"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-2920"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-2920@current-authority"
+    ],
+    "explanation": "RFC-2920 holds MERGED policy status for the rust-inline-const scope, replacing RFC-2203.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\"governing_decision_ids\":[\"RFC-2920\"],\"evidence_artifact_ids\":[\"RFC-2920@current-authority\"],\"explanation\":\"RFC-2920 holds MERGED policy status for the rust-inline-const scope, replacing RFC-2203.\"}\n```"
+}

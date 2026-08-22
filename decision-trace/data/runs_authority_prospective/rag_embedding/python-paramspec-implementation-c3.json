@@ -1,0 +1,28 @@
+{
+  "checkpoint_id": "python-paramspec-implementation-c3",
+  "timeline_id": "python-paramspec-implementation",
+  "condition": "rag_embedding",
+  "prompt_sha256": "8625f3236d057265b1db33be13e1a15faab5ba472c8b22cc2ee88fa566ab8887",
+  "source_artifact_ids": [
+    "PEP-612@final",
+    "python/cpython#23702@open",
+    "python/cpython#23702@merged"
+  ],
+  "retrieved_artifact_ids": [
+    "PEP-612@final",
+    "python/cpython#23702@open",
+    "python/cpython#23702@merged"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "python/cpython#23702"
+    ],
+    "evidence_artifact_ids": [
+      "python/cpython#23702@merged"
+    ],
+    "explanation": "Pull request python/cpython#23702 is merged, implementing PEP-612 and governing the python-paramspec-implementation scope.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"python/cpython#23702\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"python/cpython#23702@merged\"\n  ],\n  \"explanation\": \"Pull request python/cpython#23702 is merged, implementing PEP-612 and governing the python-paramspec-implementation scope.\"\n}\n```"
+}

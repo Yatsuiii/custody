@@ -1,0 +1,29 @@
+{
+  "checkpoint_id": "python-db-api-c3",
+  "timeline_id": "python-db-api",
+  "condition": "rag_embedding",
+  "prompt_sha256": "9ec259baa533f37dc9b3e721883b0e5880aac355500474e8412b4f1a4da231b1",
+  "source_artifact_ids": [
+    "PEP-248@accepted",
+    "PEP-249@accepted",
+    "PEP-248@current-note"
+  ],
+  "retrieved_artifact_ids": [
+    "PEP-248@accepted",
+    "PEP-249@accepted",
+    "PEP-248@current-note"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-249"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-248@current-note",
+      "PEP-249@accepted"
+    ],
+    "explanation": "PEP-249 is in FINAL policy status for the python-db-api scope and explicitly replaces PEP-248 (Python Database API Specification v1.0), which is also marked as superseded.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"PEP-249\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"PEP-249@accepted\",\n    \"PEP-248@current-note\"\n  ],\n  \"explanation\": \"PEP-249 is in FINAL policy status for the python-db-api scope and explicitly replaces PEP-248 (Python Database API Specification v1.0), which is also marked as superseded.\"\n}\n```"
+}

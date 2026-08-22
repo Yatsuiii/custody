@@ -1,0 +1,31 @@
+{
+  "checkpoint_id": "go-range-functions-c2",
+  "timeline_id": "go-range-functions",
+  "condition": "rag_embedding",
+  "prompt_sha256": "59dd77b70391ac5c1e8659f1585ea16d3a238b2561c1ee374e7ea140f23594a7",
+  "source_artifact_ids": [
+    "golang/go#61405@open",
+    "golang/go#61405@accepted"
+  ],
+  "retrieved_artifact_ids": [
+    "golang/go#61405@accepted",
+    "golang/go#61405@open",
+    "golang/go#61405@open",
+    "golang/go#61405@open",
+    "golang/go#61405@open",
+    "golang/go#61405@open",
+    "golang/go#61405@open"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "golang/go#61405"
+    ],
+    "evidence_artifact_ids": [
+      "golang/go#61405@accepted"
+    ],
+    "explanation": "Proposal golang/go#61405 was officially accepted by the proposal review group, establishing policy authority for range-over-int and range-over-func details for the Go 1.22 release cycle.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"golang/go#61405\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"golang/go#61405@accepted\"\n  ],\n  \"explanation\": \"Proposal golang/go#61405 was officially accepted by the proposal review group, establishing policy authority for range-over-int and range-over-func details for the Go 1.22 release cycle.\"\n}\n```"
+}

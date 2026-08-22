@@ -1,0 +1,33 @@
+{
+  "checkpoint_id": "llvm-openmp-target-fast-c5",
+  "timeline_id": "llvm-openmp-target-fast",
+  "condition": "rag_embedding",
+  "prompt_sha256": "e5c86474b952e7ffdb21014ced4a61a49fdf1b1550e8ecf7b6de7b2ca430644b",
+  "source_artifact_ids": [
+    "llvm/llvm-project#205775@open",
+    "llvm/llvm-project#205775@merged",
+    "llvm/llvm-project#213769@open",
+    "llvm/llvm-project#213769@merged",
+    "llvm/llvm-project#213911@open"
+  ],
+  "retrieved_artifact_ids": [
+    "llvm/llvm-project#213911@open",
+    "llvm/llvm-project#205775@merged",
+    "llvm/llvm-project#213769@merged",
+    "llvm/llvm-project#205775@open",
+    "llvm/llvm-project#213769@open"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "llvm/llvm-project#213769"
+    ],
+    "evidence_artifact_ids": [
+      "llvm/llvm-project#213769@merged",
+      "llvm/llvm-project#213911@open"
+    ],
+    "explanation": "Decision llvm/llvm-project#213769 was merged to revert llvm/llvm-project#205775. Although a reland/reversion (llvm/llvm-project#213911) was proposed, it remains in OPEN status and does not supersede the merged revert.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"llvm/llvm-project#213769\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"llvm/llvm-project#213769@merged\",\n    \"llvm/llvm-project#213911@open\"\n  ],\n  \"explanation\": \"Decision llvm/llvm-project#213769 was merged to revert llvm/llvm-project#205775. Although a reland/reversion (llvm/llvm-project#213911) was proposed, it remains in OPEN status and does not supersede the merged revert.\"\n}\n```"
+}

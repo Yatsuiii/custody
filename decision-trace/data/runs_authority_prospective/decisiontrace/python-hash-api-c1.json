@@ -1,0 +1,22 @@
+{
+  "checkpoint_id": "python-hash-api-c1",
+  "timeline_id": "python-hash-api",
+  "condition": "decisiontrace",
+  "prompt_sha256": "563fac834ae183f30cbee8e533b71811fa34dbfc384b78f137307db39586070e",
+  "source_artifact_ids": [
+    "PEP-247@accepted"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-247"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-247@accepted"
+    ],
+    "explanation": "The organizational decision that currently governs the `python-hash-api` scope is **PEP-247** (*API for Cryptographic Hash Functions*), which holds the **GOVERNING** authority state as the sole eligible active policy decision in this scope.\n\nAuthority is established by the following source artifact:\n* **Artifact ID:** `PEP-247@accepted`\n* **Repository:** `python/peps` (Pinned revision: `b2120d116aa696f409b4d8333c4020ab8f93c9c7`)\n* **Lifecycle Status:** `FINAL`\n* **Source URL:** https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0247.rst",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision that currently governs the `python-hash-api` scope is **PEP-247** (*API for Cryptographic Hash Functions*), which holds the **GOVERNING** authority state as the sole eligible active policy decision in this scope.\n\nAuthority is established by the following source artifact:\n* **Artifact ID:** `PEP-247@accepted`\n* **Repository:** `python/peps` (Pinned revision: `b2120d116aa696f409b4d8333c4020ab8f93c9c7`)\n* **Lifecycle Status:** `FINAL`\n* **Source URL:** https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0247.rst"
+}

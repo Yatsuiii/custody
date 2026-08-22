@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "go-type-parameters-c4",
+  "timeline_id": "go-type-parameters",
+  "condition": "decisiontrace",
+  "prompt_sha256": "64791b48ef8735855fe01f001495e7051ab43780ed34c16bb0e3d7db29160ab4",
+  "source_artifact_ids": [
+    "go-contracts@superseded",
+    "golang/go#43651@open",
+    "golang/go#43651@accepted"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "golang/go#43651"
+    ],
+    "evidence_artifact_ids": [
+      "golang/go#43651@accepted"
+    ],
+    "explanation": "Decision `golang/go#43651` is the governing authority for Go type parameters. It is an accepted policy decision (lifecycle status: ACCEPTED) that explicitly replaced `go-contracts` and represents the sole eligible active decision in the `go-type-parameters` scope.",
+    "parse_error": null
+  },
+  "raw_response": "Decision `golang/go#43651` is the governing authority for Go type parameters. It is an accepted policy decision (lifecycle status: ACCEPTED) that explicitly replaced `go-contracts` and represents the sole eligible active decision in the `go-type-parameters` scope."
+}

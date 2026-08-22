@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "rust-rpit-capture-c3",
+  "timeline_id": "rust-rpit-capture",
+  "condition": "decisiontrace",
+  "prompt_sha256": "c2c9ab19dc5e00a37bc6592e419a64a45c2ada6733a1220f367f4ee67bd9a282",
+  "source_artifact_ids": [
+    "RFC-1522@merged",
+    "RFC-1951@open",
+    "RFC-1951@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-1951"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-1951@merged"
+    ],
+    "explanation": "The organizational decision currently governing Rust `impl Trait` capture rules is **RFC-1951** (Authority state: **GOVERNING**). \n\nAccording to the provided evidence, RFC-1951 is the sole active decision within the `rust-impl-trait-capture-rules` authority scope, holding a `MERGED` lifecycle status and explicitly replacing RFC-1522.\n\n**Governing Source Artifact:**\n* **Artifact ID:** `RFC-1951@merged`\n* **Decision ID:** `RFC-1951`\n* **Repository:** `rust-lang/rfcs`\n* **Source URL:** https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1951-expand-impl-trait.md",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing Rust `impl Trait` capture rules is **RFC-1951** (Authority state: **GOVERNING**). \n\nAccording to the provided evidence, RFC-1951 is the sole active decision within the `rust-impl-trait-capture-rules` authority scope, holding a `MERGED` lifecycle status and explicitly replacing RFC-1522.\n\n**Governing Source Artifact:**\n* **Artifact ID:** `RFC-1951@merged`\n* **Decision ID:** `RFC-1951`\n* **Repository:** `rust-lang/rfcs`\n* **Source URL:** https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1951-expand-impl-trait.md"
+}

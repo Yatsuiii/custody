@@ -1,0 +1,21 @@
+{
+  "checkpoint_id": "rust-inline-const-c4",
+  "timeline_id": "rust-inline-const",
+  "condition": "decisiontrace",
+  "prompt_sha256": "7329cf417d4ec2f91a23bde012824253226b00ea67fe36e45c6dfecc5d80a1e3",
+  "source_artifact_ids": [
+    "RFC-2203@merged",
+    "RFC-2920@open",
+    "RFC-2920@current-authority",
+    "RFC-2203@partial-note"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "UNRESOLVED",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [],
+    "explanation": "The authority state is UNRESOLVED, and there are no governing decision IDs (`[]`). Although visible authority exists, none possesses the explicit scope required to govern Rust inline const as an undifferentiated policy, and the resolver refuses to make a semantic guess. As a result, no source artifacts currently establish authority for this scope.",
+    "parse_error": null
+  },
+  "raw_response": "The authority state is UNRESOLVED, and there are no governing decision IDs (`[]`). Although visible authority exists, none possesses the explicit scope required to govern Rust inline const as an undifferentiated policy, and the resolver refuses to make a semantic guess. As a result, no source artifacts currently establish authority for this scope."
+}

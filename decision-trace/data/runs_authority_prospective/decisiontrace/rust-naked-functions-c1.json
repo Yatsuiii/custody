@@ -1,0 +1,22 @@
+{
+  "checkpoint_id": "rust-naked-functions-c1",
+  "timeline_id": "rust-naked-functions",
+  "condition": "decisiontrace",
+  "prompt_sha256": "d26ef977882697c98b31ff303fcb161df2ffe7c6fa0bcb1c5e44d8d3d88ac1bf",
+  "source_artifact_ids": [
+    "RFC-1201@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-1201"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-1201@merged"
+    ],
+    "explanation": "RFC-1201 is the governing organizational decision for the `rust-naked-functions` scope (Authority state: GOVERNING), serving as the sole eligible active policy decision.\n\n**Establishing Source Artifact:**\n* **Artifact ID:** `RFC-1201@merged`\n* **Decision ID:** RFC-1201\n* **Repository:** `rust-lang/rfcs`\n* **Lifecycle Status:** MERGED\n* **Pinned Revision:** `4e61ad08a822e5cfc0850f8d583265bce2096491`\n* **Source URL:** https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1201-naked-fns.md",
+    "parse_error": null
+  },
+  "raw_response": "RFC-1201 is the governing organizational decision for the `rust-naked-functions` scope (Authority state: GOVERNING), serving as the sole eligible active policy decision.\n\n**Establishing Source Artifact:**\n* **Artifact ID:** `RFC-1201@merged`\n* **Decision ID:** RFC-1201\n* **Repository:** `rust-lang/rfcs`\n* **Lifecycle Status:** MERGED\n* **Pinned Revision:** `4e61ad08a822e5cfc0850f8d583265bce2096491`\n* **Source URL:** https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1201-naked-fns.md"
+}

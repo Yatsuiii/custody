@@ -1,0 +1,28 @@
+{
+  "checkpoint_id": "python-paramspec-implementation-c6",
+  "timeline_id": "python-paramspec-implementation",
+  "condition": "rag_full_context",
+  "prompt_sha256": "b42bf47ba00be071d685f0b3afe0dc540779ffe0a190761dfead86bf8ae9be52",
+  "source_artifact_ids": [
+    "PEP-612@final",
+    "python/cpython#23702@open",
+    "python/cpython#23702@merged",
+    "python/cpython#25449@open",
+    "python/cpython#25449@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "MULTIPLE_GOVERNING",
+    "governing_decision_ids": [
+      "PEP-612",
+      "python/cpython#25449"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-612@final",
+      "python/cpython#25449@merged"
+    ],
+    "explanation": "PEP-612 is the final policy decision governing python-paramspec-policy, and python/cpython#25449 is the merged implementation decision that reverted and superseded python/cpython#23702 for python-paramspec-implementation.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"MULTIPLE_GOVERNING\",\n  \"governing_decision_ids\": [\n    \"PEP-612\",\n    \"python/cpython#25449\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"PEP-612@final\",\n    \"python/cpython#25449@merged\"\n  ],\n  \"explanation\": \"PEP-612 is the final policy decision governing python-paramspec-policy, and python/cpython#25449 is the merged implementation decision that reverted and superseded python/cpython#23702 for python-paramspec-implementation.\"\n}\n```"
+}

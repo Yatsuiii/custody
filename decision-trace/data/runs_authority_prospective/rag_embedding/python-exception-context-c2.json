@@ -1,0 +1,26 @@
+{
+  "checkpoint_id": "python-exception-context-c2",
+  "timeline_id": "python-exception-context",
+  "condition": "rag_embedding",
+  "prompt_sha256": "f8a624576a5636e566e5a5bc52ecb0fad62b304c28a2a0534111ba8cbb6f6c26",
+  "source_artifact_ids": [
+    "PEP-409@accepted",
+    "PEP-415@accepted"
+  ],
+  "retrieved_artifact_ids": [
+    "PEP-409@accepted",
+    "PEP-415@accepted"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-415"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-415@accepted"
+    ],
+    "explanation": "PEP-415 is in Final status for the python-exception-context scope and explicitly replaces PEP-409, making it the governing decision.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"PEP-415\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"PEP-415@accepted\"\n  ],\n  \"explanation\": \"PEP-415 is in Final status for the python-exception-context scope and explicitly replaces PEP-409, making it the governing decision.\"\n}\n```"
+}

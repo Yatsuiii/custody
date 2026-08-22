@@ -1,0 +1,18 @@
+{
+  "checkpoint_id": "opentofu-minimal-image-docs-c1",
+  "timeline_id": "opentofu-minimal-image-docs",
+  "condition": "decisiontrace",
+  "prompt_sha256": "1cdea3432ee0fe72e81070ecd1996daa093ef7539696a8cdb87e0d54f441b00c",
+  "source_artifact_ids": [
+    "opentofu/opentofu#2403@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [],
+    "explanation": "There is currently no governing decision for `opentofu-minimal-image-docs` (`NO_GOVERNING_DECISION`, IDs: `[]`). Based on the available evidence, no visible accepted or implemented decisions are eligible to govern, and no source artifacts exist to establish current authority.",
+    "parse_error": null
+  },
+  "raw_response": "There is currently no governing decision for `opentofu-minimal-image-docs` (`NO_GOVERNING_DECISION`, IDs: `[]`). Based on the available evidence, no visible accepted or implemented decisions are eligible to govern, and no source artifacts exist to establish current authority."
+}

@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "kubernetes-gang-scheduling-c2",
+  "timeline_id": "kubernetes-gang-scheduling",
+  "condition": "decisiontrace",
+  "prompt_sha256": "4d051a6d5c55283e9a1ae1d8a5994cd29d662c631101eaf08ec33e95d1d35cbe",
+  "source_artifact_ids": [
+    "KEP-583@current",
+    "KEP-5832@current"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "KEP-5832"
+    ],
+    "evidence_artifact_ids": [
+      "KEP-5832@current"
+    ],
+    "explanation": "The organizational decision currently governing Kubernetes gang scheduling policy is **KEP-5832**. It is the sole eligible active decision in the `kubernetes-gang-scheduling-policy` scope with an `ACCEPTED` lifecycle status (implementable policy replacing KEP-583).\n\n**Source Artifact Establishing Authority:**\n- **Artifact ID:** `KEP-5832@current`\n- **Decision ID:** `KEP-5832`\n- **Repository:** `kubernetes/enhancements`\n- **Pinned Revision:** `c4f439c2dd4acb928094660be0ea771bf63f2b76`\n- **Source URL:** https://github.com/kubernetes/enhancements/blob/c4f439c2dd4acb928094660be0ea771bf63f2b76/keps/sig-scheduling/5832-decouple-podgroup-api/kep.yaml",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing Kubernetes gang scheduling policy is **KEP-5832**. It is the sole eligible active decision in the `kubernetes-gang-scheduling-policy` scope with an `ACCEPTED` lifecycle status (implementable policy replacing KEP-583).\n\n**Source Artifact Establishing Authority:**\n- **Artifact ID:** `KEP-5832@current`\n- **Decision ID:** `KEP-5832`\n- **Repository:** `kubernetes/enhancements`\n- **Pinned Revision:** `c4f439c2dd4acb928094660be0ea771bf63f2b76`\n- **Source URL:** https://github.com/kubernetes/enhancements/blob/c4f439c2dd4acb928094660be0ea771bf63f2b76/keps/sig-scheduling/5832-decouple-podgroup-api/kep.yaml"
+}

@@ -1,0 +1,25 @@
+{
+  "checkpoint_id": "rust-rpit-capture-c4",
+  "timeline_id": "rust-rpit-capture",
+  "condition": "decisiontrace",
+  "prompt_sha256": "48cb6660ecd1f56c21167fa7cc8513039fec8f47557474319e1ede4ed075715a",
+  "source_artifact_ids": [
+    "RFC-1522@merged",
+    "RFC-1951@open",
+    "RFC-1951@merged",
+    "RFC-3498@rpit-authority"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-3498"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-3498@rpit-authority"
+    ],
+    "explanation": "The organizational decision currently governing Rust `impl Trait` capture rules in Rust 2024 is **RFC-3498** (Authority state: **GOVERNING**). \n\nBased on the evidence from artifact `RFC-3498@rpit-authority` (repository `rust-lang/rfcs`, pinned revision `425406316f88d799c9690401cc51456f9bb2ddd8`, source URL: `https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/3498-lifetime-capture-rules-2024.md`), RFC-3498 is a merged policy decision that explicitly supersedes RFC 1951 and RFC 1522, making it the sole eligible active authority within the `rust-impl-trait-capture-rules` scope.",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing Rust `impl Trait` capture rules in Rust 2024 is **RFC-3498** (Authority state: **GOVERNING**). \n\nBased on the evidence from artifact `RFC-3498@rpit-authority` (repository `rust-lang/rfcs`, pinned revision `425406316f88d799c9690401cc51456f9bb2ddd8`, source URL: `https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/3498-lifetime-capture-rules-2024.md`), RFC-3498 is a merged policy decision that explicitly supersedes RFC 1951 and RFC 1522, making it the sole eligible active authority within the `rust-impl-trait-capture-rules` scope."
+}

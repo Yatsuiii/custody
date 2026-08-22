@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "python-db-api-c4",
+  "timeline_id": "python-db-api",
+  "condition": "decisiontrace",
+  "prompt_sha256": "f44196c8eaf2ad7a950e864f45a33959ad1f025cf0e7dacf5972b2c7e0c396fa",
+  "source_artifact_ids": [
+    "PEP-248@accepted",
+    "PEP-249@accepted",
+    "PEP-248@current-note"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-249"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-249@accepted"
+    ],
+    "explanation": "PEP-249 (\"Python Database API Specification v2.0\") is the governing authority for the `python-db-api` scope. With a lifecycle status of \"Final\" and having explicitly replaced PEP-248, it is the sole active decision currently establishing the authoritative standard for the Python Database API.",
+    "parse_error": null
+  },
+  "raw_response": "PEP-249 (\"Python Database API Specification v2.0\") is the governing authority for the `python-db-api` scope. With a lifecycle status of \"Final\" and having explicitly replaced PEP-248, it is the sole active decision currently establishing the authoritative standard for the Python Database API."
+}

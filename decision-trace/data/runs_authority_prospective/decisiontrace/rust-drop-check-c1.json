@@ -1,0 +1,22 @@
+{
+  "checkpoint_id": "rust-drop-check-c1",
+  "timeline_id": "rust-drop-check",
+  "condition": "decisiontrace",
+  "prompt_sha256": "7194f5dfa047b60c1ff7ccadba9f2e018f66206205b048672477925dedfa7d22",
+  "source_artifact_ids": [
+    "RFC-769@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-769"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-769@merged"
+    ],
+    "explanation": "The organizational decision currently governing Rust generic drop safety is **RFC-769** (Authority state: **GOVERNING**). RFC-769 is the sole eligible active policy decision within the `rust-generic-drop-safety` authority scope.\n\n**Governing Source Artifact:**\n- **Artifact ID:** `RFC-769@merged`\n- **Decision ID:** `RFC-769`\n- **Repository:** `rust-lang/rfcs`\n- **Lifecycle Status:** `MERGED` (Timestamp: `2015-02-10T17:19:59Z`, Pinned Revision: `github-merged-event-2015-02-10T17:19:59Z`)\n- **Source URL:** https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/0769-sound-generic-drop.md",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing Rust generic drop safety is **RFC-769** (Authority state: **GOVERNING**). RFC-769 is the sole eligible active policy decision within the `rust-generic-drop-safety` authority scope.\n\n**Governing Source Artifact:**\n- **Artifact ID:** `RFC-769@merged`\n- **Decision ID:** `RFC-769`\n- **Repository:** `rust-lang/rfcs`\n- **Lifecycle Status:** `MERGED` (Timestamp: `2015-02-10T17:19:59Z`, Pinned Revision: `github-merged-event-2015-02-10T17:19:59Z`)\n- **Source URL:** https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/0769-sound-generic-drop.md"
+}

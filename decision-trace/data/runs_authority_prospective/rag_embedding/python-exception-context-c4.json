@@ -1,0 +1,29 @@
+{
+  "checkpoint_id": "python-exception-context-c4",
+  "timeline_id": "python-exception-context",
+  "condition": "rag_embedding",
+  "prompt_sha256": "f14c74617b3c2f45d082954eadc403b5bda2ebdcef11f2f64c780835c9c01b0e",
+  "source_artifact_ids": [
+    "PEP-409@accepted",
+    "PEP-415@accepted",
+    "PEP-409@current-note"
+  ],
+  "retrieved_artifact_ids": [
+    "PEP-415@accepted",
+    "PEP-409@current-note",
+    "PEP-409@accepted"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-415"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-409@current-note",
+      "PEP-415@accepted"
+    ],
+    "explanation": "PEP-415 is in Final status with a policy role and explicitly replaces PEP-409 (which is noted as superseded by 415) for python-exception-context.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"PEP-415\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"PEP-415@accepted\",\n    \"PEP-409@current-note\"\n  ],\n  \"explanation\": \"PEP-415 is in Final status with a policy role and explicitly replaces PEP-409 (which is noted as superseded by 415) for python-exception-context.\"\n}\n```"
+}

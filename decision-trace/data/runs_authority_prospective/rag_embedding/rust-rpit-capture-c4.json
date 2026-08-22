@@ -1,0 +1,30 @@
+{
+  "checkpoint_id": "rust-rpit-capture-c4",
+  "timeline_id": "rust-rpit-capture",
+  "condition": "rag_embedding",
+  "prompt_sha256": "1a7145366337af4880dcb5220f44a38a59941b769aaf8b32ba1a49a40da2d274",
+  "source_artifact_ids": [
+    "RFC-1522@merged",
+    "RFC-1951@open",
+    "RFC-1951@merged",
+    "RFC-3498@rpit-authority"
+  ],
+  "retrieved_artifact_ids": [
+    "RFC-1522@merged",
+    "RFC-1951@open",
+    "RFC-3498@rpit-authority",
+    "RFC-1951@merged"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-3498"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-3498@rpit-authority"
+    ],
+    "explanation": "RFC-3498 is MERGED with a POLICY decision role in scope 'rust-impl-trait-capture-rules', explicitly superseding and replacing RFC-1951 and RFC-1522.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\"RFC-3498\"],\n  \"evidence_artifact_ids\": [\"RFC-3498@rpit-authority\"],\n  \"explanation\": \"RFC-3498 is MERGED with a POLICY decision role in scope 'rust-impl-trait-capture-rules', explicitly superseding and replacing RFC-1951 and RFC-1522.\"\n}\n```"
+}

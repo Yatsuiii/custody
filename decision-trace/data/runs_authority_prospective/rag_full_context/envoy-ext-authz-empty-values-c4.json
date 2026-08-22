@@ -1,0 +1,25 @@
+{
+  "checkpoint_id": "envoy-ext-authz-empty-values-c4",
+  "timeline_id": "envoy-ext-authz-empty-values",
+  "condition": "rag_full_context",
+  "prompt_sha256": "1c4c846948bbb17aa3149bed28c5b64cf4fb1893ee18c0c53bed0e7cf10908e8",
+  "source_artifact_ids": [
+    "envoyproxy/envoy#45103@open",
+    "envoyproxy/envoy#45103@merged",
+    "envoyproxy/envoy#45321@open",
+    "envoyproxy/envoy#45321@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "envoyproxy/envoy#45321"
+    ],
+    "evidence_artifact_ids": [
+      "envoyproxy/envoy#45321@merged"
+    ],
+    "explanation": "Pull request envoyproxy/envoy#45321 was merged to revert envoyproxy/envoy#45103, making it the active governing implementation decision for envoy-ext-authz-empty-values.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"envoyproxy/envoy#45321\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"envoyproxy/envoy#45321@merged\"\n  ],\n  \"explanation\": \"Pull request envoyproxy/envoy#45321 was merged to revert envoyproxy/envoy#45103, making it the active governing implementation decision for envoy-ext-authz-empty-values.\"\n}\n```"
+}

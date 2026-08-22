@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "go-range-functions-c4",
+  "timeline_id": "go-range-functions",
+  "condition": "rag_full_context",
+  "prompt_sha256": "6e50211b9c536fc5b5b5cff3b8e43261eeb3e730af432c445f657586147365ae",
+  "source_artifact_ids": [
+    "golang/go#61405@open",
+    "golang/go#61405@accepted"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "golang/go#61405"
+    ],
+    "evidence_artifact_ids": [
+      "golang/go#61405@accepted"
+    ],
+    "explanation": "Proposal golang/go#61405 was accepted by the proposal review group, establishing governing policy for range-over-int and the range-over-func details under GOEXPERIMENT=rangefunc.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\"governing_decision_ids\":[\"golang/go#61405\"],\"evidence_artifact_ids\":[\"golang/go#61405@accepted\"],\"explanation\":\"Proposal golang/go#61405 was accepted by the proposal review group, establishing governing policy for range-over-int and the range-over-func details under GOEXPERIMENT=rangefunc.\"}\n```"
+}

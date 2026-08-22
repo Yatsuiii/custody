@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "rust-global-allocator-c4",
+  "timeline_id": "rust-global-allocator",
+  "condition": "decisiontrace",
+  "prompt_sha256": "5c3b90dffbccd475f05987b6682b4732e2b7618259fadaa697ba40816920d47e",
+  "source_artifact_ids": [
+    "RFC-1183@merged",
+    "RFC-1974@open",
+    "RFC-1974@current-authority"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-1974"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-1974@current-authority"
+    ],
+    "explanation": "RFC-1974 is currently authoritative (GOVERNING) for the `rust-global-allocator` scope. It is a merged policy decision that explicitly replaces RFC-1183 and serves as the sole active governing decision for Rust global allocators.",
+    "parse_error": null
+  },
+  "raw_response": "RFC-1974 is currently authoritative (GOVERNING) for the `rust-global-allocator` scope. It is a merged policy decision that explicitly replaces RFC-1183 and serves as the sole active governing decision for Rust global allocators."
+}

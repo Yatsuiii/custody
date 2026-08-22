@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "rust-inline-const-c2",
+  "timeline_id": "rust-inline-const",
+  "condition": "decisiontrace",
+  "prompt_sha256": "861761f42632dc8e0fffcacfae9f4137fa44547b7deb2c8b90a3bde3b607ebe3",
+  "source_artifact_ids": [
+    "RFC-2203@merged",
+    "RFC-2920@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-2203"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-2203@merged"
+    ],
+    "explanation": "The organizational decision currently governing `rust-const-repeat-simple-case` is **RFC-2203** (Authority state: `GOVERNING`). It is the sole eligible active policy decision within the `rust-const-repeat-simple-case` scope.\n\n**Governing Source Artifact:**\n- **Artifact ID:** `RFC-2203@merged`\n- **Decision ID:** `RFC-2203`\n- **Repository:** `rust-lang/rfcs`\n- **Lifecycle Status:** `MERGED`\n- **Pinned Revision:** `f8a83dd072b04c5a97a91f388f28c03a13cd62c8`\n- **Source URL:** https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/2203-const-repeat-expr.md",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing `rust-const-repeat-simple-case` is **RFC-2203** (Authority state: `GOVERNING`). It is the sole eligible active policy decision within the `rust-const-repeat-simple-case` scope.\n\n**Governing Source Artifact:**\n- **Artifact ID:** `RFC-2203@merged`\n- **Decision ID:** `RFC-2203`\n- **Repository:** `rust-lang/rfcs`\n- **Lifecycle Status:** `MERGED`\n- **Pinned Revision:** `f8a83dd072b04c5a97a91f388f28c03a13cd62c8`\n- **Source URL:** https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/2203-const-repeat-expr.md"
+}

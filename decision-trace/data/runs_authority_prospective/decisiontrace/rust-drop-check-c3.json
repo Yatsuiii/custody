@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "rust-drop-check-c3",
+  "timeline_id": "rust-drop-check",
+  "condition": "decisiontrace",
+  "prompt_sha256": "3f687c0b4007eed3083c3743adf9ba660c5bad76b942b149c20b11f3588cf71d",
+  "source_artifact_ids": [
+    "RFC-769@merged",
+    "RFC-1238@open",
+    "RFC-1238@current-authority"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-1238"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-1238@current-authority"
+    ],
+    "explanation": "The organizational decision currently governing `rust-dropck-parametricity` is **RFC-1238** (Authority State: **GOVERNING**). It is the sole eligible active policy decision within this scope.\n\n**Source Artifact:**\n* **Artifact ID:** `RFC-1238@current-authority` (Decision ID: `RFC-1238`)\n* **Repository:** `rust-lang/rfcs`\n* **Pinned Revision:** `354518a8c9025f40be6f730452c1bfe71a12dc22`\n* **Source URL:** https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1238-nonparametric-dropck.md\n* **Status:** MERGED (Decision Role: POLICY)",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing `rust-dropck-parametricity` is **RFC-1238** (Authority State: **GOVERNING**). It is the sole eligible active policy decision within this scope.\n\n**Source Artifact:**\n* **Artifact ID:** `RFC-1238@current-authority` (Decision ID: `RFC-1238`)\n* **Repository:** `rust-lang/rfcs`\n* **Pinned Revision:** `354518a8c9025f40be6f730452c1bfe71a12dc22`\n* **Source URL:** https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1238-nonparametric-dropck.md\n* **Status:** MERGED (Decision Role: POLICY)"
+}

@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "llvm-openmp-target-fast-c2",
+  "timeline_id": "llvm-openmp-target-fast",
+  "condition": "decisiontrace",
+  "prompt_sha256": "186a608ce074cc99b26428c90b6c0af40a3d781d6790360502eddafe2135e7d9",
+  "source_artifact_ids": [
+    "llvm/llvm-project#205775@open",
+    "llvm/llvm-project#205775@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "llvm/llvm-project#205775"
+    ],
+    "evidence_artifact_ids": [
+      "llvm/llvm-project#205775@merged"
+    ],
+    "explanation": "The scope `llvm-openmp-target-fast` is currently governed by decision **`llvm/llvm-project#205775`** (Authority state: **GOVERNING**).\n\n**Source artifact establishing authority:**\n* **`llvm/llvm-project#205775@merged`** (Source: https://github.com/llvm/llvm-project/pull/205775)\n\nThis merged implementation decision is the sole eligible active decision in the `llvm-openmp-target-fast` scope, establishing that `-fopenmp-target-fast` enables `-fopenmp-assume-teams-oversubscription` and `-fopenmp-assume-threads-oversubscription` by default.",
+    "parse_error": null
+  },
+  "raw_response": "The scope `llvm-openmp-target-fast` is currently governed by decision **`llvm/llvm-project#205775`** (Authority state: **GOVERNING**).\n\n**Source artifact establishing authority:**\n* **`llvm/llvm-project#205775@merged`** (Source: https://github.com/llvm/llvm-project/pull/205775)\n\nThis merged implementation decision is the sole eligible active decision in the `llvm-openmp-target-fast` scope, establishing that `-fopenmp-target-fast` enables `-fopenmp-assume-teams-oversubscription` and `-fopenmp-assume-threads-oversubscription` by default."
+}

@@ -1,0 +1,19 @@
+{
+  "checkpoint_id": "python-paramspec-implementation-c2",
+  "timeline_id": "python-paramspec-implementation",
+  "condition": "decisiontrace",
+  "prompt_sha256": "c13187b9f6ad2adec48c1e7e971f406ec8b27fd0311135e7bed51f0b296a6cd3",
+  "source_artifact_ids": [
+    "PEP-612@final",
+    "python/cpython#23702@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "UNRESOLVED",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [],
+    "explanation": "The authority state is UNRESOLVED, and there are no governing decision IDs (`[]`). While visible authority exists regarding Python ParamSpec implementation, none contains the requested explicit scope. Because the resolver refuses to make a semantic guess, no governing decision or source artifact is currently established.",
+    "parse_error": null
+  },
+  "raw_response": "The authority state is UNRESOLVED, and there are no governing decision IDs (`[]`). While visible authority exists regarding Python ParamSpec implementation, none contains the requested explicit scope. Because the resolver refuses to make a semantic guess, no governing decision or source artifact is currently established."
+}

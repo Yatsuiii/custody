@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "kubernetes-pleg-default-c3",
+  "timeline_id": "kubernetes-pleg-default",
+  "condition": "rag_full_context",
+  "prompt_sha256": "c3fda92d802be7926b5e8f67b8f1a6781fda4945ae081acf06733f1d4f7ffac5",
+  "source_artifact_ids": [
+    "kubernetes/kubernetes#137909@open",
+    "kubernetes/kubernetes#137909@merged",
+    "kubernetes/kubernetes#137946@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "kubernetes/kubernetes#137909"
+    ],
+    "evidence_artifact_ids": [
+      "kubernetes/kubernetes#137909@merged"
+    ],
+    "explanation": "Pull request kubernetes/kubernetes#137909 was merged, switching the PLEGOnDemandRelist default to false for 1.36. The subsequent revert PR (kubernetes/kubernetes#137946) remains in OPEN status and has not been merged, so kubernetes/kubernetes#137909 remains the governing decision.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"kubernetes/kubernetes#137909\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"kubernetes/kubernetes#137909@merged\"\n  ],\n  \"explanation\": \"Pull request kubernetes/kubernetes#137909 was merged, switching the PLEGOnDemandRelist default to false for 1.36. The subsequent revert PR (kubernetes/kubernetes#137946) remains in OPEN status and has not been merged, so kubernetes/kubernetes#137909 remains the governing decision.\"\n}\n```"
+}

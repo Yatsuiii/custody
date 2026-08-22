@@ -1,0 +1,19 @@
+{
+  "checkpoint_id": "go-type-parameters-c2",
+  "timeline_id": "go-type-parameters",
+  "condition": "decisiontrace",
+  "prompt_sha256": "d260bab5c47bd0ffce39888fc2e0b6bb7287f480a3ca5dfd3f2473f5a245f0ae",
+  "source_artifact_ids": [
+    "go-contracts@superseded",
+    "golang/go#43651@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [],
+    "explanation": "There is currently no governing decision for Go type parameters because no visible accepted or implemented decision is eligible to govern, and no source artifacts are present in the evidence to establish current authority.",
+    "parse_error": null
+  },
+  "raw_response": "There is currently no governing decision for Go type parameters because no visible accepted or implemented decision is eligible to govern, and no source artifacts are present in the evidence to establish current authority."
+}

@@ -1,0 +1,26 @@
+{
+  "checkpoint_id": "swift-coroutine-accessors-c5",
+  "timeline_id": "swift-coroutine-accessors",
+  "condition": "rag_full_context",
+  "prompt_sha256": "3dd17091a736f7b23b2d29c2f092164d7b6c6bbf538d9e1b82f54b28cc90824a",
+  "source_artifact_ids": [
+    "SE-0474@accepted",
+    "swiftlang/swift#90516@open",
+    "swiftlang/swift#90516@merged",
+    "swiftlang/swift#91475@open",
+    "swiftlang/swift#91475@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "SE-0474"
+    ],
+    "evidence_artifact_ids": [
+      "SE-0474@accepted"
+    ],
+    "explanation": "SE-0474 is accepted and establishes governing policy for swift-yielding-accessor-policy. The subsequent pull request revert (swiftlang/swift#91475) operated only on the implementation scope (swiftlang/swift#90516) and did not modify or revert the evolution policy.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\"SE-0474\"],\n  \"evidence_artifact_ids\": [\"SE-0474@accepted\"],\n  \"explanation\": \"SE-0474 is accepted and establishes governing policy for swift-yielding-accessor-policy. The subsequent pull request revert (swiftlang/swift#91475) operated only on the implementation scope (swiftlang/swift#90516) and did not modify or revert the evolution policy.\"\n}\n```"
+}

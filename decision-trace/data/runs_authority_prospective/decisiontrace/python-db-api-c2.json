@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "python-db-api-c2",
+  "timeline_id": "python-db-api",
+  "condition": "decisiontrace",
+  "prompt_sha256": "7acd9459617174d4582ad1dfab18433ce1ece71dc6551f19a7894e7c046698e1",
+  "source_artifact_ids": [
+    "PEP-248@accepted",
+    "PEP-249@accepted"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-249"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-249@accepted"
+    ],
+    "explanation": "The organizational decision currently governing `python-db-api` is **PEP-249** (\"Python Database API Specification v2.0\") with an authority state of **GOVERNING**. \n\nIt is established as the sole eligible active decision in the `python-db-api` authority scope with a lifecycle status of `FINAL` (replacing PEP-248).\n\n**Governing Source Artifact:**\n- **Artifact ID:** `PEP-249@accepted` (Decision ID: `PEP-249`)\n- **Repository:** `python/peps`\n- **Pinned Revision:** `b2120d116aa696f409b4d8333c4020ab8f93c9c7`\n- **Source URL:** https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0249.rst",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing `python-db-api` is **PEP-249** (\"Python Database API Specification v2.0\") with an authority state of **GOVERNING**. \n\nIt is established as the sole eligible active decision in the `python-db-api` authority scope with a lifecycle status of `FINAL` (replacing PEP-248).\n\n**Governing Source Artifact:**\n- **Artifact ID:** `PEP-249@accepted` (Decision ID: `PEP-249`)\n- **Repository:** `python/peps`\n- **Pinned Revision:** `b2120d116aa696f409b4d8333c4020ab8f93c9c7`\n- **Source URL:** https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0249.rst"
+}

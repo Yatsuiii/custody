@@ -1,0 +1,18 @@
+{
+  "checkpoint_id": "go-loop-variables-c1",
+  "timeline_id": "go-loop-variables",
+  "condition": "decisiontrace",
+  "prompt_sha256": "88544a201d0bcd1120d618e45e83ed85d2d070ac35ecbcb775e14f551288148d",
+  "source_artifact_ids": [
+    "golang/go#60078@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [],
+    "explanation": "There is currently no governing organizational decision (authority state: `NO_GOVERNING_DECISION`) for Go loop variable semantics. Based on the provided evidence, no visible accepted or implemented decision is eligible to govern, and no source artifacts establish current governing authority.",
+    "parse_error": null
+  },
+  "raw_response": "There is currently no governing organizational decision (authority state: `NO_GOVERNING_DECISION`) for Go loop variable semantics. Based on the provided evidence, no visible accepted or implemented decision is eligible to govern, and no source artifacts establish current governing authority."
+}

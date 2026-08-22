@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "swift-property-wrappers-c3",
+  "timeline_id": "swift-property-wrappers",
+  "condition": "rag_full_context",
+  "prompt_sha256": "5bbc50d1290aa0a20a3bcf30f7ab69012ad0175d48f2f7b9ad125ebfa1a9329e",
+  "source_artifact_ids": [
+    "SE-0030@withdrawn",
+    "SE-0258@accepted",
+    "SE-0030@historical-note"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "SE-0258"
+    ],
+    "evidence_artifact_ids": [
+      "SE-0258@accepted"
+    ],
+    "explanation": "SE-0258 is accepted policy for Swift property wrappers, explicitly replacing the withdrawn proposal SE-0030, while later mentions carry no transition of authority.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\"SE-0258\"],\n  \"evidence_artifact_ids\": [\"SE-0258@accepted\"],\n  \"explanation\": \"SE-0258 is accepted policy for Swift property wrappers, explicitly replacing the withdrawn proposal SE-0030, while later mentions carry no transition of authority.\"\n}\n```"
+}

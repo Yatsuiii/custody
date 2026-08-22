@@ -1,0 +1,22 @@
+{
+  "checkpoint_id": "rust-naked-functions-c1",
+  "timeline_id": "rust-naked-functions",
+  "condition": "rag_full_context",
+  "prompt_sha256": "a435db34b2bd8054f9f61d5713657ef1c455a428a811525dc9de8f0fca708f4e",
+  "source_artifact_ids": [
+    "RFC-1201@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-1201"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-1201@merged"
+    ],
+    "explanation": "RFC-1201 is merged with a POLICY decision role governing the rust-naked-functions scope, with no conflicting or superseding decisions visible.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"RFC-1201\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"RFC-1201@merged\"\n  ],\n  \"explanation\": \"RFC-1201 is merged with a POLICY decision role governing the rust-naked-functions scope, with no conflicting or superseding decisions visible.\"\n}\n```"
+}

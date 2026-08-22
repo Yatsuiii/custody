@@ -1,0 +1,22 @@
+{
+  "checkpoint_id": "python-db-api-c1",
+  "timeline_id": "python-db-api",
+  "condition": "decisiontrace",
+  "prompt_sha256": "4c529c47bffaac021c514434af477b5f0cb9c1025f9e356483ac9ec7ad2692a2",
+  "source_artifact_ids": [
+    "PEP-248@accepted"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-248"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-248@accepted"
+    ],
+    "explanation": "The `python-db-api` scope is currently governed by **PEP-248** (\"Python Database API Specification v1.0\"). PEP-248 is the sole eligible active decision in this scope, holding a lifecycle status of `FINAL` with a `POLICY` decision role.\n\n**Governing Source Artifact:**\n- **Artifact ID:** `PEP-248@accepted` (Decision ID: `PEP-248`)\n- **Repository:** `python/peps`\n- **Pinned Revision:** `b2120d116aa696f409b4d8333c4020ab8f93c9c7`\n- **Source URL:** https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0248.rst",
+    "parse_error": null
+  },
+  "raw_response": "The `python-db-api` scope is currently governed by **PEP-248** (\"Python Database API Specification v1.0\"). PEP-248 is the sole eligible active decision in this scope, holding a lifecycle status of `FINAL` with a `POLICY` decision role.\n\n**Governing Source Artifact:**\n- **Artifact ID:** `PEP-248@accepted` (Decision ID: `PEP-248`)\n- **Repository:** `python/peps`\n- **Pinned Revision:** `b2120d116aa696f409b4d8333c4020ab8f93c9c7`\n- **Source URL:** https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0248.rst"
+}

@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "swift-plugin-api-c3",
+  "timeline_id": "swift-plugin-api",
+  "condition": "rag_full_context",
+  "prompt_sha256": "ae46961d9ecf0ddc5bd2cdcd24b3bbd5ce21eb9ce4133808d9647798300971fc",
+  "source_artifact_ids": [
+    "SE-0303@accepted",
+    "SE-0325@accepted",
+    "SE-0325@compatibility-note"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "SE-0303"
+    ],
+    "evidence_artifact_ids": [
+      "SE-0303@accepted"
+    ],
+    "explanation": "SE-0303 established policy governing the swiftpm-plugin-legacy-api scope under accepted status, and SE-0325 only replaced authority for the swiftpm-plugin-entry-point scope while preserving the previous API.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\"governing_decision_ids\":[\"SE-0303\"],\"evidence_artifact_ids\":[\"SE-0303@accepted\"],\"explanation\":\"SE-0303 established policy governing the swiftpm-plugin-legacy-api scope under accepted status, and SE-0325 only replaced authority for the swiftpm-plugin-entry-point scope while preserving the previous API.\"}\n```"
+}

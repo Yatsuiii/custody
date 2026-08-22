@@ -1,0 +1,25 @@
+{
+  "checkpoint_id": "llvm-openmp-target-fast-c4",
+  "timeline_id": "llvm-openmp-target-fast",
+  "condition": "decisiontrace",
+  "prompt_sha256": "b7782ad5d73850c633c6f35a3309a345e3f76d77dd4be16e802e2b28384f5182",
+  "source_artifact_ids": [
+    "llvm/llvm-project#205775@open",
+    "llvm/llvm-project#205775@merged",
+    "llvm/llvm-project#213769@open",
+    "llvm/llvm-project#213769@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "llvm/llvm-project#213769"
+    ],
+    "evidence_artifact_ids": [
+      "llvm/llvm-project#213769@merged"
+    ],
+    "explanation": "The governing decision for the `llvm-openmp-target-fast` scope is **`llvm/llvm-project#213769`** under authority state **GOVERNING**. \n\nAs established by source artifact **`llvm/llvm-project#213769@merged`** (commit `a5f7de0ce79e7b969cafc8684055ba5bd790397b`, https://github.com/llvm/llvm-project/pull/213769), this merged revert decision (`REVERT_MERGED`) explicitly reverted `llvm/llvm-project#205775` and represents the sole eligible active decision governing the scope.",
+    "parse_error": null
+  },
+  "raw_response": "The governing decision for the `llvm-openmp-target-fast` scope is **`llvm/llvm-project#213769`** under authority state **GOVERNING**. \n\nAs established by source artifact **`llvm/llvm-project#213769@merged`** (commit `a5f7de0ce79e7b969cafc8684055ba5bd790397b`, https://github.com/llvm/llvm-project/pull/213769), this merged revert decision (`REVERT_MERGED`) explicitly reverted `llvm/llvm-project#205775` and represents the sole eligible active decision governing the scope."
+}

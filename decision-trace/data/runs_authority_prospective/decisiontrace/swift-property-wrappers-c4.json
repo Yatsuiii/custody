@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "swift-property-wrappers-c4",
+  "timeline_id": "swift-property-wrappers",
+  "condition": "decisiontrace",
+  "prompt_sha256": "df478fa8da65f3272d2f2aa18b74ce66a36d1d4930d610c9ed3cb9dc414326a3",
+  "source_artifact_ids": [
+    "SE-0030@withdrawn",
+    "SE-0258@accepted",
+    "SE-0030@historical-note"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "SE-0258"
+    ],
+    "evidence_artifact_ids": [
+      "SE-0258@accepted"
+    ],
+    "explanation": "Based on the provided evidence, **SE-0258** is the accepted Swift Evolution decision that currently authorizes property wrappers. It is the sole active governing decision in the `swift-property-wrappers` scope, having an accepted status (implemented for Swift 5.1) and explicitly replacing the earlier proposal SE-0030.",
+    "parse_error": null
+  },
+  "raw_response": "Based on the provided evidence, **SE-0258** is the accepted Swift Evolution decision that currently authorizes property wrappers. It is the sole active governing decision in the `swift-property-wrappers` scope, having an accepted status (implemented for Swift 5.1) and explicitly replacing the earlier proposal SE-0030."
+}

@@ -1,0 +1,28 @@
+{
+  "checkpoint_id": "kubernetes-gang-scheduling-c6",
+  "timeline_id": "kubernetes-gang-scheduling",
+  "condition": "decisiontrace",
+  "prompt_sha256": "a9acf2923e3acf22f3f1318637000d9eab9b839ea0d03df20574679b36a392c7",
+  "source_artifact_ids": [
+    "KEP-583@current",
+    "KEP-5832@current",
+    "KEP-4671@current",
+    "kubernetes/kubernetes#137464@merged",
+    "kubernetes/kubernetes#139008@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "MULTIPLE_GOVERNING",
+    "governing_decision_ids": [
+      "KEP-4671",
+      "kubernetes/kubernetes#139008"
+    ],
+    "evidence_artifact_ids": [
+      "KEP-4671@current",
+      "kubernetes/kubernetes#139008@merged"
+    ],
+    "explanation": "The authority resolver determined a **MULTIPLE_GOVERNING** state because two distinct decisions govern separate authority scopes:\n\n1. **Gang-Scheduling Policy (`kubernetes-gang-scheduling-policy`)**: Governed by **KEP-4671**, which is accepted/implementable as the active policy (explicitly replacing KEP-5832 and KEP-583).\n2. **PodGroup Admission Implementation (`kubernetes-podgroup-admission-implementation`)**: Governed by **kubernetes/kubernetes#139008**, a merged revert PR (reverting #137464) that removes the PodGroup admission plugin.\n\nEach represents the sole eligible active decision within its respective scope.",
+    "parse_error": null
+  },
+  "raw_response": "The authority resolver determined a **MULTIPLE_GOVERNING** state because two distinct decisions govern separate authority scopes:\n\n1. **Gang-Scheduling Policy (`kubernetes-gang-scheduling-policy`)**: Governed by **KEP-4671**, which is accepted/implementable as the active policy (explicitly replacing KEP-5832 and KEP-583).\n2. **PodGroup Admission Implementation (`kubernetes-podgroup-admission-implementation`)**: Governed by **kubernetes/kubernetes#139008**, a merged revert PR (reverting #137464) that removes the PodGroup admission plugin.\n\nEach represents the sole eligible active decision within its respective scope."
+}

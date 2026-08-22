@@ -1,0 +1,25 @@
+{
+  "checkpoint_id": "python-paramspec-implementation-c4",
+  "timeline_id": "python-paramspec-implementation",
+  "condition": "rag_full_context",
+  "prompt_sha256": "41db89b412376c6af42cb0abf2d90a7e19cc28c116429c67f7f10314939d9f55",
+  "source_artifact_ids": [
+    "PEP-612@final",
+    "python/cpython#23702@open",
+    "python/cpython#23702@merged",
+    "python/cpython#25449@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "python/cpython#23702"
+    ],
+    "evidence_artifact_ids": [
+      "python/cpython#23702@merged"
+    ],
+    "explanation": "PR python/cpython#23702 was merged to implement PEP 612 for python-paramspec-implementation. The subsequent PR python/cpython#25449 proposing to revert changes remains in OPEN status and carries no governing authority.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"python/cpython#23702\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"python/cpython#23702@merged\"\n  ],\n  \"explanation\": \"PR python/cpython#23702 was merged to implement PEP 612 for python-paramspec-implementation. The subsequent PR python/cpython#25449 proposing to revert changes remains in OPEN status and carries no governing authority.\"\n}\n```"
+}

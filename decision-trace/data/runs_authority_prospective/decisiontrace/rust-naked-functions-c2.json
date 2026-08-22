@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "rust-naked-functions-c2",
+  "timeline_id": "rust-naked-functions",
+  "condition": "decisiontrace",
+  "prompt_sha256": "3ec9f446ac9ef7ae968253bcfa3686f0af5894ab20ec39a3d8d500f49b95d35a",
+  "source_artifact_ids": [
+    "RFC-1201@merged",
+    "RFC-2972@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-1201"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-1201@merged"
+    ],
+    "explanation": "The decision that currently governs Rust naked functions is **RFC-1201** (Authority state: **GOVERNING**), as it is the sole eligible active decision within the `rust-naked-functions` scope.\n\n**Governing Source Artifact:**\n* **Artifact ID:** `RFC-1201@merged`\n* **Decision ID:** `RFC-1201`\n* **Repository:** `rust-lang/rfcs`\n* **Pinned Revision:** `4e61ad08a822e5cfc0850f8d583265bce2096491`\n* **Lifecycle Status:** `MERGED`\n* **Source URL:** https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1201-naked-fns.md",
+    "parse_error": null
+  },
+  "raw_response": "The decision that currently governs Rust naked functions is **RFC-1201** (Authority state: **GOVERNING**), as it is the sole eligible active decision within the `rust-naked-functions` scope.\n\n**Governing Source Artifact:**\n* **Artifact ID:** `RFC-1201@merged`\n* **Decision ID:** `RFC-1201`\n* **Repository:** `rust-lang/rfcs`\n* **Pinned Revision:** `4e61ad08a822e5cfc0850f8d583265bce2096491`\n* **Lifecycle Status:** `MERGED`\n* **Source URL:** https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1201-naked-fns.md"
+}

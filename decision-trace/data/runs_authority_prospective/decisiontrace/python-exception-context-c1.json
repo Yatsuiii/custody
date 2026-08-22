@@ -1,0 +1,22 @@
+{
+  "checkpoint_id": "python-exception-context-c1",
+  "timeline_id": "python-exception-context",
+  "condition": "decisiontrace",
+  "prompt_sha256": "1057160ad0d79267ce1afbdf25f4c10ed3d9bba40c89ebf822e7dc948bc53330",
+  "source_artifact_ids": [
+    "PEP-409@accepted"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-409"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-409@accepted"
+    ],
+    "explanation": "The organizational decision currently governing Python exception context is **PEP-409** (Authority state: **GOVERNING**). \n\nAccording to the resolver, PEP-409 is the sole eligible active decision within the `python-exception-context` scope, holding a lifecycle status of `FINAL` with a policy role.\n\n**Governing Artifact:**\n* **Artifact ID:** `PEP-409@accepted`\n* **Decision ID:** `PEP-409` (\"Suppressing exception context\")\n* **Repository:** `python/peps` (Revision: `b2120d116aa696f409b4d8333c4020ab8f93c9c7`)\n* **Source URL:** https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0409.rst",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing Python exception context is **PEP-409** (Authority state: **GOVERNING**). \n\nAccording to the resolver, PEP-409 is the sole eligible active decision within the `python-exception-context` scope, holding a lifecycle status of `FINAL` with a policy role.\n\n**Governing Artifact:**\n* **Artifact ID:** `PEP-409@accepted`\n* **Decision ID:** `PEP-409` (\"Suppressing exception context\")\n* **Repository:** `python/peps` (Revision: `b2120d116aa696f409b4d8333c4020ab8f93c9c7`)\n* **Source URL:** https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0409.rst"
+}

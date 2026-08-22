@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "python-hash-api-c2",
+  "timeline_id": "python-hash-api",
+  "condition": "decisiontrace",
+  "prompt_sha256": "42887902b5d335c95f385475ce4c92092e71a9285add39cef38822d9e6051fe9",
+  "source_artifact_ids": [
+    "PEP-247@accepted",
+    "PEP-452@accepted"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-452"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-452@accepted"
+    ],
+    "explanation": "The organizational decision that currently governs `python-hash-api` is **PEP-452** (Authority state: GOVERNING). \n\nCurrent authority is established by source artifact **PEP-452@accepted** from the `python/peps` repository (pinned revision `b2120d116aa696f409b4d8333c4020ab8f93c9c7`, timestamp 2013-08-15T00:00:00Z). It holds a lifecycle status of `FINAL`, serves in the `POLICY` role, and explicitly replaces PEP-247, making it the sole eligible active governing decision within the `python-hash-api` scope.",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision that currently governs `python-hash-api` is **PEP-452** (Authority state: GOVERNING). \n\nCurrent authority is established by source artifact **PEP-452@accepted** from the `python/peps` repository (pinned revision `b2120d116aa696f409b4d8333c4020ab8f93c9c7`, timestamp 2013-08-15T00:00:00Z). It holds a lifecycle status of `FINAL`, serves in the `POLICY` role, and explicitly replaces PEP-247, making it the sole eligible active governing decision within the `python-hash-api` scope."
+}

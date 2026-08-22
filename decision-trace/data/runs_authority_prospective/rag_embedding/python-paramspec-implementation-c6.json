@@ -1,0 +1,36 @@
+{
+  "checkpoint_id": "python-paramspec-implementation-c6",
+  "timeline_id": "python-paramspec-implementation",
+  "condition": "rag_embedding",
+  "prompt_sha256": "6b22fbe46adea5a3e25b8d8ccf3a62427251b6a57e991e01ec42bacff29fe17f",
+  "source_artifact_ids": [
+    "PEP-612@final",
+    "python/cpython#23702@open",
+    "python/cpython#23702@merged",
+    "python/cpython#25449@open",
+    "python/cpython#25449@merged"
+  ],
+  "retrieved_artifact_ids": [
+    "PEP-612@final",
+    "python/cpython#23702@open",
+    "python/cpython#23702@merged",
+    "python/cpython#25449@open",
+    "python/cpython#25449@merged",
+    "python/cpython#25449@open",
+    "python/cpython#25449@merged"
+  ],
+  "prediction": {
+    "authority_state": "MULTIPLE_GOVERNING",
+    "governing_decision_ids": [
+      "PEP-612",
+      "python/cpython#25449"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-612@final",
+      "python/cpython#25449@merged"
+    ],
+    "explanation": "PEP-612 is the final governing policy for python-paramspec-policy, and merged PR python/cpython#25449 governs python-paramspec-implementation after explicitly reverting the previous implementation in python/cpython#23702.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"MULTIPLE_GOVERNING\",\n  \"governing_decision_ids\": [\n    \"PEP-612\",\n    \"python/cpython#25449\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"PEP-612@final\",\n    \"python/cpython#25449@merged\"\n  ],\n  \"explanation\": \"PEP-612 is the final governing policy for python-paramspec-policy, and merged PR python/cpython#25449 governs python-paramspec-implementation after explicitly reverting the previous implementation in python/cpython#23702.\"\n}\n```"
+}

@@ -1,0 +1,26 @@
+{
+  "checkpoint_id": "swift-plugin-api-c4",
+  "timeline_id": "swift-plugin-api",
+  "condition": "decisiontrace",
+  "prompt_sha256": "1ea8c25bd785f52156697ee9e69dce56f3635ce4f88744703ca0b0fa68afc536",
+  "source_artifact_ids": [
+    "SE-0303@accepted",
+    "SE-0325@accepted",
+    "SE-0325@compatibility-note"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "MULTIPLE_GOVERNING",
+    "governing_decision_ids": [
+      "SE-0303",
+      "SE-0325"
+    ],
+    "evidence_artifact_ids": [
+      "SE-0303@accepted",
+      "SE-0325@compatibility-note"
+    ],
+    "explanation": "The authority state is **MULTIPLE_GOVERNING** across two distinct scopes:\n\n* **SE-0325** governs the new SwiftPM plugin entry point (`swiftpm-plugin-entry-point`), superseding the previous protocol entry point defined in SE-0303.\n* **SE-0303** governs the retained legacy plugin API (`swiftpm-plugin-legacy-api`), which remains active so existing plugins continue to function.",
+    "parse_error": null
+  },
+  "raw_response": "The authority state is **MULTIPLE_GOVERNING** across two distinct scopes:\n\n* **SE-0325** governs the new SwiftPM plugin entry point (`swiftpm-plugin-entry-point`), superseding the previous protocol entry point defined in SE-0303.\n* **SE-0303** governs the retained legacy plugin API (`swiftpm-plugin-legacy-api`), which remains active so existing plugins continue to function."
+}

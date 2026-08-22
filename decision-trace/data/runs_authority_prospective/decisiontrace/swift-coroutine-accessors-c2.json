@@ -1,0 +1,19 @@
+{
+  "checkpoint_id": "swift-coroutine-accessors-c2",
+  "timeline_id": "swift-coroutine-accessors",
+  "condition": "decisiontrace",
+  "prompt_sha256": "9145bda8d7f5e921675051d4e06aca39300e38a1f1cd1bc754f8e7fc6aa93eed",
+  "source_artifact_ids": [
+    "SE-0474@accepted",
+    "swiftlang/swift#90516@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "UNRESOLVED",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [],
+    "explanation": "The authority state is UNRESOLVED, and no governing decision IDs are established (governing decision IDs: []). While visible authority exists, none covers the explicitly requested scope for swift coroutine accessor implementation, and the resolver refuses to make a semantic guess. As a result, no source artifacts currently establish authority for this scope.",
+    "parse_error": null
+  },
+  "raw_response": "The authority state is UNRESOLVED, and no governing decision IDs are established (governing decision IDs: []). While visible authority exists, none covers the explicitly requested scope for swift coroutine accessor implementation, and the resolver refuses to make a semantic guess. As a result, no source artifacts currently establish authority for this scope."
+}

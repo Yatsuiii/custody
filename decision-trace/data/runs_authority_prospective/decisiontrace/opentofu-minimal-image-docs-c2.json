@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "opentofu-minimal-image-docs-c2",
+  "timeline_id": "opentofu-minimal-image-docs",
+  "condition": "decisiontrace",
+  "prompt_sha256": "ed8445ea4793c7eabaaf58f22979f533558a52cbca569166deb6fc23748eefb1",
+  "source_artifact_ids": [
+    "opentofu/opentofu#2403@open",
+    "opentofu/opentofu#2403@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "opentofu/opentofu#2403"
+    ],
+    "evidence_artifact_ids": [
+      "opentofu/opentofu#2403@merged"
+    ],
+    "explanation": "The scope `opentofu-minimal-image-docs` is currently governed by decision **`opentofu/opentofu#2403`** (\"Temporary revert minimal image docs\"). \n\nAuthority is established by the following artifact:\n- **Artifact ID:** `opentofu/opentofu#2403@merged` (Decision ID: `opentofu/opentofu#2403`)\n  - **Repository:** `opentofu/opentofu`\n  - **Lifecycle Status:** MERGED (Timestamp: `2025-01-21T13:04:03Z`)\n  - **Pinned Revision:** `a36af7ba8a7587ec2923b6043d8d01cc3ca83779`\n  - **Source URL:** https://github.com/opentofu/opentofu/pull/2403\n\nThis merged pull request is the sole eligible active decision governing the `opentofu-minimal-image-docs` authority scope.",
+    "parse_error": null
+  },
+  "raw_response": "The scope `opentofu-minimal-image-docs` is currently governed by decision **`opentofu/opentofu#2403`** (\"Temporary revert minimal image docs\"). \n\nAuthority is established by the following artifact:\n- **Artifact ID:** `opentofu/opentofu#2403@merged` (Decision ID: `opentofu/opentofu#2403`)\n  - **Repository:** `opentofu/opentofu`\n  - **Lifecycle Status:** MERGED (Timestamp: `2025-01-21T13:04:03Z`)\n  - **Pinned Revision:** `a36af7ba8a7587ec2923b6043d8d01cc3ca83779`\n  - **Source URL:** https://github.com/opentofu/opentofu/pull/2403\n\nThis merged pull request is the sole eligible active decision governing the `opentofu-minimal-image-docs` authority scope."
+}

@@ -1,0 +1,25 @@
+{
+  "checkpoint_id": "terraform-iam-role-chaining-c4",
+  "timeline_id": "terraform-iam-role-chaining",
+  "condition": "decisiontrace",
+  "prompt_sha256": "cccf5fa8ad72e4181ae74b3db8559f420be75822c96b88edae3e59690acc636d",
+  "source_artifact_ids": [
+    "hashicorp/terraform#35720@open",
+    "hashicorp/terraform#35720@merged",
+    "hashicorp/terraform#35827@open",
+    "hashicorp/terraform#35827@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "hashicorp/terraform#35827"
+    ],
+    "evidence_artifact_ids": [
+      "hashicorp/terraform#35827@merged"
+    ],
+    "explanation": "The decision currently governing `terraform-s3-iam-role-chaining` is **`hashicorp/terraform#35827`** (Authority state: `GOVERNING`).\n\nAccording to the supplied evidence from artifact **`hashicorp/terraform#35827@merged`** (merged 2024-10-09T00:36:58Z; pinned revision `0be94d43efde5afb90f7d918879e46110cc60966`), this pull request executed a rollback by explicitly reverting `hashicorp/terraform#35720` to address a breaking change in the S3 backend. Consequently, `hashicorp/terraform#35827` stands as the sole eligible active decision governing the `terraform-s3-iam-role-chaining` scope.",
+    "parse_error": null
+  },
+  "raw_response": "The decision currently governing `terraform-s3-iam-role-chaining` is **`hashicorp/terraform#35827`** (Authority state: `GOVERNING`).\n\nAccording to the supplied evidence from artifact **`hashicorp/terraform#35827@merged`** (merged 2024-10-09T00:36:58Z; pinned revision `0be94d43efde5afb90f7d918879e46110cc60966`), this pull request executed a rollback by explicitly reverting `hashicorp/terraform#35720` to address a breaking change in the S3 backend. Consequently, `hashicorp/terraform#35827` stands as the sole eligible active decision governing the `terraform-s3-iam-role-chaining` scope."
+}

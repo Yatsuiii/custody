@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "swift-plugin-api-c2",
+  "timeline_id": "swift-plugin-api",
+  "condition": "decisiontrace",
+  "prompt_sha256": "069362eb2bec1d72312777e25481f6ab73bfcf6b716f2c4d286a24e88d49408e",
+  "source_artifact_ids": [
+    "SE-0303@accepted",
+    "SE-0325@accepted"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "SE-0325"
+    ],
+    "evidence_artifact_ids": [
+      "SE-0325@accepted"
+    ],
+    "explanation": "The SwiftPM build-tool plugin entry point is currently governed by **SE-0325** (Authority state: `GOVERNING`). It is the sole eligible active decision within the `swiftpm-plugin-entry-point` scope and explicitly supersedes the earlier `BuildToolPlugin` entry point defined in SE-0303.\n\n**Governing Source Artifact:**\n* **Artifact ID:** `SE-0325@accepted`\n* **Decision ID:** `SE-0325`\n* **Status:** ACCEPTED\n* **Repository:** `swiftlang/swift-evolution`\n* **Pinned Revision:** `0105e139a22938561c700cfbb89ddc3ebe402f0c`\n* **Source URL:** https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0325-swiftpm-additional-plugin-apis.md",
+    "parse_error": null
+  },
+  "raw_response": "The SwiftPM build-tool plugin entry point is currently governed by **SE-0325** (Authority state: `GOVERNING`). It is the sole eligible active decision within the `swiftpm-plugin-entry-point` scope and explicitly supersedes the earlier `BuildToolPlugin` entry point defined in SE-0303.\n\n**Governing Source Artifact:**\n* **Artifact ID:** `SE-0325@accepted`\n* **Decision ID:** `SE-0325`\n* **Status:** ACCEPTED\n* **Repository:** `swiftlang/swift-evolution`\n* **Pinned Revision:** `0105e139a22938561c700cfbb89ddc3ebe402f0c`\n* **Source URL:** https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0325-swiftpm-additional-plugin-apis.md"
+}

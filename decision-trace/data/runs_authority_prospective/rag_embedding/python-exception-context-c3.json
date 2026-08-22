@@ -1,0 +1,29 @@
+{
+  "checkpoint_id": "python-exception-context-c3",
+  "timeline_id": "python-exception-context",
+  "condition": "rag_embedding",
+  "prompt_sha256": "cd3718d7d6f329c88c9a4547a9ef0ad3c445200e8a4f2f7740a040ee9adefe5f",
+  "source_artifact_ids": [
+    "PEP-409@accepted",
+    "PEP-415@accepted",
+    "PEP-409@current-note"
+  ],
+  "retrieved_artifact_ids": [
+    "PEP-415@accepted",
+    "PEP-409@current-note",
+    "PEP-409@accepted"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-415"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-409@current-note",
+      "PEP-415@accepted"
+    ],
+    "explanation": "PEP-415 holds Final status as policy for python-exception-context and explicitly replaces PEP-409, which is recorded as superseded by PEP-415.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"PEP-415\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"PEP-415@accepted\",\n    \"PEP-409@current-note\"\n  ],\n  \"explanation\": \"PEP-415 holds Final status as policy for python-exception-context and explicitly replaces PEP-409, which is recorded as superseded by PEP-415.\"\n}\n```"
+}

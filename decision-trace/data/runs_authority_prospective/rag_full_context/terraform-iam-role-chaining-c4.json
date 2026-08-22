@@ -1,0 +1,25 @@
+{
+  "checkpoint_id": "terraform-iam-role-chaining-c4",
+  "timeline_id": "terraform-iam-role-chaining",
+  "condition": "rag_full_context",
+  "prompt_sha256": "82a2522167f26efa93c20f41cf3277937cc07e0fb5371f596de9148df0f933c1",
+  "source_artifact_ids": [
+    "hashicorp/terraform#35720@open",
+    "hashicorp/terraform#35720@merged",
+    "hashicorp/terraform#35827@open",
+    "hashicorp/terraform#35827@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "hashicorp/terraform#35827"
+    ],
+    "evidence_artifact_ids": [
+      "hashicorp/terraform#35827@merged"
+    ],
+    "explanation": "PR #35827 was merged (lifecycle status REVERT_MERGED), explicitly reverting PR #35720 and establishing current governing authority over terraform-s3-iam-role-chaining.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\"governing_decision_ids\":[\"hashicorp/terraform#35827\"],\"evidence_artifact_ids\":[\"hashicorp/terraform#35827@merged\"],\"explanation\":\"PR #35827 was merged (lifecycle status REVERT_MERGED), explicitly reverting PR #35720 and establishing current governing authority over terraform-s3-iam-role-chaining.\"}\n```"
+}

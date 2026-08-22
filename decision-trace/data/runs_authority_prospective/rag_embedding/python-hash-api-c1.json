@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "python-hash-api-c1",
+  "timeline_id": "python-hash-api",
+  "condition": "rag_embedding",
+  "prompt_sha256": "751e7b88087326fba08fc5dcbfcae540716fbb5d9306b4dd119ceae5bf2600ea",
+  "source_artifact_ids": [
+    "PEP-247@accepted"
+  ],
+  "retrieved_artifact_ids": [
+    "PEP-247@accepted"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-247"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-247@accepted"
+    ],
+    "explanation": "PEP-247 has a final lifecycle status and policy decision role governing the python-hash-api scope.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"PEP-247\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"PEP-247@accepted\"\n  ],\n  \"explanation\": \"PEP-247 has a final lifecycle status and policy decision role governing the python-hash-api scope.\"\n}\n```"
+}

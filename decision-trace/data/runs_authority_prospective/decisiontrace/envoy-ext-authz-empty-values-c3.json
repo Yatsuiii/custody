@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "envoy-ext-authz-empty-values-c3",
+  "timeline_id": "envoy-ext-authz-empty-values",
+  "condition": "decisiontrace",
+  "prompt_sha256": "65251ae752e79714fc7f1c23c8fb8e9711c1a5dd6c687288d58aadc2db40a3bf",
+  "source_artifact_ids": [
+    "envoyproxy/envoy#45103@open",
+    "envoyproxy/envoy#45103@merged",
+    "envoyproxy/envoy#45321@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "envoyproxy/envoy#45103"
+    ],
+    "evidence_artifact_ids": [
+      "envoyproxy/envoy#45103@merged"
+    ],
+    "explanation": "The decision currently governing `envoy-ext-authz-empty-values` is **`envoyproxy/envoy#45103`** (Authority state: **GOVERNING**). \n\nAccording to the resolver evidence, `envoyproxy/envoy#45103` is the sole eligible active decision in the `envoy-ext-authz-empty-values` scope. Current authority is established by the merged implementation artifact:\n\n* **Artifact ID:** `envoyproxy/envoy#45103@merged`\n* **Decision ID:** `envoyproxy/envoy#45103`\n* **Repository / URL:** [https://github.com/envoyproxy/envoy/pull/45103](https://github.com/envoyproxy/envoy/pull/45103)\n* **Lifecycle Status:** MERGED\n* **Scope:** `envoy-ext-authz-empty-values` (\"ext_authz: respect keep_empty_value in HeaderValueOption\")",
+    "parse_error": null
+  },
+  "raw_response": "The decision currently governing `envoy-ext-authz-empty-values` is **`envoyproxy/envoy#45103`** (Authority state: **GOVERNING**). \n\nAccording to the resolver evidence, `envoyproxy/envoy#45103` is the sole eligible active decision in the `envoy-ext-authz-empty-values` scope. Current authority is established by the merged implementation artifact:\n\n* **Artifact ID:** `envoyproxy/envoy#45103@merged`\n* **Decision ID:** `envoyproxy/envoy#45103`\n* **Repository / URL:** [https://github.com/envoyproxy/envoy/pull/45103](https://github.com/envoyproxy/envoy/pull/45103)\n* **Lifecycle Status:** MERGED\n* **Scope:** `envoy-ext-authz-empty-values` (\"ext_authz: respect keep_empty_value in HeaderValueOption\")"
+}

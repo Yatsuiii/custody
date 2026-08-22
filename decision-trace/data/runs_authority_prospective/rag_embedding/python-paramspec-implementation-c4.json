@@ -1,0 +1,32 @@
+{
+  "checkpoint_id": "python-paramspec-implementation-c4",
+  "timeline_id": "python-paramspec-implementation",
+  "condition": "rag_embedding",
+  "prompt_sha256": "2a7b581dc33a3c10db35fc45074399fdab2cc437a82cb97d4e2f9c3a0198180a",
+  "source_artifact_ids": [
+    "PEP-612@final",
+    "python/cpython#23702@open",
+    "python/cpython#23702@merged",
+    "python/cpython#25449@open"
+  ],
+  "retrieved_artifact_ids": [
+    "PEP-612@final",
+    "python/cpython#23702@open",
+    "python/cpython#23702@merged",
+    "python/cpython#25449@open",
+    "python/cpython#25449@open"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "python/cpython#23702"
+    ],
+    "evidence_artifact_ids": [
+      "python/cpython#23702@merged",
+      "python/cpython#25449@open"
+    ],
+    "explanation": "PR python/cpython#23702 is merged and currently governs the python-paramspec-implementation scope; the reverting PR python/cpython#25449 is only open/proposed and has not displaced it.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"python/cpython#23702\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"python/cpython#23702@merged\",\n    \"python/cpython#25449@open\"\n  ],\n  \"explanation\": \"PR python/cpython#23702 is merged and currently governs the python-paramspec-implementation scope; the reverting PR python/cpython#25449 is only open/proposed and has not displaced it.\"\n}\n```"
+}

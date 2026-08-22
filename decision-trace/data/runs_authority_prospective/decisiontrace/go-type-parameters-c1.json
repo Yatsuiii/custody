@@ -1,0 +1,18 @@
+{
+  "checkpoint_id": "go-type-parameters-c1",
+  "timeline_id": "go-type-parameters",
+  "condition": "decisiontrace",
+  "prompt_sha256": "8e933d8b1c5a8dae28bd0cd2fcdba305df940612e3736118d746c19c85758b72",
+  "source_artifact_ids": [
+    "go-contracts@superseded"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [],
+    "explanation": "Based on the deterministic authority resolution, there is currently no governing decision (`NO_GOVERNING_DECISION`) for Go type parameters (Governing decision IDs: `[]`). No visible accepted or implemented decisions are eligible to govern, and there are no source artifacts in the provided evidence establishing current authority.",
+    "parse_error": null
+  },
+  "raw_response": "Based on the deterministic authority resolution, there is currently no governing decision (`NO_GOVERNING_DECISION`) for Go type parameters (Governing decision IDs: `[]`). No visible accepted or implemented decisions are eligible to govern, and there are no source artifacts in the provided evidence establishing current authority."
+}

@@ -1,0 +1,18 @@
+{
+  "checkpoint_id": "envoy-ext-authz-empty-values-c1",
+  "timeline_id": "envoy-ext-authz-empty-values",
+  "condition": "decisiontrace",
+  "prompt_sha256": "2c6529f9f614035477da6a1c832fce48526323bac0ed62b35954cdf6b605e65f",
+  "source_artifact_ids": [
+    "envoyproxy/envoy#45103@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [],
+    "explanation": "There is currently no governing organizational decision for `envoy-ext-authz-empty-values` (authority state: `NO_GOVERNING_DECISION`, governing decision IDs: `[]`). Based on the provided evidence, no visible accepted or implemented decisions exist to govern this behavior, and no source artifacts are available to establish authority.",
+    "parse_error": null
+  },
+  "raw_response": "There is currently no governing organizational decision for `envoy-ext-authz-empty-values` (authority state: `NO_GOVERNING_DECISION`, governing decision IDs: `[]`). Based on the provided evidence, no visible accepted or implemented decisions exist to govern this behavior, and no source artifacts are available to establish authority."
+}

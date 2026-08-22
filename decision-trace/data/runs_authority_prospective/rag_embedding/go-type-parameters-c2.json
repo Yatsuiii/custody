@@ -1,0 +1,26 @@
+{
+  "checkpoint_id": "go-type-parameters-c2",
+  "timeline_id": "go-type-parameters",
+  "condition": "rag_embedding",
+  "prompt_sha256": "8a1fafd2801322ed4417f890609954b9ae690759f955d37609d61b96208a53e9",
+  "source_artifact_ids": [
+    "go-contracts@superseded",
+    "golang/go#43651@open"
+  ],
+  "retrieved_artifact_ids": [
+    "go-contracts@superseded",
+    "golang/go#43651@open",
+    "golang/go#43651@open"
+  ],
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [
+      "go-contracts@superseded",
+      "golang/go#43651@open"
+    ],
+    "explanation": "The prior design draft 'go-contracts' has been withdrawn, and the replacing proposal 'golang/go#43651' remains open and proposed without an accepted or implemented governing policy.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"NO_GOVERNING_DECISION\",\n  \"governing_decision_ids\": [],\n  \"evidence_artifact_ids\": [\n    \"go-contracts@superseded\",\n    \"golang/go#43651@open\"\n  ],\n  \"explanation\": \"The prior design draft 'go-contracts' has been withdrawn, and the replacing proposal 'golang/go#43651' remains open and proposed without an accepted or implemented governing policy.\"\n}\n```"
+}

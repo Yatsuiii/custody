@@ -1,0 +1,28 @@
+{
+  "checkpoint_id": "rust-global-allocator-c4",
+  "timeline_id": "rust-global-allocator",
+  "condition": "rag_embedding",
+  "prompt_sha256": "3db2e6d47ff520049b4631e44faec2270015e430d9f4f5225a5e5d88e543e6e1",
+  "source_artifact_ids": [
+    "RFC-1183@merged",
+    "RFC-1974@open",
+    "RFC-1974@current-authority"
+  ],
+  "retrieved_artifact_ids": [
+    "RFC-1974@current-authority",
+    "RFC-1974@open",
+    "RFC-1183@merged"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-1974"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-1974@current-authority"
+    ],
+    "explanation": "RFC-1974 is merged with policy decision role for the rust-global-allocator scope and explicitly replaces RFC-1183.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"RFC-1974\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"RFC-1974@current-authority\"\n  ],\n  \"explanation\": \"RFC-1974 is merged with policy decision role for the rust-global-allocator scope and explicitly replaces RFC-1183.\"\n}\n```"
+}

@@ -1,0 +1,34 @@
+{
+  "checkpoint_id": "kubernetes-gang-scheduling-c5",
+  "timeline_id": "kubernetes-gang-scheduling",
+  "condition": "rag_embedding",
+  "prompt_sha256": "e1a2f0058c9d0434b44ce271f596c4dcdfe7fec41e5cfcd5b6f61cd66138d85a",
+  "source_artifact_ids": [
+    "KEP-583@current",
+    "KEP-5832@current",
+    "KEP-4671@current",
+    "kubernetes/kubernetes#137464@merged",
+    "kubernetes/kubernetes#139008@merged"
+  ],
+  "retrieved_artifact_ids": [
+    "kubernetes/kubernetes#139008@merged",
+    "KEP-4671@current",
+    "kubernetes/kubernetes#137464@merged",
+    "KEP-5832@current",
+    "KEP-583@current",
+    "kubernetes/kubernetes#139008@merged",
+    "kubernetes/kubernetes#137464@merged"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "KEP-4671"
+    ],
+    "evidence_artifact_ids": [
+      "KEP-4671@current"
+    ],
+    "explanation": "KEP-4671 is an accepted policy decision governing Kubernetes gang scheduling policy (kubernetes-gang-scheduling-policy) and explicitly replaces KEP-5832 and KEP-583. The merged revert PR #139008 affected only the admission implementation scope without altering the governing enhancement policy.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"KEP-4671\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"KEP-4671@current\"\n  ],\n  \"explanation\": \"KEP-4671 is an accepted policy decision governing Kubernetes gang scheduling policy (kubernetes-gang-scheduling-policy) and explicitly replaces KEP-5832 and KEP-583. The merged revert PR #139008 affected only the admission implementation scope without altering the governing enhancement policy.\"\n}\n```"
+}

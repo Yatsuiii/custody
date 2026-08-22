@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "python-exception-context-c4",
+  "timeline_id": "python-exception-context",
+  "condition": "decisiontrace",
+  "prompt_sha256": "8c0a5f50e6540812fe7dfbd3476e8f74e7e231c72f191ff4b22a857caf39fdc5",
+  "source_artifact_ids": [
+    "PEP-409@accepted",
+    "PEP-415@accepted",
+    "PEP-409@current-note"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-415"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-415@accepted"
+    ],
+    "explanation": "PEP-415 is the governing standard for Python exception context. It holds a lifecycle status of \"Final\", explicitly replaces PEP-409, and is the sole active decision currently in scope for `python-exception-context`.",
+    "parse_error": null
+  },
+  "raw_response": "PEP-415 is the governing standard for Python exception context. It holds a lifecycle status of \"Final\", explicitly replaces PEP-409, and is the sole active decision currently in scope for `python-exception-context`."
+}

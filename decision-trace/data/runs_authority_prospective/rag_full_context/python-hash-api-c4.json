@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "python-hash-api-c4",
+  "timeline_id": "python-hash-api",
+  "condition": "rag_full_context",
+  "prompt_sha256": "4ad684853733d1d609346897d8c983f318600820a1df74ba5e64846aa646b6ff",
+  "source_artifact_ids": [
+    "PEP-247@accepted",
+    "PEP-452@accepted",
+    "PEP-247@current-note"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-452"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-452@accepted"
+    ],
+    "explanation": "PEP-452 has Final status with a Policy decision role and explicitly replaces PEP-247 within the python-hash-api authority scope.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"PEP-452\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"PEP-452@accepted\"\n  ],\n  \"explanation\": \"PEP-452 has Final status with a Policy decision role and explicitly replaces PEP-247 within the python-hash-api authority scope.\"\n}\n```"
+}

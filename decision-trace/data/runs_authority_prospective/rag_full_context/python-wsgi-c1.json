@@ -1,0 +1,22 @@
+{
+  "checkpoint_id": "python-wsgi-c1",
+  "timeline_id": "python-wsgi",
+  "condition": "rag_full_context",
+  "prompt_sha256": "3bd6606dbdeeeb7b43cdffe2d4f3cb7d26329b32848d32db6244712396f3e3ea",
+  "source_artifact_ids": [
+    "PEP-333@accepted"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-333"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-333@accepted"
+    ],
+    "explanation": "PEP-333 is in Final status with a policy decision role governing the python-wsgi scope.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"PEP-333\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"PEP-333@accepted\"\n  ],\n  \"explanation\": \"PEP-333 is in Final status with a policy decision role governing the python-wsgi scope.\"\n}\n```"
+}

@@ -1,0 +1,25 @@
+{
+  "checkpoint_id": "kubernetes-pleg-default-c4",
+  "timeline_id": "kubernetes-pleg-default",
+  "condition": "rag_full_context",
+  "prompt_sha256": "9e7ec0878cafc55dfdff4099a41c000f7838be9896094ae18970b3085550188a",
+  "source_artifact_ids": [
+    "kubernetes/kubernetes#137909@open",
+    "kubernetes/kubernetes#137909@merged",
+    "kubernetes/kubernetes#137946@open",
+    "kubernetes/kubernetes#137946@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "kubernetes/kubernetes#137946"
+    ],
+    "evidence_artifact_ids": [
+      "kubernetes/kubernetes#137946@merged"
+    ],
+    "explanation": "Pull request kubernetes/kubernetes#137946 has been merged (REVERT_MERGED), explicitly reverting kubernetes/kubernetes#137909 and re-enabling the PLEGOnDemandRelist default for the kubernetes-pleg-default scope.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"kubernetes/kubernetes#137946\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"kubernetes/kubernetes#137946@merged\"\n  ],\n  \"explanation\": \"Pull request kubernetes/kubernetes#137946 has been merged (REVERT_MERGED), explicitly reverting kubernetes/kubernetes#137909 and re-enabling the PLEGOnDemandRelist default for the kubernetes-pleg-default scope.\"\n}\n```"
+}

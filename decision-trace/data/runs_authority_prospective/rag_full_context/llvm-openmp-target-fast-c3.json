@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "llvm-openmp-target-fast-c3",
+  "timeline_id": "llvm-openmp-target-fast",
+  "condition": "rag_full_context",
+  "prompt_sha256": "f7939ff8f9320ced897fe11336172d53bdfe42d08616d699b83ed9c97b94b61a",
+  "source_artifact_ids": [
+    "llvm/llvm-project#205775@open",
+    "llvm/llvm-project#205775@merged",
+    "llvm/llvm-project#213769@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "llvm/llvm-project#205775"
+    ],
+    "evidence_artifact_ids": [
+      "llvm/llvm-project#205775@merged"
+    ],
+    "explanation": "Decision llvm/llvm-project#205775 was merged, establishing authority over the llvm-openmp-target-fast scope; the subsequent revert pull request llvm/llvm-project#213769 is only open (proposed) and has not been merged.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"llvm/llvm-project#205775\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"llvm/llvm-project#205775@merged\"\n  ],\n  \"explanation\": \"Decision llvm/llvm-project#205775 was merged, establishing authority over the llvm-openmp-target-fast scope; the subsequent revert pull request llvm/llvm-project#213769 is only open (proposed) and has not been merged.\"\n}\n```"
+}

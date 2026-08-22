@@ -1,0 +1,20 @@
+{
+  "checkpoint_id": "envoy-ext-authz-empty-values-c1",
+  "timeline_id": "envoy-ext-authz-empty-values",
+  "condition": "rag_full_context",
+  "prompt_sha256": "7e8a82ab22e0cabc41bec4709b69c788fd7dd6004c998904c1f6dd6a9510a3af",
+  "source_artifact_ids": [
+    "envoyproxy/envoy#45103@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [
+      "envoyproxy/envoy#45103@open"
+    ],
+    "explanation": "Pull request envoyproxy/envoy#45103 is currently in an OPEN lifecycle status and has not been accepted or merged, leaving no governing decision for the envoy-ext-authz-empty-values scope.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\"authority_state\":\"NO_GOVERNING_DECISION\",\"governing_decision_ids\":[],\"evidence_artifact_ids\":[\"envoyproxy/envoy#45103@open\"],\"explanation\":\"Pull request envoyproxy/envoy#45103 is currently in an OPEN lifecycle status and has not been accepted or merged, leaving no governing decision for the envoy-ext-authz-empty-values scope.\"}\n```"
+}

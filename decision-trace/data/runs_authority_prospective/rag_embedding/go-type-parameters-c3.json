@@ -1,0 +1,29 @@
+{
+  "checkpoint_id": "go-type-parameters-c3",
+  "timeline_id": "go-type-parameters",
+  "condition": "rag_embedding",
+  "prompt_sha256": "c52d926943d6cb264c86d691f031144afcb34fed3d8ba32d14607a915b5e8201",
+  "source_artifact_ids": [
+    "go-contracts@superseded",
+    "golang/go#43651@open",
+    "golang/go#43651@accepted"
+  ],
+  "retrieved_artifact_ids": [
+    "golang/go#43651@accepted",
+    "go-contracts@superseded",
+    "golang/go#43651@open",
+    "golang/go#43651@open"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "golang/go#43651"
+    ],
+    "evidence_artifact_ids": [
+      "golang/go#43651@accepted"
+    ],
+    "explanation": "Proposal golang/go#43651 was formally accepted by the proposal review group as the governing policy for go-type-parameters, explicitly replacing the superseded go-contracts draft.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"golang/go#43651\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"golang/go#43651@accepted\"\n  ],\n  \"explanation\": \"Proposal golang/go#43651 was formally accepted by the proposal review group as the governing policy for go-type-parameters, explicitly replacing the superseded go-contracts draft.\"\n}\n```"
+}

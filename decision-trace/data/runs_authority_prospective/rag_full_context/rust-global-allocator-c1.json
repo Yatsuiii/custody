@@ -1,0 +1,22 @@
+{
+  "checkpoint_id": "rust-global-allocator-c1",
+  "timeline_id": "rust-global-allocator",
+  "condition": "rag_full_context",
+  "prompt_sha256": "8e61b2b1110ad1b9fab7a9d55a27cd62d766f1595d21bbd55de1808b8d189949",
+  "source_artifact_ids": [
+    "RFC-1183@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-1183"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-1183@merged"
+    ],
+    "explanation": "RFC-1183 is in merged lifecycle status with a policy decision role, establishing governing authority over the rust-global-allocator scope.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\"RFC-1183\"],\n  \"evidence_artifact_ids\": [\"RFC-1183@merged\"],\n  \"explanation\": \"RFC-1183 is in merged lifecycle status with a policy decision role, establishing governing authority over the rust-global-allocator scope.\"\n}\n```"
+}

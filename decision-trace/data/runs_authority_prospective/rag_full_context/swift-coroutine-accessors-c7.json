@@ -1,0 +1,30 @@
+{
+  "checkpoint_id": "swift-coroutine-accessors-c7",
+  "timeline_id": "swift-coroutine-accessors",
+  "condition": "rag_full_context",
+  "prompt_sha256": "06477d4bbc71a87fa23fa2913df622f14e8bf154afad3fdedb462f8d98e5d751",
+  "source_artifact_ids": [
+    "SE-0474@accepted",
+    "swiftlang/swift#90516@open",
+    "swiftlang/swift#90516@merged",
+    "swiftlang/swift#91475@open",
+    "swiftlang/swift#91475@merged",
+    "swiftlang/swift#91494@open",
+    "swiftlang/swift#91494@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "MULTIPLE_GOVERNING",
+    "governing_decision_ids": [
+      "SE-0474",
+      "swiftlang/swift#91494"
+    ],
+    "evidence_artifact_ids": [
+      "SE-0474@accepted",
+      "swiftlang/swift#91494@merged"
+    ],
+    "explanation": "SE-0474 is accepted and governs the yielding accessor policy, while swiftlang/swift#91494 was merged to revert the revert (swiftlang/swift#91475) and restore the coroutine accessor implementation.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"MULTIPLE_GOVERNING\",\n  \"governing_decision_ids\": [\n    \"SE-0474\",\n    \"swiftlang/swift#91494\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"SE-0474@accepted\",\n    \"swiftlang/swift#91494@merged\"\n  ],\n  \"explanation\": \"SE-0474 is accepted and governs the yielding accessor policy, while swiftlang/swift#91494 was merged to revert the revert (swiftlang/swift#91475) and restore the coroutine accessor implementation.\"\n}\n```"
+}

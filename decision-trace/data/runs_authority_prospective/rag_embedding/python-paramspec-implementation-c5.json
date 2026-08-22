@@ -1,0 +1,34 @@
+{
+  "checkpoint_id": "python-paramspec-implementation-c5",
+  "timeline_id": "python-paramspec-implementation",
+  "condition": "rag_embedding",
+  "prompt_sha256": "39c6b9cfa676c903d87a5a2f23cd45ed369eaeaf667dbd09dfc0fd08a06e3b72",
+  "source_artifact_ids": [
+    "PEP-612@final",
+    "python/cpython#23702@open",
+    "python/cpython#23702@merged",
+    "python/cpython#25449@open",
+    "python/cpython#25449@merged"
+  ],
+  "retrieved_artifact_ids": [
+    "PEP-612@final",
+    "python/cpython#25449@merged",
+    "python/cpython#25449@open",
+    "python/cpython#23702@open",
+    "python/cpython#23702@merged",
+    "python/cpython#25449@merged",
+    "python/cpython#25449@open"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-612"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-612@final"
+    ],
+    "explanation": "PEP-612 holds FINAL lifecycle status governing the python-paramspec-policy scope. Subsequent pull requests (such as python/cpython#25449) operated solely within the python-paramspec-implementation scope to align code with PEP-612 and did not alter or supersede the governing policy.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"PEP-612\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"PEP-612@final\"\n  ],\n  \"explanation\": \"PEP-612 holds FINAL lifecycle status governing the python-paramspec-policy scope. Subsequent pull requests (such as python/cpython#25449) operated solely within the python-paramspec-implementation scope to align code with PEP-612 and did not alter or supersede the governing policy.\"\n}\n```"
+}

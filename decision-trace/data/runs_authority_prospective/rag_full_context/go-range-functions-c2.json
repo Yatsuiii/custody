@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "go-range-functions-c2",
+  "timeline_id": "go-range-functions",
+  "condition": "rag_full_context",
+  "prompt_sha256": "92c639dab397978a70cd346b5937704c985f8607cb046d6f461a61f7ed97cc08",
+  "source_artifact_ids": [
+    "golang/go#61405@open",
+    "golang/go#61405@accepted"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "golang/go#61405"
+    ],
+    "evidence_artifact_ids": [
+      "golang/go#61405@accepted"
+    ],
+    "explanation": "golang/go#61405 was officially marked as accepted by the proposal review group, establishing governing authority over the go-range-function-details scope.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\"governing_decision_ids\":[\"golang/go#61405\"],\"evidence_artifact_ids\":[\"golang/go#61405@accepted\"],\"explanation\":\"golang/go#61405 was officially marked as accepted by the proposal review group, establishing governing authority over the go-range-function-details scope.\"}\n```"
+}

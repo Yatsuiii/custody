@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "go-range-functions-c2",
+  "timeline_id": "go-range-functions",
+  "condition": "decisiontrace",
+  "prompt_sha256": "842574b7cff9c9c121fc7cae0ac1b6cb62193ff17b41f5bf52189fb6b7380123",
+  "source_artifact_ids": [
+    "golang/go#61405@open",
+    "golang/go#61405@accepted"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "golang/go#61405"
+    ],
+    "evidence_artifact_ids": [
+      "golang/go#61405@accepted"
+    ],
+    "explanation": "The organizational decision currently governing `go-range-function-details` is **golang/go#61405** (Authority state: **GOVERNING**). \n\nThis authority is established by the following artifact:\n- **Artifact ID:** `golang/go#61405@accepted`\n- **Source URL:** https://github.com/golang/go/issues/61405#issuecomment-1782052910\n- **Timestamp:** 2023-10-26T23:19:35Z\n- **Lifecycle Status:** ACCEPTED\n\nAccording to the record, the proposal review group accepted the proposal to add range-over-int in Go 1.22 while placing range-over-func implementation and iterator library details behind `GOEXPERIMENT=rangefunc`. As the sole eligible active decision in the `go-range-function-details` scope, it serves as the governing policy.",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing `go-range-function-details` is **golang/go#61405** (Authority state: **GOVERNING**). \n\nThis authority is established by the following artifact:\n- **Artifact ID:** `golang/go#61405@accepted`\n- **Source URL:** https://github.com/golang/go/issues/61405#issuecomment-1782052910\n- **Timestamp:** 2023-10-26T23:19:35Z\n- **Lifecycle Status:** ACCEPTED\n\nAccording to the record, the proposal review group accepted the proposal to add range-over-int in Go 1.22 while placing range-over-func implementation and iterator library details behind `GOEXPERIMENT=rangefunc`. As the sole eligible active decision in the `go-range-function-details` scope, it serves as the governing policy."
+}

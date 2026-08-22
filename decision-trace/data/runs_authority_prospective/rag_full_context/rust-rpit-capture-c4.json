@@ -1,0 +1,25 @@
+{
+  "checkpoint_id": "rust-rpit-capture-c4",
+  "timeline_id": "rust-rpit-capture",
+  "condition": "rag_full_context",
+  "prompt_sha256": "cafbf4b01998a32eff2995863181654616639954e8187747967c8b4b6236fd67",
+  "source_artifact_ids": [
+    "RFC-1522@merged",
+    "RFC-1951@open",
+    "RFC-1951@merged",
+    "RFC-3498@rpit-authority"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-3498"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-3498@rpit-authority"
+    ],
+    "explanation": "RFC-3498 is merged with a POLICY decision role and explicitly replaces RFC-1951, establishing governing authority over rust-impl-trait-capture-rules.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"RFC-3498\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"RFC-3498@rpit-authority\"\n  ],\n  \"explanation\": \"RFC-3498 is merged with a POLICY decision role and explicitly replaces RFC-1951, establishing governing authority over rust-impl-trait-capture-rules.\"\n}\n```"
+}

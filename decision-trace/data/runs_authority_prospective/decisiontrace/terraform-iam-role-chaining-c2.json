@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "terraform-iam-role-chaining-c2",
+  "timeline_id": "terraform-iam-role-chaining",
+  "condition": "decisiontrace",
+  "prompt_sha256": "fcadbb6f6bc7b8c1fc553ae60b10a6d25357fa8d93441c3d3a75397e48a6c914",
+  "source_artifact_ids": [
+    "hashicorp/terraform#35720@open",
+    "hashicorp/terraform#35720@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "hashicorp/terraform#35720"
+    ],
+    "evidence_artifact_ids": [
+      "hashicorp/terraform#35720@merged"
+    ],
+    "explanation": "The organizational decision currently governing `terraform-s3-iam-role-chaining` is **`hashicorp/terraform#35720`** with **GOVERNING** authority status. \n\nThis authority is established by the following artifact:\n- **Artifact ID:** `hashicorp/terraform#35720@merged`\n- **Repository:** `hashicorp/terraform`\n- **URL:** https://github.com/hashicorp/terraform/pull/35720\n- **Pinned Revision:** `305775e9f0be14f09051a237fdc70394c30dc287`\n- **Merged Timestamp:** 2024-09-23T21:26:38Z\n- **Scope & Role:** `terraform-s3-iam-role-chaining` (IMPLEMENTATION)\n\nIt serves as the sole eligible active decision in scope, implementing support for IAM role chaining in the Terraform S3 backend by allowing the `assume_role` attribute to accept multiple elements.",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing `terraform-s3-iam-role-chaining` is **`hashicorp/terraform#35720`** with **GOVERNING** authority status. \n\nThis authority is established by the following artifact:\n- **Artifact ID:** `hashicorp/terraform#35720@merged`\n- **Repository:** `hashicorp/terraform`\n- **URL:** https://github.com/hashicorp/terraform/pull/35720\n- **Pinned Revision:** `305775e9f0be14f09051a237fdc70394c30dc287`\n- **Merged Timestamp:** 2024-09-23T21:26:38Z\n- **Scope & Role:** `terraform-s3-iam-role-chaining` (IMPLEMENTATION)\n\nIt serves as the sole eligible active decision in scope, implementing support for IAM role chaining in the Terraform S3 backend by allowing the `assume_role` attribute to accept multiple elements."
+}

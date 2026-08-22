@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "rust-rpit-capture-c1",
+  "timeline_id": "rust-rpit-capture",
+  "condition": "rag_embedding",
+  "prompt_sha256": "4e7dec1639ad189cdca345ceb2d5f4a6f7597ef1a8a01773bc4e81688811ecc2",
+  "source_artifact_ids": [
+    "RFC-1522@merged"
+  ],
+  "retrieved_artifact_ids": [
+    "RFC-1522@merged"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-1522"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-1522@merged"
+    ],
+    "explanation": "RFC-1522 is merged with a policy decision role governing the rust-impl-trait-capture-rules scope.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"RFC-1522\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"RFC-1522@merged\"\n  ],\n  \"explanation\": \"RFC-1522 is merged with a policy decision role governing the rust-impl-trait-capture-rules scope.\"\n}\n```"
+}

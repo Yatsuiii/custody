@@ -1,0 +1,30 @@
+{
+  "checkpoint_id": "rust-tait-capture-c4",
+  "timeline_id": "rust-tait-capture",
+  "condition": "rag_embedding",
+  "prompt_sha256": "ba37953817bc1990062bbfca1f5909520bb00c564320e5b5f69df6ea8087c65e",
+  "source_artifact_ids": [
+    "RFC-2071@merged",
+    "RFC-2515@open",
+    "RFC-2515@merged",
+    "RFC-3498@merged"
+  ],
+  "retrieved_artifact_ids": [
+    "RFC-2515@open",
+    "RFC-2515@merged",
+    "RFC-2071@merged",
+    "RFC-3498@merged"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-3498"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-3498@merged"
+    ],
+    "explanation": "RFC-3498 is a merged policy decision scoped to rust-type-alias-impl-trait-capture that explicitly supersedes and replaces prior RFCs 2071 and 2515.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"RFC-3498\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"RFC-3498@merged\"\n  ],\n  \"explanation\": \"RFC-3498 is a merged policy decision scoped to rust-type-alias-impl-trait-capture that explicitly supersedes and replaces prior RFCs 2071 and 2515.\"\n}\n```"
+}

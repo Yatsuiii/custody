@@ -1,0 +1,20 @@
+{
+  "checkpoint_id": "swift-property-wrappers-c1",
+  "timeline_id": "swift-property-wrappers",
+  "condition": "rag_full_context",
+  "prompt_sha256": "061e1e4da5581a0b69e4b90d1bdab89751ad70a5aa928eca9b973cf15c4af033",
+  "source_artifact_ids": [
+    "SE-0030@withdrawn"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [
+      "SE-0030@withdrawn"
+    ],
+    "explanation": "SE-0030 is marked WITHDRAWN and no accepted or implemented governing decision (such as SE-0258) is present in the visible context.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"NO_GOVERNING_DECISION\",\n  \"governing_decision_ids\": [],\n  \"evidence_artifact_ids\": [\n    \"SE-0030@withdrawn\"\n  ],\n  \"explanation\": \"SE-0030 is marked WITHDRAWN and no accepted or implemented governing decision (such as SE-0258) is present in the visible context.\"\n}\n```"
+}

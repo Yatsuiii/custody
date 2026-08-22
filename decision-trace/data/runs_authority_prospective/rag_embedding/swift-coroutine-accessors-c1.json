@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "swift-coroutine-accessors-c1",
+  "timeline_id": "swift-coroutine-accessors",
+  "condition": "rag_embedding",
+  "prompt_sha256": "9723aa1a7a9396f653b21577698cb03e076d61b3cbd171dc37bff4669009358e",
+  "source_artifact_ids": [
+    "SE-0474@accepted"
+  ],
+  "retrieved_artifact_ids": [
+    "SE-0474@accepted"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "SE-0474"
+    ],
+    "evidence_artifact_ids": [
+      "SE-0474@accepted"
+    ],
+    "explanation": "SE-0474 is in ACCEPTED status with a POLICY role governing the swift-yielding-accessor-policy scope.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"SE-0474\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"SE-0474@accepted\"\n  ],\n  \"explanation\": \"SE-0474 is in ACCEPTED status with a POLICY role governing the swift-yielding-accessor-policy scope.\"\n}\n```"
+}

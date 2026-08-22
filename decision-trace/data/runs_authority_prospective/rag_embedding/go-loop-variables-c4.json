@@ -1,0 +1,32 @@
+{
+  "checkpoint_id": "go-loop-variables-c4",
+  "timeline_id": "go-loop-variables",
+  "condition": "rag_embedding",
+  "prompt_sha256": "735e25eeafd8ef054d1204cfb205c411789378963dbc85139233f059975de962",
+  "source_artifact_ids": [
+    "golang/go#60078@open",
+    "golang/go#60078@accepted"
+  ],
+  "retrieved_artifact_ids": [
+    "golang/go#60078@accepted",
+    "golang/go#60078@open",
+    "golang/go#60078@open",
+    "golang/go#60078@open",
+    "golang/go#60078@open",
+    "golang/go#60078@open",
+    "golang/go#60078@open",
+    "golang/go#60078@open"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "golang/go#60078"
+    ],
+    "evidence_artifact_ids": [
+      "golang/go#60078@accepted"
+    ],
+    "explanation": "golang/go#60078 was formally accepted by the proposal review group to govern go loop variable semantics (scoping loop variables per-iteration).",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\"governing_decision_ids\":[\"golang/go#60078\"],\"evidence_artifact_ids\":[\"golang/go#60078@accepted\"],\"explanation\":\"golang/go#60078 was formally accepted by the proposal review group to govern go loop variable semantics (scoping loop variables per-iteration).\"}\n```"
+}

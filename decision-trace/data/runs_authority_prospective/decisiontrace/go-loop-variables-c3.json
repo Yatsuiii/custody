@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "go-loop-variables-c3",
+  "timeline_id": "go-loop-variables",
+  "condition": "decisiontrace",
+  "prompt_sha256": "32c041c65e685b1963a4d9918cea5bbee896082666a79b348d2534bc79efc4ae",
+  "source_artifact_ids": [
+    "golang/go#60078@open",
+    "golang/go#60078@accepted"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "golang/go#60078"
+    ],
+    "evidence_artifact_ids": [
+      "golang/go#60078@accepted"
+    ],
+    "explanation": "The authoritative decision for Go loop variable semantics is `golang/go#60078`. It has a lifecycle status of ACCEPTED (effective 2023-07-19) under the policy role and is the sole eligible active decision governing the `go-loop-variable-semantics` scope.",
+    "parse_error": null
+  },
+  "raw_response": "The authoritative decision for Go loop variable semantics is `golang/go#60078`. It has a lifecycle status of ACCEPTED (effective 2023-07-19) under the policy role and is the sole eligible active decision governing the `go-loop-variable-semantics` scope."
+}

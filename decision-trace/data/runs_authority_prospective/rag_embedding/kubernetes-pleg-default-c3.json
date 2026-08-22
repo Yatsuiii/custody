@@ -1,0 +1,33 @@
+{
+  "checkpoint_id": "kubernetes-pleg-default-c3",
+  "timeline_id": "kubernetes-pleg-default",
+  "condition": "rag_embedding",
+  "prompt_sha256": "3d753b221e8b534d1043f93aec5be59eb5639ac546cfca2a5eda6e8ef6073438",
+  "source_artifact_ids": [
+    "kubernetes/kubernetes#137909@open",
+    "kubernetes/kubernetes#137909@merged",
+    "kubernetes/kubernetes#137946@open"
+  ],
+  "retrieved_artifact_ids": [
+    "kubernetes/kubernetes#137946@open",
+    "kubernetes/kubernetes#137909@merged",
+    "kubernetes/kubernetes#137909@open",
+    "kubernetes/kubernetes#137909@open",
+    "kubernetes/kubernetes#137909@open",
+    "kubernetes/kubernetes#137909@merged",
+    "kubernetes/kubernetes#137909@merged",
+    "kubernetes/kubernetes#137909@merged"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "kubernetes/kubernetes#137909"
+    ],
+    "evidence_artifact_ids": [
+      "kubernetes/kubernetes#137909@merged"
+    ],
+    "explanation": "PR #137909 is merged and governs the kubernetes-pleg-default authority scope by setting PLEGOnDemandRelist default to false, while the revert PR #137946 remains open and proposed.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\"governing_decision_ids\":[\"kubernetes/kubernetes#137909\"],\"evidence_artifact_ids\":[\"kubernetes/kubernetes#137909@merged\"],\"explanation\":\"PR #137909 is merged and governs the kubernetes-pleg-default authority scope by setting PLEGOnDemandRelist default to false, while the revert PR #137946 remains open and proposed.\"}\n```"
+}

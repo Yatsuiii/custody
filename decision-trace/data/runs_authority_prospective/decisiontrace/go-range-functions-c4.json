@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "go-range-functions-c4",
+  "timeline_id": "go-range-functions",
+  "condition": "decisiontrace",
+  "prompt_sha256": "9df79d1912d9c87a3170dfb58ed4ddedd078c2c0d1df1a9a5bb5894aa966eb8c",
+  "source_artifact_ids": [
+    "golang/go#61405@open",
+    "golang/go#61405@accepted"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "golang/go#61405"
+    ],
+    "evidence_artifact_ids": [
+      "golang/go#61405@accepted"
+    ],
+    "explanation": "The authoritative decision for Go range function details is **golang/go#61405** (governing state: **GOVERNING**). It is the sole eligible active decision within the `go-range-function-details` authority scope, having been officially accepted on 2023-10-26 to establish policy for range-over-int, range-over-func, and associated iterator proposals.",
+    "parse_error": null
+  },
+  "raw_response": "The authoritative decision for Go range function details is **golang/go#61405** (governing state: **GOVERNING**). It is the sole eligible active decision within the `go-range-function-details` authority scope, having been officially accepted on 2023-10-26 to establish policy for range-over-int, range-over-func, and associated iterator proposals."
+}

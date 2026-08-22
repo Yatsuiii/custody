@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "python-exception-context-c2",
+  "timeline_id": "python-exception-context",
+  "condition": "rag_full_context",
+  "prompt_sha256": "6c11b0db6dec92245b85573e853170ae346fca1d96315a2ea12fbefdd9abd2ea",
+  "source_artifact_ids": [
+    "PEP-409@accepted",
+    "PEP-415@accepted"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-415"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-415@accepted"
+    ],
+    "explanation": "PEP-415 is in Final policy status and explicitly replaces PEP-409 for governing python exception context.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\"PEP-415\"],\n  \"evidence_artifact_ids\": [\"PEP-415@accepted\"],\n  \"explanation\": \"PEP-415 is in Final policy status and explicitly replaces PEP-409 for governing python exception context.\"\n}\n```"
+}

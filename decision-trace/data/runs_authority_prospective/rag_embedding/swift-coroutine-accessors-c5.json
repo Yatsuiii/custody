@@ -1,0 +1,35 @@
+{
+  "checkpoint_id": "swift-coroutine-accessors-c5",
+  "timeline_id": "swift-coroutine-accessors",
+  "condition": "rag_embedding",
+  "prompt_sha256": "1bf6d9b1d20a98018d07df442bf4812a1c860810db1a08a1486753bb4d1548ac",
+  "source_artifact_ids": [
+    "SE-0474@accepted",
+    "swiftlang/swift#90516@open",
+    "swiftlang/swift#90516@merged",
+    "swiftlang/swift#91475@open",
+    "swiftlang/swift#91475@merged"
+  ],
+  "retrieved_artifact_ids": [
+    "SE-0474@accepted",
+    "swiftlang/swift#90516@open",
+    "swiftlang/swift#90516@merged",
+    "swiftlang/swift#91475@open",
+    "swiftlang/swift#91475@merged",
+    "swiftlang/swift#91475@merged",
+    "swiftlang/swift#91475@open",
+    "swiftlang/swift#91475@merged"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "SE-0474"
+    ],
+    "evidence_artifact_ids": [
+      "SE-0474@accepted"
+    ],
+    "explanation": "SE-0474 is accepted and governs swift-yielding-accessor-policy. The subsequent revert PR (swiftlang/swift#91475) only reverted the implementation PR (swiftlang/swift#90516) in the swift-coroutine-accessor-implementation scope, leaving the policy decision intact.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"SE-0474\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"SE-0474@accepted\"\n  ],\n  \"explanation\": \"SE-0474 is accepted and governs swift-yielding-accessor-policy. The subsequent revert PR (swiftlang/swift#91475) only reverted the implementation PR (swiftlang/swift#90516) in the swift-coroutine-accessor-implementation scope, leaving the policy decision intact.\"\n}\n```"
+}

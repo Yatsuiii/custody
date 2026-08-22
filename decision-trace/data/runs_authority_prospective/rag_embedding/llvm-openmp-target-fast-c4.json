@@ -1,0 +1,30 @@
+{
+  "checkpoint_id": "llvm-openmp-target-fast-c4",
+  "timeline_id": "llvm-openmp-target-fast",
+  "condition": "rag_embedding",
+  "prompt_sha256": "e3f0bf88f70c8285479473838ea5c42a78de38097d075b9c2d62e25b989bd04c",
+  "source_artifact_ids": [
+    "llvm/llvm-project#205775@open",
+    "llvm/llvm-project#205775@merged",
+    "llvm/llvm-project#213769@open",
+    "llvm/llvm-project#213769@merged"
+  ],
+  "retrieved_artifact_ids": [
+    "llvm/llvm-project#205775@merged",
+    "llvm/llvm-project#213769@merged",
+    "llvm/llvm-project#205775@open",
+    "llvm/llvm-project#213769@open"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "llvm/llvm-project#213769"
+    ],
+    "evidence_artifact_ids": [
+      "llvm/llvm-project#213769@merged"
+    ],
+    "explanation": "PR #213769 was merged with status REVERT_MERGED, explicitly reverting PR #205775 and establishing current governing implementation authority over the llvm-openmp-target-fast scope.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"llvm/llvm-project#213769\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"llvm/llvm-project#213769@merged\"\n  ],\n  \"explanation\": \"PR #213769 was merged with status REVERT_MERGED, explicitly reverting PR #205775 and establishing current governing implementation authority over the llvm-openmp-target-fast scope.\"\n}\n```"
+}

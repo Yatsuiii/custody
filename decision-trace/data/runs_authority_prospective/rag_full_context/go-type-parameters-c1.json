@@ -1,0 +1,20 @@
+{
+  "checkpoint_id": "go-type-parameters-c1",
+  "timeline_id": "go-type-parameters",
+  "condition": "rag_full_context",
+  "prompt_sha256": "497b9f3083c83e27c5a7d052edad1a5a24353c290c7b1688e6d5f70dbfb4c900",
+  "source_artifact_ids": [
+    "go-contracts@superseded"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [
+      "go-contracts@superseded"
+    ],
+    "explanation": "The visible proposal go-contracts for scope go-type-parameters has lifecycle status WITHDRAWN and is explicitly superseded, leaving no active governing decision.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"NO_GOVERNING_DECISION\",\n  \"governing_decision_ids\": [],\n  \"evidence_artifact_ids\": [\n    \"go-contracts@superseded\"\n  ],\n  \"explanation\": \"The visible proposal go-contracts for scope go-type-parameters has lifecycle status WITHDRAWN and is explicitly superseded, leaving no active governing decision.\"\n}\n```"
+}

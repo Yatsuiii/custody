@@ -1,0 +1,30 @@
+{
+  "checkpoint_id": "swift-coroutine-accessors-c7",
+  "timeline_id": "swift-coroutine-accessors",
+  "condition": "decisiontrace",
+  "prompt_sha256": "963ec8282d794c934750c508804b223492d636fe1a92d1f1a734595fa5eee733",
+  "source_artifact_ids": [
+    "SE-0474@accepted",
+    "swiftlang/swift#90516@open",
+    "swiftlang/swift#90516@merged",
+    "swiftlang/swift#91475@open",
+    "swiftlang/swift#91475@merged",
+    "swiftlang/swift#91494@open",
+    "swiftlang/swift#91494@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "MULTIPLE_GOVERNING",
+    "governing_decision_ids": [
+      "SE-0474",
+      "swiftlang/swift#91494"
+    ],
+    "evidence_artifact_ids": [
+      "SE-0474@accepted",
+      "swiftlang/swift#91494@merged"
+    ],
+    "explanation": "The authority state is MULTIPLE_GOVERNING across two scopes:\n\n- **swift-yielding-accessor-policy**: Governed by **SE-0474**, which is the sole eligible active decision with status `ACCEPTED` in the policy role.\n- **swift-coroutine-accessor-implementation**: Governed by **swiftlang/swift#91494**, which is the sole eligible active decision with status `REVERT_MERGED` in the implementation role.",
+    "parse_error": null
+  },
+  "raw_response": "The authority state is MULTIPLE_GOVERNING across two scopes:\n\n- **swift-yielding-accessor-policy**: Governed by **SE-0474**, which is the sole eligible active decision with status `ACCEPTED` in the policy role.\n- **swift-coroutine-accessor-implementation**: Governed by **swiftlang/swift#91494**, which is the sole eligible active decision with status `REVERT_MERGED` in the implementation role."
+}

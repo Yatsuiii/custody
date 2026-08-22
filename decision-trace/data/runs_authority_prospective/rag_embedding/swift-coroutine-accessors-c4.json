@@ -1,0 +1,35 @@
+{
+  "checkpoint_id": "swift-coroutine-accessors-c4",
+  "timeline_id": "swift-coroutine-accessors",
+  "condition": "rag_embedding",
+  "prompt_sha256": "43adc674742b830856f0f3df19c88f68e4f00e5b3b60cb3922e13d5a79cc7923",
+  "source_artifact_ids": [
+    "SE-0474@accepted",
+    "swiftlang/swift#90516@open",
+    "swiftlang/swift#90516@merged",
+    "swiftlang/swift#91475@open"
+  ],
+  "retrieved_artifact_ids": [
+    "swiftlang/swift#90516@open",
+    "swiftlang/swift#90516@merged",
+    "SE-0474@accepted",
+    "swiftlang/swift#91475@open",
+    "swiftlang/swift#91475@open",
+    "swiftlang/swift#91475@open",
+    "swiftlang/swift#91475@open",
+    "swiftlang/swift#91475@open"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "swiftlang/swift#90516"
+    ],
+    "evidence_artifact_ids": [
+      "swiftlang/swift#90516@merged",
+      "swiftlang/swift#91475@open"
+    ],
+    "explanation": "PR swiftlang/swift#90516 is merged and currently governs the swift-coroutine-accessor-implementation scope. The reverting PR swiftlang/swift#91475 is only in an OPEN status and has not been merged, so it does not alter current decision authority.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"swiftlang/swift#90516\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"swiftlang/swift#90516@merged\",\n    \"swiftlang/swift#91475@open\"\n  ],\n  \"explanation\": \"PR swiftlang/swift#90516 is merged and currently governs the swift-coroutine-accessor-implementation scope. The reverting PR swiftlang/swift#91475 is only in an OPEN status and has not been merged, so it does not alter current decision authority.\"\n}\n```"
+}

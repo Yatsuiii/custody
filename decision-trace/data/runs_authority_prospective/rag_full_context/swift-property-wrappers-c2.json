@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "swift-property-wrappers-c2",
+  "timeline_id": "swift-property-wrappers",
+  "condition": "rag_full_context",
+  "prompt_sha256": "b6347c6648fd7e6a3cc8499baa92c6506c28d3141c22da275cb56d2529d4984a",
+  "source_artifact_ids": [
+    "SE-0030@withdrawn",
+    "SE-0258@accepted"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "SE-0258"
+    ],
+    "evidence_artifact_ids": [
+      "SE-0258@accepted"
+    ],
+    "explanation": "SE-0258 has an ACCEPTED lifecycle status for the swift-property-wrappers scope and explicitly replaces the withdrawn SE-0030.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"SE-0258\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"SE-0258@accepted\"\n  ],\n  \"explanation\": \"SE-0258 has an ACCEPTED lifecycle status for the swift-property-wrappers scope and explicitly replaces the withdrawn SE-0030.\"\n}\n```"
+}

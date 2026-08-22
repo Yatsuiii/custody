@@ -1,0 +1,28 @@
+{
+  "checkpoint_id": "rust-inline-const-c3",
+  "timeline_id": "rust-inline-const",
+  "condition": "rag_embedding",
+  "prompt_sha256": "b6f0c43fa981f09710c2d503a46381f7f28c7e66ca2974c00a9433058295e462",
+  "source_artifact_ids": [
+    "RFC-2203@merged",
+    "RFC-2920@open",
+    "RFC-2920@current-authority"
+  ],
+  "retrieved_artifact_ids": [
+    "RFC-2920@current-authority",
+    "RFC-2920@open",
+    "RFC-2203@merged"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-2920"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-2920@current-authority"
+    ],
+    "explanation": "RFC-2920 is merged with policy decision authority governing the rust-inline-const scope, replacing RFC-2203, and no superseding decision is present in the visible evidence.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"RFC-2920\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"RFC-2920@current-authority\"\n  ],\n  \"explanation\": \"RFC-2920 is merged with policy decision authority governing the rust-inline-const scope, replacing RFC-2203, and no superseding decision is present in the visible evidence.\"\n}\n```"
+}

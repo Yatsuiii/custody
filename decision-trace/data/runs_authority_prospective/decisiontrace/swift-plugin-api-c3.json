@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "swift-plugin-api-c3",
+  "timeline_id": "swift-plugin-api",
+  "condition": "decisiontrace",
+  "prompt_sha256": "c9e91a540ca98ba4c7e942d9213423865ba1180d443986852608bd4321b8c813",
+  "source_artifact_ids": [
+    "SE-0303@accepted",
+    "SE-0325@accepted",
+    "SE-0325@compatibility-note"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "SE-0303"
+    ],
+    "evidence_artifact_ids": [
+      "SE-0303@accepted"
+    ],
+    "explanation": "The retained SwiftPM legacy plugin API is governed by decision **SE-0303** (Authority state: **GOVERNING**), which serves as the sole active policy decision within the `swiftpm-plugin-legacy-api` scope.\n\n**Governing Source Artifact:**\n* **Artifact ID:** `SE-0303@accepted`\n* **Repository / Revision:** `swiftlang/swift-evolution` (`0105e139a22938561c700cfbb89ddc3ebe402f0c`)\n* **Proposal File:** [`proposals/0303-swiftpm-extensible-build-tools.md`](https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0303-swiftpm-extensible-build-tools.md)\n* **Lifecycle Status:** `ACCEPTED` (Implemented in Swift 5.6)",
+    "parse_error": null
+  },
+  "raw_response": "The retained SwiftPM legacy plugin API is governed by decision **SE-0303** (Authority state: **GOVERNING**), which serves as the sole active policy decision within the `swiftpm-plugin-legacy-api` scope.\n\n**Governing Source Artifact:**\n* **Artifact ID:** `SE-0303@accepted`\n* **Repository / Revision:** `swiftlang/swift-evolution` (`0105e139a22938561c700cfbb89ddc3ebe402f0c`)\n* **Proposal File:** [`proposals/0303-swiftpm-extensible-build-tools.md`](https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0303-swiftpm-extensible-build-tools.md)\n* **Lifecycle Status:** `ACCEPTED` (Implemented in Swift 5.6)"
+}

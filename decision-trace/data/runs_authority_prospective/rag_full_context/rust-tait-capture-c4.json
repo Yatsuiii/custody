@@ -1,0 +1,25 @@
+{
+  "checkpoint_id": "rust-tait-capture-c4",
+  "timeline_id": "rust-tait-capture",
+  "condition": "rag_full_context",
+  "prompt_sha256": "cd05e2da540ebb31fea5bc42f878ac54bbbde1bccca55ffe9d4667a5103b78ec",
+  "source_artifact_ids": [
+    "RFC-2071@merged",
+    "RFC-2515@open",
+    "RFC-2515@merged",
+    "RFC-3498@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-3498"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-3498@merged"
+    ],
+    "explanation": "RFC-3498 is merged with POLICY decision role for the rust-type-alias-impl-trait-capture scope, explicitly replacing RFC-2515.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\"governing_decision_ids\":[\"RFC-3498\"],\"evidence_artifact_ids\":[\"RFC-3498@merged\"],\"explanation\":\"RFC-3498 is merged with POLICY decision role for the rust-type-alias-impl-trait-capture scope, explicitly replacing RFC-2515.\"}\n```"
+}

@@ -1,0 +1,34 @@
+{
+  "checkpoint_id": "llvm-openmp-target-fast-c6",
+  "timeline_id": "llvm-openmp-target-fast",
+  "condition": "rag_embedding",
+  "prompt_sha256": "73c2af9c1aa8314e8acdffd56e6991e9ea04e2b506f9d4f6f4adb6ae4176b547",
+  "source_artifact_ids": [
+    "llvm/llvm-project#205775@open",
+    "llvm/llvm-project#205775@merged",
+    "llvm/llvm-project#213769@open",
+    "llvm/llvm-project#213769@merged",
+    "llvm/llvm-project#213911@open",
+    "llvm/llvm-project#213911@merged"
+  ],
+  "retrieved_artifact_ids": [
+    "llvm/llvm-project#213911@merged",
+    "llvm/llvm-project#205775@merged",
+    "llvm/llvm-project#213911@open",
+    "llvm/llvm-project#213769@merged",
+    "llvm/llvm-project#205775@open",
+    "llvm/llvm-project#213769@open"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "llvm/llvm-project#213911"
+    ],
+    "evidence_artifact_ids": [
+      "llvm/llvm-project#213911@merged"
+    ],
+    "explanation": "Decision llvm/llvm-project#213911 is REVERT_MERGED for authority scope llvm-openmp-target-fast, explicitly reverting the previous revert PR #213769 and establishing current governing authority.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"llvm/llvm-project#213911\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"llvm/llvm-project#213911@merged\"\n  ],\n  \"explanation\": \"Decision llvm/llvm-project#213911 is REVERT_MERGED for authority scope llvm-openmp-target-fast, explicitly reverting the previous revert PR #213769 and establishing current governing authority.\"\n}\n```"
+}

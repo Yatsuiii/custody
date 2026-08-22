@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "kubernetes-pleg-default-c2",
+  "timeline_id": "kubernetes-pleg-default",
+  "condition": "decisiontrace",
+  "prompt_sha256": "c0f0206e09a22eed3f0c61c4ce7ec551e1695a2c44f1e43fcc93851acbf1e2f9",
+  "source_artifact_ids": [
+    "kubernetes/kubernetes#137909@open",
+    "kubernetes/kubernetes#137909@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "kubernetes/kubernetes#137909"
+    ],
+    "evidence_artifact_ids": [
+      "kubernetes/kubernetes#137909@merged"
+    ],
+    "explanation": "The organizational decision currently governing `kubernetes-pleg-default` is **kubernetes/kubernetes#137909** (merged on 2026-03-19T20:52:40Z). \n\nAccording to the evidence, pull request `kubernetes/kubernetes#137909` switched the `PLEGOnDemandRelist` feature flag default to `false` for Kubernetes 1.36 and stands as the sole eligible active decision within the `kubernetes-pleg-default` scope.\n\n**Governing Artifact:**\n- PR: https://github.com/kubernetes/kubernetes/pull/137909 (`kubernetes/kubernetes#137909@merged`)",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing `kubernetes-pleg-default` is **kubernetes/kubernetes#137909** (merged on 2026-03-19T20:52:40Z). \n\nAccording to the evidence, pull request `kubernetes/kubernetes#137909` switched the `PLEGOnDemandRelist` feature flag default to `false` for Kubernetes 1.36 and stands as the sole eligible active decision within the `kubernetes-pleg-default` scope.\n\n**Governing Artifact:**\n- PR: https://github.com/kubernetes/kubernetes/pull/137909 (`kubernetes/kubernetes#137909@merged`)"
+}

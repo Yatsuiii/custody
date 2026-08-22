@@ -1,0 +1,26 @@
+{
+  "checkpoint_id": "kubernetes-gang-scheduling-c2",
+  "timeline_id": "kubernetes-gang-scheduling",
+  "condition": "rag_embedding",
+  "prompt_sha256": "1aeca8e4124488338ed9dfe5c5b3697d93bab4de5c2d9f9f4496582897fad205",
+  "source_artifact_ids": [
+    "KEP-583@current",
+    "KEP-5832@current"
+  ],
+  "retrieved_artifact_ids": [
+    "KEP-583@current",
+    "KEP-5832@current"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "KEP-5832"
+    ],
+    "evidence_artifact_ids": [
+      "KEP-5832@current"
+    ],
+    "explanation": "KEP-5832 is in ACCEPTED status (implementable) with the POLICY decision role for the kubernetes-gang-scheduling-policy scope, explicitly replacing KEP-583.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"KEP-5832\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"KEP-5832@current\"\n  ],\n  \"explanation\": \"KEP-5832 is in ACCEPTED status (implementable) with the POLICY decision role for the kubernetes-gang-scheduling-policy scope, explicitly replacing KEP-583.\"\n}\n```"
+}

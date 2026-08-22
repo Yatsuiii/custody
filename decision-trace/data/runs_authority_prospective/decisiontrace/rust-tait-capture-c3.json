@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "rust-tait-capture-c3",
+  "timeline_id": "rust-tait-capture",
+  "condition": "decisiontrace",
+  "prompt_sha256": "579886726a9137ac331a2bbc05f79f61ed19cb8daf04cf6fea3cd43102c6fb68",
+  "source_artifact_ids": [
+    "RFC-2071@merged",
+    "RFC-2515@open",
+    "RFC-2515@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-2515"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-2515@merged"
+    ],
+    "explanation": "The organizational decision currently governing Rust type-alias `impl Trait` capture behavior is **RFC-2515** (Authority state: **GOVERNING**). RFC-2515 is the sole eligible active decision within the `rust-type-alias-impl-trait-capture` scope.\n\n**Establishing Source Artifact:**\n* **Artifact ID:** `RFC-2515@merged`\n* **Decision ID:** RFC-2515\n* **Repository:** `rust-lang/rfcs`\n* **Lifecycle Status:** MERGED (Timestamp: `2019-07-28T06:13:16Z`, explicitly replacing `RFC-2071`)\n* **Pinned Revision:** `f3a7bad25a6b40daf346a34d22b869358a2e305f`\n* **Source URL:** `https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/2515-type_alias_impl_trait.md`",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing Rust type-alias `impl Trait` capture behavior is **RFC-2515** (Authority state: **GOVERNING**). RFC-2515 is the sole eligible active decision within the `rust-type-alias-impl-trait-capture` scope.\n\n**Establishing Source Artifact:**\n* **Artifact ID:** `RFC-2515@merged`\n* **Decision ID:** RFC-2515\n* **Repository:** `rust-lang/rfcs`\n* **Lifecycle Status:** MERGED (Timestamp: `2019-07-28T06:13:16Z`, explicitly replacing `RFC-2071`)\n* **Pinned Revision:** `f3a7bad25a6b40daf346a34d22b869358a2e305f`\n* **Source URL:** `https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/2515-type_alias_impl_trait.md`"
+}

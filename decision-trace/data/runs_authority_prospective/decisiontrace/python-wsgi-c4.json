@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "python-wsgi-c4",
+  "timeline_id": "python-wsgi",
+  "condition": "decisiontrace",
+  "prompt_sha256": "9abeb34a91cd08f69323f74c90fceed47e98346f3b82df4124cd4ec0e846dfdf",
+  "source_artifact_ids": [
+    "PEP-333@accepted",
+    "PEP-3333@accepted",
+    "PEP-333@current-note"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-3333"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-3333@accepted"
+    ],
+    "explanation": "PEP-3333 is the authoritative governing standard for the `python-wsgi` scope. It has a status of \"Final\" with a policy decision role (explicitly replacing PEP-333) and is the sole eligible active decision in scope for the Python Web Server Gateway Interface v1.0.1.",
+    "parse_error": null
+  },
+  "raw_response": "PEP-3333 is the authoritative governing standard for the `python-wsgi` scope. It has a status of \"Final\" with a policy decision role (explicitly replacing PEP-333) and is the sole eligible active decision in scope for the Python Web Server Gateway Interface v1.0.1."
+}

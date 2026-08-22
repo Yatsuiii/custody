@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "rust-drop-check-c1",
+  "timeline_id": "rust-drop-check",
+  "condition": "rag_embedding",
+  "prompt_sha256": "d365f6b05301404ff60f559c441426c3ec5fbd2ee0fc20b2d181ee9639cd2660",
+  "source_artifact_ids": [
+    "RFC-769@merged"
+  ],
+  "retrieved_artifact_ids": [
+    "RFC-769@merged"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-769"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-769@merged"
+    ],
+    "explanation": "RFC-769 is merged policy governing the rust-generic-drop-safety authority scope.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"RFC-769\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"RFC-769@merged\"\n  ],\n  \"explanation\": \"RFC-769 is merged policy governing the rust-generic-drop-safety authority scope.\"\n}\n```"
+}

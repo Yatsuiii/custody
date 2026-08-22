@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "llvm-openmp-target-fast-c3",
+  "timeline_id": "llvm-openmp-target-fast",
+  "condition": "decisiontrace",
+  "prompt_sha256": "ef0392c9bcc9939beae9d4cd4b4cc18fdba214398cb5c3c8fbdb2bd6e9aa3c24",
+  "source_artifact_ids": [
+    "llvm/llvm-project#205775@open",
+    "llvm/llvm-project#205775@merged",
+    "llvm/llvm-project#213769@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "llvm/llvm-project#205775"
+    ],
+    "evidence_artifact_ids": [
+      "llvm/llvm-project#205775@merged"
+    ],
+    "explanation": "The organizational decision currently governing `llvm-openmp-target-fast` is **`llvm/llvm-project#205775`** (Authority state: **GOVERNING**). \n\nIt is the sole eligible active decision within the `llvm-openmp-target-fast` authority scope.\n\n**Source Artifact Establishing Authority:**\n* **Artifact ID:** `llvm/llvm-project#205775@merged`\n* **Decision ID:** `llvm/llvm-project#205775`\n* **Source URL:** https://github.com/llvm/llvm-project/pull/205775\n* **Pinned Revision:** `981286a235471cfffbf2b18201aea926a0803b9c`\n* **Status / Timestamp:** MERGED at 2026-08-03T13:21:04Z\n* **Summary:** Implements enabling `-fopenmp-assume-teams-oversubscription` and `-fopenmp-assume-threads-oversubscription` by default under `-fopenmp-target-fast`.",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing `llvm-openmp-target-fast` is **`llvm/llvm-project#205775`** (Authority state: **GOVERNING**). \n\nIt is the sole eligible active decision within the `llvm-openmp-target-fast` authority scope.\n\n**Source Artifact Establishing Authority:**\n* **Artifact ID:** `llvm/llvm-project#205775@merged`\n* **Decision ID:** `llvm/llvm-project#205775`\n* **Source URL:** https://github.com/llvm/llvm-project/pull/205775\n* **Pinned Revision:** `981286a235471cfffbf2b18201aea926a0803b9c`\n* **Status / Timestamp:** MERGED at 2026-08-03T13:21:04Z\n* **Summary:** Implements enabling `-fopenmp-assume-teams-oversubscription` and `-fopenmp-assume-threads-oversubscription` by default under `-fopenmp-target-fast`."
+}

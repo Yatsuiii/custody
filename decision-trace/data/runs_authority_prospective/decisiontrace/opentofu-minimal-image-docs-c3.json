@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "opentofu-minimal-image-docs-c3",
+  "timeline_id": "opentofu-minimal-image-docs",
+  "condition": "decisiontrace",
+  "prompt_sha256": "18cefae5e15c3278fc0324c8956659da9e6a5278f4f14631eb12fe2aeeb5dd55",
+  "source_artifact_ids": [
+    "opentofu/opentofu#2403@open",
+    "opentofu/opentofu#2403@merged",
+    "opentofu/opentofu#2404@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "opentofu/opentofu#2403"
+    ],
+    "evidence_artifact_ids": [
+      "opentofu/opentofu#2403@merged"
+    ],
+    "explanation": "The organizational decision governing the `opentofu-minimal-image-docs` scope is `opentofu/opentofu#2403`, placing the authority state at **GOVERNING**. \n\nAccording to the resolver evidence, `opentofu/opentofu#2403` is the sole eligible active decision in the `opentofu-minimal-image-docs` scope. \n\n**Governing Source Artifact:**\n* **Artifact ID:** `opentofu/opentofu#2403@merged`\n* **Decision ID:** `opentofu/opentofu#2403`\n* **Repository:** `opentofu/opentofu`\n* **URL:** https://github.com/opentofu/opentofu/pull/2403\n* **Lifecycle Status:** MERGED (Timestamp: 2025-01-21T13:04:03Z, Pinned Revision: `a36af7ba8a7587ec2923b6043d8d01cc3ca83779`)\n* **Role:** IMPLEMENTATION (\"Temporary revert minimal image docs\")",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision governing the `opentofu-minimal-image-docs` scope is `opentofu/opentofu#2403`, placing the authority state at **GOVERNING**. \n\nAccording to the resolver evidence, `opentofu/opentofu#2403` is the sole eligible active decision in the `opentofu-minimal-image-docs` scope. \n\n**Governing Source Artifact:**\n* **Artifact ID:** `opentofu/opentofu#2403@merged`\n* **Decision ID:** `opentofu/opentofu#2403`\n* **Repository:** `opentofu/opentofu`\n* **URL:** https://github.com/opentofu/opentofu/pull/2403\n* **Lifecycle Status:** MERGED (Timestamp: 2025-01-21T13:04:03Z, Pinned Revision: `a36af7ba8a7587ec2923b6043d8d01cc3ca83779`)\n* **Role:** IMPLEMENTATION (\"Temporary revert minimal image docs\")"
+}

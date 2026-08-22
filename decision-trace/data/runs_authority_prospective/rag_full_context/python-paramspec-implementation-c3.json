@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "python-paramspec-implementation-c3",
+  "timeline_id": "python-paramspec-implementation",
+  "condition": "rag_full_context",
+  "prompt_sha256": "54eb2b0e36ef2d7977ac938af51365f205241c5d852d8c3c7ed1a854578be93e",
+  "source_artifact_ids": [
+    "PEP-612@final",
+    "python/cpython#23702@open",
+    "python/cpython#23702@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "python/cpython#23702"
+    ],
+    "evidence_artifact_ids": [
+      "python/cpython#23702@merged"
+    ],
+    "explanation": "PR python/cpython#23702 is merged, establishing governing authority over the python-paramspec-implementation scope.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"python/cpython#23702\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"python/cpython#23702@merged\"\n  ],\n  \"explanation\": \"PR python/cpython#23702 is merged, establishing governing authority over the python-paramspec-implementation scope.\"\n}\n```"
+}

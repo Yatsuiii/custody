@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "envoy-ext-authz-empty-values-c2",
+  "timeline_id": "envoy-ext-authz-empty-values",
+  "condition": "decisiontrace",
+  "prompt_sha256": "8d7fa70ae07230f9fd559470b841c430fcd952f22fd91469aa456f0d246e8343",
+  "source_artifact_ids": [
+    "envoyproxy/envoy#45103@open",
+    "envoyproxy/envoy#45103@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "envoyproxy/envoy#45103"
+    ],
+    "evidence_artifact_ids": [
+      "envoyproxy/envoy#45103@merged"
+    ],
+    "explanation": "The organizational decision currently governing `envoy-ext-authz-empty-values` is **envoyproxy/envoy#45103** (Authority state: **GOVERNING**). \n\nThis authority is established by the following source artifact:\n* **Artifact ID:** `envoyproxy/envoy#45103@merged`\n* **Source URL:** https://github.com/envoyproxy/envoy/pull/45103\n* **Pinned Revision:** `c3ab9e5a3d3ab77a3eddec72d6ff8c54ad237ad3`\n* **Lifecycle Status:** MERGED\n\nAs an implementation decision titled *\"ext_authz: respect keep_empty_value in HeaderValueOption\"*, it is the sole eligible active decision governing the `envoy-ext-authz-empty-values` scope.",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing `envoy-ext-authz-empty-values` is **envoyproxy/envoy#45103** (Authority state: **GOVERNING**). \n\nThis authority is established by the following source artifact:\n* **Artifact ID:** `envoyproxy/envoy#45103@merged`\n* **Source URL:** https://github.com/envoyproxy/envoy/pull/45103\n* **Pinned Revision:** `c3ab9e5a3d3ab77a3eddec72d6ff8c54ad237ad3`\n* **Lifecycle Status:** MERGED\n\nAs an implementation decision titled *\"ext_authz: respect keep_empty_value in HeaderValueOption\"*, it is the sole eligible active decision governing the `envoy-ext-authz-empty-values` scope."
+}

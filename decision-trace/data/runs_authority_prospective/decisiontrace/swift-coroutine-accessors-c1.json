@@ -1,0 +1,22 @@
+{
+  "checkpoint_id": "swift-coroutine-accessors-c1",
+  "timeline_id": "swift-coroutine-accessors",
+  "condition": "decisiontrace",
+  "prompt_sha256": "a2572fdd7ee8fdc63a4f08b80b973b07f2cef9fb0e252349bedde73b3f6cbffa",
+  "source_artifact_ids": [
+    "SE-0474@accepted"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "SE-0474"
+    ],
+    "evidence_artifact_ids": [
+      "SE-0474@accepted"
+    ],
+    "explanation": "The organizational decision currently governing the `swift-yielding-accessor-policy` scope is **SE-0474** (Authority State: **GOVERNING**), which serves as the sole eligible active policy decision.\n\n**Source Artifact Establishing Authority:**\n* **Artifact ID:** `SE-0474@accepted`\n* **Decision ID:** SE-0474\n* **Lifecycle Status:** ACCEPTED (`* Status: **Accepted**`)\n* **Repository:** `swiftlang/swift-evolution` (Pinned revision: `0105e139a22938561c700cfbb89ddc3ebe402f0c`)\n* **Source URL:** https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0474-yielding-accessors.md",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing the `swift-yielding-accessor-policy` scope is **SE-0474** (Authority State: **GOVERNING**), which serves as the sole eligible active policy decision.\n\n**Source Artifact Establishing Authority:**\n* **Artifact ID:** `SE-0474@accepted`\n* **Decision ID:** SE-0474\n* **Lifecycle Status:** ACCEPTED (`* Status: **Accepted**`)\n* **Repository:** `swiftlang/swift-evolution` (Pinned revision: `0105e139a22938561c700cfbb89ddc3ebe402f0c`)\n* **Source URL:** https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0474-yielding-accessors.md"
+}

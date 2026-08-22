@@ -1,0 +1,21 @@
+{
+  "checkpoint_id": "python-paramspec-implementation-c2",
+  "timeline_id": "python-paramspec-implementation",
+  "condition": "rag_full_context",
+  "prompt_sha256": "92dda6ad092f2f31911cb282778727fe44378204acfed5c52b2b64f5c7176087",
+  "source_artifact_ids": [
+    "PEP-612@final",
+    "python/cpython#23702@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [
+      "python/cpython#23702@open"
+    ],
+    "explanation": "Pull request python/cpython#23702 for the python-paramspec-implementation scope has lifecycle status OPEN and is only proposed, so no accepted or merged implementation decision currently governs.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"NO_GOVERNING_DECISION\",\n  \"governing_decision_ids\": [],\n  \"evidence_artifact_ids\": [\n    \"python/cpython#23702@open\"\n  ],\n  \"explanation\": \"Pull request python/cpython#23702 for the python-paramspec-implementation scope has lifecycle status OPEN and is only proposed, so no accepted or merged implementation decision currently governs.\"\n}\n```"
+}

@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "rust-naked-functions-c3",
+  "timeline_id": "rust-naked-functions",
+  "condition": "decisiontrace",
+  "prompt_sha256": "2b3e018e652d01af305fffc0e3d7cee4cf32354e9814acd8ffeee40dc3233dc6",
+  "source_artifact_ids": [
+    "RFC-1201@merged",
+    "RFC-2972@open",
+    "RFC-2972@current-authority"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-2972"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-2972@current-authority"
+    ],
+    "explanation": "The organizational decision currently governing `rust-naked-functions` is **RFC-2972** (Authority state: **GOVERNING**). \n\nRFC-2972 holds the lifecycle status of `MERGED`, explicitly replaces RFC-1201, and is the sole eligible active decision in the `rust-naked-functions` authority scope.\n\n**Source Artifact Establishing Authority:**\n* **Artifact ID:** `RFC-2972@current-authority`\n* **Repository:** `rust-lang/rfcs`\n* **Pinned Revision:** `354518a8c9025f40be6f730452c1bfe71a12dc22`\n* **Source URL:** https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/2972-constrained-naked.md",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing `rust-naked-functions` is **RFC-2972** (Authority state: **GOVERNING**). \n\nRFC-2972 holds the lifecycle status of `MERGED`, explicitly replaces RFC-1201, and is the sole eligible active decision in the `rust-naked-functions` authority scope.\n\n**Source Artifact Establishing Authority:**\n* **Artifact ID:** `RFC-2972@current-authority`\n* **Repository:** `rust-lang/rfcs`\n* **Pinned Revision:** `354518a8c9025f40be6f730452c1bfe71a12dc22`\n* **Source URL:** https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/2972-constrained-naked.md"
+}

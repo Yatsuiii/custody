@@ -1,0 +1,27 @@
+{
+  "checkpoint_id": "rust-inline-const-c2",
+  "timeline_id": "rust-inline-const",
+  "condition": "rag_embedding",
+  "prompt_sha256": "f80a6646bf2efacddd35843348bbd18ef91343c07368b774d12d8fbd6b15d6c9",
+  "source_artifact_ids": [
+    "RFC-2203@merged",
+    "RFC-2920@open"
+  ],
+  "retrieved_artifact_ids": [
+    "RFC-2203@merged",
+    "RFC-2920@open"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-2203"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-2203@merged",
+      "RFC-2920@open"
+    ],
+    "explanation": "RFC-2203 is merged and retains governing policy authority over rust-const-repeat-simple-case because the successor proposal RFC-2920 is still in OPEN status.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"RFC-2203\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"RFC-2203@merged\",\n    \"RFC-2920@open\"\n  ],\n  \"explanation\": \"RFC-2203 is merged and retains governing policy authority over rust-const-repeat-simple-case because the successor proposal RFC-2920 is still in OPEN status.\"\n}\n```"
+}

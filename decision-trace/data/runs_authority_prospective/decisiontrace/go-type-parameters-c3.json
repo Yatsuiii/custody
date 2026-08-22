@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "go-type-parameters-c3",
+  "timeline_id": "go-type-parameters",
+  "condition": "decisiontrace",
+  "prompt_sha256": "81728066f273ca539d55b644caac9044f25d85f2e558cd31b2de31c05e8284cd",
+  "source_artifact_ids": [
+    "go-contracts@superseded",
+    "golang/go#43651@open",
+    "golang/go#43651@accepted"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "golang/go#43651"
+    ],
+    "evidence_artifact_ids": [
+      "golang/go#43651@accepted"
+    ],
+    "explanation": "The organizational decision currently governing `go-type-parameters` is **golang/go#43651** (Authority state: **GOVERNING**). It is the sole eligible active decision within the `go-type-parameters` authority scope, holding an `ACCEPTED` lifecycle status and explicitly replacing `go-contracts`.\n\nCurrent authority is established by the following artifact:\n- **Artifact ID:** `golang/go#43651@accepted`\n- **Decision ID:** `golang/go#43651`\n- **Pinned Revision:** `github-comment-776944155` (Timestamp: `2021-02-10T19:11:31Z`)\n- **Source URL:** https://github.com/golang/go/issues/43651#issuecomment-776944155\n- **Record:** The proposal review group confirmed consensus and marked the policy proposal as accepted to track implementation.",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing `go-type-parameters` is **golang/go#43651** (Authority state: **GOVERNING**). It is the sole eligible active decision within the `go-type-parameters` authority scope, holding an `ACCEPTED` lifecycle status and explicitly replacing `go-contracts`.\n\nCurrent authority is established by the following artifact:\n- **Artifact ID:** `golang/go#43651@accepted`\n- **Decision ID:** `golang/go#43651`\n- **Pinned Revision:** `github-comment-776944155` (Timestamp: `2021-02-10T19:11:31Z`)\n- **Source URL:** https://github.com/golang/go/issues/43651#issuecomment-776944155\n- **Record:** The proposal review group confirmed consensus and marked the policy proposal as accepted to track implementation."
+}

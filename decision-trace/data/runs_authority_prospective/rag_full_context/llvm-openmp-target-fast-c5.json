@@ -1,0 +1,26 @@
+{
+  "checkpoint_id": "llvm-openmp-target-fast-c5",
+  "timeline_id": "llvm-openmp-target-fast",
+  "condition": "rag_full_context",
+  "prompt_sha256": "8eaa58f20a869a9158baeaeb3d5152b49c2948d5c4ff4c63f91afe5dda045a4f",
+  "source_artifact_ids": [
+    "llvm/llvm-project#205775@open",
+    "llvm/llvm-project#205775@merged",
+    "llvm/llvm-project#213769@open",
+    "llvm/llvm-project#213769@merged",
+    "llvm/llvm-project#213911@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "llvm/llvm-project#213769"
+    ],
+    "evidence_artifact_ids": [
+      "llvm/llvm-project#213769@merged"
+    ],
+    "explanation": "Pull request #213769 was merged to revert #205775, making it the active governing decision for llvm-openmp-target-fast. The subsequent reland PR #213911 remains in OPEN lifecycle status and carries no governing authority.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"llvm/llvm-project#213769\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"llvm/llvm-project#213769@merged\"\n  ],\n  \"explanation\": \"Pull request #213769 was merged to revert #205775, making it the active governing decision for llvm-openmp-target-fast. The subsequent reland PR #213911 remains in OPEN lifecycle status and carries no governing authority.\"\n}\n```"
+}

@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "rust-rpit-capture-c2",
+  "timeline_id": "rust-rpit-capture",
+  "condition": "decisiontrace",
+  "prompt_sha256": "2dd99c8904b7216d52589cba1985f419cb3a01cb77afe66c36ab9a691967cabe",
+  "source_artifact_ids": [
+    "RFC-1522@merged",
+    "RFC-1951@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-1522"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-1522@merged"
+    ],
+    "explanation": "The organizational decision currently governing Rust `impl Trait` capture rules is **RFC-1522** (Authority state: `GOVERNING`), which is the sole eligible active policy decision in the `rust-impl-trait-capture-rules` scope.\n\n**Governing Source Artifact:**\n* **Artifact ID:** `RFC-1522@merged`\n* **Decision ID:** `RFC-1522` (\"Minimal `impl Trait`\")\n* **Repository:** `rust-lang/rfcs`\n* **Lifecycle Status:** MERGED (Timestamp: 2016-06-27T22:28:41Z)\n* **Pinned Revision:** `b48ef3700842391b28fb96298d274edeb12edf6c`\n* **Source URL:** https://github.com/rust-lang/rfcs/pull/1522",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing Rust `impl Trait` capture rules is **RFC-1522** (Authority state: `GOVERNING`), which is the sole eligible active policy decision in the `rust-impl-trait-capture-rules` scope.\n\n**Governing Source Artifact:**\n* **Artifact ID:** `RFC-1522@merged`\n* **Decision ID:** `RFC-1522` (\"Minimal `impl Trait`\")\n* **Repository:** `rust-lang/rfcs`\n* **Lifecycle Status:** MERGED (Timestamp: 2016-06-27T22:28:41Z)\n* **Pinned Revision:** `b48ef3700842391b28fb96298d274edeb12edf6c`\n* **Source URL:** https://github.com/rust-lang/rfcs/pull/1522"
+}

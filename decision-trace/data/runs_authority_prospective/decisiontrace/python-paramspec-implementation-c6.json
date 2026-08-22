@@ -1,0 +1,28 @@
+{
+  "checkpoint_id": "python-paramspec-implementation-c6",
+  "timeline_id": "python-paramspec-implementation",
+  "condition": "decisiontrace",
+  "prompt_sha256": "8f517f9f10cafc28016a2be20fadf413c8f7a368d6f42ca28df90772bb7c9639",
+  "source_artifact_ids": [
+    "PEP-612@final",
+    "python/cpython#23702@open",
+    "python/cpython#23702@merged",
+    "python/cpython#25449@open",
+    "python/cpython#25449@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "MULTIPLE_GOVERNING",
+    "governing_decision_ids": [
+      "PEP-612",
+      "python/cpython#25449"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-612@final",
+      "python/cpython#25449@merged"
+    ],
+    "explanation": "The authority state is **MULTIPLE_GOVERNING** across two distinct scopes:\n\n1. **`python-paramspec-policy`**: Governed by **PEP-612**, which serves as the active, final policy decision (`FINAL`).\n2. **`python-paramspec-implementation`**: Governed by **python/cpython#25449**, which serves as the active implementation decision (`REVERT_MERGED`).",
+    "parse_error": null
+  },
+  "raw_response": "The authority state is **MULTIPLE_GOVERNING** across two distinct scopes:\n\n1. **`python-paramspec-policy`**: Governed by **PEP-612**, which serves as the active, final policy decision (`FINAL`).\n2. **`python-paramspec-implementation`**: Governed by **python/cpython#25449**, which serves as the active implementation decision (`REVERT_MERGED`)."
+}

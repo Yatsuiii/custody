@@ -1,0 +1,18 @@
+{
+  "checkpoint_id": "go-range-functions-c1",
+  "timeline_id": "go-range-functions",
+  "condition": "decisiontrace",
+  "prompt_sha256": "767f8f339e646ee05deb8a294e860a547255c5f82e7f20a29488b077bb73804b",
+  "source_artifact_ids": [
+    "golang/go#61405@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [],
+    "explanation": "There is currently no governing decision (`NO_GOVERNING_DECISION`) for Go range function details. No visible accepted or implemented decisions are eligible to govern, and no source artifacts establishing governing authority exist in the provided evidence.",
+    "parse_error": null
+  },
+  "raw_response": "There is currently no governing decision (`NO_GOVERNING_DECISION`) for Go range function details. No visible accepted or implemented decisions are eligible to govern, and no source artifacts establishing governing authority exist in the provided evidence."
+}

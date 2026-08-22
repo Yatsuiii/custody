@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "rust-tait-capture-c2",
+  "timeline_id": "rust-tait-capture",
+  "condition": "rag_full_context",
+  "prompt_sha256": "24d17571c79a9aa37d94931aec38474718e1d035d83fc4bacbf73aa69ce79de4",
+  "source_artifact_ids": [
+    "RFC-2071@merged",
+    "RFC-2515@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-2071"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-2071@merged",
+      "RFC-2515@open"
+    ],
+    "explanation": "RFC-2071 is the accepted merged policy governing type-alias impl Trait capture, while the replacement RFC-2515 remains only an open proposal without governing authority.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\"RFC-2071\"],\n  \"evidence_artifact_ids\": [\"RFC-2071@merged\", \"RFC-2515@open\"],\n  \"explanation\": \"RFC-2071 is the accepted merged policy governing type-alias impl Trait capture, while the replacement RFC-2515 remains only an open proposal without governing authority.\"\n}\n```"
+}

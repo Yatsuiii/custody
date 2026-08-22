@@ -1,0 +1,30 @@
+{
+  "checkpoint_id": "rust-inline-const-c4",
+  "timeline_id": "rust-inline-const",
+  "condition": "rag_embedding",
+  "prompt_sha256": "b67fd77728e344a217707221867a80300257239a29dc3ceed1ae7808add4366e",
+  "source_artifact_ids": [
+    "RFC-2203@merged",
+    "RFC-2920@open",
+    "RFC-2920@current-authority",
+    "RFC-2203@partial-note"
+  ],
+  "retrieved_artifact_ids": [
+    "RFC-2920@current-authority",
+    "RFC-2920@open",
+    "RFC-2203@merged",
+    "RFC-2203@partial-note"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-2920"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-2920@current-authority"
+    ],
+    "explanation": "RFC-2920 is merged with a POLICY decision role governing the rust-inline-const scope, explicitly replacing RFC-2203.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"RFC-2920\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"RFC-2920@current-authority\"\n  ],\n  \"explanation\": \"RFC-2920 is merged with a POLICY decision role governing the rust-inline-const scope, explicitly replacing RFC-2203.\"\n}\n```"
+}

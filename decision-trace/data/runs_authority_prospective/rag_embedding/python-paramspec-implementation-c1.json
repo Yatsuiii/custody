@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "python-paramspec-implementation-c1",
+  "timeline_id": "python-paramspec-implementation",
+  "condition": "rag_embedding",
+  "prompt_sha256": "96bdd662d2b7f8e11f755919b0846118707a2992654a037ed5dda9ff34bc60e9",
+  "source_artifact_ids": [
+    "PEP-612@final"
+  ],
+  "retrieved_artifact_ids": [
+    "PEP-612@final"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-612"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-612@final"
+    ],
+    "explanation": "PEP-612 is in Final status with a decision role of POLICY governing python-paramspec-policy.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"PEP-612\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"PEP-612@final\"\n  ],\n  \"explanation\": \"PEP-612 is in Final status with a decision role of POLICY governing python-paramspec-policy.\"\n}\n```"
+}

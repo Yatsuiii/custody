@@ -1,0 +1,30 @@
+{
+  "checkpoint_id": "swift-plugin-api-c4",
+  "timeline_id": "swift-plugin-api",
+  "condition": "rag_embedding",
+  "prompt_sha256": "3e5bd98324cccd36137120d8e9820331d669916a471d21494c72d6f0ddba3139",
+  "source_artifact_ids": [
+    "SE-0303@accepted",
+    "SE-0325@accepted",
+    "SE-0325@compatibility-note"
+  ],
+  "retrieved_artifact_ids": [
+    "SE-0325@compatibility-note",
+    "SE-0325@accepted",
+    "SE-0303@accepted"
+  ],
+  "prediction": {
+    "authority_state": "MULTIPLE_GOVERNING",
+    "governing_decision_ids": [
+      "SE-0303",
+      "SE-0325"
+    ],
+    "evidence_artifact_ids": [
+      "SE-0303@accepted",
+      "SE-0325@accepted"
+    ],
+    "explanation": "SE-0325 governs the new SwiftPM plugin entry point (superseding SE-0303 for that scope), while SE-0303 remains the governing policy for the retained legacy plugin API.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"MULTIPLE_GOVERNING\",\n  \"governing_decision_ids\": [\n    \"SE-0303\",\n    \"SE-0325\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"SE-0303@accepted\",\n    \"SE-0325@accepted\"\n  ],\n  \"explanation\": \"SE-0325 governs the new SwiftPM plugin entry point (superseding SE-0303 for that scope), while SE-0303 remains the governing policy for the retained legacy plugin API.\"\n}\n```"
+}

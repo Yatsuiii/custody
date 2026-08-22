@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "python-db-api-c1",
+  "timeline_id": "python-db-api",
+  "condition": "rag_embedding",
+  "prompt_sha256": "e91d1f02724cf4093938a30c360ccb56fa390efe9728421efa95dbe8898ed5cb",
+  "source_artifact_ids": [
+    "PEP-248@accepted"
+  ],
+  "retrieved_artifact_ids": [
+    "PEP-248@accepted"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-248"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-248@accepted"
+    ],
+    "explanation": "PEP-248 is in Final status with a POLICY decision role governing the python-db-api scope.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"PEP-248\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"PEP-248@accepted\"\n  ],\n  \"explanation\": \"PEP-248 is in Final status with a POLICY decision role governing the python-db-api scope.\"\n}\n```"
+}

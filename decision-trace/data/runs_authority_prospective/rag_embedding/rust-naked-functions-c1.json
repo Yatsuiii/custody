@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "rust-naked-functions-c1",
+  "timeline_id": "rust-naked-functions",
+  "condition": "rag_embedding",
+  "prompt_sha256": "472583fc68a9760c6dd3186b2d2920c3edff9b94bc41f86a7f359688fe1ee0a6",
+  "source_artifact_ids": [
+    "RFC-1201@merged"
+  ],
+  "retrieved_artifact_ids": [
+    "RFC-1201@merged"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-1201"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-1201@merged"
+    ],
+    "explanation": "RFC-1201 is a merged policy decision establishing support and authority for rust naked functions.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"RFC-1201\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"RFC-1201@merged\"\n  ],\n  \"explanation\": \"RFC-1201 is a merged policy decision establishing support and authority for rust naked functions.\"\n}\n```"
+}

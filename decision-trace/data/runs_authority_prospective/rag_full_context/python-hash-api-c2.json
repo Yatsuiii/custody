@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "python-hash-api-c2",
+  "timeline_id": "python-hash-api",
+  "condition": "rag_full_context",
+  "prompt_sha256": "1fae7e7050e30977a31790e1044bcc2a369b7be05b739210e7785b1708d2f92a",
+  "source_artifact_ids": [
+    "PEP-247@accepted",
+    "PEP-452@accepted"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-452"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-452@accepted"
+    ],
+    "explanation": "PEP-452 has a status of Final in the python-hash-api scope and explicitly replaces PEP-247 as the governing policy.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"PEP-452\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"PEP-452@accepted\"\n  ],\n  \"explanation\": \"PEP-452 has a status of Final in the python-hash-api scope and explicitly replaces PEP-247 as the governing policy.\"\n}\n```"
+}

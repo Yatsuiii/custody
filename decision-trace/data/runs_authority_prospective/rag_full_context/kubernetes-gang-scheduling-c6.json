@@ -1,0 +1,28 @@
+{
+  "checkpoint_id": "kubernetes-gang-scheduling-c6",
+  "timeline_id": "kubernetes-gang-scheduling",
+  "condition": "rag_full_context",
+  "prompt_sha256": "af912c492911da24fbee85223fcd34b30d6465af06a396eb8e35d7bd4aedcfa2",
+  "source_artifact_ids": [
+    "KEP-583@current",
+    "KEP-5832@current",
+    "KEP-4671@current",
+    "kubernetes/kubernetes#137464@merged",
+    "kubernetes/kubernetes#139008@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "MULTIPLE_GOVERNING",
+    "governing_decision_ids": [
+      "KEP-4671",
+      "kubernetes/kubernetes#139008"
+    ],
+    "evidence_artifact_ids": [
+      "KEP-4671@current",
+      "kubernetes/kubernetes#139008@merged"
+    ],
+    "explanation": "KEP-4671 is accepted and explicitly replaces KEP-5832 and KEP-583, governing the gang-scheduling policy scope. In the PodGroup admission implementation scope, pull request kubernetes/kubernetes#139008 was merged to explicitly revert kubernetes/kubernetes#137464 and remove the admission plugin.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"MULTIPLE_GOVERNING\",\n  \"governing_decision_ids\": [\n    \"KEP-4671\",\n    \"kubernetes/kubernetes#139008\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"KEP-4671@current\",\n    \"kubernetes/kubernetes#139008@merged\"\n  ],\n  \"explanation\": \"KEP-4671 is accepted and explicitly replaces KEP-5832 and KEP-583, governing the gang-scheduling policy scope. In the PodGroup admission implementation scope, pull request kubernetes/kubernetes#139008 was merged to explicitly revert kubernetes/kubernetes#137464 and remove the admission plugin.\"\n}\n```"
+}

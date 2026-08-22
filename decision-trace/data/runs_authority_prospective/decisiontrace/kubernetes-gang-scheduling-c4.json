@@ -1,0 +1,25 @@
+{
+  "checkpoint_id": "kubernetes-gang-scheduling-c4",
+  "timeline_id": "kubernetes-gang-scheduling",
+  "condition": "decisiontrace",
+  "prompt_sha256": "ece2f0cda4ffe2a2fc8e5d5fba5fc9e06bc460be113c81bf47367e3e66460878",
+  "source_artifact_ids": [
+    "KEP-583@current",
+    "KEP-5832@current",
+    "KEP-4671@current",
+    "kubernetes/kubernetes#137464@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "KEP-4671"
+    ],
+    "evidence_artifact_ids": [
+      "KEP-4671@current"
+    ],
+    "explanation": "The decision currently governing Kubernetes gang scheduling policy is **KEP-4671** (Authority state: **GOVERNING**). It is the sole eligible active decision in the `kubernetes-gang-scheduling-policy` scope, holding an `ACCEPTED` lifecycle status and acting as a `POLICY` decision that explicitly replaces KEP-5832 and KEP-583.\n\n**Governing Source Artifact:**\n- **Artifact ID:** `KEP-4671@current`\n- **Decision ID:** `KEP-4671`\n- **Repository:** `kubernetes/enhancements`\n- **Pinned Revision:** `c4f439c2dd4acb928094660be0ea771bf63f2b76`\n- **Source URL:** https://github.com/kubernetes/enhancements/blob/c4f439c2dd4acb928094660be0ea771bf63f2b76/keps/sig-scheduling/4671-gang-scheduling/kep.yaml",
+    "parse_error": null
+  },
+  "raw_response": "The decision currently governing Kubernetes gang scheduling policy is **KEP-4671** (Authority state: **GOVERNING**). It is the sole eligible active decision in the `kubernetes-gang-scheduling-policy` scope, holding an `ACCEPTED` lifecycle status and acting as a `POLICY` decision that explicitly replaces KEP-5832 and KEP-583.\n\n**Governing Source Artifact:**\n- **Artifact ID:** `KEP-4671@current`\n- **Decision ID:** `KEP-4671`\n- **Repository:** `kubernetes/enhancements`\n- **Pinned Revision:** `c4f439c2dd4acb928094660be0ea771bf63f2b76`\n- **Source URL:** https://github.com/kubernetes/enhancements/blob/c4f439c2dd4acb928094660be0ea771bf63f2b76/keps/sig-scheduling/4671-gang-scheduling/kep.yaml"
+}

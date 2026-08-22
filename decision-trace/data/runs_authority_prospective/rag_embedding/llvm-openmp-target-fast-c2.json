@@ -1,0 +1,26 @@
+{
+  "checkpoint_id": "llvm-openmp-target-fast-c2",
+  "timeline_id": "llvm-openmp-target-fast",
+  "condition": "rag_embedding",
+  "prompt_sha256": "39b61fefe8e040ba19c193c346d79b285ad8f97f75c5154a86373a35100b512c",
+  "source_artifact_ids": [
+    "llvm/llvm-project#205775@open",
+    "llvm/llvm-project#205775@merged"
+  ],
+  "retrieved_artifact_ids": [
+    "llvm/llvm-project#205775@open",
+    "llvm/llvm-project#205775@merged"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "llvm/llvm-project#205775"
+    ],
+    "evidence_artifact_ids": [
+      "llvm/llvm-project#205775@merged"
+    ],
+    "explanation": "Pull request #205775 was merged, establishing governing implementation authority for the llvm-openmp-target-fast scope by enabling teams and threads oversubscription assumptions under -fopenmp-target-fast.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"llvm/llvm-project#205775\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"llvm/llvm-project#205775@merged\"\n  ],\n  \"explanation\": \"Pull request #205775 was merged, establishing governing implementation authority for the llvm-openmp-target-fast scope by enabling teams and threads oversubscription assumptions under -fopenmp-target-fast.\"\n}\n```"
+}

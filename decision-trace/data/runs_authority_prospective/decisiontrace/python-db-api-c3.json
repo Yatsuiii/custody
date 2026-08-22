@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "python-db-api-c3",
+  "timeline_id": "python-db-api",
+  "condition": "decisiontrace",
+  "prompt_sha256": "ba2f3e245f210f8653a4b322c49d269c50d87b080c1e378bcc72349259998e55",
+  "source_artifact_ids": [
+    "PEP-248@accepted",
+    "PEP-249@accepted",
+    "PEP-248@current-note"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-249"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-249@accepted"
+    ],
+    "explanation": "PEP-249 (\"Python Database API Specification v2.0\") currently holds GOVERNING authority over the `python-db-api` scope. \n\nAccording to artifact `PEP-249@accepted` (repository `python/peps`, pinned revision `b2120d116aa696f409b4d8333c4020ab8f93c9c7`), PEP-249 has a lifecycle status of `FINAL`, explicitly replaces PEP-248, and serves as the sole eligible active policy decision governing the `python-db-api` scope.",
+    "parse_error": null
+  },
+  "raw_response": "PEP-249 (\"Python Database API Specification v2.0\") currently holds GOVERNING authority over the `python-db-api` scope. \n\nAccording to artifact `PEP-249@accepted` (repository `python/peps`, pinned revision `b2120d116aa696f409b4d8333c4020ab8f93c9c7`), PEP-249 has a lifecycle status of `FINAL`, explicitly replaces PEP-248, and serves as the sole eligible active policy decision governing the `python-db-api` scope."
+}

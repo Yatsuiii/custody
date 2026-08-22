@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "python-exception-context-c3",
+  "timeline_id": "python-exception-context",
+  "condition": "decisiontrace",
+  "prompt_sha256": "49a0d1c5b06814a665094493d9cf3b6901c4a2c68a30afbe1abd9df18fb60fa5",
+  "source_artifact_ids": [
+    "PEP-409@accepted",
+    "PEP-415@accepted",
+    "PEP-409@current-note"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-415"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-415@accepted"
+    ],
+    "explanation": "The organizational decision currently governing Python exception context is **PEP-415** (Authority state: **GOVERNING**). \n\nAccording to artifact `PEP-415@accepted` (repository `python/peps`, pinned revision `b2120d116aa696f409b4d8333c4020ab8f93c9c7`), PEP-415 holds a lifecycle status of `FINAL`, defines policy for the `python-exception-context` scope, and explicitly replaces PEP-409, making it the sole active governing decision in this scope.",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing Python exception context is **PEP-415** (Authority state: **GOVERNING**). \n\nAccording to artifact `PEP-415@accepted` (repository `python/peps`, pinned revision `b2120d116aa696f409b4d8333c4020ab8f93c9c7`), PEP-415 holds a lifecycle status of `FINAL`, defines policy for the `python-exception-context` scope, and explicitly replaces PEP-409, making it the sole active governing decision in this scope."
+}

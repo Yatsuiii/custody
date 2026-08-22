@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "rust-rpit-capture-c2",
+  "timeline_id": "rust-rpit-capture",
+  "condition": "rag_full_context",
+  "prompt_sha256": "5dbcdbf2c63cbf1587cc65bb1f1841590d0b5777063bc850c5e165e7d5e7612b",
+  "source_artifact_ids": [
+    "RFC-1522@merged",
+    "RFC-1951@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-1522"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-1522@merged",
+      "RFC-1951@open"
+    ],
+    "explanation": "RFC-1522 is merged policy governing rust-impl-trait-capture-rules. Although RFC-1951 proposes to replace it, RFC-1951 is currently OPEN and has not attained governing lifecycle status.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\"RFC-1522\"],\n  \"evidence_artifact_ids\": [\"RFC-1522@merged\", \"RFC-1951@open\"],\n  \"explanation\": \"RFC-1522 is merged policy governing rust-impl-trait-capture-rules. Although RFC-1951 proposes to replace it, RFC-1951 is currently OPEN and has not attained governing lifecycle status.\"\n}\n```"
+}

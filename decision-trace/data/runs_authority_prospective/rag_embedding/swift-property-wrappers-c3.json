@@ -1,0 +1,28 @@
+{
+  "checkpoint_id": "swift-property-wrappers-c3",
+  "timeline_id": "swift-property-wrappers",
+  "condition": "rag_embedding",
+  "prompt_sha256": "43ddeb3d2dc10d52de8f50216164ac0a4b520f07800a3fc41d0933c3096bbcb7",
+  "source_artifact_ids": [
+    "SE-0030@withdrawn",
+    "SE-0258@accepted",
+    "SE-0030@historical-note"
+  ],
+  "retrieved_artifact_ids": [
+    "SE-0258@accepted",
+    "SE-0030@historical-note",
+    "SE-0030@withdrawn"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "SE-0258"
+    ],
+    "evidence_artifact_ids": [
+      "SE-0258@accepted"
+    ],
+    "explanation": "SE-0258 holds an ACCEPTED lifecycle status with POLICY role for the 'swift-property-wrappers' scope, explicitly replacing SE-0030 (which was withdrawn and noted as superseded).",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"SE-0258\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"SE-0258@accepted\"\n  ],\n  \"explanation\": \"SE-0258 holds an ACCEPTED lifecycle status with POLICY role for the 'swift-property-wrappers' scope, explicitly replacing SE-0030 (which was withdrawn and noted as superseded).\"\n}\n```"
+}

@@ -1,0 +1,21 @@
+{
+  "checkpoint_id": "swift-coroutine-accessors-c2",
+  "timeline_id": "swift-coroutine-accessors",
+  "condition": "rag_full_context",
+  "prompt_sha256": "49e315b9d7d12a5d2d7850e33ebd03cef432a5dfd88906bb60cc18ef86eafd57",
+  "source_artifact_ids": [
+    "SE-0474@accepted",
+    "swiftlang/swift#90516@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [
+      "swiftlang/swift#90516@open"
+    ],
+    "explanation": "Pull request swiftlang/swift#90516 addresses the swift-coroutine-accessor-implementation scope, but it remains in an OPEN lifecycle status and has not been accepted or merged, leaving no governing decision for this implementation scope.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\"authority_state\":\"NO_GOVERNING_DECISION\",\"governing_decision_ids\":[],\"evidence_artifact_ids\":[\"swiftlang/swift#90516@open\"],\"explanation\":\"Pull request swiftlang/swift#90516 addresses the swift-coroutine-accessor-implementation scope, but it remains in an OPEN lifecycle status and has not been accepted or merged, leaving no governing decision for this implementation scope.\"}\n```"
+}

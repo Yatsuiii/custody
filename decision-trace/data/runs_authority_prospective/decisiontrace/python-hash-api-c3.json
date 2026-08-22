@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "python-hash-api-c3",
+  "timeline_id": "python-hash-api",
+  "condition": "decisiontrace",
+  "prompt_sha256": "2d52d904067df018f6a74cd1732510547a77ca7a3d70febf43d7184273dddc27",
+  "source_artifact_ids": [
+    "PEP-247@accepted",
+    "PEP-452@accepted",
+    "PEP-247@current-note"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-452"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-452@accepted"
+    ],
+    "explanation": "The organizational decision currently governing the `python-hash-api` scope is **PEP-452** (Authority state: **GOVERNING**). \n\nBased on the provided evidence, PEP-452 holds a lifecycle status of `FINAL`, explicitly replaces PEP-247, and is the sole eligible active decision within the `python-hash-api` authority scope.\n\n**Governing Source Artifact:**\n- **Artifact ID:** `PEP-452@accepted`\n  - **Decision ID:** PEP-452\n  - **Repository:** `python/peps`\n  - **Pinned Revision:** `b2120d116aa696f409b4d8333c4020ab8f93c9c7`\n  - **Source URL:** https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0452.rst",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing the `python-hash-api` scope is **PEP-452** (Authority state: **GOVERNING**). \n\nBased on the provided evidence, PEP-452 holds a lifecycle status of `FINAL`, explicitly replaces PEP-247, and is the sole eligible active decision within the `python-hash-api` authority scope.\n\n**Governing Source Artifact:**\n- **Artifact ID:** `PEP-452@accepted`\n  - **Decision ID:** PEP-452\n  - **Repository:** `python/peps`\n  - **Pinned Revision:** `b2120d116aa696f409b4d8333c4020ab8f93c9c7`\n  - **Source URL:** https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0452.rst"
+}

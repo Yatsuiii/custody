@@ -1,0 +1,22 @@
+{
+  "checkpoint_id": "swift-property-wrappers-c1",
+  "timeline_id": "swift-property-wrappers",
+  "condition": "rag_embedding",
+  "prompt_sha256": "0cadb3d75f8eca684b1254bc9b96c283b9776407dd81675c0123bc340afb9921",
+  "source_artifact_ids": [
+    "SE-0030@withdrawn"
+  ],
+  "retrieved_artifact_ids": [
+    "SE-0030@withdrawn"
+  ],
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [
+      "SE-0030@withdrawn"
+    ],
+    "explanation": "The only visible proposal for Swift property behaviors/wrappers, SE-0030, has a lifecycle status of WITHDRAWN, leaving no accepted or implemented decision governing this scope in the visible records.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"NO_GOVERNING_DECISION\",\n  \"governing_decision_ids\": [],\n  \"evidence_artifact_ids\": [\n    \"SE-0030@withdrawn\"\n  ],\n  \"explanation\": \"The only visible proposal for Swift property behaviors/wrappers, SE-0030, has a lifecycle status of WITHDRAWN, leaving no accepted or implemented decision governing this scope in the visible records.\"\n}\n```"
+}

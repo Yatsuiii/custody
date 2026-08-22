@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "swift-coroutine-accessors-c2",
+  "timeline_id": "swift-coroutine-accessors",
+  "condition": "rag_embedding",
+  "prompt_sha256": "edf2eb7107dd58dc799c5207103fc482df8e446da2d3181b3ebf1f8f93a4bdac",
+  "source_artifact_ids": [
+    "SE-0474@accepted",
+    "swiftlang/swift#90516@open"
+  ],
+  "retrieved_artifact_ids": [
+    "swiftlang/swift#90516@open",
+    "SE-0474@accepted"
+  ],
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [
+      "swiftlang/swift#90516@open"
+    ],
+    "explanation": "PR swiftlang/swift#90516 covers the swift-coroutine-accessor-implementation scope but has a lifecycle status of OPEN (proposed), so no accepted or implemented decision currently governs this implementation scope.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"NO_GOVERNING_DECISION\",\n  \"governing_decision_ids\": [],\n  \"evidence_artifact_ids\": [\n    \"swiftlang/swift#90516@open\"\n  ],\n  \"explanation\": \"PR swiftlang/swift#90516 covers the swift-coroutine-accessor-implementation scope but has a lifecycle status of OPEN (proposed), so no accepted or implemented decision currently governs this implementation scope.\"\n}\n```"
+}

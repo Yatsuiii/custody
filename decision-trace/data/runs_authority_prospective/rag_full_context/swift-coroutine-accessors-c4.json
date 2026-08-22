@@ -1,0 +1,25 @@
+{
+  "checkpoint_id": "swift-coroutine-accessors-c4",
+  "timeline_id": "swift-coroutine-accessors",
+  "condition": "rag_full_context",
+  "prompt_sha256": "29d419dc1e70380d1f902e2c40c2e5aaa8b68051d6fdeeefd002914220d8c4f2",
+  "source_artifact_ids": [
+    "SE-0474@accepted",
+    "swiftlang/swift#90516@open",
+    "swiftlang/swift#90516@merged",
+    "swiftlang/swift#91475@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "swiftlang/swift#90516"
+    ],
+    "evidence_artifact_ids": [
+      "swiftlang/swift#90516@merged"
+    ],
+    "explanation": "Pull request swiftlang/swift#90516 is merged and governs the swift-coroutine-accessor-implementation scope. The revert PR swiftlang/swift#91475 is currently OPEN and thus remains only a proposal without governing authority.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"swiftlang/swift#90516\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"swiftlang/swift#90516@merged\"\n  ],\n  \"explanation\": \"Pull request swiftlang/swift#90516 is merged and governs the swift-coroutine-accessor-implementation scope. The revert PR swiftlang/swift#91475 is currently OPEN and thus remains only a proposal without governing authority.\"\n}\n```"
+}

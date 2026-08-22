@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "rust-naked-functions-c4",
+  "timeline_id": "rust-naked-functions",
+  "condition": "decisiontrace",
+  "prompt_sha256": "4a8d4a5bf9d6a9f77cc6eb78771d974ac4a40fe9a28aae17b7b90b2c0703296d",
+  "source_artifact_ids": [
+    "RFC-1201@merged",
+    "RFC-2972@open",
+    "RFC-2972@current-authority"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-2972"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-2972@current-authority"
+    ],
+    "explanation": "RFC-2972 is the authoritative decision governing `rust-naked-functions`. It has a merged lifecycle status, explicitly replaces RFC-1201, and is the sole eligible active policy decision within the `rust-naked-functions` scope.",
+    "parse_error": null
+  },
+  "raw_response": "RFC-2972 is the authoritative decision governing `rust-naked-functions`. It has a merged lifecycle status, explicitly replaces RFC-1201, and is the sole eligible active policy decision within the `rust-naked-functions` scope."
+}

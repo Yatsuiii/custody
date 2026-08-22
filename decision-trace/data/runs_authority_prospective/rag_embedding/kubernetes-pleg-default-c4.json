@@ -1,0 +1,34 @@
+{
+  "checkpoint_id": "kubernetes-pleg-default-c4",
+  "timeline_id": "kubernetes-pleg-default",
+  "condition": "rag_embedding",
+  "prompt_sha256": "63ee5cbec2311ffd33ff721d52275c90083c5d96ddbb01f1767484bdf8311c71",
+  "source_artifact_ids": [
+    "kubernetes/kubernetes#137909@open",
+    "kubernetes/kubernetes#137909@merged",
+    "kubernetes/kubernetes#137946@open",
+    "kubernetes/kubernetes#137946@merged"
+  ],
+  "retrieved_artifact_ids": [
+    "kubernetes/kubernetes#137946@merged",
+    "kubernetes/kubernetes#137909@merged",
+    "kubernetes/kubernetes#137946@open",
+    "kubernetes/kubernetes#137909@open",
+    "kubernetes/kubernetes#137909@open",
+    "kubernetes/kubernetes#137909@open",
+    "kubernetes/kubernetes#137909@merged",
+    "kubernetes/kubernetes#137909@merged"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "kubernetes/kubernetes#137946"
+    ],
+    "evidence_artifact_ids": [
+      "kubernetes/kubernetes#137946@merged"
+    ],
+    "explanation": "PR kubernetes/kubernetes#137946 merged with lifecycle status REVERT_MERGED, explicitly reverting PR kubernetes/kubernetes#137909 and re-enabling the default for PLEGOnDemandRelist under scope kubernetes-pleg-default.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\"governing_decision_ids\":[\"kubernetes/kubernetes#137946\"],\"evidence_artifact_ids\":[\"kubernetes/kubernetes#137946@merged\"],\"explanation\":\"PR kubernetes/kubernetes#137946 merged with lifecycle status REVERT_MERGED, explicitly reverting PR kubernetes/kubernetes#137909 and re-enabling the default for PLEGOnDemandRelist under scope kubernetes-pleg-default.\"}\n```"
+}

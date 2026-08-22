@@ -1,0 +1,26 @@
+{
+  "checkpoint_id": "python-paramspec-implementation-c5",
+  "timeline_id": "python-paramspec-implementation",
+  "condition": "rag_full_context",
+  "prompt_sha256": "c317292569d5cba22f4c745ded4c3ee4b2726a0938d87b4e15701e2f069f5060",
+  "source_artifact_ids": [
+    "PEP-612@final",
+    "python/cpython#23702@open",
+    "python/cpython#23702@merged",
+    "python/cpython#25449@open",
+    "python/cpython#25449@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-612"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-612@final"
+    ],
+    "explanation": "PEP-612 remains the final governing policy decision for python-paramspec-policy. The subsequent pull requests operate under the implementation authority scope (python-paramspec-implementation) and do not alter or revert the governing policy.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\"governing_decision_ids\":[\"PEP-612\"],\"evidence_artifact_ids\":[\"PEP-612@final\"],\"explanation\":\"PEP-612 remains the final governing policy decision for python-paramspec-policy. The subsequent pull requests operate under the implementation authority scope (python-paramspec-implementation) and do not alter or revert the governing policy.\"}\n```"
+}

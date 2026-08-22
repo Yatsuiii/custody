@@ -1,0 +1,29 @@
+{
+  "checkpoint_id": "envoy-ext-authz-empty-values-c3",
+  "timeline_id": "envoy-ext-authz-empty-values",
+  "condition": "rag_embedding",
+  "prompt_sha256": "304939a4d45d89c09302aa2a6162679b8b55a351dafb1cec8bdbe35b716cfb25",
+  "source_artifact_ids": [
+    "envoyproxy/envoy#45103@open",
+    "envoyproxy/envoy#45103@merged",
+    "envoyproxy/envoy#45321@open"
+  ],
+  "retrieved_artifact_ids": [
+    "envoyproxy/envoy#45321@open",
+    "envoyproxy/envoy#45103@merged",
+    "envoyproxy/envoy#45103@open"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "envoyproxy/envoy#45103"
+    ],
+    "evidence_artifact_ids": [
+      "envoyproxy/envoy#45103@merged",
+      "envoyproxy/envoy#45321@open"
+    ],
+    "explanation": "PR envoyproxy/envoy#45103 is merged and currently governs the envoy-ext-authz-empty-values scope. The revert PR envoyproxy/envoy#45321 remains OPEN and has not taken effect.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"envoyproxy/envoy#45103\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"envoyproxy/envoy#45103@merged\",\n    \"envoyproxy/envoy#45321@open\"\n  ],\n  \"explanation\": \"PR envoyproxy/envoy#45103 is merged and currently governs the envoy-ext-authz-empty-values scope. The revert PR envoyproxy/envoy#45321 remains OPEN and has not taken effect.\"\n}\n```"
+}

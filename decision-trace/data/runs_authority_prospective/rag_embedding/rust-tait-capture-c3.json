@@ -1,0 +1,28 @@
+{
+  "checkpoint_id": "rust-tait-capture-c3",
+  "timeline_id": "rust-tait-capture",
+  "condition": "rag_embedding",
+  "prompt_sha256": "4829dc35bb8b968dbb505c0a6337214f74d20295f9d23037dc1644b286673bff",
+  "source_artifact_ids": [
+    "RFC-2071@merged",
+    "RFC-2515@open",
+    "RFC-2515@merged"
+  ],
+  "retrieved_artifact_ids": [
+    "RFC-2515@open",
+    "RFC-2515@merged",
+    "RFC-2071@merged"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-2515"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-2515@merged"
+    ],
+    "explanation": "RFC-2515 is merged with a POLICY decision role for the rust-type-alias-impl-trait-capture scope and explicitly replaces RFC-2071.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\"RFC-2515\"],\n  \"evidence_artifact_ids\": [\"RFC-2515@merged\"],\n  \"explanation\": \"RFC-2515 is merged with a POLICY decision role for the rust-type-alias-impl-trait-capture scope and explicitly replaces RFC-2071.\"\n}\n```"
+}

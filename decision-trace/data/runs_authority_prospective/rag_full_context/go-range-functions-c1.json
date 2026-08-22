@@ -1,0 +1,20 @@
+{
+  "checkpoint_id": "go-range-functions-c1",
+  "timeline_id": "go-range-functions",
+  "condition": "rag_full_context",
+  "prompt_sha256": "c29bdc46fc256dc835d5854e4047963acbadbe7a49c100709c968a0af92fc150",
+  "source_artifact_ids": [
+    "golang/go#61405@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [
+      "golang/go#61405@open"
+    ],
+    "explanation": "Issue golang/go#61405 is an open proposal with lifecycle status OPEN; no accepted or governing decision exists in the visible record.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"NO_GOVERNING_DECISION\",\n  \"governing_decision_ids\": [],\n  \"evidence_artifact_ids\": [\n    \"golang/go#61405@open\"\n  ],\n  \"explanation\": \"Issue golang/go#61405 is an open proposal with lifecycle status OPEN; no accepted or governing decision exists in the visible record.\"\n}\n```"
+}

@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "python-hash-api-c4",
+  "timeline_id": "python-hash-api",
+  "condition": "decisiontrace",
+  "prompt_sha256": "985ec9bb4dbef8e3baca7415ac5bae0c0e22785bff2b6d5add77797c82d01b8f",
+  "source_artifact_ids": [
+    "PEP-247@accepted",
+    "PEP-452@accepted",
+    "PEP-247@current-note"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-452"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-452@accepted"
+    ],
+    "explanation": "PEP-452 (\"API for Cryptographic Hash Functions v2.0\") is the authoritative standard for the `python-hash-api` scope. It holds a lifecycle status of \"Final\" (explicitly replacing PEP-247) and is the sole active governing decision in this scope.",
+    "parse_error": null
+  },
+  "raw_response": "PEP-452 (\"API for Cryptographic Hash Functions v2.0\") is the authoritative standard for the `python-hash-api` scope. It holds a lifecycle status of \"Final\" (explicitly replacing PEP-247) and is the sole active governing decision in this scope."
+}

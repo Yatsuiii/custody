@@ -1,0 +1,22 @@
+{
+  "checkpoint_id": "llvm-openmp-target-fast-c1",
+  "timeline_id": "llvm-openmp-target-fast",
+  "condition": "rag_embedding",
+  "prompt_sha256": "91007ec4c9b30fba527952f807b7953094e4ad95944c4940ccbb2c8e6be8cc1b",
+  "source_artifact_ids": [
+    "llvm/llvm-project#205775@open"
+  ],
+  "retrieved_artifact_ids": [
+    "llvm/llvm-project#205775@open"
+  ],
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [
+      "llvm/llvm-project#205775@open"
+    ],
+    "explanation": "The only visible artifact for llvm-openmp-target-fast is PR #205775, which has lifecycle status OPEN and role IMPLEMENTATION, meaning it is only proposed and does not establish governing authority.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"NO_GOVERNING_DECISION\",\n  \"governing_decision_ids\": [],\n  \"evidence_artifact_ids\": [\n    \"llvm/llvm-project#205775@open\"\n  ],\n  \"explanation\": \"The only visible artifact for llvm-openmp-target-fast is PR #205775, which has lifecycle status OPEN and role IMPLEMENTATION, meaning it is only proposed and does not establish governing authority.\"\n}\n```"
+}

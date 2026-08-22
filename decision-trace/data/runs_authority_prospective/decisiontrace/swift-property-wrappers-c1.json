@@ -1,0 +1,18 @@
+{
+  "checkpoint_id": "swift-property-wrappers-c1",
+  "timeline_id": "swift-property-wrappers",
+  "condition": "decisiontrace",
+  "prompt_sha256": "36bce0ff5c10ab067210ee5231689e2370e408f3a73b578b5ba905c1ad1423b5",
+  "source_artifact_ids": [
+    "SE-0030@withdrawn"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [],
+    "explanation": "There is currently no governing decision (`NO_GOVERNING_DECISION`) for Swift property behaviors or wrappers, as no visible accepted or implemented decisions are eligible to govern. Consequently, there are no source artifacts available to establish authority.",
+    "parse_error": null
+  },
+  "raw_response": "There is currently no governing decision (`NO_GOVERNING_DECISION`) for Swift property behaviors or wrappers, as no visible accepted or implemented decisions are eligible to govern. Consequently, there are no source artifacts available to establish authority."
+}

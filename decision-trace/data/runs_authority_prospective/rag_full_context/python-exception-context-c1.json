@@ -1,0 +1,22 @@
+{
+  "checkpoint_id": "python-exception-context-c1",
+  "timeline_id": "python-exception-context",
+  "condition": "rag_full_context",
+  "prompt_sha256": "3b248cf5a6c5e5cfc2b333b04c1d59ec670c5d8ea341fcc6e754be820e1385a0",
+  "source_artifact_ids": [
+    "PEP-409@accepted"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-409"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-409@accepted"
+    ],
+    "explanation": "PEP-409 is in Final status and holds policy decision role governing the python-exception-context scope.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"PEP-409\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"PEP-409@accepted\"\n  ],\n  \"explanation\": \"PEP-409 is in Final status and holds policy decision role governing the python-exception-context scope.\"\n}\n```"
+}

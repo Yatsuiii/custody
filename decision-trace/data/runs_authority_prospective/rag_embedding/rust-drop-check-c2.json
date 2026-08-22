@@ -1,0 +1,27 @@
+{
+  "checkpoint_id": "rust-drop-check-c2",
+  "timeline_id": "rust-drop-check",
+  "condition": "rag_embedding",
+  "prompt_sha256": "d91491d2c6179443294cd26a24e3ee11070327883f88a1159175f843a2ba110b",
+  "source_artifact_ids": [
+    "RFC-769@merged",
+    "RFC-1238@open"
+  ],
+  "retrieved_artifact_ids": [
+    "RFC-769@merged",
+    "RFC-1238@open"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-769"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-1238@open",
+      "RFC-769@merged"
+    ],
+    "explanation": "RFC-769 is merged policy governing rust generic drop safety, while the successor RFC-1238 is only open (proposed) and has not yet superseded it.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"RFC-769\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"RFC-769@merged\",\n    \"RFC-1238@open\"\n  ],\n  \"explanation\": \"RFC-769 is merged policy governing rust generic drop safety, while the successor RFC-1238 is only open (proposed) and has not yet superseded it.\"\n}\n```"
+}

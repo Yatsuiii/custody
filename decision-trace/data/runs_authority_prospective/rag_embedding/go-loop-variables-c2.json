@@ -1,0 +1,32 @@
+{
+  "checkpoint_id": "go-loop-variables-c2",
+  "timeline_id": "go-loop-variables",
+  "condition": "rag_embedding",
+  "prompt_sha256": "eae1273351ee86ba8381f780817a1f209b9541a575e7a0deb54b7e94237689de",
+  "source_artifact_ids": [
+    "golang/go#60078@open",
+    "golang/go#60078@accepted"
+  ],
+  "retrieved_artifact_ids": [
+    "golang/go#60078@accepted",
+    "golang/go#60078@open",
+    "golang/go#60078@open",
+    "golang/go#60078@open",
+    "golang/go#60078@open",
+    "golang/go#60078@open",
+    "golang/go#60078@open",
+    "golang/go#60078@open"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "golang/go#60078"
+    ],
+    "evidence_artifact_ids": [
+      "golang/go#60078@accepted"
+    ],
+    "explanation": "The proposal to change Go loop variable scoping semantics (golang/go#60078) was officially accepted by the proposal review group on 2023-07-19 as policy for go-loop-variable-semantics.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"golang/go#60078\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"golang/go#60078@accepted\"\n  ],\n  \"explanation\": \"The proposal to change Go loop variable scoping semantics (golang/go#60078) was officially accepted by the proposal review group on 2023-07-19 as policy for go-loop-variable-semantics.\"\n}\n```"
+}

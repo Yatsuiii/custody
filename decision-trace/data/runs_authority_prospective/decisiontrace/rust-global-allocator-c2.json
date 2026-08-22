@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "rust-global-allocator-c2",
+  "timeline_id": "rust-global-allocator",
+  "condition": "decisiontrace",
+  "prompt_sha256": "b6039ad4dff263c6ed307b1480fb491f42807e8cdcdf3d8d3b5bc6e6732841e8",
+  "source_artifact_ids": [
+    "RFC-1183@merged",
+    "RFC-1974@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-1183"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-1183@merged"
+    ],
+    "explanation": "The organizational decision that currently governs the Rust global allocator is **RFC-1183** (\"Allow changing the default allocator\"), with an authority state of **GOVERNING**. It is the sole eligible active policy decision in the `rust-global-allocator` scope.\n\n**Governing Source Artifact:**\n* **Artifact ID:** `RFC-1183@merged` (Decision ID: `RFC-1183`)\n* **Repository:** `rust-lang/rfcs`\n* **Lifecycle Status:** MERGED\n* **Pinned Revision:** `3282a5648465b7e63a51d41835581fb888e568a9`\n* **Source URL:** https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1183-swap-out-jemalloc.md",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision that currently governs the Rust global allocator is **RFC-1183** (\"Allow changing the default allocator\"), with an authority state of **GOVERNING**. It is the sole eligible active policy decision in the `rust-global-allocator` scope.\n\n**Governing Source Artifact:**\n* **Artifact ID:** `RFC-1183@merged` (Decision ID: `RFC-1183`)\n* **Repository:** `rust-lang/rfcs`\n* **Lifecycle Status:** MERGED\n* **Pinned Revision:** `3282a5648465b7e63a51d41835581fb888e568a9`\n* **Source URL:** https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1183-swap-out-jemalloc.md"
+}

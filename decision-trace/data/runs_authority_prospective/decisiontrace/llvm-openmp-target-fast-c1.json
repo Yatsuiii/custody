@@ -1,0 +1,18 @@
+{
+  "checkpoint_id": "llvm-openmp-target-fast-c1",
+  "timeline_id": "llvm-openmp-target-fast",
+  "condition": "decisiontrace",
+  "prompt_sha256": "933804ab9c85159a5d88304a01d9aaf242aed9e4206495285a6218eceb36feb7",
+  "source_artifact_ids": [
+    "llvm/llvm-project#205775@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [],
+    "explanation": "There is currently no governing organizational decision for `llvm-openmp-target-fast` (authority state: `NO_GOVERNING_DECISION`). No accepted or implemented decisions are eligible to govern, and no source artifacts establishing authority exist in the provided evidence.",
+    "parse_error": null
+  },
+  "raw_response": "There is currently no governing organizational decision for `llvm-openmp-target-fast` (authority state: `NO_GOVERNING_DECISION`). No accepted or implemented decisions are eligible to govern, and no source artifacts establishing authority exist in the provided evidence."
+}

@@ -1,0 +1,25 @@
+{
+  "checkpoint_id": "python-paramspec-implementation-c4",
+  "timeline_id": "python-paramspec-implementation",
+  "condition": "decisiontrace",
+  "prompt_sha256": "4b9b25a4b258743807db28f31bf64844a293c0cc5a01fa96805ebdb33d0c3e04",
+  "source_artifact_ids": [
+    "PEP-612@final",
+    "python/cpython#23702@open",
+    "python/cpython#23702@merged",
+    "python/cpython#25449@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "python/cpython#23702"
+    ],
+    "evidence_artifact_ids": [
+      "python/cpython#23702@merged"
+    ],
+    "explanation": "The organizational decision that currently holds authority over the `python-paramspec-implementation` scope is **`python/cpython#23702`** (Authority state: **GOVERNING**). \n\nAccording to the resolver, `python/cpython#23702` is the sole eligible active decision in this scope. \n\n**Governing Source Artifact:**\n- **Artifact ID:** `python/cpython#23702@merged`\n- **Decision ID:** `python/cpython#23702`\n- **Lifecycle Status:** MERGED\n- **Source URL:** https://github.com/python/cpython/pull/23702\n- **Implements:** PEP-612 (bpo-41559: Implement PEP 612 - Add ParamSpec and Concatenate to typing)",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision that currently holds authority over the `python-paramspec-implementation` scope is **`python/cpython#23702`** (Authority state: **GOVERNING**). \n\nAccording to the resolver, `python/cpython#23702` is the sole eligible active decision in this scope. \n\n**Governing Source Artifact:**\n- **Artifact ID:** `python/cpython#23702@merged`\n- **Decision ID:** `python/cpython#23702`\n- **Lifecycle Status:** MERGED\n- **Source URL:** https://github.com/python/cpython/pull/23702\n- **Implements:** PEP-612 (bpo-41559: Implement PEP 612 - Add ParamSpec and Concatenate to typing)"
+}

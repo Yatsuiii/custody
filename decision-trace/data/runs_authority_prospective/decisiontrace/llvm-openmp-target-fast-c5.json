@@ -1,0 +1,26 @@
+{
+  "checkpoint_id": "llvm-openmp-target-fast-c5",
+  "timeline_id": "llvm-openmp-target-fast",
+  "condition": "decisiontrace",
+  "prompt_sha256": "81ebedf81e647133cf5f2c178354254ab5e98a30cc9006b03b5f34a91b04274f",
+  "source_artifact_ids": [
+    "llvm/llvm-project#205775@open",
+    "llvm/llvm-project#205775@merged",
+    "llvm/llvm-project#213769@open",
+    "llvm/llvm-project#213769@merged",
+    "llvm/llvm-project#213911@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "llvm/llvm-project#213769"
+    ],
+    "evidence_artifact_ids": [
+      "llvm/llvm-project#213769@merged"
+    ],
+    "explanation": "The decision currently governing `llvm-openmp-target-fast` is `llvm/llvm-project#213769`. \n\nThis authority is established by artifact `llvm/llvm-project#213769@merged` (pinned revision `a5f7de0ce79e7b969cafc8684055ba5bd790397b`), with lifecycle status `REVERT_MERGED`. It explicitly reverts `llvm/llvm-project#205775` and stands as the sole eligible active governing decision within the `llvm-openmp-target-fast` scope.",
+    "parse_error": null
+  },
+  "raw_response": "The decision currently governing `llvm-openmp-target-fast` is `llvm/llvm-project#213769`. \n\nThis authority is established by artifact `llvm/llvm-project#213769@merged` (pinned revision `a5f7de0ce79e7b969cafc8684055ba5bd790397b`), with lifecycle status `REVERT_MERGED`. It explicitly reverts `llvm/llvm-project#205775` and stands as the sole eligible active governing decision within the `llvm-openmp-target-fast` scope."
+}

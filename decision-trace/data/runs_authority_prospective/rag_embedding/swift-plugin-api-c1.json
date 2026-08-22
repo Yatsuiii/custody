@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "swift-plugin-api-c1",
+  "timeline_id": "swift-plugin-api",
+  "condition": "rag_embedding",
+  "prompt_sha256": "632d5e30867015cc10493ba2ead536ee1573e1cb617e29542c0c709a19d3e51f",
+  "source_artifact_ids": [
+    "SE-0303@accepted"
+  ],
+  "retrieved_artifact_ids": [
+    "SE-0303@accepted"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "SE-0303"
+    ],
+    "evidence_artifact_ids": [
+      "SE-0303@accepted"
+    ],
+    "explanation": "SE-0303 is accepted policy governing the SwiftPM build-tool plugin entry point.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"SE-0303\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"SE-0303@accepted\"\n  ],\n  \"explanation\": \"SE-0303 is accepted policy governing the SwiftPM build-tool plugin entry point.\"\n}\n```"
+}

@@ -1,0 +1,22 @@
+{
+  "checkpoint_id": "python-wsgi-c1",
+  "timeline_id": "python-wsgi",
+  "condition": "decisiontrace",
+  "prompt_sha256": "dd9a43ba234090ba46bb50b22a73fd2c195c636c29bf3ec6e51cc087484df201",
+  "source_artifact_ids": [
+    "PEP-333@accepted"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-333"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-333@accepted"
+    ],
+    "explanation": "The organizational decision currently governing `python-wsgi` is **PEP-333** (Python Web Server Gateway Interface v1.0), which holds a `GOVERNING` authority state as the sole active policy in this scope.\n\n**Source Artifact Establishing Current Authority:**\n* **Artifact ID:** `PEP-333@accepted`\n* **Decision ID:** PEP-333\n* **Repository:** `python/peps` (Revision: `b2120d116aa696f409b4d8333c4020ab8f93c9c7`)\n* **Lifecycle Status:** FINAL / POLICY\n* **Source URL:** https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0333.rst",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing `python-wsgi` is **PEP-333** (Python Web Server Gateway Interface v1.0), which holds a `GOVERNING` authority state as the sole active policy in this scope.\n\n**Source Artifact Establishing Current Authority:**\n* **Artifact ID:** `PEP-333@accepted`\n* **Decision ID:** PEP-333\n* **Repository:** `python/peps` (Revision: `b2120d116aa696f409b4d8333c4020ab8f93c9c7`)\n* **Lifecycle Status:** FINAL / POLICY\n* **Source URL:** https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0333.rst"
+}

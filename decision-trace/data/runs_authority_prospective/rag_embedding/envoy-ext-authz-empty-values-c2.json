@@ -1,0 +1,26 @@
+{
+  "checkpoint_id": "envoy-ext-authz-empty-values-c2",
+  "timeline_id": "envoy-ext-authz-empty-values",
+  "condition": "rag_embedding",
+  "prompt_sha256": "166a8514a504a3f22de2d92f01425f412940d8812cdac297440070da0000e32c",
+  "source_artifact_ids": [
+    "envoyproxy/envoy#45103@open",
+    "envoyproxy/envoy#45103@merged"
+  ],
+  "retrieved_artifact_ids": [
+    "envoyproxy/envoy#45103@merged",
+    "envoyproxy/envoy#45103@open"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "envoyproxy/envoy#45103"
+    ],
+    "evidence_artifact_ids": [
+      "envoyproxy/envoy#45103@merged"
+    ],
+    "explanation": "PR envoyproxy/envoy#45103 has been merged, implementing the decision to respect keep_empty_value in HeaderValueOption for ext_authz.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"envoyproxy/envoy#45103\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"envoyproxy/envoy#45103@merged\"\n  ],\n  \"explanation\": \"PR envoyproxy/envoy#45103 has been merged, implementing the decision to respect keep_empty_value in HeaderValueOption for ext_authz.\"\n}\n```"
+}

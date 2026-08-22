@@ -1,0 +1,25 @@
+{
+  "checkpoint_id": "envoy-ext-authz-empty-values-c4",
+  "timeline_id": "envoy-ext-authz-empty-values",
+  "condition": "decisiontrace",
+  "prompt_sha256": "fd720410e90cbe67ad130f79da25dc880db7bb374f4851f08e6eae5ef799f326",
+  "source_artifact_ids": [
+    "envoyproxy/envoy#45103@open",
+    "envoyproxy/envoy#45103@merged",
+    "envoyproxy/envoy#45321@open",
+    "envoyproxy/envoy#45321@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "envoyproxy/envoy#45321"
+    ],
+    "evidence_artifact_ids": [
+      "envoyproxy/envoy#45321@merged"
+    ],
+    "explanation": "The organizational decision currently governing the `envoy-ext-authz-empty-values` scope is **`envoyproxy/envoy#45321`** (Authority state: **GOVERNING**). \n\nThis is established by the following source artifact:\n- **Artifact ID:** `envoyproxy/envoy#45321@merged`\n  - **Source URL:** https://github.com/envoyproxy/envoy/pull/45321\n  - **Pinned Revision:** `4b8be8a46833c21b2a8e3d03e6994ac65f33004f`\n  - **Timestamp:** 2026-05-27T23:37:06Z\n  - **Lifecycle Status:** `REVERT_MERGED` (explicitly reverts `envoyproxy/envoy#45103`)\n\nFollowing the merge of this rollback, `envoyproxy/envoy#45321` is the sole eligible active decision establishing authority in the `envoy-ext-authz-empty-values` scope.",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing the `envoy-ext-authz-empty-values` scope is **`envoyproxy/envoy#45321`** (Authority state: **GOVERNING**). \n\nThis is established by the following source artifact:\n- **Artifact ID:** `envoyproxy/envoy#45321@merged`\n  - **Source URL:** https://github.com/envoyproxy/envoy/pull/45321\n  - **Pinned Revision:** `4b8be8a46833c21b2a8e3d03e6994ac65f33004f`\n  - **Timestamp:** 2026-05-27T23:37:06Z\n  - **Lifecycle Status:** `REVERT_MERGED` (explicitly reverts `envoyproxy/envoy#45103`)\n\nFollowing the merge of this rollback, `envoyproxy/envoy#45321` is the sole eligible active decision establishing authority in the `envoy-ext-authz-empty-values` scope."
+}

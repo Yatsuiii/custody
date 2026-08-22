@@ -1,0 +1,26 @@
+{
+  "checkpoint_id": "swift-plugin-api-c2",
+  "timeline_id": "swift-plugin-api",
+  "condition": "rag_embedding",
+  "prompt_sha256": "f1ff6f5655e32b86fa335c3c38433efaf33d9516a442756ae2e346a7f747006e",
+  "source_artifact_ids": [
+    "SE-0303@accepted",
+    "SE-0325@accepted"
+  ],
+  "retrieved_artifact_ids": [
+    "SE-0303@accepted",
+    "SE-0325@accepted"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "SE-0325"
+    ],
+    "evidence_artifact_ids": [
+      "SE-0325@accepted"
+    ],
+    "explanation": "SE-0325 is accepted and implemented as policy, explicitly superseding and replacing SE-0303 for the SwiftPM build-tool plugin entry point scope.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"SE-0325\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"SE-0325@accepted\"\n  ],\n  \"explanation\": \"SE-0325 is accepted and implemented as policy, explicitly superseding and replacing SE-0303 for the SwiftPM build-tool plugin entry point scope.\"\n}\n```"
+}

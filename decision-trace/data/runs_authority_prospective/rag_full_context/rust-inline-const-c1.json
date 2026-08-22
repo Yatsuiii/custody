@@ -1,0 +1,22 @@
+{
+  "checkpoint_id": "rust-inline-const-c1",
+  "timeline_id": "rust-inline-const",
+  "condition": "rag_full_context",
+  "prompt_sha256": "2a7ccb05576e5c86e1ef7507881f3e32d9c34570d690b8520ff68614beca9fa1",
+  "source_artifact_ids": [
+    "RFC-2203@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-2203"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-2203@merged"
+    ],
+    "explanation": "RFC-2203 is merged with policy decision authority governing the rust-const-repeat-simple-case scope.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\"governing_decision_ids\":[\"RFC-2203\"],\"evidence_artifact_ids\":[\"RFC-2203@merged\"],\"explanation\":\"RFC-2203 is merged with policy decision authority governing the rust-const-repeat-simple-case scope.\"}\n```"
+}

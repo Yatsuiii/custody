@@ -1,0 +1,25 @@
+{
+  "checkpoint_id": "llvm-openmp-target-fast-c4",
+  "timeline_id": "llvm-openmp-target-fast",
+  "condition": "rag_full_context",
+  "prompt_sha256": "66b442f6803488428b1d28fafd0bf4352898ef8f0401bfac588a666062f19bb1",
+  "source_artifact_ids": [
+    "llvm/llvm-project#205775@open",
+    "llvm/llvm-project#205775@merged",
+    "llvm/llvm-project#213769@open",
+    "llvm/llvm-project#213769@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "llvm/llvm-project#213769"
+    ],
+    "evidence_artifact_ids": [
+      "llvm/llvm-project#213769@merged"
+    ],
+    "explanation": "llvm/llvm-project#213769 was merged (REVERT_MERGED) to explicitly revert llvm/llvm-project#205775, making it the governing decision for the llvm-openmp-target-fast scope.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\"governing_decision_ids\":[\"llvm/llvm-project#213769\"],\"evidence_artifact_ids\":[\"llvm/llvm-project#213769@merged\"],\"explanation\":\"llvm/llvm-project#213769 was merged (REVERT_MERGED) to explicitly revert llvm/llvm-project#205775, making it the governing decision for the llvm-openmp-target-fast scope.\"}\n```"
+}

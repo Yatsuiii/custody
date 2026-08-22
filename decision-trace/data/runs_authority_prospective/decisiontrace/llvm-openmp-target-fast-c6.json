@@ -1,0 +1,27 @@
+{
+  "checkpoint_id": "llvm-openmp-target-fast-c6",
+  "timeline_id": "llvm-openmp-target-fast",
+  "condition": "decisiontrace",
+  "prompt_sha256": "61e45e974d8c6a3b0bcfda522a2361ca75231f10df31513d1dd5414f6a3a81ea",
+  "source_artifact_ids": [
+    "llvm/llvm-project#205775@open",
+    "llvm/llvm-project#205775@merged",
+    "llvm/llvm-project#213769@open",
+    "llvm/llvm-project#213769@merged",
+    "llvm/llvm-project#213911@open",
+    "llvm/llvm-project#213911@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "llvm/llvm-project#213911"
+    ],
+    "evidence_artifact_ids": [
+      "llvm/llvm-project#213911@merged"
+    ],
+    "explanation": "The decision currently governing the `llvm-openmp-target-fast` scope is **llvm/llvm-project#213911** with an authority state of **GOVERNING**.\n\n**Source Artifact Establishing Current Authority:**\n* **Artifact ID:** `llvm/llvm-project#213911@merged`\n* **Decision ID:** `llvm/llvm-project#213911`\n* **Source URL:** https://github.com/llvm/llvm-project/pull/213911\n* **Pinned Revision:** `4d349761f5bf7cc42ffbae5d7819bf87315dbafb`\n* **Timestamp:** `2026-08-04T12:05:39Z`\n* **Lifecycle Status:** `REVERT_MERGED` (Reland \"Revert \"[OpenMP] target-fast implies teams/threads oversubscription\"\", explicitly reverting `llvm/llvm-project#213769`)\n\nThis artifact represents the sole eligible active decision in the `llvm-openmp-target-fast` authority scope.",
+    "parse_error": null
+  },
+  "raw_response": "The decision currently governing the `llvm-openmp-target-fast` scope is **llvm/llvm-project#213911** with an authority state of **GOVERNING**.\n\n**Source Artifact Establishing Current Authority:**\n* **Artifact ID:** `llvm/llvm-project#213911@merged`\n* **Decision ID:** `llvm/llvm-project#213911`\n* **Source URL:** https://github.com/llvm/llvm-project/pull/213911\n* **Pinned Revision:** `4d349761f5bf7cc42ffbae5d7819bf87315dbafb`\n* **Timestamp:** `2026-08-04T12:05:39Z`\n* **Lifecycle Status:** `REVERT_MERGED` (Reland \"Revert \"[OpenMP] target-fast implies teams/threads oversubscription\"\", explicitly reverting `llvm/llvm-project#213769`)\n\nThis artifact represents the sole eligible active decision in the `llvm-openmp-target-fast` authority scope."
+}

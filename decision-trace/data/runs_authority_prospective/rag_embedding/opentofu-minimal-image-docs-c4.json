@@ -1,0 +1,33 @@
+{
+  "checkpoint_id": "opentofu-minimal-image-docs-c4",
+  "timeline_id": "opentofu-minimal-image-docs",
+  "condition": "rag_embedding",
+  "prompt_sha256": "f0cc9f2aeae7436ce135b41db9737eb5f7508c2e4992b8f9c87df9e37c72efea",
+  "source_artifact_ids": [
+    "opentofu/opentofu#2403@open",
+    "opentofu/opentofu#2403@merged",
+    "opentofu/opentofu#2404@open",
+    "opentofu/opentofu#2404@merged"
+  ],
+  "retrieved_artifact_ids": [
+    "opentofu/opentofu#2404@merged",
+    "opentofu/opentofu#2404@open",
+    "opentofu/opentofu#2403@merged",
+    "opentofu/opentofu#2403@open",
+    "opentofu/opentofu#2403@open",
+    "opentofu/opentofu#2403@merged"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "opentofu/opentofu#2404"
+    ],
+    "evidence_artifact_ids": [
+      "opentofu/opentofu#2403@merged",
+      "opentofu/opentofu#2404@merged"
+    ],
+    "explanation": "Decision opentofu/opentofu#2404 was merged with REVERT_MERGED lifecycle status, explicitly reverting opentofu/opentofu#2403 and establishing governing authority over the opentofu-minimal-image-docs scope.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"opentofu/opentofu#2404\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"opentofu/opentofu#2404@merged\",\n    \"opentofu/opentofu#2403@merged\"\n  ],\n  \"explanation\": \"Decision opentofu/opentofu#2404 was merged with REVERT_MERGED lifecycle status, explicitly reverting opentofu/opentofu#2403 and establishing governing authority over the opentofu-minimal-image-docs scope.\"\n}\n```"
+}

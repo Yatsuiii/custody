@@ -1,0 +1,9 @@
+{
+  "condition": "rag_embedding",
+  "git_sha": "ca430f04484e46ce7f5b46077e70b33335d8808d",
+  "generation_model": "gemini-3.7-flash",
+  "generation_calls": 101,
+  "started_at": "2026-08-22T08:18:40.191725+00:00",
+  "completed_at": "2026-08-22T08:28:11.483264+00:00",
+  "errors": []
+}

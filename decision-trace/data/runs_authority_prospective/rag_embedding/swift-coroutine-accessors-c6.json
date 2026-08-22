@@ -1,0 +1,37 @@
+{
+  "checkpoint_id": "swift-coroutine-accessors-c6",
+  "timeline_id": "swift-coroutine-accessors",
+  "condition": "rag_embedding",
+  "prompt_sha256": "5255c5911248bec616e1075fb3349df783fe65c092eb5cab840155c1214fd7e7",
+  "source_artifact_ids": [
+    "SE-0474@accepted",
+    "swiftlang/swift#90516@open",
+    "swiftlang/swift#90516@merged",
+    "swiftlang/swift#91475@open",
+    "swiftlang/swift#91475@merged",
+    "swiftlang/swift#91494@open",
+    "swiftlang/swift#91494@merged"
+  ],
+  "retrieved_artifact_ids": [
+    "swiftlang/swift#91494@open",
+    "swiftlang/swift#91494@merged",
+    "swiftlang/swift#90516@merged",
+    "swiftlang/swift#90516@open",
+    "SE-0474@accepted",
+    "swiftlang/swift#91475@open",
+    "swiftlang/swift#91475@merged",
+    "swiftlang/swift#91475@open"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "swiftlang/swift#91494"
+    ],
+    "evidence_artifact_ids": [
+      "swiftlang/swift#91494@merged"
+    ],
+    "explanation": "Pull request swiftlang/swift#91494 was merged to revert PR #91475 and re-land/restore the coroutine accessor implementation from PR #90516, establishing it as the governing implementation decision.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"swiftlang/swift#91494\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"swiftlang/swift#91494@merged\"\n  ],\n  \"explanation\": \"Pull request swiftlang/swift#91494 was merged to revert PR #91475 and re-land/restore the coroutine accessor implementation from PR #90516, establishing it as the governing implementation decision.\"\n}\n```"
+}

@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "opentofu-minimal-image-docs-c2",
+  "timeline_id": "opentofu-minimal-image-docs",
+  "condition": "rag_full_context",
+  "prompt_sha256": "1f541e9e669523e224811684c11fd4a2af0c51b454a7d917db84174439e72f46",
+  "source_artifact_ids": [
+    "opentofu/opentofu#2403@open",
+    "opentofu/opentofu#2403@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "opentofu/opentofu#2403"
+    ],
+    "evidence_artifact_ids": [
+      "opentofu/opentofu#2403@merged"
+    ],
+    "explanation": "Pull request opentofu/opentofu#2403 for scope opentofu-minimal-image-docs was merged into the repository, establishing governing authority.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\"governing_decision_ids\":[\"opentofu/opentofu#2403\"],\"evidence_artifact_ids\":[\"opentofu/opentofu#2403@merged\"],\"explanation\":\"Pull request opentofu/opentofu#2403 for scope opentofu-minimal-image-docs was merged into the repository, establishing governing authority.\"}\n```"
+}

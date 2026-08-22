@@ -1,0 +1,25 @@
+{
+  "checkpoint_id": "kubernetes-pleg-default-c4",
+  "timeline_id": "kubernetes-pleg-default",
+  "condition": "decisiontrace",
+  "prompt_sha256": "ffe4385eab33e824d7266ac3f619f1fe0df4bb419a48363cb9625864853a31dc",
+  "source_artifact_ids": [
+    "kubernetes/kubernetes#137909@open",
+    "kubernetes/kubernetes#137909@merged",
+    "kubernetes/kubernetes#137946@open",
+    "kubernetes/kubernetes#137946@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "kubernetes/kubernetes#137946"
+    ],
+    "evidence_artifact_ids": [
+      "kubernetes/kubernetes#137946@merged"
+    ],
+    "explanation": "The organizational decision that currently governs `kubernetes-pleg-default` is **`kubernetes/kubernetes#137946`** (Authority State: **GOVERNING**). \n\n**Governing Source Artifact:**\n* **Artifact ID:** `kubernetes/kubernetes#137946@merged`\n* **Source URL:** https://github.com/kubernetes/kubernetes/pull/137946\n* **Pinned Revision:** `1ed5965382e09c1fdc8b363c153e9ebee0942481`\n\n**Reasoning:**\nFollowing its merge (`REVERT_MERGED`), PR `kubernetes/kubernetes#137946` explicitly reverted `kubernetes/kubernetes#137909` and stands as the sole eligible active decision within the `kubernetes-pleg-default` authority scope.",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision that currently governs `kubernetes-pleg-default` is **`kubernetes/kubernetes#137946`** (Authority State: **GOVERNING**). \n\n**Governing Source Artifact:**\n* **Artifact ID:** `kubernetes/kubernetes#137946@merged`\n* **Source URL:** https://github.com/kubernetes/kubernetes/pull/137946\n* **Pinned Revision:** `1ed5965382e09c1fdc8b363c153e9ebee0942481`\n\n**Reasoning:**\nFollowing its merge (`REVERT_MERGED`), PR `kubernetes/kubernetes#137946` explicitly reverted `kubernetes/kubernetes#137909` and stands as the sole eligible active decision within the `kubernetes-pleg-default` authority scope."
+}

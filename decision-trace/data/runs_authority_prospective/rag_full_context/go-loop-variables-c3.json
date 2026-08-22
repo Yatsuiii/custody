@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "go-loop-variables-c3",
+  "timeline_id": "go-loop-variables",
+  "condition": "rag_full_context",
+  "prompt_sha256": "2c3a5c4db504515c6a07fd874d762856ce0ab5bdf12e9e50b7531a266c928afd",
+  "source_artifact_ids": [
+    "golang/go#60078@open",
+    "golang/go#60078@accepted"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "golang/go#60078"
+    ],
+    "evidence_artifact_ids": [
+      "golang/go#60078@accepted"
+    ],
+    "explanation": "Decision golang/go#60078 was accepted by the proposal review group to change loop variable scoping to one-instance-per-iteration under scope go-loop-variable-semantics.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"golang/go#60078\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"golang/go#60078@accepted\"\n  ],\n  \"explanation\": \"Decision golang/go#60078 was accepted by the proposal review group to change loop variable scoping to one-instance-per-iteration under scope go-loop-variable-semantics.\"\n}\n```"
+}

@@ -1,0 +1,25 @@
+{
+  "checkpoint_id": "python-exception-context-c4",
+  "timeline_id": "python-exception-context",
+  "condition": "rag_full_context",
+  "prompt_sha256": "ba6ee2c72b6a06bb9f65f34b6976156d8ac27ce110f3b767c6612fd34df389ec",
+  "source_artifact_ids": [
+    "PEP-409@accepted",
+    "PEP-415@accepted",
+    "PEP-409@current-note"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-415"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-409@current-note",
+      "PEP-415@accepted"
+    ],
+    "explanation": "PEP-415 is a final policy decision in the python-exception-context scope that explicitly replaces PEP-409 (superseding confirmed by PEP-409@current-note).",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\"PEP-415\"],\n  \"evidence_artifact_ids\": [\"PEP-415@accepted\", \"PEP-409@current-note\"],\n  \"explanation\": \"PEP-415 is a final policy decision in the python-exception-context scope that explicitly replaces PEP-409 (superseding confirmed by PEP-409@current-note).\"\n}\n```"
+}

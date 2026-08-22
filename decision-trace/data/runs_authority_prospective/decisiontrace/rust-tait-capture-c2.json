@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "rust-tait-capture-c2",
+  "timeline_id": "rust-tait-capture",
+  "condition": "decisiontrace",
+  "prompt_sha256": "7b8e4115bed8d0a758a2adb4152c1e8a1c4e9dc382fb5558c52220d18d21cfd3",
+  "source_artifact_ids": [
+    "RFC-2071@merged",
+    "RFC-2515@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-2071"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-2071@merged"
+    ],
+    "explanation": "The organizational decision that currently governs Rust type-alias `impl Trait` capture behavior is **RFC-2071** (\"Named existentials and impl Trait variable declarations\"), which holds the authority state of **GOVERNING**.\n\nCurrent authority is established by the following source artifact:\n- **Artifact ID:** `RFC-2071@merged`\n- **Decision ID:** RFC-2071\n- **Repository:** `rust-lang/rfcs` (Pinned revision: `1e82830bfcef1bc6f4603e1c99daa317eb6b555f`)\n- **Source URL:** https://github.com/rust-lang/rfcs/pull/2071\n- **Lifecycle Status:** MERGED\n\nRFC-2071 is the sole eligible active decision operating in the `rust-type-alias-impl-trait-capture` authority scope.",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision that currently governs Rust type-alias `impl Trait` capture behavior is **RFC-2071** (\"Named existentials and impl Trait variable declarations\"), which holds the authority state of **GOVERNING**.\n\nCurrent authority is established by the following source artifact:\n- **Artifact ID:** `RFC-2071@merged`\n- **Decision ID:** RFC-2071\n- **Repository:** `rust-lang/rfcs` (Pinned revision: `1e82830bfcef1bc6f4603e1c99daa317eb6b555f`)\n- **Source URL:** https://github.com/rust-lang/rfcs/pull/2071\n- **Lifecycle Status:** MERGED\n\nRFC-2071 is the sole eligible active decision operating in the `rust-type-alias-impl-trait-capture` authority scope."
+}

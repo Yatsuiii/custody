@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "go-loop-variables-c4",
+  "timeline_id": "go-loop-variables",
+  "condition": "decisiontrace",
+  "prompt_sha256": "32c041c65e685b1963a4d9918cea5bbee896082666a79b348d2534bc79efc4ae",
+  "source_artifact_ids": [
+    "golang/go#60078@open",
+    "golang/go#60078@accepted"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "golang/go#60078"
+    ],
+    "evidence_artifact_ids": [
+      "golang/go#60078@accepted"
+    ],
+    "explanation": "`golang/go#60078` is the governing, authoritative decision for `go-loop-variable-semantics`. It holds an `ACCEPTED` lifecycle status as confirmed by the proposal review group, serving as the sole eligible active policy decision within this scope.",
+    "parse_error": null
+  },
+  "raw_response": "`golang/go#60078` is the governing, authoritative decision for `go-loop-variable-semantics`. It holds an `ACCEPTED` lifecycle status as confirmed by the proposal review group, serving as the sole eligible active policy decision within this scope."
+}

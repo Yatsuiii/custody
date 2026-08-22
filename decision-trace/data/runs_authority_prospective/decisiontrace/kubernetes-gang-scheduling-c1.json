@@ -1,0 +1,18 @@
+{
+  "checkpoint_id": "kubernetes-gang-scheduling-c1",
+  "timeline_id": "kubernetes-gang-scheduling",
+  "condition": "decisiontrace",
+  "prompt_sha256": "f2be3bcd3fbb1db3117a5319607a0aaf0a923066fcb49cd89c9372209a0c15b3",
+  "source_artifact_ids": [
+    "KEP-583@current"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [],
+    "explanation": "There is currently no governing organizational decision for Kubernetes gang scheduling (`NO_GOVERNING_DECISION`), and no governing decision IDs exist (`[]`). Based on the resolver's findings, no visible accepted or implemented decision is eligible to govern, and no evidence or source artifacts are available to establish current authority.",
+    "parse_error": null
+  },
+  "raw_response": "There is currently no governing organizational decision for Kubernetes gang scheduling (`NO_GOVERNING_DECISION`), and no governing decision IDs exist (`[]`). Based on the resolver's findings, no visible accepted or implemented decision is eligible to govern, and no evidence or source artifacts are available to establish current authority."
+}

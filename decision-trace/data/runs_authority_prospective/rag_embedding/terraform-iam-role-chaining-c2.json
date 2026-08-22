@@ -1,0 +1,28 @@
+{
+  "checkpoint_id": "terraform-iam-role-chaining-c2",
+  "timeline_id": "terraform-iam-role-chaining",
+  "condition": "rag_embedding",
+  "prompt_sha256": "e986a440560436477caeab26b658f100bdd5e695f89f1de1947b2c607d135524",
+  "source_artifact_ids": [
+    "hashicorp/terraform#35720@open",
+    "hashicorp/terraform#35720@merged"
+  ],
+  "retrieved_artifact_ids": [
+    "hashicorp/terraform#35720@merged",
+    "hashicorp/terraform#35720@open",
+    "hashicorp/terraform#35720@open",
+    "hashicorp/terraform#35720@merged"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "hashicorp/terraform#35720"
+    ],
+    "evidence_artifact_ids": [
+      "hashicorp/terraform#35720@merged"
+    ],
+    "explanation": "PR hashicorp/terraform#35720 has been merged, implementing support for IAM role chaining in the Terraform S3 backend.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"hashicorp/terraform#35720\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"hashicorp/terraform#35720@merged\"\n  ],\n  \"explanation\": \"PR hashicorp/terraform#35720 has been merged, implementing support for IAM role chaining in the Terraform S3 backend.\"\n}\n```"
+}

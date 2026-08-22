@@ -1,0 +1,28 @@
+{
+  "checkpoint_id": "rust-naked-functions-c4",
+  "timeline_id": "rust-naked-functions",
+  "condition": "rag_embedding",
+  "prompt_sha256": "15ea649a3c89fb3d51feedc397e6c8c82bd54cb1caf349c6127d57a70ccbe213",
+  "source_artifact_ids": [
+    "RFC-1201@merged",
+    "RFC-2972@open",
+    "RFC-2972@current-authority"
+  ],
+  "retrieved_artifact_ids": [
+    "RFC-2972@current-authority",
+    "RFC-2972@open",
+    "RFC-1201@merged"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-2972"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-2972@current-authority"
+    ],
+    "explanation": "RFC-2972 is merged with policy decision authority over scope rust-naked-functions, explicitly replacing RFC-1201.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\"governing_decision_ids\":[\"RFC-2972\"],\"evidence_artifact_ids\":[\"RFC-2972@current-authority\"],\"explanation\":\"RFC-2972 is merged with policy decision authority over scope rust-naked-functions, explicitly replacing RFC-1201.\"}\n```"
+}

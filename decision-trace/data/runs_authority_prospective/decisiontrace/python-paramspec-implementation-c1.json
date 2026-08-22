@@ -1,0 +1,22 @@
+{
+  "checkpoint_id": "python-paramspec-implementation-c1",
+  "timeline_id": "python-paramspec-implementation",
+  "condition": "decisiontrace",
+  "prompt_sha256": "623f0d1f42ccc2b73737e0fd078df1ba48c25d58c0e2b39538a6d97a996a9883",
+  "source_artifact_ids": [
+    "PEP-612@final"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-612"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-612@final"
+    ],
+    "explanation": "The organizational decision currently governing the `python-paramspec-policy` scope is **PEP-612** (Authority State: **GOVERNING**). \n\nAccording to the resolver evidence, PEP-612 is the sole eligible active policy decision in this scope. Current authority is established by the following artifact:\n\n- **Artifact ID:** `PEP-612@final`\n- **Lifecycle Status:** FINAL\n- **Repository:** `python/peps`\n- **Pinned Revision:** `b2120d116aa696f409b4d8333c4020ab8f93c9c7`\n- **Source URL:** https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0612.rst",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing the `python-paramspec-policy` scope is **PEP-612** (Authority State: **GOVERNING**). \n\nAccording to the resolver evidence, PEP-612 is the sole eligible active policy decision in this scope. Current authority is established by the following artifact:\n\n- **Artifact ID:** `PEP-612@final`\n- **Lifecycle Status:** FINAL\n- **Repository:** `python/peps`\n- **Pinned Revision:** `b2120d116aa696f409b4d8333c4020ab8f93c9c7`\n- **Source URL:** https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0612.rst"
+}

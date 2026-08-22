@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "go-loop-variables-c2",
+  "timeline_id": "go-loop-variables",
+  "condition": "decisiontrace",
+  "prompt_sha256": "922291922cf9e09c137fb9291a9843f619bc3204feb398f68833744141aa0eb0",
+  "source_artifact_ids": [
+    "golang/go#60078@open",
+    "golang/go#60078@accepted"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "golang/go#60078"
+    ],
+    "evidence_artifact_ids": [
+      "golang/go#60078@accepted"
+    ],
+    "explanation": "The organizational decision currently governing `go-loop-variable-semantics` is **golang/go#60078** (Authority state: **GOVERNING**). \n\nThis authority is established by the following source artifact:\n* **Artifact ID:** `golang/go#60078@accepted`\n* **Decision ID:** `golang/go#60078`\n* **Lifecycle Status:** ACCEPTED (Role: POLICY)\n* **Timestamp:** 2023-07-19T21:20:45Z\n* **Source URL:** https://github.com/golang/go/issues/60078#issuecomment-1642774250\n* **Details:** As confirmed by the proposal review group (\"No change in consensus, so **accepted**\"), `golang/go#60078` is the sole eligible active decision governing the `go-loop-variable-semantics` scope.",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing `go-loop-variable-semantics` is **golang/go#60078** (Authority state: **GOVERNING**). \n\nThis authority is established by the following source artifact:\n* **Artifact ID:** `golang/go#60078@accepted`\n* **Decision ID:** `golang/go#60078`\n* **Lifecycle Status:** ACCEPTED (Role: POLICY)\n* **Timestamp:** 2023-07-19T21:20:45Z\n* **Source URL:** https://github.com/golang/go/issues/60078#issuecomment-1642774250\n* **Details:** As confirmed by the proposal review group (\"No change in consensus, so **accepted**\"), `golang/go#60078` is the sole eligible active decision governing the `go-loop-variable-semantics` scope."
+}

@@ -1,0 +1,28 @@
+{
+  "checkpoint_id": "swift-coroutine-accessors-c6",
+  "timeline_id": "swift-coroutine-accessors",
+  "condition": "decisiontrace",
+  "prompt_sha256": "8524c2282130d00ed5691662dd8b86b2213b6294caf4810cfbab3b1061cf3bf2",
+  "source_artifact_ids": [
+    "SE-0474@accepted",
+    "swiftlang/swift#90516@open",
+    "swiftlang/swift#90516@merged",
+    "swiftlang/swift#91475@open",
+    "swiftlang/swift#91475@merged",
+    "swiftlang/swift#91494@open",
+    "swiftlang/swift#91494@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "swiftlang/swift#91494"
+    ],
+    "evidence_artifact_ids": [
+      "swiftlang/swift#91494@merged"
+    ],
+    "explanation": "The decision that currently governs the `swift-coroutine-accessor-implementation` scope is **`swiftlang/swift#91494`** (Authority state: **GOVERNING**).\n\n**Governing Source Artifact:**\n* **Artifact ID:** `swiftlang/swift#91494@merged`\n* **Source URL:** https://github.com/swiftlang/swift/pull/91494\n* **Pinned Revision:** `947a75e5865b85f00cc5c008ce54255e1513e325`\n* **Timestamp:** 2026-08-19T19:44:26Z\n\n**Explanation:**\n`swiftlang/swift#91494` holds active governing authority because it is the sole eligible active decision in the `swift-coroutine-accessor-implementation` scope. With a lifecycle status of `REVERT_MERGED`, it explicitly reverted `swiftlang/swift#91475` to restore `swiftlang/swift#90516`, successfully re-landing the implementation of `[Embedded] Support CoroutineAccessors in no-allocations embedded`.",
+    "parse_error": null
+  },
+  "raw_response": "The decision that currently governs the `swift-coroutine-accessor-implementation` scope is **`swiftlang/swift#91494`** (Authority state: **GOVERNING**).\n\n**Governing Source Artifact:**\n* **Artifact ID:** `swiftlang/swift#91494@merged`\n* **Source URL:** https://github.com/swiftlang/swift/pull/91494\n* **Pinned Revision:** `947a75e5865b85f00cc5c008ce54255e1513e325`\n* **Timestamp:** 2026-08-19T19:44:26Z\n\n**Explanation:**\n`swiftlang/swift#91494` holds active governing authority because it is the sole eligible active decision in the `swift-coroutine-accessor-implementation` scope. With a lifecycle status of `REVERT_MERGED`, it explicitly reverted `swiftlang/swift#91475` to restore `swiftlang/swift#90516`, successfully re-landing the implementation of `[Embedded] Support CoroutineAccessors in no-allocations embedded`."
+}

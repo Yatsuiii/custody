@@ -1,0 +1,28 @@
+{
+  "checkpoint_id": "python-hash-api-c3",
+  "timeline_id": "python-hash-api",
+  "condition": "rag_embedding",
+  "prompt_sha256": "1cdaea040e5ffdc10b106661e2e18b62ae0681534fa11cc895cde764b83cf87f",
+  "source_artifact_ids": [
+    "PEP-247@accepted",
+    "PEP-452@accepted",
+    "PEP-247@current-note"
+  ],
+  "retrieved_artifact_ids": [
+    "PEP-247@accepted",
+    "PEP-452@accepted",
+    "PEP-247@current-note"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-452"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-452@accepted"
+    ],
+    "explanation": "PEP-452 is in FINAL lifecycle status with a POLICY decision role for the python-hash-api scope and explicitly replaces PEP-247. Subsequent note-level mentions do not alter this governing authority.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\"PEP-452\"],\n  \"evidence_artifact_ids\": [\"PEP-452@accepted\"],\n  \"explanation\": \"PEP-452 is in FINAL lifecycle status with a POLICY decision role for the python-hash-api scope and explicitly replaces PEP-247. Subsequent note-level mentions do not alter this governing authority.\"\n}\n```"
+}

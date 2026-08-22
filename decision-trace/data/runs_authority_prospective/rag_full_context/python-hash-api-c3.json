@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "python-hash-api-c3",
+  "timeline_id": "python-hash-api",
+  "condition": "rag_full_context",
+  "prompt_sha256": "423d9443767d1803e9942feacaf017371748ca9cb9ba3041e700ef882a4d4ff9",
+  "source_artifact_ids": [
+    "PEP-247@accepted",
+    "PEP-452@accepted",
+    "PEP-247@current-note"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-452"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-452@accepted"
+    ],
+    "explanation": "PEP-452 is a Final policy decision that explicitly replaces PEP-247 for python-hash-api. The later note is only a mention and does not alter authority.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"PEP-452\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"PEP-452@accepted\"\n  ],\n  \"explanation\": \"PEP-452 is a Final policy decision that explicitly replaces PEP-247 for python-hash-api. The later note is only a mention and does not alter authority.\"\n}\n```"
+}

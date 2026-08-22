@@ -1,0 +1,32 @@
+{
+  "checkpoint_id": "terraform-iam-role-chaining-c4",
+  "timeline_id": "terraform-iam-role-chaining",
+  "condition": "rag_embedding",
+  "prompt_sha256": "7319072f02eceb97238af6f3697ed871edf0eb15ad63e94ba1103709d3fa6478",
+  "source_artifact_ids": [
+    "hashicorp/terraform#35720@open",
+    "hashicorp/terraform#35720@merged",
+    "hashicorp/terraform#35827@open",
+    "hashicorp/terraform#35827@merged"
+  ],
+  "retrieved_artifact_ids": [
+    "hashicorp/terraform#35827@merged",
+    "hashicorp/terraform#35827@open",
+    "hashicorp/terraform#35720@merged",
+    "hashicorp/terraform#35720@open",
+    "hashicorp/terraform#35720@open",
+    "hashicorp/terraform#35720@merged"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "hashicorp/terraform#35827"
+    ],
+    "evidence_artifact_ids": [
+      "hashicorp/terraform#35827@merged"
+    ],
+    "explanation": "PR hashicorp/terraform#35827 achieved REVERT_MERGED status, explicitly reverting PR hashicorp/terraform#35720 to remove IAM role chaining support in the S3 backend, establishing it as the governing implementation decision.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"hashicorp/terraform#35827\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"hashicorp/terraform#35827@merged\"\n  ],\n  \"explanation\": \"PR hashicorp/terraform#35827 achieved REVERT_MERGED status, explicitly reverting PR hashicorp/terraform#35720 to remove IAM role chaining support in the S3 backend, establishing it as the governing implementation decision.\"\n}\n```"
+}

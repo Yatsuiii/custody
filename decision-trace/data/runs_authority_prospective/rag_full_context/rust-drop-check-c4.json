@@ -1,0 +1,25 @@
+{
+  "checkpoint_id": "rust-drop-check-c4",
+  "timeline_id": "rust-drop-check",
+  "condition": "rag_full_context",
+  "prompt_sha256": "2a2f1331bb06786090c4ca309a052d3a2f1e7cf652ee04cb8175cbbd87f401f9",
+  "source_artifact_ids": [
+    "RFC-769@merged",
+    "RFC-1238@open",
+    "RFC-1238@current-authority",
+    "RFC-769@partial-note"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-1238"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-1238@current-authority"
+    ],
+    "explanation": "RFC-1238 is merged with policy decision authority over rust-dropck-parametricity, explicitly replacing RFC-769.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\"RFC-1238\"],\n  \"evidence_artifact_ids\": [\"RFC-1238@current-authority\"],\n  \"explanation\": \"RFC-1238 is merged with policy decision authority over rust-dropck-parametricity, explicitly replacing RFC-769.\"\n}\n```"
+}

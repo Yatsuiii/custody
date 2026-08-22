@@ -1,0 +1,29 @@
+{
+  "checkpoint_id": "go-type-parameters-c4",
+  "timeline_id": "go-type-parameters",
+  "condition": "rag_embedding",
+  "prompt_sha256": "6595c9171524ae31baa9f4c5449e089567d71834f15eb1083d968e20e14a4cc7",
+  "source_artifact_ids": [
+    "go-contracts@superseded",
+    "golang/go#43651@open",
+    "golang/go#43651@accepted"
+  ],
+  "retrieved_artifact_ids": [
+    "golang/go#43651@accepted",
+    "golang/go#43651@open",
+    "golang/go#43651@open",
+    "go-contracts@superseded"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "golang/go#43651"
+    ],
+    "evidence_artifact_ids": [
+      "golang/go#43651@accepted"
+    ],
+    "explanation": "Decision golang/go#43651 was formally accepted by the proposal review group for the go-type-parameters scope, superseding the withdrawn go-contracts design.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"golang/go#43651\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"golang/go#43651@accepted\"\n  ],\n  \"explanation\": \"Decision golang/go#43651 was formally accepted by the proposal review group for the go-type-parameters scope, superseding the withdrawn go-contracts design.\"\n}\n```"
+}

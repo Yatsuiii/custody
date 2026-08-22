@@ -1,0 +1,29 @@
+{
+  "checkpoint_id": "swift-plugin-api-c3",
+  "timeline_id": "swift-plugin-api",
+  "condition": "rag_embedding",
+  "prompt_sha256": "44d2917c8fddfe267a717dd4eba7f1acbf472f7cf96b01f3a974904ec52537f1",
+  "source_artifact_ids": [
+    "SE-0303@accepted",
+    "SE-0325@accepted",
+    "SE-0325@compatibility-note"
+  ],
+  "retrieved_artifact_ids": [
+    "SE-0325@compatibility-note",
+    "SE-0303@accepted",
+    "SE-0325@accepted"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "SE-0303"
+    ],
+    "evidence_artifact_ids": [
+      "SE-0303@accepted",
+      "SE-0325@accepted"
+    ],
+    "explanation": "SE-0303 is the accepted policy defining the legacy plugin API (swiftpm-plugin-legacy-api). Although SE-0325 supersedes SE-0303 for the swiftpm-plugin-entry-point scope, it explicitly leaves the previous API in place for compatibility, preserving SE-0303's authority over the legacy API.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"SE-0303\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"SE-0303@accepted\",\n    \"SE-0325@accepted\"\n  ],\n  \"explanation\": \"SE-0303 is the accepted policy defining the legacy plugin API (swiftpm-plugin-legacy-api). Although SE-0325 supersedes SE-0303 for the swiftpm-plugin-entry-point scope, it explicitly leaves the previous API in place for compatibility, preserving SE-0303's authority over the legacy API.\"\n}\n```"
+}

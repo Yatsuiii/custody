@@ -1,0 +1,22 @@
+{
+  "checkpoint_id": "kubernetes-gang-scheduling-c1",
+  "timeline_id": "kubernetes-gang-scheduling",
+  "condition": "rag_embedding",
+  "prompt_sha256": "9513ec6299fa078d6d2c291887e9909d8b93b2b366baa0a326927193ba01e56e",
+  "source_artifact_ids": [
+    "KEP-583@current"
+  ],
+  "retrieved_artifact_ids": [
+    "KEP-583@current"
+  ],
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [
+      "KEP-583@current"
+    ],
+    "explanation": "KEP-583 is in DRAFT (provisional) status, meaning it has not been accepted or implemented, so there is no governing decision for kubernetes-gang-scheduling-policy.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"NO_GOVERNING_DECISION\",\n  \"governing_decision_ids\": [],\n  \"evidence_artifact_ids\": [\n    \"KEP-583@current\"\n  ],\n  \"explanation\": \"KEP-583 is in DRAFT (provisional) status, meaning it has not been accepted or implemented, so there is no governing decision for kubernetes-gang-scheduling-policy.\"\n}\n```"
+}

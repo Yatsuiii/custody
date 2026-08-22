@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "swift-property-wrappers-c2",
+  "timeline_id": "swift-property-wrappers",
+  "condition": "decisiontrace",
+  "prompt_sha256": "6664088d045c8752baa789008698691c0757dd99d2b71520d7da23f1dada4a6c",
+  "source_artifact_ids": [
+    "SE-0030@withdrawn",
+    "SE-0258@accepted"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "SE-0258"
+    ],
+    "evidence_artifact_ids": [
+      "SE-0258@accepted"
+    ],
+    "explanation": "The organizational decision that currently governs Swift property wrappers is **SE-0258** (Authority State: `GOVERNING`). It is the sole eligible active decision within the `swift-property-wrappers` authority scope, carrying an `ACCEPTED` lifecycle status and explicitly superseding SE-0030.\n\n**Source Artifact Establishing Authority:**\n* **Artifact ID:** `SE-0258@accepted`\n* **Decision ID:** `SE-0258`\n* **Repository:** `swiftlang/swift-evolution`\n* **Pinned Revision:** `0105e139a22938561c700cfbb89ddc3ebe402f0c`\n* **Source URL:** https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0258-property-wrappers.md",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision that currently governs Swift property wrappers is **SE-0258** (Authority State: `GOVERNING`). It is the sole eligible active decision within the `swift-property-wrappers` authority scope, carrying an `ACCEPTED` lifecycle status and explicitly superseding SE-0030.\n\n**Source Artifact Establishing Authority:**\n* **Artifact ID:** `SE-0258@accepted`\n* **Decision ID:** `SE-0258`\n* **Repository:** `swiftlang/swift-evolution`\n* **Pinned Revision:** `0105e139a22938561c700cfbb89ddc3ebe402f0c`\n* **Source URL:** https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0258-property-wrappers.md"
+}

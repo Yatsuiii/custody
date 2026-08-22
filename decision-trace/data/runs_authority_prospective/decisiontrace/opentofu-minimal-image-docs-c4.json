@@ -1,0 +1,25 @@
+{
+  "checkpoint_id": "opentofu-minimal-image-docs-c4",
+  "timeline_id": "opentofu-minimal-image-docs",
+  "condition": "decisiontrace",
+  "prompt_sha256": "30302423e0eb44a1818b3b535246f623c4b49a10bae0b67cf71f28a4df2dcdae",
+  "source_artifact_ids": [
+    "opentofu/opentofu#2403@open",
+    "opentofu/opentofu#2403@merged",
+    "opentofu/opentofu#2404@open",
+    "opentofu/opentofu#2404@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "opentofu/opentofu#2404"
+    ],
+    "evidence_artifact_ids": [
+      "opentofu/opentofu#2404@merged"
+    ],
+    "explanation": "The organizational decision currently governing `opentofu-minimal-image-docs` is **`opentofu/opentofu#2404`** with an authority state of **GOVERNING**. \n\nIt serves as the sole active decision in scope following the merge of its revert of `opentofu/opentofu#2403`.\n\n**Source Artifact Establishing Current Authority:**\n* **Artifact ID:** `opentofu/opentofu#2404@merged`\n* **Decision ID:** `opentofu/opentofu#2404`\n* **Repository:** `opentofu/opentofu`\n* **Source URL:** https://github.com/opentofu/opentofu/pull/2404\n* **Lifecycle Status:** `REVERT_MERGED` (Reverts `opentofu/opentofu#2403`)\n* **Timestamp:** 2025-04-25T11:22:19Z\n* **Pinned Revision:** `f6f5d109038ca278f57e20e788309d55e4226ab1`",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing `opentofu-minimal-image-docs` is **`opentofu/opentofu#2404`** with an authority state of **GOVERNING**. \n\nIt serves as the sole active decision in scope following the merge of its revert of `opentofu/opentofu#2403`.\n\n**Source Artifact Establishing Current Authority:**\n* **Artifact ID:** `opentofu/opentofu#2404@merged`\n* **Decision ID:** `opentofu/opentofu#2404`\n* **Repository:** `opentofu/opentofu`\n* **Source URL:** https://github.com/opentofu/opentofu/pull/2404\n* **Lifecycle Status:** `REVERT_MERGED` (Reverts `opentofu/opentofu#2403`)\n* **Timestamp:** 2025-04-25T11:22:19Z\n* **Pinned Revision:** `f6f5d109038ca278f57e20e788309d55e4226ab1`"
+}

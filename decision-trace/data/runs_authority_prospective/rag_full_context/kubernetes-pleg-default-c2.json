@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "kubernetes-pleg-default-c2",
+  "timeline_id": "kubernetes-pleg-default",
+  "condition": "rag_full_context",
+  "prompt_sha256": "ec2b8fccc1c0b40e35fbca5a1def1854ebac0462b81b687e5147ec9ebbabf032",
+  "source_artifact_ids": [
+    "kubernetes/kubernetes#137909@open",
+    "kubernetes/kubernetes#137909@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "kubernetes/kubernetes#137909"
+    ],
+    "evidence_artifact_ids": [
+      "kubernetes/kubernetes#137909@merged"
+    ],
+    "explanation": "Pull request kubernetes/kubernetes#137909 was merged, establishing that the PLEGOnDemandRelist feature flag default is switched off (false) for Kubernetes 1.36.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\"governing_decision_ids\":[\"kubernetes/kubernetes#137909\"],\"evidence_artifact_ids\":[\"kubernetes/kubernetes#137909@merged\"],\"explanation\":\"Pull request kubernetes/kubernetes#137909 was merged, establishing that the PLEGOnDemandRelist feature flag default is switched off (false) for Kubernetes 1.36.\"}\n```"
+}

@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "swift-coroutine-accessors-c3",
+  "timeline_id": "swift-coroutine-accessors",
+  "condition": "decisiontrace",
+  "prompt_sha256": "6a5884a17a91f80a9647b64bd98c6f5b9d9ca0f10374663d376440985ac3e3e1",
+  "source_artifact_ids": [
+    "SE-0474@accepted",
+    "swiftlang/swift#90516@open",
+    "swiftlang/swift#90516@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "swiftlang/swift#90516"
+    ],
+    "evidence_artifact_ids": [
+      "swiftlang/swift#90516@merged"
+    ],
+    "explanation": "The organizational decision currently governing swift coroutine accessor implementation is **swiftlang/swift#90516** (Authority state: **GOVERNING**). It is the sole eligible active decision within the `swift-coroutine-accessor-implementation` scope and implements SE-0474.\n\n**Source artifact establishing authority:**\n* **swiftlang/swift#90516@merged** \n  * Source URL: https://github.com/swiftlang/swift/pull/90516\n  * Lifecycle Status: MERGED\n  * Revision: `0416f827ae0e7e7fc3e988d671cdd9404f96aa19`",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing swift coroutine accessor implementation is **swiftlang/swift#90516** (Authority state: **GOVERNING**). It is the sole eligible active decision within the `swift-coroutine-accessor-implementation` scope and implements SE-0474.\n\n**Source artifact establishing authority:**\n* **swiftlang/swift#90516@merged** \n  * Source URL: https://github.com/swiftlang/swift/pull/90516\n  * Lifecycle Status: MERGED\n  * Revision: `0416f827ae0e7e7fc3e988d671cdd9404f96aa19`"
+}

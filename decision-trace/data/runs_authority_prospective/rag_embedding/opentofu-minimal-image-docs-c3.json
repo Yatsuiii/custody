@@ -1,0 +1,31 @@
+{
+  "checkpoint_id": "opentofu-minimal-image-docs-c3",
+  "timeline_id": "opentofu-minimal-image-docs",
+  "condition": "rag_embedding",
+  "prompt_sha256": "292afae6a57f2db9a9357ad41ea3efa48fe0715d2938e33a274af3e7ffcf99c1",
+  "source_artifact_ids": [
+    "opentofu/opentofu#2403@open",
+    "opentofu/opentofu#2403@merged",
+    "opentofu/opentofu#2404@open"
+  ],
+  "retrieved_artifact_ids": [
+    "opentofu/opentofu#2404@open",
+    "opentofu/opentofu#2403@open",
+    "opentofu/opentofu#2403@merged",
+    "opentofu/opentofu#2403@open",
+    "opentofu/opentofu#2403@merged"
+  ],
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "opentofu/opentofu#2403"
+    ],
+    "evidence_artifact_ids": [
+      "opentofu/opentofu#2403@merged",
+      "opentofu/opentofu#2404@open"
+    ],
+    "explanation": "PR #2403 was merged and currently governs the minimal image docs scope. PR #2404, which proposes to revert #2403, is currently open and has not been merged.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"opentofu/opentofu#2403\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"opentofu/opentofu#2403@merged\",\n    \"opentofu/opentofu#2404@open\"\n  ],\n  \"explanation\": \"PR #2403 was merged and currently governs the minimal image docs scope. PR #2404, which proposes to revert #2403, is currently open and has not been merged.\"\n}\n```"
+}

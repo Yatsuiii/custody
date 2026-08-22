@@ -1,0 +1,26 @@
+{
+  "checkpoint_id": "swift-coroutine-accessors-c5",
+  "timeline_id": "swift-coroutine-accessors",
+  "condition": "decisiontrace",
+  "prompt_sha256": "c47e3f5205e42ccc4e871b70bfffe26e4672201bb1819eb6e107a5a31243ccbb",
+  "source_artifact_ids": [
+    "SE-0474@accepted",
+    "swiftlang/swift#90516@open",
+    "swiftlang/swift#90516@merged",
+    "swiftlang/swift#91475@open",
+    "swiftlang/swift#91475@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "SE-0474"
+    ],
+    "evidence_artifact_ids": [
+      "SE-0474@accepted"
+    ],
+    "explanation": "The organizational decision currently governing the `swift-yielding-accessor-policy` scope is **SE-0474** (Authority State: `GOVERNING`). \n\nBased on the evidence, SE-0474 holds an `ACCEPTED` lifecycle status with a `POLICY` decision role and is the sole eligible active decision within the `swift-yielding-accessor-policy` scope.\n\n**Governing Source Artifact:**\n- **Artifact ID:** `SE-0474@accepted`\n- **Repository:** `swiftlang/swift-evolution`\n- **Pinned Revision:** `0105e139a22938561c700cfbb89ddc3ebe402f0c`\n- **Source URL:** https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0474-yielding-accessors.md",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing the `swift-yielding-accessor-policy` scope is **SE-0474** (Authority State: `GOVERNING`). \n\nBased on the evidence, SE-0474 holds an `ACCEPTED` lifecycle status with a `POLICY` decision role and is the sole eligible active decision within the `swift-yielding-accessor-policy` scope.\n\n**Governing Source Artifact:**\n- **Artifact ID:** `SE-0474@accepted`\n- **Repository:** `swiftlang/swift-evolution`\n- **Pinned Revision:** `0105e139a22938561c700cfbb89ddc3ebe402f0c`\n- **Source URL:** https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0474-yielding-accessors.md"
+}

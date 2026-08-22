@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "opentofu-minimal-image-docs-c3",
+  "timeline_id": "opentofu-minimal-image-docs",
+  "condition": "rag_full_context",
+  "prompt_sha256": "b83beda487385695fe27d4f85cb4725760b4d0fbebda841553ef77dea5d016d9",
+  "source_artifact_ids": [
+    "opentofu/opentofu#2403@open",
+    "opentofu/opentofu#2403@merged",
+    "opentofu/opentofu#2404@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "opentofu/opentofu#2403"
+    ],
+    "evidence_artifact_ids": [
+      "opentofu/opentofu#2403@merged"
+    ],
+    "explanation": "opentofu/opentofu#2403 was merged and currently governs opentofu-minimal-image-docs, while the subsequent revert PR opentofu/opentofu#2404 remains open and unmerged.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\"authority_state\":\"GOVERNING\",\"governing_decision_ids\":[\"opentofu/opentofu#2403\"],\"evidence_artifact_ids\":[\"opentofu/opentofu#2403@merged\"],\"explanation\":\"opentofu/opentofu#2403 was merged and currently governs opentofu-minimal-image-docs, while the subsequent revert PR opentofu/opentofu#2404 remains open and unmerged.\"}\n```"
+}

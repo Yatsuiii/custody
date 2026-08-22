@@ -1,0 +1,20 @@
+{
+  "checkpoint_id": "opentofu-minimal-image-docs-c1",
+  "timeline_id": "opentofu-minimal-image-docs",
+  "condition": "rag_full_context",
+  "prompt_sha256": "229ee659c7b7ead34dabff41ce16839751c284d70fec12188cf75c145bb4b721",
+  "source_artifact_ids": [
+    "opentofu/opentofu#2403@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [
+      "opentofu/opentofu#2403@open"
+    ],
+    "explanation": "Pull request opentofu/opentofu#2403 is currently OPEN and proposed, so no accepted or implemented decision governs the opentofu-minimal-image-docs scope in the visible history.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"NO_GOVERNING_DECISION\",\n  \"governing_decision_ids\": [],\n  \"evidence_artifact_ids\": [\n    \"opentofu/opentofu#2403@open\"\n  ],\n  \"explanation\": \"Pull request opentofu/opentofu#2403 is currently OPEN and proposed, so no accepted or implemented decision governs the opentofu-minimal-image-docs scope in the visible history.\"\n}\n```"
+}

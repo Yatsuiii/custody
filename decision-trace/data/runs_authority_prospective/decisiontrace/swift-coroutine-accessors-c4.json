@@ -1,0 +1,25 @@
+{
+  "checkpoint_id": "swift-coroutine-accessors-c4",
+  "timeline_id": "swift-coroutine-accessors",
+  "condition": "decisiontrace",
+  "prompt_sha256": "c9e2912ff85af4febcccf53627fd61e269e0e26fc287c53768ff8c44d5d20b4c",
+  "source_artifact_ids": [
+    "SE-0474@accepted",
+    "swiftlang/swift#90516@open",
+    "swiftlang/swift#90516@merged",
+    "swiftlang/swift#91475@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "swiftlang/swift#90516"
+    ],
+    "evidence_artifact_ids": [
+      "swiftlang/swift#90516@merged"
+    ],
+    "explanation": "Based on the authority resolver's determination, the organizational decision that currently governs Swift coroutine accessor implementation is **`swiftlang/swift#90516`** (Authority state: **GOVERNING**).\n\nThe source artifact establishing this authority is:\n* **`swiftlang/swift#90516@merged`** (Source URL: https://github.com/swiftlang/swift/pull/90516), which serves as the active implementation decision (implementing SE-0474) and is the sole eligible decision in the `swift-coroutine-accessor-implementation` scope.",
+    "parse_error": null
+  },
+  "raw_response": "Based on the authority resolver's determination, the organizational decision that currently governs Swift coroutine accessor implementation is **`swiftlang/swift#90516`** (Authority state: **GOVERNING**).\n\nThe source artifact establishing this authority is:\n* **`swiftlang/swift#90516@merged`** (Source URL: https://github.com/swiftlang/swift/pull/90516), which serves as the active implementation decision (implementing SE-0474) and is the sole eligible decision in the `swift-coroutine-accessor-implementation` scope."
+}

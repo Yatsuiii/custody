@@ -1,0 +1,25 @@
+{
+  "checkpoint_id": "opentofu-minimal-image-docs-c4",
+  "timeline_id": "opentofu-minimal-image-docs",
+  "condition": "rag_full_context",
+  "prompt_sha256": "a41e3a0501067996df950858cc61ac31bbeeed48f6d4700ecb5b964915fa2b5a",
+  "source_artifact_ids": [
+    "opentofu/opentofu#2403@open",
+    "opentofu/opentofu#2403@merged",
+    "opentofu/opentofu#2404@open",
+    "opentofu/opentofu#2404@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "opentofu/opentofu#2404"
+    ],
+    "evidence_artifact_ids": [
+      "opentofu/opentofu#2404@merged"
+    ],
+    "explanation": "Pull request opentofu/opentofu#2404 was merged (REVERT_MERGED), explicitly reverting decision opentofu/opentofu#2403 and currently governing the opentofu-minimal-image-docs scope.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"opentofu/opentofu#2404\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"opentofu/opentofu#2404@merged\"\n  ],\n  \"explanation\": \"Pull request opentofu/opentofu#2404 was merged (REVERT_MERGED), explicitly reverting decision opentofu/opentofu#2403 and currently governing the opentofu-minimal-image-docs scope.\"\n}\n```"
+}

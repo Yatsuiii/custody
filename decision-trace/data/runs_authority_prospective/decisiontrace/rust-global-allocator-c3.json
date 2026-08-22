@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "rust-global-allocator-c3",
+  "timeline_id": "rust-global-allocator",
+  "condition": "decisiontrace",
+  "prompt_sha256": "8b02541410927afb3932a789ae066355eeb7685c5def3d8b2c8f6f69bca39e91",
+  "source_artifact_ids": [
+    "RFC-1183@merged",
+    "RFC-1974@open",
+    "RFC-1974@current-authority"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-1974"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-1974@current-authority"
+    ],
+    "explanation": "The decision currently governing the Rust global allocator is **RFC-1974** (Authority state: **GOVERNING**). RFC-1974 is the sole eligible active policy decision within the `rust-global-allocator` scope, having superseded RFC-1183.\n\n**Governing Source Artifact:**\n- **Artifact ID:** `RFC-1974@current-authority` (Decision ID: `RFC-1974`)\n- **Repository:** `rust-lang/rfcs`\n- **Pinned Revision:** `354518a8c9025f40be6f730452c1bfe71a12dc22`\n- **Source URL:** https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1974-global-allocators.md",
+    "parse_error": null
+  },
+  "raw_response": "The decision currently governing the Rust global allocator is **RFC-1974** (Authority state: **GOVERNING**). RFC-1974 is the sole eligible active policy decision within the `rust-global-allocator` scope, having superseded RFC-1183.\n\n**Governing Source Artifact:**\n- **Artifact ID:** `RFC-1974@current-authority` (Decision ID: `RFC-1974`)\n- **Repository:** `rust-lang/rfcs`\n- **Pinned Revision:** `354518a8c9025f40be6f730452c1bfe71a12dc22`\n- **Source URL:** https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1974-global-allocators.md"
+}

@@ -1,0 +1,25 @@
+{
+  "checkpoint_id": "rust-tait-capture-c4",
+  "timeline_id": "rust-tait-capture",
+  "condition": "decisiontrace",
+  "prompt_sha256": "c17b44a559076a71cdecdd9201d35412a4e8b5cfd0ba0aa3ce3ae55ac8caea5a",
+  "source_artifact_ids": [
+    "RFC-2071@merged",
+    "RFC-2515@open",
+    "RFC-2515@merged",
+    "RFC-3498@merged"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-3498"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-3498@merged"
+    ],
+    "explanation": "The organizational decision currently governing Rust type-alias `impl Trait` capture behavior is **RFC-3498** (Authority State: **GOVERNING**). \n\nRFC-3498 is the sole active governing policy decision within the `rust-type-alias-impl-trait-capture` scope, explicitly superseding earlier specifications (RFC-2515 and RFC 2071).\n\n**Governing Source Artifact:**\n* **Artifact ID:** `RFC-3498@merged`\n* **Repository:** `rust-lang/rfcs`\n* **Status:** MERGED\n* **Source URL:** https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/3498-lifetime-capture-rules-2024.md",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing Rust type-alias `impl Trait` capture behavior is **RFC-3498** (Authority State: **GOVERNING**). \n\nRFC-3498 is the sole active governing policy decision within the `rust-type-alias-impl-trait-capture` scope, explicitly superseding earlier specifications (RFC-2515 and RFC 2071).\n\n**Governing Source Artifact:**\n* **Artifact ID:** `RFC-3498@merged`\n* **Repository:** `rust-lang/rfcs`\n* **Status:** MERGED\n* **Source URL:** https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/3498-lifetime-capture-rules-2024.md"
+}

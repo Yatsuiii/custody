@@ -1,0 +1,23 @@
+{
+  "checkpoint_id": "swift-plugin-api-c2",
+  "timeline_id": "swift-plugin-api",
+  "condition": "rag_full_context",
+  "prompt_sha256": "72436bf420239aba55806b7c8ba51e07d8494f4c0435d27a62bfbb8df13a0049",
+  "source_artifact_ids": [
+    "SE-0303@accepted",
+    "SE-0325@accepted"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "SE-0325"
+    ],
+    "evidence_artifact_ids": [
+      "SE-0325@accepted"
+    ],
+    "explanation": "SE-0325 is an accepted policy decision governing the swiftpm-plugin-entry-point scope that explicitly supersedes the entry point defined in SE-0303.",
+    "parse_error": null
+  },
+  "raw_response": "```json\n{\n  \"authority_state\": \"GOVERNING\",\n  \"governing_decision_ids\": [\n    \"SE-0325\"\n  ],\n  \"evidence_artifact_ids\": [\n    \"SE-0325@accepted\"\n  ],\n  \"explanation\": \"SE-0325 is an accepted policy decision governing the swiftpm-plugin-entry-point scope that explicitly supersedes the entry point defined in SE-0303.\"\n}\n```"
+}

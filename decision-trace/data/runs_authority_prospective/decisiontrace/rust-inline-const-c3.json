@@ -1,0 +1,24 @@
+{
+  "checkpoint_id": "rust-inline-const-c3",
+  "timeline_id": "rust-inline-const",
+  "condition": "decisiontrace",
+  "prompt_sha256": "32829d9a1dcca89bc373b654b46e6d857471e949292303e7ffe40138cfbe0593",
+  "source_artifact_ids": [
+    "RFC-2203@merged",
+    "RFC-2920@open",
+    "RFC-2920@current-authority"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-2920"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-2920@current-authority"
+    ],
+    "explanation": "The organizational decision currently governing `rust-inline-const` is **RFC-2920** (Authority state: **GOVERNING**). It is the sole eligible active decision within the `rust-inline-const` authority scope, holding a `MERGED` lifecycle status and serving as active `POLICY` (explicitly replacing RFC-2203).\n\n**Source Artifact:**\n* **Artifact ID:** `RFC-2920@current-authority` (Decision ID: `RFC-2920`)\n* **Repository:** `rust-lang/rfcs`\n* **Pinned Revision:** `354518a8c9025f40be6f730452c1bfe71a12dc22`\n* **Source URL:** https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/2920-inline-const.md",
+    "parse_error": null
+  },
+  "raw_response": "The organizational decision currently governing `rust-inline-const` is **RFC-2920** (Authority state: **GOVERNING**). It is the sole eligible active decision within the `rust-inline-const` authority scope, holding a `MERGED` lifecycle status and serving as active `POLICY` (explicitly replacing RFC-2203).\n\n**Source Artifact:**\n* **Artifact ID:** `RFC-2920@current-authority` (Decision ID: `RFC-2920`)\n* **Repository:** `rust-lang/rfcs`\n* **Pinned Revision:** `354518a8c9025f40be6f730452c1bfe71a12dc22`\n* **Source URL:** https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/2920-inline-const.md"
+}

@@ -1,0 +1,18 @@
+{
+  "checkpoint_id": "kubernetes-pleg-default-c1",
+  "timeline_id": "kubernetes-pleg-default",
+  "condition": "decisiontrace",
+  "prompt_sha256": "e6c5e62a36b33b1dc45b31f883a31e31698d09dee3e3580cdf08b8241e53c9ba",
+  "source_artifact_ids": [
+    "kubernetes/kubernetes#137909@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [],
+    "explanation": "There is currently no governing decision (`NO_GOVERNING_DECISION`) for `kubernetes-pleg-default`. No visible accepted or implemented decisions are eligible to govern it, and there are no source artifacts or decision IDs establishing current authority.",
+    "parse_error": null
+  },
+  "raw_response": "There is currently no governing decision (`NO_GOVERNING_DECISION`) for `kubernetes-pleg-default`. No visible accepted or implemented decisions are eligible to govern it, and there are no source artifacts or decision IDs establishing current authority."
+}

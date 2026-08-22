@@ -1,0 +1,21 @@
+{
+  "checkpoint_id": "rust-drop-check-c4",
+  "timeline_id": "rust-drop-check",
+  "condition": "decisiontrace",
+  "prompt_sha256": "7ad87bca44a46b1be28d8c168d650d0776bcac6c1828dc94fef769e649cd34e9",
+  "source_artifact_ids": [
+    "RFC-769@merged",
+    "RFC-1238@open",
+    "RFC-1238@current-authority",
+    "RFC-769@partial-note"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "UNRESOLVED",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [],
+    "explanation": "The authority state is UNRESOLVED, and there are no governing decision IDs (`[]`). While visible authority exists, none explicitly covers the requested broad scope of Rust dropck parametricity as a single undifferentiated policy. Because the resolver refuses to make a semantic guess, no governing decision or source artifact currently establishes authority for this scope.",
+    "parse_error": null
+  },
+  "raw_response": "The authority state is UNRESOLVED, and there are no governing decision IDs (`[]`). While visible authority exists, none explicitly covers the requested broad scope of Rust dropck parametricity as a single undifferentiated policy. Because the resolver refuses to make a semantic guess, no governing decision or source artifact currently establishes authority for this scope."
+}

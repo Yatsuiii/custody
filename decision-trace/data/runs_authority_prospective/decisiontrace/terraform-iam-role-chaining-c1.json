@@ -1,0 +1,18 @@
+{
+  "checkpoint_id": "terraform-iam-role-chaining-c1",
+  "timeline_id": "terraform-iam-role-chaining",
+  "condition": "decisiontrace",
+  "prompt_sha256": "ba749f04b5d337f6aa74e7675d6f770611a740f6c0fb645428c7cef4f53b750c",
+  "source_artifact_ids": [
+    "hashicorp/terraform#35720@open"
+  ],
+  "retrieved_artifact_ids": null,
+  "prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [],
+    "explanation": "Based on the resolver output and available evidence, there is currently no governing decision for `terraform-s3-iam-role-chaining` (authority state: `NO_GOVERNING_DECISION`, governing decision IDs: `[]`). No visible accepted or implemented decision is eligible to govern, and no source artifacts were provided to establish authority.",
+    "parse_error": null
+  },
+  "raw_response": "Based on the resolver output and available evidence, there is currently no governing decision for `terraform-s3-iam-role-chaining` (authority state: `NO_GOVERNING_DECISION`, governing decision IDs: `[]`). No visible accepted or implemented decision is eligible to govern, and no source artifacts were provided to establish authority."
+}
