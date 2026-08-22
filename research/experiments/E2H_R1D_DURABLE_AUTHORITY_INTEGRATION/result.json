@@ -1,0 +1,36 @@
+{
+  "canonical_result_digest": "6d9fa267cac5e4b42d488548b5da749916449a5435c937d8747436dcf67d8e25",
+  "cleanup": {
+    "cleanup_complete": false,
+    "reason": "runner exception; preserve namespace for diagnosis"
+  },
+  "e2g_commit": "bd0fcd3af38b105f326dbe0e4f73149b6da67449",
+  "e2g_result_digest": "05707014de0ed008db4eadd4ab74f7aa21ae530ea4029e2218b448b5fa6e1bac",
+  "environment": {
+    "database": "(default)",
+    "database_class": "Firestore Native",
+    "namespace_prefix": "custody_research_e2h_r1d_20260822",
+    "project": "project-988bc9fe-092c-4b32-90c",
+    "region": "us-central1"
+  },
+  "error_message": "W command failed: ValueError: Failed to commit transaction in 5 attempts.",
+  "error_type": "RuntimeError",
+  "execution_status": "INVALID_RUNNER_EXCEPTION",
+  "experiment_id": "E2H_R1D_DURABLE_AUTHORITY_INTEGRATION",
+  "first_failed_gate": "EXECUTION_IMPLEMENTATION_ERROR",
+  "leakage_guard": {
+    "runtime_scan": [],
+    "scorer_read_counter_before_actions": 0
+  },
+  "operation_counts": {
+    "deletes": 0,
+    "model_calls": 0,
+    "reads": 0,
+    "writes": 0
+  },
+  "plan_immutable": true,
+  "plan_sha256": "b87e953362b68528fc5b9714a775ad73c49844fe221cf6bff65d93c9495614a0",
+  "preregistration_commit": "3e642a77cfc24d66c471c6fc83abf25349d232e1",
+  "reason": "RUNNER_EXCEPTION",
+  "verdict": "INTEGRATION-BLOCKED"
+}
