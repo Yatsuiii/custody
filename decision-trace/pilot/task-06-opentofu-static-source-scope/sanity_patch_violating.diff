@@ -1,0 +1,130 @@
+diff --git a/internal/configs/module_call.go b/internal/configs/module_call.go
+index 8eb6dfa..2bb90ab 100644
+--- a/internal/configs/module_call.go
++++ b/internal/configs/module_call.go
+@@ -9,2 +9,3 @@ import (
+ 	"fmt"
++	"strings"
+ 
+@@ -20,8 +21,10 @@ import (
+ type ModuleCall struct {
+-	Name string
++	Name           string
++	NameExpression hcl.Expression
+ 
+-	SourceAddr      addrs.ModuleSource
+-	SourceAddrRaw   string
+-	SourceAddrRange hcl.Range
+-	SourceSet       bool
++	SourceAddr           addrs.ModuleSource
++	SourceAddrRaw        string
++	SourceAddrRange      hcl.Range
++	SourceAddrExpression hcl.Expression
++	SourceSet            bool
+ 
+@@ -48,2 +51,12 @@ func decodeModuleBlock(block *hcl.Block, override bool) (*ModuleCall, hcl.Diagno
+ 	}
++	if strings.Contains(mc.Name, "{") {
++		labelTemplate := strings.ReplaceAll(mc.Name, "{", "${")
++		var labelDiags hcl.Diagnostics
++		mc.NameExpression, labelDiags = hclsyntax.ParseExpression(
++			[]byte(fmt.Sprintf("%q", labelTemplate)),
++			block.DefRange.Filename,
++			hcl.Pos{Line: 1, Column: 1},
++		)
++		diags = append(diags, labelDiags...)
++	}
+ 
+@@ -78,2 +91,3 @@ func decodeModuleBlock(block *hcl.Block, override bool) (*ModuleCall, hcl.Diagno
+ 		mc.SourceAddrRange = attr.Expr.Range()
++		mc.SourceAddrExpression = attr.Expr
+ 		valDiags := gohcl.DecodeExpression(attr.Expr, nil, &mc.SourceAddrRaw)
+diff --git a/internal/configs/module_call_test.go b/internal/configs/module_call_test.go
+index 46068e4..a7e8cfa 100644
+--- a/internal/configs/module_call_test.go
++++ b/internal/configs/module_call_test.go
+@@ -15,2 +15,3 @@ import (
+ 	"github.com/opentofu/opentofu/internal/addrs"
++	"github.com/zclconf/go-cty/cty"
+ )
+@@ -146,2 +147,3 @@ func TestLoadModuleCall(t *testing.T) {
+ 		m.ForEach = nil
++		m.SourceAddrExpression = nil
+ 	}
+@@ -153,2 +155,60 @@ func TestLoadModuleCall(t *testing.T) {
+ 
++func TestDecisionTracePreservesStaticSourceExpression(t *testing.T) {
++	parser := testParser(map[string]string{
++		"source.tf": `
++locals {
++  module_source = "./child"
++}
++
++module "child" {
++  source = local.module_source
++}
++`,
++	})
++
++	file, _ := parser.LoadConfigFile("source.tf")
++	if file == nil || len(file.ModuleCalls) != 1 {
++		t.Fatalf("expected one decoded module call")
++	}
++	expr := file.ModuleCalls[0].SourceAddrExpression
++	if expr == nil {
++		t.Fatal("module source expression was discarded")
++	}
++	refs := expr.Variables()
++	if len(refs) != 1 || refs[0].RootName() != "local" {
++		t.Fatalf("unexpected source references: %#v", refs)
++	}
++	if attr, ok := refs[0][1].(hcl.TraverseAttr); !ok || attr.Name != "module_source" {
++		t.Fatalf("source reference was not local.module_source: %#v", refs[0])
++	}
++}
++
++func TestDecisionTraceInterpolatesModuleLabel(t *testing.T) {
++	parser := testParser(map[string]string{
++		"label.tf": `
++module "{local.prefix}-child" {
++  source = "./child"
++}
++`,
++	})
++
++	file, _ := parser.LoadConfigFile("label.tf")
++	if file == nil || len(file.ModuleCalls) != 1 {
++		t.Fatalf("expected one decoded module call")
++	}
++	expr := file.ModuleCalls[0].NameExpression
++	if expr == nil {
++		t.Fatal("module label expression was discarded")
++	}
++	ctx := &hcl.EvalContext{Variables: map[string]cty.Value{
++		"local": cty.ObjectVal(map[string]cty.Value{
++			"prefix": cty.StringVal("example"),
++		}),
++	}}
++	value, diags := expr.Value(ctx)
++	if diags.HasErrors() || value.AsString() != "example-child" {
++		t.Fatalf("unexpected evaluated label: %s (%s)", value.AsString(), diags.Error())
++	}
++}
++
+ func TestModuleSourceAddrEntersNewPackage(t *testing.T) {
+diff --git a/internal/configs/module_merge.go b/internal/configs/module_merge.go
+index 3b23890..e4fcfdc 100644
+--- a/internal/configs/module_merge.go
++++ b/internal/configs/module_merge.go
+@@ -174,2 +174,3 @@ func (mc *ModuleCall) merge(omc *ModuleCall) hcl.Diagnostics {
+ 		mc.SourceAddrRange = omc.SourceAddrRange
++		mc.SourceAddrExpression = omc.SourceAddrExpression
+ 		mc.SourceSet = omc.SourceSet
+diff --git a/internal/configs/module_merge_test.go b/internal/configs/module_merge_test.go
+index 11ee1c4..72ca1cc 100644
+--- a/internal/configs/module_merge_test.go
++++ b/internal/configs/module_merge_test.go
+@@ -177,2 +177,3 @@ func TestModuleOverrideModule(t *testing.T) {
+ 	got.Config = nil
++	got.SourceAddrExpression = nil
+ 

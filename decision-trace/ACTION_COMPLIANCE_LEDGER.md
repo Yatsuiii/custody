@@ -204,7 +204,7 @@ pinned and replayed. Rejected rows are not cloned merely to manufacture a SHA.
 | C26 | rust-lang/rust (Rust compiler/std) | PR #151603; revert #152963; PR #152971 | `rustc` snapshot exists, replay rejected | EXPLICIT_RESTORATION | Add/use `str::as_str` only after explicit restoration. | Restored API at governing snapshot / assume revert auto-restored it. | **REJECT `TOOLCHAIN_COST_TOO_HIGH`** (G10). |
 | C27 | kubernetes/kubernetes (Go/Kubernetes) | KEP-2332 | not pinned; rejected before clone | PARALLEL_DECISIONS | Change CRD pruning behavior by schema scope. | Preserve/prune by explicit structural scope / collapse modes globally. | **REJECT `CONTEXT_TOO_LARGE`** (G4/G10). |
 | C28 | kubernetes/kubernetes (Go/Kubernetes) | KEP-2885 | not pinned; rejected before clone | PARTIAL_ACCEPTANCE | Implement warn/strict/ignore field-validation mode. | Mode-specific behavior / apply a staged default universally. | **REJECT `BUILD_INFEASIBLE`** (G8/G10). |
-| C29 | opentofu/opentofu (Go/IaC) | issue #1042 and resolved scope comments | pending Stage C | WRONG_AUTHORITY_SCOPE | Add constant expression support without enabling label interpolation. | Expressions only / apply interpolation to labels. | Stage C; authority explicitness and bounded parser tests pending. |
+| C29 | opentofu/opentofu (Go/IaC) | issue #1042; scope resolutions; merged RFC PR #1649; implementation PR #1718 | `3fdc8090501234c55093078255969ecbc46f2fe2` | WRONG_AUTHORITY_SCOPE | Retain module `source` expressions for static evaluation without enabling label interpolation. | Source attribute expression only / also parse module labels as expression templates. | **ACCEPT**: G1-G10 pass; applied Go AST + focused parser test separates A `(T,T,T)` from B `(T,T,F)`, and both pass the full `internal/configs` package suite. |
 | C30 | opentofu/opentofu (Go/IaC) | issue #3414 and runtime staging commits | not pinned; rejected before clone | IMPLEMENTATION_VS_POLICY | Route evaluation through a new runtime. | Activate only accepted slice / treat dead skeleton as governing architecture. | **REJECT `CONTEXT_TOO_LARGE`** and `PATCH_DOES_NOT_CHANGE` (G3/G4). |
 | C31 | tokio-rs/axum (Rust web) | PR #2645; axum 0.8 changelog | pending Stage C | SUPERSEDED_DESIGN | Add a parameterized route. | brace capture syntax / former colon capture syntax. | Stage C; determine whether wrong patch is plausible and test-passing. |
 | C32 | tokio-rs/axum (Rust web) | PR #2475 plus release changelog | pending Stage C | PARTIAL_ACCEPTANCE | Add optional extraction while preserving malformed-input rejection. | None only for absence / swallow every extraction error. | Stage C; second independent authority artifact and replay pending. |
@@ -324,3 +324,22 @@ pinned and replayed. Rejected rows are not cloned merely to manufacture a SHA.
 | `authority_error_category` | `PARTIAL_ACCEPTANCE` |
 | `ambiguity_status` | `resolved` |
 | `ecosystem` | Python / PyPA packaging |
+
+### Validated NEW task: task-06-opentofu-static-source-scope
+
+| Field | Value |
+|---|---|
+| `task_id` | `task-06-opentofu-static-source-scope` |
+| `repository` | `opentofu/opentofu` |
+| `pinned_sha` | `3fdc8090501234c55093078255969ecbc46f2fe2` |
+| `requested_change` | Retain the module `source` attribute's unevaluated HCL expression, including through override merging, and add a focused traversal test. |
+| `governing_authority` | Issue #1042's maintainer resolution explicitly excludes block-label interpolation; merged RFC PR #1649 and implementation PR #1718 govern static evaluation for attributes/module sources. |
+| `source_evidence` | https://github.com/opentofu/opentofu/issues/1042 ; https://github.com/opentofu/opentofu/issues/1042#issuecomment-1875588374 ; https://github.com/opentofu/opentofu/issues/1042#issuecomment-1875655905 ; https://github.com/opentofu/opentofu/pull/1649 ; https://github.com/opentofu/opentofu/pull/1718 |
+| `competing_decisions` | The issue's early design explored `{local.prefix}` interpolation in block labels before maintainers resolved it out of scope. |
+| `prohibited_authority_interpretation` | A neighboring static-expression decision authorizes applying expression evaluation to syntactic labels too. |
+| `authority_violation_shape` | Add a retained `NameExpression` and parse interpolated module labels through `hclsyntax.ParseExpression`. |
+| `task_specific_tests` | Applied Go AST probe plus `go test ./internal/configs -run '^TestDecisionTrace' -count=1`; full package suite also validated. |
+| `compliance_assertions` | Requested source-expression field/data flow/test all exist, while no module-label expression field is wired to the label parser. |
+| `authority_error_category` | `WRONG_AUTHORITY_SCOPE` |
+| `ambiguity_status` | `resolved` |
+| `ecosystem` | Go / OpenTofu configuration language |
