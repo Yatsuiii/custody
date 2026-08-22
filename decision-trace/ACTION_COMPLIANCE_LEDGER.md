@@ -180,6 +180,37 @@ PARTIAL_ACCEPTANCE, IMPLEMENTATION_VS_POLICY, and MENTION_WITHOUT_TRANSITION.
     diversity guidance (don't over-fill one category) rather than any
     structural gate failure.
 
+## Current task-inventory structural triage (research continuation)
+
+These are serious candidates C14-C34 from Stage B. They were selected from the
+57-lead cheap pool in `ACTION_COMPLIANCE_DISCOVERY.md`. A promoted row's SHA is
+deliberately `pending Stage C`; it is not ground truth until a real worktree is
+pinned and replayed. Rejected rows are not cloned merely to manufacture a SHA.
+
+| ID | Repo / ecosystem | Primary sources | Pinned SHA | Category | Coding-task concept | Compliant / violating behavior | Gate status and decision |
+|---|---|---|---|---|---|---|---|
+| C14 | django/django (Python/Django) | ticket #27236; commits `a6385b382e`, `2abf417c81` | `879e5d587b84e6fc961829611999431778eb9f6a` | SUPERSEDED_DESIGN | Add a real two-column `Book` database index and schema test. | `Meta.indexes` / functioning but deprecated `index_together`. | Stage C; replay G10 and semantic G8/G9. |
+| C15 | golang/go (Go stdlib) | issues #61626, #61900 | `56ebf80e57db9f61981fc0636fc6419dc6f68eda` | PROPOSAL_NOT_ACCEPTED | Produce and test a deterministic sorted slice of map keys. | Compose accepted iterator API / add declined exported slice helper. | Stage C; replay G10 and typed G8/G9. |
+| C16 | opentofu/opentofu (Go/IaC) | RFC `20260808-ignore-provider-meta.md` plus implementation history | `f831fa1aa4b90cdbdb1e0b5a8d5815f9e74646a5` | PARTIAL_ACCEPTANCE | Warn when configured `provider_meta` is evaluated. | Warn but still transmit / warn and prematurely ignore. | Stage C; G2/G4/G10 pending. |
+| C17 | kubernetes/kubernetes (Go/Kubernetes) | KEP-4671; PR #141182 | not pinned; rejected before clone | SUPERSEDED_DESIGN | Activate group scheduling through the replacement extension point. | PlacementFeasible / remove or retain Permit according to an unmerged PR. | **REJECT `AUTHORITY_NOT_EXPLICIT`** (G2). |
+| C18 | django/django (Python/Django) | ticket #26029; commit `32940d390a` | not pinned; rejected before clone | SUPERSEDED_DESIGN | Configure a storage backend. | `STORAGES` / deprecated single-backend setting. | **REJECT `DUPLICATE_SCENARIO`**; duplicates C14 mechanism/category/ecosystem. |
+| C19 | python/peps + packaging implementations (Python) | PEP 345; withdrawn PEP 426; PEP 566 | not pinned; rejected before clone | SUPERSEDED_DESIGN | Extend package metadata handling. | PEP 566 field model / withdrawn PEP 426 redesign. | **REJECT `NO_EXECUTABLE_TASK`** (G5 bounded target absent). |
+| C20 | pypa/packaging (Python/PyPA) | PEP 513/571/599/600; packaging#293; manylinux#542 | pending Stage C | PARALLEL_DECISIONS | Extend manylinux tag recognition without deleting valid legacy aliases. | Perennial plus scoped aliases / collapse all legacy policy into new tag only. | Stage C; G1/G6/G10 pending. |
+| C21 | pypa/pip (Python/PyPA) | rejected PEP 722; final PEP 723; pip PR #12891 | pending Stage C | SUPERSEDED_DESIGN | Parse dependency metadata from a runnable script. | PEP 723 TOML block / rejected PEP 722 comment block. | Stage C; G1/G6/G10 pending. |
+| C22 | python/cpython (C/Python) | PEP 563/649/749 | not pinned; rejected before clone | SUPERSEDED_DESIGN | Change runtime annotation evaluation. | Current descriptor semantics / superseded postponed-string semantics. | **REJECT `TOOLCHAIN_COST_TOO_HIGH`** (G10). |
+| C23 | pypa/pip or pypi/warehouse (Python/PyPA) | withdrawn PEP 381; final PEP 449; final PEP 464 | pending Stage C | PARALLEL_DECISIONS | Update mirror handling while preserving independent discovery/authenticity scope. | Apply each PEP only to its scope / collapse one policy into the other. | Stage C; implementation target and G8/G10 pending. |
+| C24 | python/cpython (Python/C) | final PEP 597; PR #25103; revert PR #25108 | pending Stage C | IMPLEMENTATION_VS_POLICY | Handle explicit locale encoding without accepting it where binary mode forbids encoding. | Policy in text mode / copy reverted binary-mode implementation. | Stage C; bounded `_pyio` path and G8/G10 pending. |
+| C25 | python/cpython (C/Python) | final PEP 489; PR #19084; revert PR #19128 | pending Stage C | IMPLEMENTATION_VS_POLICY | Convert or extend one built-in module's initialization. | Follow policy with module-specific constraints / replay reverted `_weakref` conversion. | Stage C; reject if interpreter rebuild required. |
+| C26 | rust-lang/rust (Rust compiler/std) | PR #151603; revert #152963; PR #152971 | `rustc` snapshot exists, replay rejected | EXPLICIT_RESTORATION | Add/use `str::as_str` only after explicit restoration. | Restored API at governing snapshot / assume revert auto-restored it. | **REJECT `TOOLCHAIN_COST_TOO_HIGH`** (G10). |
+| C27 | kubernetes/kubernetes (Go/Kubernetes) | KEP-2332 | not pinned; rejected before clone | PARALLEL_DECISIONS | Change CRD pruning behavior by schema scope. | Preserve/prune by explicit structural scope / collapse modes globally. | **REJECT `CONTEXT_TOO_LARGE`** (G4/G10). |
+| C28 | kubernetes/kubernetes (Go/Kubernetes) | KEP-2885 | not pinned; rejected before clone | PARTIAL_ACCEPTANCE | Implement warn/strict/ignore field-validation mode. | Mode-specific behavior / apply a staged default universally. | **REJECT `BUILD_INFEASIBLE`** (G8/G10). |
+| C29 | opentofu/opentofu (Go/IaC) | issue #1042 and resolved scope comments | pending Stage C | WRONG_AUTHORITY_SCOPE | Add constant expression support without enabling label interpolation. | Expressions only / apply interpolation to labels. | Stage C; authority explicitness and bounded parser tests pending. |
+| C30 | opentofu/opentofu (Go/IaC) | issue #3414 and runtime staging commits | not pinned; rejected before clone | IMPLEMENTATION_VS_POLICY | Route evaluation through a new runtime. | Activate only accepted slice / treat dead skeleton as governing architecture. | **REJECT `CONTEXT_TOO_LARGE`** and `PATCH_DOES_NOT_CHANGE` (G3/G4). |
+| C31 | tokio-rs/axum (Rust web) | PR #2645; axum 0.8 changelog | pending Stage C | SUPERSEDED_DESIGN | Add a parameterized route. | brace capture syntax / former colon capture syntax. | Stage C; determine whether wrong patch is plausible and test-passing. |
+| C32 | tokio-rs/axum (Rust web) | PR #2475 plus release changelog | pending Stage C | PARTIAL_ACCEPTANCE | Add optional extraction while preserving malformed-input rejection. | None only for absence / swallow every extraction error. | Stage C; second independent authority artifact and replay pending. |
+| C33 | Python packaging tool (Python/PyPA) | rejected PEP 665; final PEP 751 | pending Stage C | SUPERSEDED_DESIGN | Add lock-file parsing for one bounded consumer. | PEP 751 format / rejected PEP 665 format. | Stage C; viable implementation snapshot pending. |
+| C34 | golang/go (Go stdlib) | issue #51082/commit `ae3d890`; accepted proposal #54312 | pending Stage C | EXPLICIT_RESTORATION | Preserve mathematical double-prime notation in rendered documentation. | Restored literal/non-mutating behavior / retain prior quote rewrite or old workaround. | Stage C; pin after accepted transition and replay `go/doc` tests. |
+
 ## Task rows
 
 | Field | Value |
