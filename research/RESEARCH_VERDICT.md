@@ -295,7 +295,7 @@ experiment) would need to sit on top of a materially different derivation
 mechanism than the one Custody has today — not a claim to act on yet, per
 this experiment's scope, but the accumulating basis for one.
 
-## Current next highest-leverage action (post-E2B)
+## Current next highest-leverage action (superseded — see E2C addendum below)
 
 Not decided in this session. `research/experiments/E2B_TMANM_SUMMARIZE/
 RESULT.md` (item 9) notes that the natural positive-control follow-up
@@ -306,3 +306,43 @@ covered by an existing unit test
 confirming against this exact scenario's values before deciding whether a
 further adapted experiment is warranted. No further step is authorized by
 this session.
+
+## Addendum, 2026-08-22 (continued): E2C result
+
+Full detail in `research/experiments/E2C_EXACT_VS_TRANSFORMED/`.
+**Verdict: EXACT-MATCH-DEPENDENCY-CONFIRMED.** Not an attack benchmark —
+a mechanistic falsifier for the specific hypothesis underneath E2B's
+finding. `tests/test_graph.py::RetrievalIsAttributedAsACitation` already
+proved the exact-match positive control and was reused rather than
+re-derived; new minimal harness code covered the untested cases. Result:
+a genuinely trusted root fact retrieved byte-identical fully preserves
+ancestry and authority; the same fact retrieved with a single trailing
+period removed produces a total loss, byte-for-byte identical in every
+measured field to a full semantic paraphrase and to an entirely unrelated
+proposition. The mechanism (`CustodyGraph.resolve`, `graph.py:187-197`,
+SHA-256 equality) has no notion of "close" — it is a hard cliff, not a
+graded fragility, with no threshold to characterize.
+
+This closes out the mechanistic question E2B's own item-9 next-step
+raised, and gives cases D/E in `CURRENT_CUSTODY_REDTEAM.md` their most
+precise form yet: one named line of code is the entire load-bearing
+mechanism behind both the red-team's original D/E verdicts and E2B's
+measured collateral-damage finding. Per this experiment's own scope, no
+defense was designed or evaluated for readiness.
+
+**Verdict stays RESEARCH-ONLY.** Three externally- or mechanistically-
+grounded findings now sit alongside the still-untouched K/L gaps: case F
+(E2A, EXTERNAL-FAIL — tool-identity trust with no payload inspection),
+cases D/E (E2B, EXTERNAL-PASS-ACCIDENTAL — exact-hash matching cannot
+distinguish malicious from benign transformation), and the single-line
+mechanistic root cause of the D/E finding (E2C). Whether this is
+sufficient characterization to justify designing a mechanism is an open
+question this session does not answer, per E2C's own item 10.
+
+## Current next highest-leverage action (post-E2C)
+
+Not decided in this session, per E2C's own non-negotiable scope
+restriction (characterization only, no readiness judgment for mechanism
+design). Any further step — including whether to begin designing a
+replacement or supplement for `CustodyGraph.resolve`'s exact-match gate —
+remains gated on explicit authorization.
