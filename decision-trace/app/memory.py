@@ -58,6 +58,12 @@ def propose_reconsideration(
             type="conversation", url="", quote=changed_assumption,
         )],
         related_decisions=[(target_decision_id, RelationshipType.RECONSIDERS)],
+        # Inherit the target's scope so the candidate is visible to
+        # resolve_authority_with_proof as an excluded PROPOSED_NOT_ACCEPTED
+        # candidate in the target's own scope, instead of being invisible
+        # to authority resolution entirely (RECONSIDERS still isn't a
+        # lifecycle edge, so this does not change what governs).
+        related_components=list(target.related_components),
     )
     store.save(candidate)
     return candidate

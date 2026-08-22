@@ -9,6 +9,7 @@ from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from authority import resolve_authority_with_proof  # noqa: E402
 from collaborate import Claim, ClaimCategory  # noqa: E402
 from graph import DecisionGraph, resolve_active  # noqa: E402
 from loader import load_decisions  # noqa: E402
@@ -94,6 +95,66 @@ def test_status_line_html_escapes_untrusted_active_subject(tmp_path):
     combined = "\n".join(captured)
     assert "<img src=x onerror=alert(1)>" not in combined
     assert "&lt;img src=x onerror=alert(1)&gt;" in combined
+
+
+class _NoopExpander:
+    """Minimal stand-in for `st.expander(...)`'s context-manager return
+    value — the body only calls `st.markdown` inside it, which is
+    separately captured, so this needs no behavior of its own."""
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc_info):
+        return False
+
+
+def test_render_authority_proof_shows_governing_and_excluded(tmp_path):
+    a = Decision(id="A", subject="A", current_status=DecisionStatus.ACCEPTED,
+                 related_components=["scope"])
+    b = Decision(id="B", subject="B", current_status=DecisionStatus.PROPOSED,
+                 related_components=["scope"])
+    proof = resolve_authority_with_proof([a, b], "scope")
+
+    captured = []
+    with patch.object(ui.st, "markdown", lambda text, *a, **k: captured.append(text)), \
+         patch.object(ui.st, "caption", lambda *a, **k: None), \
+         patch("ui.st.expander", return_value=_NoopExpander()):
+        ui.render_authority_proof(proof)
+
+    combined = "\n".join(captured)
+    assert "CURRENTLY GOVERNING" in combined
+    assert "`A`" in combined
+    assert "✓ `A`" in combined
+    assert "✗ `B`" in combined
+    assert "PROPOSED_NOT_ACCEPTED" in combined
+
+
+def test_render_authority_proof_none_is_a_no_op():
+    captured = []
+    with patch.object(ui.st, "markdown", lambda text, *a, **k: captured.append(text)):
+        ui.render_authority_proof(None)
+    assert captured == []
+
+
+def test_render_authority_proof_escapes_untrusted_witness_text():
+    evil = Decision(
+        id="<script>evil</script>", subject="evil", current_status=DecisionStatus.PROPOSED,
+        related_components=["scope"],
+    )
+    accepted = Decision(id="A", subject="A", current_status=DecisionStatus.ACCEPTED,
+                         related_components=["scope"])
+    proof = resolve_authority_with_proof([accepted, evil], "scope")
+
+    captured = []
+    with patch.object(ui.st, "markdown", lambda text, *a, **k: captured.append(text)), \
+         patch.object(ui.st, "caption", lambda *a, **k: None), \
+         patch("ui.st.expander", return_value=_NoopExpander()):
+        ui.render_authority_proof(proof)
+
+    combined = "\n".join(captured)
+    assert "<script>evil</script>" not in combined
+    assert "&lt;script&gt;evil&lt;/script&gt;" in combined
 
 
 def test_frozen_benchmark_seeds_even_when_store_already_has_other_data(tmp_path):

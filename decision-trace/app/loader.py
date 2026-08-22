@@ -40,6 +40,11 @@ def _revert_pair_to_decisions(record: dict) -> list[Decision]:
     original_id = f"{record['repo']}-pr-{original_pr['number']}"
     revert_id = f"{record['repo']}-pr-{revert_pr['number']}"
 
+    # The original and its revert are the same authority scope by
+    # construction (one governs, or the other does) — a stable id derived
+    # from the original PR, not the mined title, so it survives even if
+    # `chosen`/`rejected` text changes on a future re-mine.
+    scope = f"{record['repo']}#{original_pr['number']}"
     original = Decision(
         id=original_id,
         subject=record["chosen"],
@@ -47,6 +52,7 @@ def _revert_pair_to_decisions(record: dict) -> list[Decision]:
         chosen_approach=record["chosen"],
         introduced_at=record.get("date"),
         evidence=[Evidence(type="pr", url=original_pr["url"], quote=record["chosen"])],
+        related_components=[scope],
     )
     revert = Decision(
         id=revert_id,
@@ -57,6 +63,7 @@ def _revert_pair_to_decisions(record: dict) -> list[Decision]:
             type="revert_pr", url=revert_pr["url"], quote=record["rationale_quote"],
         )],
         related_decisions=[(original_id, RelationshipType.REVERTS)],
+        related_components=[scope],
     )
     return [original, revert]
 
@@ -73,6 +80,12 @@ def _kep_alternatives_to_decision(record: dict) -> Decision:
         evidence=[Evidence(
             type="proposal", url=file_citation["url"], quote=record["rationale_quote"],
         )],
+        # One decision per KEP row in this dataset (loader.py's own
+        # docstring: no supersession is invented), so its own id is a
+        # stable, unique scope — a later reconsideration of it inherits
+        # this same scope (memory.py) and becomes a visible, correctly
+        # excluded candidate rather than an invisible one.
+        related_components=[record["decision_id"]],
     )
 
 

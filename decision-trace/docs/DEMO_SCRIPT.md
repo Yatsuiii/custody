@@ -32,18 +32,16 @@ Show the live URL loading: https://decision-trace-742122658452.us-central1.run.a
 
 ## 0:30–1:00 — Why this exists, not just a claim
 
-On screen: the results table from `RESULTS.md`.
-
-> "We didn't assume structured memory beats RAG — we measured it, and
-> re-measured after finding real bugs in our own first attempt. 37 real
-> decisions across 4 open-source repos. Naive embedding RAG: 57% combined
-> correct. DecisionTrace's structured approach: 76% — clearly ahead, and
-> on revert-PR decisions specifically it's already at 94%. The remaining
-> gap is one document type: long, template-structured design docs that
-> name several rejected alternatives in one section, where citing the
-> right decision is easy but stating the specific right reason is
-> genuinely harder. That's the mechanism this product is built around —
-> and the mechanism we're still actively closing."
+> "Engineering organizations accumulate contradictory historical
+> decisions — proposed, accepted, superseded, reverted, reconsidered.
+> Retrieval can surface something relevant to your question without it
+> being the thing that's actually still true. DecisionTrace separates
+> those two jobs: agents discover and interpret decision history, but a
+> deterministic lifecycle resolver decides what currently governs, and it
+> doesn't just answer — it proves it. Every governing decision comes with
+> the competing candidates it beat and the specific, checkable reason
+> each one didn't win: proposed but never accepted, superseded, or
+> belonging to a different scope entirely."
 
 ## 1:00–3:00 — Live walkthrough (6 steps, ~20s each)
 

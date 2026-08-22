@@ -66,3 +66,12 @@ class Decision:
     related_components: list[str] = field(default_factory=list)
     # Outgoing edges from this decision: (target_decision_id, relationship).
     related_decisions: list[tuple[str, RelationshipType]] = field(default_factory=list)
+    # True when the source evidence shows `current_status` was reached for
+    # only part of `subject` — e.g. an acceptance comment that settles one
+    # claim in the record and explicitly defers a related claim to a
+    # follow-up. A single Decision has one status; this flag tells the
+    # authority resolver that status cannot be trusted to cover the whole
+    # record, so it must not be promoted to GOVERNING on its own (see
+    # AUTHORITY_SEMANTICS.md, "PARTIAL ACCEPTANCE"). Defaults to False —
+    # every existing record is unaffected until explicitly marked.
+    partial_acceptance: bool = False
