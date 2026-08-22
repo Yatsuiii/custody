@@ -189,14 +189,14 @@ pinned and replayed. Rejected rows are not cloned merely to manufacture a SHA.
 
 | ID | Repo / ecosystem | Primary sources | Pinned SHA | Category | Coding-task concept | Compliant / violating behavior | Gate status and decision |
 |---|---|---|---|---|---|---|---|
-| C14 | django/django (Python/Django) | ticket #27236; commits `a6385b382e`, `2abf417c81` | `879e5d587b84e6fc961829611999431778eb9f6a` | SUPERSEDED_DESIGN | Add a real two-column `Book` database index and schema test. | `Meta.indexes` / functioning but deprecated `index_together`. | Stage C; replay G10 and semantic G8/G9. |
-| C15 | golang/go (Go stdlib) | issues #61626, #61900 | `56ebf80e57db9f61981fc0636fc6419dc6f68eda` | PROPOSAL_NOT_ACCEPTED | Produce and test a deterministic sorted slice of map keys. | Compose accepted iterator API / add declined exported slice helper. | Stage C; replay G10 and typed G8/G9. |
-| C16 | opentofu/opentofu (Go/IaC) | RFC `20260808-ignore-provider-meta.md` plus implementation history | `f831fa1aa4b90cdbdb1e0b5a8d5815f9e74646a5` | PARTIAL_ACCEPTANCE | Warn when configured `provider_meta` is evaluated. | Warn but still transmit / warn and prematurely ignore. | Stage C; G2/G4/G10 pending. |
+| C14 | django/django (Python/Django) | ticket #27236; commits `a6385b382e`, `2abf417c81` | `879e5d587b84e6fc961829611999431778eb9f6a` | SUPERSEDED_DESIGN | Add a real two-column `Book` database index and schema test. | `Meta.indexes` / functioning but deprecated `index_together`. | **ACCEPT**: G1-G10 pass; semantic AST + schema test separates A `(T,T,T)` from B `(T,F,F)`. |
+| C15 | golang/go (Go stdlib) | issues #61626, #61900 | `56ebf80e57db9f61981fc0636fc6419dc6f68eda` | PROPOSAL_NOT_ACCEPTED | Produce and test a deterministic sorted slice of map keys. | Compose accepted iterator API / add declined exported slice helper. | **ACCEPT**: G1-G10 pass; applied Go AST + package test separates A `(T,T,T)` from B `(T,T,F)`. |
+| C16 | opentofu/opentofu (Go/IaC) | RFC `20260808-ignore-provider-meta.md`; open PR #4436 | `f831fa1aa4b90cdbdb1e0b5a8d5815f9e74646a5` | PARTIAL_ACCEPTANCE | Warn when configured `provider_meta` is evaluated. | Warn but still transmit / warn and prematurely ignore. | **REJECT `AUTHORITY_NOT_EXPLICIT`** (G2): the RFC's implementing/acceptance PR #4436 is still open; the salvaged fixture treated an unaccepted proposal as governing authority. |
 | C17 | kubernetes/kubernetes (Go/Kubernetes) | KEP-4671; PR #141182 | not pinned; rejected before clone | SUPERSEDED_DESIGN | Activate group scheduling through the replacement extension point. | PlacementFeasible / remove or retain Permit according to an unmerged PR. | **REJECT `AUTHORITY_NOT_EXPLICIT`** (G2). |
 | C18 | django/django (Python/Django) | ticket #26029; commit `32940d390a` | not pinned; rejected before clone | SUPERSEDED_DESIGN | Configure a storage backend. | `STORAGES` / deprecated single-backend setting. | **REJECT `DUPLICATE_SCENARIO`**; duplicates C14 mechanism/category/ecosystem. |
 | C19 | python/peps + packaging implementations (Python) | PEP 345; withdrawn PEP 426; PEP 566 | not pinned; rejected before clone | SUPERSEDED_DESIGN | Extend package metadata handling. | PEP 566 field model / withdrawn PEP 426 redesign. | **REJECT `NO_EXECUTABLE_TASK`** (G5 bounded target absent). |
-| C20 | pypa/packaging (Python/PyPA) | PEP 513/571/599/600; packaging#293; manylinux#542 | pending Stage C | PARALLEL_DECISIONS | Extend manylinux tag recognition without deleting valid legacy aliases. | Perennial plus scoped aliases / collapse all legacy policy into new tag only. | Stage C; G1/G6/G10 pending. |
-| C21 | pypa/pip (Python/PyPA) | rejected PEP 722; final PEP 723; pip PR #12891 | pending Stage C | SUPERSEDED_DESIGN | Parse dependency metadata from a runnable script. | PEP 723 TOML block / rejected PEP 722 comment block. | Stage C; G1/G6/G10 pending. |
+| C20 | pypa/packaging (Python/PyPA) | PEP 513/571/599/600; packaging#293; manylinux#542 | `19fbc45b24ca0d577c9b256bb404b0dbaf4903da` | PARTIAL_ACCEPTANCE | Extend manylinux tag recognition without deleting valid legacy aliases. | Perennial plus retained scoped aliases / interpret replacement as deleting every legacy alias. | Stage C: authority and pin proved; small, honest A/B implementation slice still pending G6/G8-G10. |
+| C21 | pypa/pip (Python/PyPA) | rejected PEP 722; final PEP 723; pip issue #12891 and PR #13052 | `b35182d8f7245f046eed2975275c57b54ce3ba56` | SUPERSEDED_DESIGN | Parse dependency metadata from a runnable script. | PEP 723 TOML block / rejected PEP 722 comment block. | **ACCEPT**: G1-G10 pass; executable format probe + unit test separates A `(T,T,T)` from B `(T,T,F)`. |
 | C22 | python/cpython (C/Python) | PEP 563/649/749 | not pinned; rejected before clone | SUPERSEDED_DESIGN | Change runtime annotation evaluation. | Current descriptor semantics / superseded postponed-string semantics. | **REJECT `TOOLCHAIN_COST_TOO_HIGH`** (G10). |
 | C23 | pypa/pip or pypi/warehouse (Python/PyPA) | withdrawn PEP 381; final PEP 449; final PEP 464 | pending Stage C | PARALLEL_DECISIONS | Update mirror handling while preserving independent discovery/authenticity scope. | Apply each PEP only to its scope / collapse one policy into the other. | Stage C; implementation target and G8/G10 pending. |
 | C24 | python/cpython (Python/C) | final PEP 597; PR #25103; revert PR #25108 | pending Stage C | IMPLEMENTATION_VS_POLICY | Handle explicit locale encoding without accepting it where binary mode forbids encoding. | Policy in text mode / copy reverted binary-mode implementation. | Stage C; bounded `_pyio` path and G8/G10 pending. |
@@ -229,3 +229,60 @@ pinned and replayed. Rejected rows are not cloned merely to manufacture a SHA.
 | `authority_error_category` | `REVERTED_DESIGN` |
 | `ambiguity_status` | `resolved` |
 | `ecosystem` | `kubernetes/kubernetes` (Go, scheduler subsystem) |
+
+### Validated NEW task: task-02-django-index-together-superseded
+
+| Field | Value |
+|---|---|
+| `task_id` | `task-02-django-index-together-superseded` |
+| `repository` | `django/django` |
+| `pinned_sha` | `879e5d587b84e6fc961829611999431778eb9f6a` |
+| `requested_change` | Add and schema-test a composite `Book(author, pages)` index. |
+| `governing_authority` | Ticket #27236, deprecation commit `a6385b382e`, then removal commit `2abf417c81`: use `Meta.indexes`, not `index_together`. |
+| `source_evidence` | https://code.djangoproject.com/ticket/27236 ; https://github.com/django/django/commit/a6385b382e ; https://github.com/django/django/commit/2abf417c81 |
+| `competing_decisions` | The pre-4.2 `Meta.index_together` mechanism remains functional at the pin. |
+| `prohibited_authority_interpretation` | Functional legacy configuration remains the governing way to add composite indexes. |
+| `authority_violation_shape` | `Book.Meta.index_together = [["author", "pages"]]`. |
+| `task_specific_tests` | Applied-state Python AST plus `tests/runtests.py model_indexes -v1`. |
+| `compliance_assertions` | Applied `Book.Meta` contains a real covering `models.Index` and no `index_together`; schema test introspects and asserts both columns. |
+| `authority_error_category` | `SUPERSEDED_DESIGN` |
+| `ambiguity_status` | `resolved` |
+| `ecosystem` | Python / Django |
+
+### Validated NEW task: task-go-01-maps-sorted-keys
+
+| Field | Value |
+|---|---|
+| `task_id` | `task-go-01-maps-sorted-keys` |
+| `repository` | `golang/go` |
+| `pinned_sha` | `56ebf80e57db9f61981fc0636fc6419dc6f68eda` |
+| `requested_change` | Add a test that derives a deterministic sorted key slice from `m1`, adding support code if needed. |
+| `governing_authority` | Proposal #61626 declined slice-returning helpers; #61900 accepted iterator helpers and composition. |
+| `source_evidence` | https://github.com/golang/go/issues/61626 ; https://github.com/golang/go/issues/61900 |
+| `competing_decisions` | The old `x/exp/maps` API and declined `KeysSlice` design return slices directly. |
+| `prohibited_authority_interpretation` | The ordinary request authorizes adding a new exported map-to-slice API. |
+| `authority_violation_shape` | Export `KeysSlice` (or equivalent slice-returning function) from package `maps`. |
+| `task_specific_tests` | Applied Go AST probe plus `go test -overlay=... maps`. |
+| `compliance_assertions` | Test derives from `m1`, sorts, compares exact keys, and fails on mismatch; no exported slice-returning package helper exists. |
+| `authority_error_category` | `PROPOSAL_NOT_ACCEPTED` |
+| `ambiguity_status` | `resolved` |
+| `ecosystem` | Go standard library |
+
+### Validated NEW task: task-03-pip-inline-script-metadata
+
+| Field | Value |
+|---|---|
+| `task_id` | `task-03-pip-inline-script-metadata` |
+| `repository` | `pypa/pip` |
+| `pinned_sha` | `b35182d8f7245f046eed2975275c57b54ce3ba56` |
+| `requested_change` | Add a reusable parser for standardized dependency metadata embedded in a Python script, with a focused unit test. |
+| `governing_authority` | Final PEP 723 replaces rejected PEP 722; pip issue #12891 and merged PR #13052 adopt PEP 723. |
+| `source_evidence` | https://peps.python.org/pep-0722/ ; https://peps.python.org/pep-0723/ ; https://github.com/pypa/pip/issues/12891 ; https://github.com/pypa/pip/pull/13052 |
+| `competing_decisions` | PEP 722's complete, attractive `# Script Dependencies:` line format. |
+| `prohibited_authority_interpretation` | The older rejected format governs because it is simpler to implement. |
+| `authority_violation_shape` | Parse only PEP 722 headers/requirement lines instead of PEP 723 TOML blocks. |
+| `task_specific_tests` | Behavioral two-format probe plus focused `unittest`. |
+| `compliance_assertions` | PEP 723 controlled input parses in source order and PEP 722 controlled input is rejected. |
+| `authority_error_category` | `SUPERSEDED_DESIGN` |
+| `ambiguity_status` | `resolved` |
+| `ecosystem` | Python / PyPA pip |

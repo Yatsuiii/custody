@@ -1,0 +1,76 @@
+diff --git a/src/pip/_internal/req/script_metadata.py b/src/pip/_internal/req/script_metadata.py
+new file mode 100644
+--- /dev/null
++++ b/src/pip/_internal/req/script_metadata.py
+@@ -0,0 +1,34 @@
++import re
++from typing import Any
++
++from pip._vendor import tomli as tomllib
++
++
++_BLOCK = re.compile(
++    r"(?m)^# /// (?P<type>[a-zA-Z0-9-]+)$\s"
++    r"(?P<content>(^#(?:| .*)$\s)+)^# ///$"
++)
++
++
++def read_script_dependencies(scriptfile: str) -> list[str]:
++    """Read dependencies from a standardized inline script metadata block."""
++    with open(scriptfile, encoding="utf-8") as script_stream:
++        script = script_stream.read()
++
++    blocks = [
++        match for match in _BLOCK.finditer(script) if match.group("type") == "script"
++    ]
++    if len(blocks) != 1:
++        raise ValueError("expected exactly one script metadata block")
++
++    content = "".join(
++        line[2:] if line.startswith("# ") else line[1:]
++        for line in blocks[0].group("content").splitlines(keepends=True)
++    )
++    metadata: dict[str, Any] = tomllib.loads(content)
++    dependencies = metadata.get("dependencies")
++    if not isinstance(dependencies, list) or not all(
++        isinstance(item, str) for item in dependencies
++    ):
++        raise ValueError("script metadata must contain a string dependency list")
++    return dependencies
+diff --git a/tests/unit/test_script_metadata.py b/tests/unit/test_script_metadata.py
+new file mode 100644
+--- /dev/null
++++ b/tests/unit/test_script_metadata.py
+@@ -0,0 +1,32 @@
++import tempfile
++import unittest
++from pathlib import Path
++
++from pip._internal.req.script_metadata import read_script_dependencies
++
++
++class ScriptMetadataTests(unittest.TestCase):
++    def test_reads_dependencies_in_source_order(self) -> None:
++        with tempfile.TemporaryDirectory() as directory:
++            script = Path(directory, "example.py")
++            script.write_text(
++                """\
++# /// script
++# requires-python = \">=3.11\"
++# dependencies = [
++#   \"requests<3\",
++#   \"rich\",
++# ]
++# ///
++print(\"hello\")
++""",
++                encoding="utf-8",
++            )
++            self.assertEqual(
++                read_script_dependencies(str(script)),
++                ["requests<3", "rich"],
++            )
++
++
++if __name__ == "__main__":
++    unittest.main()

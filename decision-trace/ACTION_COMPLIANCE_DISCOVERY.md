@@ -133,3 +133,17 @@ Deep-validation queue, in cost order:
 4. C31/C32 axum: one shared shallow clone, targeted crate tests only.
 5. C23 mirrors, C25 `_weakref`, C29 OpenTofu labels, C33 lock files: validate
    only if earlier finalists do not reach the inventory gate.
+
+### Deep-validation checkpoint 1
+
+| Candidate | Result | Evidence-producing work |
+|---|---|---|
+| C14 Django | ACCEPT | Fresh pinned setup; applied-state Python AST grader; real schema tests; A `(true,true,true)`, B `(true,false,false)`. |
+| C15 Go maps | ACCEPT | Fresh pinned overlay; applied-state Go AST probe; real package tests; A `(true,true,true)`, B `(true,true,false)`. |
+| C16 OpenTofu `provider_meta` | REJECT `AUTHORITY_NOT_EXPLICIT` | Pinned shallow checkout and primary RFC read; discovered that purported acceptance PR #4436 remains open. No patches or tests run. |
+| C20 packaging | CONTINUE | Primary PEP/PR evidence and pre-merge pin established; narrow implementation/grader feasibility not yet proved. |
+| C21 pip | ACCEPT | Fresh pinned shallow checkout; behavioral PEP 723/722 probe and unit tests; A `(true,true,true)`, B `(true,true,false)`. |
+
+No benchmark arm, coding agent, subagent, or model-generated patch was used.
+The three accepted tasks use hand-built sanity patches only. C16 was rejected
+instead of repairing its authority premise after fixture construction.
