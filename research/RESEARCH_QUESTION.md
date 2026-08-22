@@ -63,3 +63,36 @@ the only framing that survives both the red-team and the literature audit.
   checked directly before treating the gap as confirmed empty), the
   interval question could already be answered and the framing would need
   to shrink again.
+
+## Design-phase refinement after E2A/E2B/E2C
+
+E2A-E2C replace the phrase "laundering-aware mechanism" with a narrower,
+testable mechanism question:
+
+> Can an in-boundary structural receipt preserve the ids of every stored
+> record exposed to a transformation—without inferring ancestry from text—so
+> that pointwise, action-scoped authority cannot amplify and a later
+> admission-time compromise window blocks exactly the descendant closure while
+> preserving outside-window-only siblings?
+
+This refinement separates two claims that the earlier wording conjoined:
+
+1. **Traceability through transformation:** a paraphrase or summary keeps its
+   structural parents and can therefore be found by later revocation.
+2. **Semantic fidelity:** the transformed proposition is true and action-safe.
+
+Architecture A attempts only the first deterministically. A free-form
+transformation retains support but is capped at `INFORM`; it does not receive
+action authority merely because trusted records were visible. Only identity or
+a registered typed transform can preserve `ACT` under the pointwise rule in
+`design/AUTHORITY_MODEL.md`.
+
+The interval is defined in authoritative admission-time coordinates. External
+source-time uncertainty must widen the interval; records without an
+authoritative time cannot be counted as outside it. Repair blocks old records
+monotonically and creates a new record only after a fresh transform—never by
+removing a compromised parent and raising unchanged content.
+
+This is still a hypothesis. The fixed six-element experiment and kill gates are
+in `design/DESIGN_FALSIFIER.md`; until it runs, the design does not change the
+standing research verdict or authorize production work.

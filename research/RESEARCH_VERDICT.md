@@ -346,3 +346,43 @@ restriction (characterization only, no readiness judgment for mechanism
 design). Any further step — including whether to begin designing a
 replacement or supplement for `CustodyGraph.resolve`'s exact-match gate —
 remains gated on explicit authorization.
+
+## Addendum, 2026-08-22 (continued): mechanism design result
+
+The explicitly authorized docs-only design phase is complete under
+`research/design/`. Its mechanism verdict is **DESIGN-CAUTION**: carry the
+central structural-envelope architecture into one isolated falsifier, but do
+not authorize a production implementation.
+
+The packet derives six required primitives from E0/E1/E2A/E2B/E2C and the
+code-grounded interval failure K, compares three architectures, defines a
+pointwise action-scoped authority algebra, distinguishes operation-level relay
+from origin, specifies authoritative-time compromise windows and crash-resumable
+repair, names the trusted computing base, and preregisters fixed
+PASS/CAUTION/KILL gates for E2D.
+
+Two design corrections are load-bearing:
+
+1. A structural receipt proves that a record was exposed to a transform, not
+   that a free-form paraphrase is semantically faithful. Free-form output keeps
+   ancestry and informational utility but is capped at `INFORM`; only identity
+   or a registered typed transform can preserve action authority.
+2. Revocation cannot remove a compromised parent and re-meet the survivors on
+   unchanged content. That can raise the old record. Affected records stay
+   blocked; useful restoration requires a fresh transform and a new record id.
+
+The standing research verdict remains **RESEARCH-ONLY**. The design closes the
+paper specification loop but adds no implementation result. Production remains
+architecturally unshippable until complete context-id capture, authoritative
+timestamps for all eligible records, atomic envelope publication,
+current-generation scoped action checks, and crash/retry recovery are proved.
+
+## Current next highest-leverage action (post-design)
+
+If and only if a later session explicitly authorizes experimental
+implementation, run E2D exactly as preregistered in
+`research/design/DESIGN_FALSIFIER.md`, writing only under
+`research/experiments/E2D_DESIGN_FALSIFIER/`. Any false action permit, missed
+affected descendant, missing declared parent, in-place authority increase, or
+unsafe crash window kills the mechanism branch. No production file should be
+touched before that evidence exists.

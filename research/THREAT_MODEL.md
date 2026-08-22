@@ -163,3 +163,60 @@ absent, not a convenient exclusion)
   quarantine-for-review, or accept the collateral damage) — this is exactly
   what the PCRR/collateral-damage metric in `METRICS.md` must be able to
   score, not something the architecture can silently duck.
+
+## Design-phase invariant refinement after E2A/E2B/E2C
+
+The three earlier invariants remain directionally correct but are not precise
+enough for an authority algebra. Architecture A uses these nine checkable
+invariants; canonical mechanics live under `research/design/`.
+
+1. **I1 — no amplification:** for every action scope, ordinary derivation's
+   tier is no greater than any declared parent or transformation cap.
+2. **I2 — transformation-stable provenance:** byte changes do not erase
+   structural parents when an in-TCB collector observed them. This is a
+   traceability property, not a semantic-entailment claim.
+3. **I3 — complete multi-parent support:** every structurally exposed stored
+   record is represented; no parent slot can overwrite another.
+4. **I4 — authority is not content:** hashes, wording, embeddings, and model
+   judgments cannot mint or elevate authority.
+5. **I5 — relay non-elevation:** a relay operation cannot substitute its own
+   identity for unknown or lower-tier upstream authority.
+6. **I6 — interval completeness:** every authoritative-time source root inside
+   an active compromise window and every descendant is ineffective.
+7. **I7 — interval non-interference:** a record supported only by roots outside
+   the window remains effective.
+8. **I8 — monotonic repair:** revocation cannot raise an unchanged record; a
+   restored result is a newly admitted record with a fresh envelope.
+9. **I9 — action scoping:** authority is evaluated per named consequential
+   action, and an unspecified scope defaults to `NONE`.
+
+I1-I8 are grounded in the measured E0/E1/E2A/E2B/E2C outcomes or the
+code-demonstrated interval failure K. I9 is a user-required adversarial case;
+only `export.send` has been measured, so broader multi-action benefit is not
+claimed.
+
+## Design-phase attacker and TCB refinement
+
+The model and arbitrary tools may lie about parent ids, omit upstream sources,
+hallucinate, or rewrite content. Their metadata is payload. Only record ids
+observed by Custody's own context collector—or verified by a separately named
+connector—are structural provenance. If the collector cannot observe all
+stored-record context, the output is explicitly incomplete and at most
+informational.
+
+The trusted boundary now includes the context/receipt collector, admission
+gate, versioned source-role/action policy, authoritative admission store,
+revocation-generation controller, current-generation action gateway, and the
+record-addressable downstream publisher/deleter. `research/design/
+TRUSTED_COMPUTING_BASE.md` records current evidence and blockers for each.
+
+The compromise reporter remains an external trusted input: this mechanism does
+not detect compromise. Reports use half-open authoritative admission-time
+windows and must conservatively include clock/ingestion uncertainty. Missing or
+legacy timestamps fall back to whole-source or unknown quarantine; they never
+count as outside-window evidence.
+
+Direct store forgery remains outside the attacker capabilities for this phase,
+so authenticated receipts are not adopted. If that capability enters scope,
+the threat model must name post-admission provenance forgery explicitly and add
+key custody, rotation, and signer compromise to the review.

@@ -144,3 +144,36 @@ before evaluating H1/H2/H4 at all.** Building bounded-interval revocation on
 top of a derivation graph that already silently drops real edges means every
 other hypothesis is measuring a system with an unknown, uncontrolled error
 floor.
+
+## H5 — Structural envelopes make transformation lineage and interval repair deterministic
+
+- **Independent variable:** attribution/authority mechanism — current Custody
+  at commit `040c28c` versus Architecture A's structural admission envelope.
+  Event corpus, topology, roles, caps, transformation classes, timestamps,
+  compromise window, action requests, and injected crash points remain fixed.
+- **Dependent metrics:** direct-parent recall, affected-record recall, false
+  `ACT` permits, same-record authority increases, benign informational
+  retention, outside-window sibling preservation, replay digest stability, and
+  unsafe fault windows, all defined exactly in
+  `design/DESIGN_FALSIFIER.md`.
+- **Baseline:** the measured E1/E2A/E2B/E2C behavior of current Custody. No
+  external system is substituted for the local baseline.
+- **Benchmark/task set:** the one deterministic six-element graph frozen in
+  `design/DESIGN_FALSIFIER.md`: tool echo, benign paraphrase, malicious
+  paraphrase, multi-parent synthesis, later compromise, and unaffected sibling.
+- **Minimum effect required:** Architecture A must achieve 1.0 direct-parent
+  recall, 1.0 affected recall, zero false `ACT` permits, zero same-record
+  increases, zero unsafe fault windows, stable replay, retained benign
+  informational access, and a live outside-window sibling.
+- **Statistical plan:** none. These are deterministic structural properties;
+  report exact numerators, denominators, booleans, and per-record evidence.
+- **PASS:** every threshold above passes and the existing suite remains 381/381
+  with no production-file diff.
+- **CAUTION:** all security properties remain fail-closed, but benign
+  informational access, sibling selectivity, or terminal replay fails.
+- **KILL:** any false action permit, missed affected descendant, silently
+  missing declared parent, in-place authority increase, unsafe crash window, or
+  dependence on semantic inference/tool self-report.
+
+H5 is preregistered design only. It has not run, and adding it does not
+authorize the E2D experimental implementation.
