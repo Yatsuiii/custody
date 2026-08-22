@@ -234,5 +234,218 @@ def main() -> None:
     print(f"done; {len(errors)} API failures recorded")
 
 
+
+
+# --- v2.1: unsupervised ingestion (BENCHMARK_V2_SPEC.md Amendment 2) ---
+#
+# v2 built one card per test case from that case's own graded span, which
+# made retrieval an exact-key lookup against a store shaped like the answer
+# sheet. Here the ingester reads a whole Alternatives section and decides
+# for itself how many alternatives there are and what to call them. It
+# never sees the case list or any per-case evidence span, so the store can
+# be incomplete, can name things differently, and can get reasons wrong —
+# which is what a real ingestion pipeline risks and what v2 never tested.
+
+INGESTED_CARDS = V2_DIR / "cards_ingested.jsonl"
+INGESTED_INDEX = V2_DIR / "cards-ingested-index.json"
+RUNS_INGESTED = RUNS_DIR / "structured_ingested"
+
+INGEST_PROMPT = """You are the ingestion step of an engineering \
+decision-memory system. Read the "Alternatives" section of a real design \
+document below and extract every distinct alternative approach it discusses.
+
+The approach that was ultimately used is: "{chosen}"
+
+For each alternative the section names, output one JSON object with:
+  "name":   what the option is, as short as you can make it
+  "reason": one sentence, at most 200 characters, in your own words, for \
+why it was not adopted — or that it was deferred, if the document defers \
+rather than rejects it
+
+Rules:
+- Extract every distinct alternative the section discusses. Do not stop \
+early and do not merge distinct options into one.
+- Do not invent alternatives that are not in the text. If the section \
+gives no reason for one, set "reason" to "no reason stated in the source".
+- Paraphrase. Do not copy contiguous phrases of more than a few words.
+
+Output ONLY a JSON array, no other text.
+
+ALTERNATIVES SECTION
+{section}"""
+
+
+def _parse_ingested(raw: str) -> list[dict]:
+    import re
+    m = re.search(r"\[.*\]", raw, re.DOTALL)
+    if not m:
+        return []
+    try:
+        items = json.loads(m.group(0))
+    except json.JSONDecodeError:
+        return []
+    return [it for it in items
+            if isinstance(it, dict) and it.get("name") and it.get("reason")]
+
+
+def ingest_decision(d: dict, section: str) -> list[dict]:
+    prompt = INGEST_PROMPT.format(chosen=d["chosen"], section=section[:12000])
+    return _parse_ingested(vertex.generate(prompt))
+
+
+def build_ingested_cards() -> list[dict]:
+    """One ingestion call per KEP, plus the unchanged revert cards."""
+    from build_v2_cases import canonical_alternatives
+    from run_conditions import load_decisions
+
+    if INGESTED_CARDS.exists():
+        return [json.loads(line) for line in INGESTED_CARDS.open()]
+
+    cases = load_cases()
+    quotes = {}
+    for c in cases:
+        quotes.setdefault(c["decision_id"], []).append(c["evidence_quote"])
+    by_case = {json.loads(line)["case_id"]: json.loads(line)
+               for line in CARDS_PATH.open()}
+
+    out, leaked = [], []
+    for d in load_decisions():
+        did = d["decision_id"]
+        if d["source"] == "revert_pair":
+            out.append({"card_id": did, "decision_id": did,
+                        "alternative_name": d["rejected"],
+                        "reason": by_case[did]["reason"], "source": "revert_pair"})
+            continue
+        source = (V2_DIR / "sources" / f"{did}.txt").read_text()
+        can = canonical_alternatives(source)
+        if not can:
+            continue
+        _, _, start, end = can
+        print(f"[ingest] {did}")
+        for i, item in enumerate(ingest_decision(d, source[start:end])):
+            if any(shares_6gram(item["reason"], q) for q in quotes.get(did, [])):
+                leaked.append(f"{did}#{i}")
+            out.append({"card_id": f"{did}::ing::{i}", "decision_id": did,
+                        "alternative_name": str(item["name"])[:200],
+                        "reason": str(item["reason"])[:400],
+                        "source": "kep_alternative"})
+    with INGESTED_CARDS.open("w") as f:
+        for c in out:
+            f.write(json.dumps(c) + "\n")
+    # Recorded rather than fatal. An ingested reason is paraphrased from a
+    # section that contains every graded span for its decision, so a shared
+    # six-word run is usually an unavoidable technical phrase rather than a
+    # copied rationale. The count is published so a reader can judge; the
+    # overlapping cards are listed so they can be read.
+    (V2_DIR / "ingest_overlaps.json").write_text(json.dumps(leaked, indent=1))
+    if leaked:
+        print(f"WARNING: {len(leaked)} ingested cards share a 6-gram with a "
+              f"graded span; see data/v2/ingest_overlaps.json")
+    return out
+
+
+def ingested_card_text(card: dict, d: dict) -> str:
+    label = ("Rejected/Reverted" if card["source"] == "revert_pair"
+             else "Alternative considered")
+    return (
+        f"Decision [{card['decision_id']}]\n"
+        f"Context: {d['context']}\n"
+        f"Chosen: {d['chosen']}\n"
+        f"{label}: {card['alternative_name']}\n"
+        f"Why it was not used: {card['reason']}\n"
+        f"Evidence: {cite_str(d)}"
+    )
+
+
+def get_ingested_index(cards: list[dict]):
+    from run_conditions import load_decisions
+    byid = {d["decision_id"]: d for d in load_decisions()}
+    docs = [{"id": c["card_id"], "text": ingested_card_text(c, byid[c["decision_id"]])}
+            for c in cards]
+    return rag_index.load_or_build_index(INGESTED_INDEX, docs)
+
+
+def main_ingested() -> None:
+    cases = load_cases()
+    cards = build_ingested_cards()
+    print(f"ingested store: {len(cards)} cards for {len(cases)} cases "
+          f"({len(cards) / len(cases):.2f} per case)")
+    index = get_ingested_index(cards)
+    RUNS_INGESTED.mkdir(parents=True, exist_ok=True)
+    for i, c in enumerate(cases):
+        out = RUNS_INGESTED / f"{c['case_id']}.json"
+        if out.exists():
+            continue
+        print(f"[{i + 1}/{len(cases)}] {c['case_id'][:70]}")
+        query = build_query(c)
+        resp, got = run_structured(index, query)
+        out.write_text(json.dumps(
+            {"query": query, "response": resp, "retrieved": got}, indent=2))
+    print("done")
+
+
 if __name__ == "__main__":
-    main()
+    import sys
+
+
+
+# --- v2.2: label the RAG target with its real identity (Amendment 3) ---
+#
+# v0 indexed the answer-bearing document as {"id": "TARGET"} while every
+# decoy kept its real path or PR number, so the one document RAG had to
+# cite was the one document whose identity was hidden. Measured: RAG
+# retrieved the target in 65/65 KEP cases and stated a correct reason in
+# 88% of them, but cited correctly in 49%. That gap was a label, not a
+# capability. Only the identifier changes here; the cached vectors are
+# reused, so this costs no re-embedding.
+
+RUNS_RAG_LABELLED = RUNS_DIR / "rag_labelled"
+
+
+def target_label(c: dict) -> str:
+    cit = c["citation"]
+    return (f"{c['repo']}#{cit['revert_pr']['number']}"
+            if "original_pr" in cit else cit["file"]["path"])
+
+
+def run_rag_labelled(c: dict, query: str) -> tuple[str, list[str]]:
+    d_texts, d_ids, d_vecs = get_repo_decoy_index(c["repo"])
+    t_texts, _, t_vecs = target_index(c)
+    label = target_label(c)
+    retrieved = rag_index.top_k_chunks(
+        query, t_texts + d_texts, [label] * len(t_texts) + d_ids,
+        np.vstack([t_vecs, d_vecs]), k=TOP_K,
+    )
+    context = "\n\n---\n\n".join(f"[{i}]\n{t}" for i, t in retrieved)
+    prompt = (
+        f"You have retrieved the following {TOP_K} document chunks from this "
+        f"repository's issue/PR/design-proposal history via semantic "
+        f"search:\n\n{context}\n\n---\n\nDeveloper question: {query}\n\n"
+        f"Answer using only the retrieved chunks above. If a retrieved chunk "
+        f"cites a specific PR/issue number or file and explains a prior "
+        f"decision relevant to the question, name it and explain the "
+        f"reasoning. If nothing retrieved is relevant, say so."
+    )
+    return vertex.generate(prompt), [i for i, _ in retrieved]
+
+
+def main_rag_labelled() -> None:
+    RUNS_RAG_LABELLED.mkdir(parents=True, exist_ok=True)
+    cases = load_cases()
+    for i, c in enumerate(cases):
+        out = RUNS_RAG_LABELLED / f"{c['case_id']}.json"
+        if out.exists():
+            continue
+        print(f"[{i + 1}/{len(cases)}] {c['case_id'][:70]}")
+        query = build_query(c)
+        resp, got = run_rag_labelled(c, query)
+        out.write_text(json.dumps(
+            {"query": query, "response": resp, "retrieved": got}, indent=2))
+    print("done")
+
+
+if __name__ == "__main__":
+    import sys
+
+    modes = {"ingested": main_ingested, "rag_labelled": main_rag_labelled}
+    next((f for k, f in modes.items() if k in sys.argv), main)()

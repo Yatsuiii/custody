@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-6122: Configurable Scaling Delay with Pod Resource Exposure\" in kubernetes/enhancements and I'm considering using \"Node Declared Features as Opt-Out Mechanism\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, that approach was considered as an alternative in **`keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md`** under the section **\"5. Node Declared Features as Opt-Out Mechanism\"**.\n\n### Why it was not adopted:\n* **Description considered**: Using Node Declared Features to allow pods to opt out of the scale-down delay at the pod level.\n* **Reason for rejection**: Node Declared Features are intended to be temporary and tied to feature gates (to be removed at GA+3), making them unsuitable as a permanent opt-out mechanism. \n* **Next steps noted**: Alternative approaches (such as pod annotations or node taints) will be evaluated for Beta graduation instead.",
+  "retrieved": [
+    "keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md",
+    "keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md",
+    "keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md",
+    "keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md",
+    "keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md"
+  ]
+}

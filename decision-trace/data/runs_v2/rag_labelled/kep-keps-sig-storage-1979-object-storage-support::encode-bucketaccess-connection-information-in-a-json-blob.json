@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-1979: Object Storage Support\" in kubernetes/enhancements and I'm considering using \"Encode BucketAccess connection information in a JSON blob\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, according to the document `keps/sig-storage/1979-object-storage-support/README.md`, encoding `BucketAccess` connection information in a JSON blob was previously considered and used in COSI `v1alpha1`, but it was deprecated in `v1alpha2` for the following reasons:\n\n* **Inflexibility for applications:** The JSON blob was originally intended to be mounted to user Pods as a file (which is generally considered safer than environment variables). However, several driver implementers reported that they were unable to process the JSON blob file into forms suitable for their applications.\n* **Preference for individual Secret data fields:** Driver implementers requested that each entry in the JSON blob instead be encoded as individual Secret data keys. This allows fields to be loaded either as files or as environment variables depending on the needs of individual applications.\n* **Consistency:** Both formats are not supported simultaneously in order to keep development and usage consistent.",
+  "retrieved": [
+    "keps/sig-storage/1979-object-storage-support/README.md",
+    "keps/sig-storage/1979-object-storage-support/README.md",
+    "keps/sig-storage/1979-object-storage-support/README.md",
+    "keps/sig-storage/1979-object-storage-support/README.md",
+    "keps/sig-cluster-lifecycle/generic/1755-communicating-a-local-registry/README.md"
+  ]
+}

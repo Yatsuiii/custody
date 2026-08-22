@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"Recovery from volume expansion failure\" in kubernetes/enhancements and I'm considering using \"Allow admins to manually fix PVCs which are stuck in resizing condition\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, that approach was previously considered under the alternative **\"Manual administrator remediation for stuck resizing\"**.\n\n* **Why it was not adopted:** Unresolved resizes block workflows dependent on pod restarts and can render volumes unusable if node expansion continuously fails.\n* **Evidence:** `keps/sig-storage/1790-recover-resize-failure/README.md`",
+  "retrieved": [
+    "kep-keps-sig-storage-1790-recover-resize-failure::ing::1",
+    "kep-keps-sig-storage-1790-recover-resize-failure::ing::0",
+    "kep-keps-sig-storage-1790-recover-resize-failure::ing::2",
+    "kubernetes-kubernetes-revert-127300",
+    "kubernetes-kubernetes-revert-126599"
+  ]
+}

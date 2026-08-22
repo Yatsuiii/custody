@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-3488: CEL for Admission Control\" in kubernetes/enhancements and I'm considering using \"Scopes\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, approaches involving scopes were considered for **KEP-3488: CEL for Admission Control**, specifically under alternatives for typesafe CEL expressions with scopes:\n\n1. **Typesafe CEL expressions, dynamic scopes**\n   * **Why it was not adopted:** It lacks support for aggregated API servers and creates a confusing blend of static and dynamic typing that is hard to explain.\n   * **Evidence:** `keps/sig-api-machinery/3488-cel-admission-control/README.md`\n\n2. **Typesafe CEL expressions and scopes**\n   * **Why it was not adopted:** It fails to support version skew or aggregated API server types, and it introduces complex failure modes due to late type checking.\n   * **Evidence:** `keps/sig-api-machinery/3488-cel-admission-control/README.md`",
+  "retrieved": [
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::ing::1",
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::ing::0",
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::ing::4",
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::ing::5",
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::ing::6"
+  ]
+}

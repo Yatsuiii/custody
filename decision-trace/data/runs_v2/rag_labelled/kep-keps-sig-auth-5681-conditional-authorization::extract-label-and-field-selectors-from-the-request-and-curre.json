@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-5681: Conditional Authorization\" in kubernetes/enhancements and I'm considering using \"Extract label and field selectors from the request and current object in etcd, and supply that to the authorization process\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, that approach was considered in **`keps/sig-auth/5681-conditional-authorization/README.md`** under the section *\"Extract label and field selectors from the request and current object in etcd, and supply that to the authorization process\"*, but it was not adopted for the following reasons:\n\n1. **Denial-of-Service (DoS) vector:** If the API server had to decode the object to extract label and field selectors before authorization takes place, a malicious actor could send massive requests containing bogus data, forcing the API server to waste CPU and memory resources decoding unauthorized requests.\n2. **State-dependent authorization anti-pattern:** Requiring the selector to apply to both the request and the stored object in etcd would make the authorization process state-dependent, which is considered an explicit anti-pattern (authorization decisions must be stateless and deterministic rather than depending on object state in etcd).",
+  "retrieved": [
+    "keps/sig-auth/5681-conditional-authorization/README.md",
+    "keps/sig-auth/5681-conditional-authorization/README.md",
+    "keps/sig-auth/5681-conditional-authorization/README.md",
+    "keps/sig-auth/5681-conditional-authorization/README.md",
+    "keps/sig-auth/5681-conditional-authorization/README.md"
+  ]
+}

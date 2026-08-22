@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"Bounding Self-Labeling Kubelets\" in kubernetes/enhancements and I'm considering using \"Forbid all labels regardless of namespace except for a specifically allowed set\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, that approach was previously considered for **Bounding Self-Labeling Kubelets**. \n\nAccording to `keps/sig-auth/279-limit-node-access/README.md`, the alternative of **forbidding all labels across all namespaces except an allowlist** was not adopted because:\n* It would disrupt existing node-label workflows.\n* It would hinder integrations (such as CSI) that rely on custom topology labels.\n* It would inappropriately limit non-Kubernetes namespaces.",
+  "retrieved": [
+    "kep-keps-sig-auth-279-limit-node-access::ing::3",
+    "kep-keps-sig-auth-279-limit-node-access::ing::2",
+    "kep-keps-sig-auth-279-limit-node-access::ing::0",
+    "kep-keps-sig-auth-279-limit-node-access::ing::1",
+    "kep-keps-sig-auth-1205-bound-service-account-tokens::ing::0"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-3488: CEL for Admission Control\" in kubernetes/enhancements and I'm considering using \"Duck Typed CRDs\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Based on the retrieved document (`keps/sig-api-machinery/3488-cel-admission-control/README.md`), the **Duck Typed CRDs** approach was considered as an alternative for separating policy definition and configuration (and was used in the initial examples of the KEP).\n\nThe file outlines the main challenge associated with this approach:\n* **Schema Mismatches:** There are difficulties dealing with mismatches between how CRDs declare the `spec.match` schema and what the API server expects, as they can briefly become out of sync even with a controller maintaining synchronization. \n\nTo handle these synchronization issues, the alternative required complex handling:\n* If unrecognized, missing, or incorrectly typed fields were found under `spec.match`, or if a CRD was deleted, the `ValidatingAdmissionPolicy` would need to be marked as \"misconfigured\" in its status and trigger the `FailurePolicy` on admission validations.\n\n*(Note: The retrieved excerpts discuss this challenge and document it as an alternative, but they do not contain a concluding statement or record explicitly stating why or if a final decision was made to reject it in favor of another design).*",
+  "retrieved": [
+    "keps/sig-api-machinery/3488-cel-admission-control/README.md",
+    "keps/sig-api-machinery/3488-cel-admission-control/README.md",
+    "keps/sig-api-machinery/3488-cel-admission-control/README.md",
+    "keps/sig-api-machinery/3488-cel-admission-control/README.md",
+    "keps/sig-api-machinery/3488-cel-admission-control/README.md"
+  ]
+}

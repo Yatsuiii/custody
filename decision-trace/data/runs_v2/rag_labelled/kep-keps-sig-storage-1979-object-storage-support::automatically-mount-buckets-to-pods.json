@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-1979: Object Storage Support\" in kubernetes/enhancements and I'm considering using \"Automatically mount buckets to Pods\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, this approach was previously considered in `keps/sig-storage/1979-object-storage-support/README.md`.\n\nAccording to the design document:\n* **Prior Consideration:** Early iterations of the COSI v1alpha1 specification attempted to design a system to automatically mount bucket information to user Pods to serve as an analog to Pod PVC mounts.\n* **Reasoning for not adopting it:** Each Pod application may have different means of and needs for connecting to object storage buckets, so there was no clear way to implement automatic mounting in a manner that could accommodate all drivers and all users.",
+  "retrieved": [
+    "keps/sig-storage/1979-object-storage-support/README.md",
+    "keps/sig-storage/1979-object-storage-support/README.md",
+    "keps/sig-storage/1979-object-storage-support/README.md",
+    "keps/sig-node/753-sidecar-containers/README.md",
+    "keps/sig-api-machinery/4192-svm-in-tree/README.md"
+  ]
+}

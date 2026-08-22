@@ -1492,5 +1492,1001 @@
   "rationale_match": true,
   "hallucinated_citation": false,
   "supersession_aware": null
+ },
+ "structured_ingested::rust-lang-rust-revert-149375": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "structured_ingested::rust-lang-rust-revert-148937": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "structured_ingested::rust-lang-rust-revert-149060": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "structured_ingested::rust-lang-rust-revert-149516": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "structured_ingested::rust-lang-rust-revert-142034": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "structured_ingested::kubernetes-kubernetes-revert-140448": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "structured_ingested::kubernetes-kubernetes-revert-306": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "structured_ingested::kubernetes-kubernetes-revert-136254": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "structured_ingested::kubernetes-kubernetes-revert-126794": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "structured_ingested::kubernetes-kubernetes-revert-127300": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "structured_ingested::elastic-elasticsearch-revert-154503": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "structured_ingested::elastic-elasticsearch-revert-152050": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "structured_ingested::elastic-elasticsearch-revert-151875": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "structured_ingested::elastic-elasticsearch-revert-120214": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "structured_ingested::elastic-elasticsearch-revert-147071": {
+  "citation_correct": true,
+  "rationale_match": false,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "structured_ingested::kep-keps-sig-storage-1979-object-storage-support::automatically-mount-buckets-to-pods": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-storage-1979-object-storage-support::encode-bucketaccess-connection-information-in-a-json-blob": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-storage-1979-object-storage-support::cross-resource-protection-finalizers": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-storage-1979-object-storage-support::bucket-creation-annotation": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-storage-1979-object-storage-support::bucketclass-field-on-bucket-resource": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-storage-1979-object-storage-support::updating-bucketaccess-secrets": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-storage-1979-object-storage-support::bucketaccess-static-provisioning": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-storage-1979-object-storage-support::bucketaccess-read-write-accessmode": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-storage-1979-object-storage-support::handling-systems-that-cannot-support-multi-bucket-bucketacce": {
+  "citation_correct": false,
+  "rationale_match": false,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-auth-2718-20210511-client-exec-proxy::alternative-proposal-request-replacement": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-cloud-provider-2133-out-of-tree-credential-provider::api-server-proxy": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-cloud-provider-2133-out-of-tree-credential-provider::sidecar-credential-daemon": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-cloud-provider-2133-out-of-tree-credential-provider::bound-service-account-token-flow": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-cloud-provider-2133-out-of-tree-credential-provider::pushing-credential-management-into-the-cri": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::rust-lang-rust-revert-144407": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "structured_ingested::kubernetes-kubernetes-revert-129701": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "structured_ingested::kubernetes-kubernetes-revert-126599": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "structured_ingested::kep-keps-sig-auth-279-limit-node-access::file-or-flag-based-configuration-of-the-apiserver-to-allow-s": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-auth-279-limit-node-access::api-based-configuration-of-the-apiserver-to-allow-specifying": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-auth-279-limit-node-access::allow-kubelets-to-add-any-labels-they-wish-and-add-noschedul": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-auth-279-limit-node-access::forbid-all-labels-regardless-of-namespace-except-for-a-speci": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-cli-2382-kustomize-exec-secret-generator::enable-plugins-with-environment-variables": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-instrumentation-647-apiserver-tracing::introducing-a-new-egressselector-type": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-instrumentation-647-apiserver-tracing::other-opentelemetry-exporters": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-storage-1790-recover-resize-failure::allow-admins-to-manually-fix-pvcs-which-are-stuck-in-resizin": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-storage-1790-recover-resize-failure::solving-limitation-of-allowing-restore-all-the-way-to-origin": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-auth-5681-conditional-authorization::expose-all-conditions-in-admissionreview-and-have-admission-": {
+  "citation_correct": true,
+  "rationale_match": false,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-auth-5681-conditional-authorization::propagate-an-api-server-generated-request-uid-to-both-author": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-auth-5681-conditional-authorization::only-one-conditionset-exposed-as-part-of-subjectaccessreview": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-auth-5681-conditional-authorization::require-the-client-to-annotate-its-write-request-with-field-": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-auth-5681-conditional-authorization::extract-label-and-field-selectors-from-the-request-and-curre": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-auth-5681-conditional-authorization::do-nothing-force-implementers-to-implement-all-of-this-out-o": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-api-machinery-3488-cel-admission-control::duck-typed-crds": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-api-machinery-3488-cel-admission-control::openapiv3-ref-in-crds": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-api-machinery-3488-cel-admission-control::matchrules-subresource": {
+  "citation_correct": true,
+  "rationale_match": false,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-api-machinery-3488-cel-admission-control::policyconfiguration-kind-with-config-embedded": {
+  "citation_correct": false,
+  "rationale_match": false,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-api-machinery-3488-cel-admission-control::generate-crds": {
+  "citation_correct": false,
+  "rationale_match": false,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-api-machinery-3488-cel-admission-control::scopes": {
+  "citation_correct": true,
+  "rationale_match": false,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-api-machinery-2523-consistent-resource-versions-semantics::introduce-exactresourceversion-and-minresourceversion-parame": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-api-machinery-2523-consistent-resource-versions-semantics::use-syntax-in-the-query-string": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-node-5593-configure-the-max-crashloopbackoff-delay::global-override": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-node-5593-configure-the-max-crashloopbackoff-delay::per-exit-code-configuration": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-node-5593-configure-the-max-crashloopbackoff-delay::restartpolicy-rapid": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-node-5593-configure-the-max-crashloopbackoff-delay::on-success-and-the-10-minute-recovery-threshold": {
+  "citation_correct": false,
+  "rationale_match": false,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-node-5593-configure-the-max-crashloopbackoff-delay::exposing-per-node-config-as-command-line-flags": {
+  "citation_correct": false,
+  "rationale_match": false,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-node-5593-configure-the-max-crashloopbackoff-delay::late-recovery": {
+  "citation_correct": false,
+  "rationale_match": false,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-node-5593-configure-the-max-crashloopbackoff-delay::more-complex-heuristics": {
+  "citation_correct": false,
+  "rationale_match": false,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-api-machinery-2885-server-side-unknown-field-validation::http-header-mechanism": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-api-machinery-2876-crd-validation-expression-language::introduce-cel-for-general-admission-control": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-api-machinery-2876-crd-validation-expression-language::rego": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-api-machinery-2876-crd-validation-expression-language::expr": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-api-machinery-2876-crd-validation-expression-language::webassembly": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-api-machinery-2876-crd-validation-expression-language::starlark-formerly-known-as-skylark": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-api-machinery-2876-crd-validation-expression-language::build-our-own": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-api-machinery-2876-crd-validation-expression-language::make-it-easier-to-validate-crds-using-webhooks": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-scheduling-5229-asynchronous-api-calls-during-scheduling::1-handle-api-calls-in-the-scheduling-queue": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-scheduling-5229-asynchronous-api-calls-during-scheduling::2-handle-api-calls-in-the-handleschedulingfailure": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-scheduling-5229-asynchronous-api-calls-during-scheduling::1-just-dispatch-goroutines": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-scheduling-5229-asynchronous-api-calls-during-scheduling::proposal-a-create-a-separate-component-managing-api-calls": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-scheduling-5229-asynchronous-api-calls-during-scheduling::proposal-b-make-a-scheduler-s-cache-managing-api-calls": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::lifo-last-in-first-out-cpu-release": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::cpu-release-based-on-real-time-usage": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::immediate-actuation-no-delay": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::handshake-based-synchronization": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::node-declared-features-as-opt-out-mechanism": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::pod-level-grace-period-opt-in-opt-out-mechanism": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::hook-based-synchronization-approach": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "structured_ingested::kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::generalizing-scale-down-delay-to-other-resource-types": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::rust-lang-rust-revert-149375": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "rag_labelled::rust-lang-rust-revert-148937": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "rag_labelled::rust-lang-rust-revert-149060": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "rag_labelled::rust-lang-rust-revert-149516": {
+  "citation_correct": false,
+  "rationale_match": false,
+  "hallucinated_citation": false,
+  "supersession_aware": false
+ },
+ "rag_labelled::rust-lang-rust-revert-142034": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "rag_labelled::kubernetes-kubernetes-revert-140448": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "rag_labelled::kubernetes-kubernetes-revert-306": {
+  "citation_correct": false,
+  "rationale_match": false,
+  "hallucinated_citation": false,
+  "supersession_aware": false
+ },
+ "rag_labelled::kubernetes-kubernetes-revert-136254": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "rag_labelled::kubernetes-kubernetes-revert-126794": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "rag_labelled::kubernetes-kubernetes-revert-127300": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "rag_labelled::elastic-elasticsearch-revert-154503": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "rag_labelled::elastic-elasticsearch-revert-152050": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "rag_labelled::elastic-elasticsearch-revert-151875": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "rag_labelled::elastic-elasticsearch-revert-120214": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "rag_labelled::elastic-elasticsearch-revert-147071": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "rag_labelled::kep-keps-sig-storage-1979-object-storage-support::automatically-mount-buckets-to-pods": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-storage-1979-object-storage-support::encode-bucketaccess-connection-information-in-a-json-blob": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-storage-1979-object-storage-support::cross-resource-protection-finalizers": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-storage-1979-object-storage-support::bucket-creation-annotation": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-storage-1979-object-storage-support::bucketclass-field-on-bucket-resource": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-storage-1979-object-storage-support::updating-bucketaccess-secrets": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-storage-1979-object-storage-support::bucketaccess-static-provisioning": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-storage-1979-object-storage-support::bucketaccess-read-write-accessmode": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-storage-1979-object-storage-support::handling-systems-that-cannot-support-multi-bucket-bucketacce": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-auth-2718-20210511-client-exec-proxy::alternative-proposal-request-replacement": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-cloud-provider-2133-out-of-tree-credential-provider::api-server-proxy": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-cloud-provider-2133-out-of-tree-credential-provider::sidecar-credential-daemon": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-cloud-provider-2133-out-of-tree-credential-provider::bound-service-account-token-flow": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-cloud-provider-2133-out-of-tree-credential-provider::pushing-credential-management-into-the-cri": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::rust-lang-rust-revert-144407": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "rag_labelled::kubernetes-kubernetes-revert-129701": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "rag_labelled::kubernetes-kubernetes-revert-126599": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": true
+ },
+ "rag_labelled::kep-keps-sig-auth-279-limit-node-access::file-or-flag-based-configuration-of-the-apiserver-to-allow-s": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-auth-279-limit-node-access::api-based-configuration-of-the-apiserver-to-allow-specifying": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-auth-279-limit-node-access::allow-kubelets-to-add-any-labels-they-wish-and-add-noschedul": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-auth-279-limit-node-access::forbid-all-labels-regardless-of-namespace-except-for-a-speci": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-cli-2382-kustomize-exec-secret-generator::enable-plugins-with-environment-variables": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-instrumentation-647-apiserver-tracing::introducing-a-new-egressselector-type": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-instrumentation-647-apiserver-tracing::other-opentelemetry-exporters": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-storage-1790-recover-resize-failure::allow-admins-to-manually-fix-pvcs-which-are-stuck-in-resizin": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-storage-1790-recover-resize-failure::solving-limitation-of-allowing-restore-all-the-way-to-origin": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-auth-5681-conditional-authorization::expose-all-conditions-in-admissionreview-and-have-admission-": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-auth-5681-conditional-authorization::propagate-an-api-server-generated-request-uid-to-both-author": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-auth-5681-conditional-authorization::only-one-conditionset-exposed-as-part-of-subjectaccessreview": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-auth-5681-conditional-authorization::require-the-client-to-annotate-its-write-request-with-field-": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-auth-5681-conditional-authorization::extract-label-and-field-selectors-from-the-request-and-curre": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-auth-5681-conditional-authorization::do-nothing-force-implementers-to-implement-all-of-this-out-o": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-api-machinery-3488-cel-admission-control::duck-typed-crds": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-api-machinery-3488-cel-admission-control::openapiv3-ref-in-crds": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-api-machinery-3488-cel-admission-control::matchrules-subresource": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-api-machinery-3488-cel-admission-control::policyconfiguration-kind-with-config-embedded": {
+  "citation_correct": false,
+  "rationale_match": false,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-api-machinery-3488-cel-admission-control::generate-crds": {
+  "citation_correct": false,
+  "rationale_match": false,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-api-machinery-3488-cel-admission-control::scopes": {
+  "citation_correct": true,
+  "rationale_match": false,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-api-machinery-2523-consistent-resource-versions-semantics::introduce-exactresourceversion-and-minresourceversion-parame": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-api-machinery-2523-consistent-resource-versions-semantics::use-syntax-in-the-query-string": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-node-5593-configure-the-max-crashloopbackoff-delay::global-override": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-node-5593-configure-the-max-crashloopbackoff-delay::per-exit-code-configuration": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-node-5593-configure-the-max-crashloopbackoff-delay::restartpolicy-rapid": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-node-5593-configure-the-max-crashloopbackoff-delay::on-success-and-the-10-minute-recovery-threshold": {
+  "citation_correct": true,
+  "rationale_match": false,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-node-5593-configure-the-max-crashloopbackoff-delay::exposing-per-node-config-as-command-line-flags": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-node-5593-configure-the-max-crashloopbackoff-delay::late-recovery": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-node-5593-configure-the-max-crashloopbackoff-delay::more-complex-heuristics": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-api-machinery-2885-server-side-unknown-field-validation::http-header-mechanism": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-api-machinery-2876-crd-validation-expression-language::introduce-cel-for-general-admission-control": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-api-machinery-2876-crd-validation-expression-language::rego": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-api-machinery-2876-crd-validation-expression-language::expr": {
+  "citation_correct": false,
+  "rationale_match": false,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-api-machinery-2876-crd-validation-expression-language::webassembly": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-api-machinery-2876-crd-validation-expression-language::starlark-formerly-known-as-skylark": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-api-machinery-2876-crd-validation-expression-language::build-our-own": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-api-machinery-2876-crd-validation-expression-language::make-it-easier-to-validate-crds-using-webhooks": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-scheduling-5229-asynchronous-api-calls-during-scheduling::1-handle-api-calls-in-the-scheduling-queue": {
+  "citation_correct": true,
+  "rationale_match": false,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-scheduling-5229-asynchronous-api-calls-during-scheduling::2-handle-api-calls-in-the-handleschedulingfailure": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-scheduling-5229-asynchronous-api-calls-during-scheduling::1-just-dispatch-goroutines": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-scheduling-5229-asynchronous-api-calls-during-scheduling::proposal-a-create-a-separate-component-managing-api-calls": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-scheduling-5229-asynchronous-api-calls-during-scheduling::proposal-b-make-a-scheduler-s-cache-managing-api-calls": {
+  "citation_correct": true,
+  "rationale_match": false,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::lifo-last-in-first-out-cpu-release": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::cpu-release-based-on-real-time-usage": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::immediate-actuation-no-delay": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::handshake-based-synchronization": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::node-declared-features-as-opt-out-mechanism": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::pod-level-grace-period-opt-in-opt-out-mechanism": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::hook-based-synchronization-approach": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
+ },
+ "rag_labelled::kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::generalizing-scale-down-delay-to-other-resource-types": {
+  "citation_correct": true,
+  "rationale_match": true,
+  "hallucinated_citation": false,
+  "supersession_aware": null
  }
 }

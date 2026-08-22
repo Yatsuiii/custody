@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-3488: CEL for Admission Control\" in kubernetes/enhancements and I'm considering using \"`/matchRules` subresource\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the **`/matchRules` subresource** approach was considered in `keps/sig-api-machinery/3488-cel-admission-control/README.md`. \n\n### The Proposed Alternative\nThe idea was to require a configuration CRD to explicitly opt-in to providing structured match criteria by declaring a `/matchRules` subresource (specifying a `matchRulesPath`, similar to how the `scale` subresource provides polymorphism across CRDs).\n\n### Why It Wasn't Adopted\nAccording to the document, the approach was not adopted due to the following cons:\n\n1. **Mismatch with subresource purpose:** A primary purpose of subresources is to access or modify a portion of a resource independently, which is not what this feature is trying to achieve.\n2. **High maintenance and development cost:** From a Kubernetes development and maintenance perspective, subresources\u2014particularly for CRDs\u2014are expensive to introduce and maintain.",
+  "retrieved": [
+    "keps/sig-api-machinery/3488-cel-admission-control/README.md",
+    "keps/sig-api-machinery/3488-cel-admission-control/README.md",
+    "keps/sig-api-machinery/3488-cel-admission-control/README.md",
+    "keps/sig-api-machinery/3488-cel-admission-control/README.md",
+    "keps/sig-api-machinery/3488-cel-admission-control/README.md"
+  ]
+}

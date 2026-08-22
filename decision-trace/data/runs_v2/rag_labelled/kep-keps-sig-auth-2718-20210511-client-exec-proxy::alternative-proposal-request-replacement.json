@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-2718: Client Executable Proxy\" in kubernetes/enhancements and I'm considering using \"Alternative Proposal: Request Replacement\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the \"Alternative Proposal: Request Replacement\" approach was already considered in **`keps/sig-auth/2718-20210511-client-exec-proxy/README.md`**.\n\nUnder this alternative, the client would package the HTTP request into the body of a gRPC or HTTP request sent to a localhost/UDS server, receive the modified request back as a payload, replace the original request, and then send it to the API server via the client transport.\n\nAccording to the KEP document, this approach was not preferred or adopted due to the following reasons following discussions at SIG-Auth:\n\n1. **Cumbersome Protocol Definition:** Defining the request/response protocol between the client and the signing process was felt to be more cumbersome.\n2. **Less Generic:** It was considered less suited to a generic solution accommodating any proxy-related use case.\n3. **No TLS Offload Support:** It is not possible to implement TLS offload with this approach.",
+  "retrieved": [
+    "keps/sig-auth/2718-20210511-client-exec-proxy/README.md",
+    "keps/sig-auth/2718-20210511-client-exec-proxy/README.md",
+    "keps/sig-auth/2718-20210511-client-exec-proxy/README.md",
+    "keps/sig-auth/2718-20210511-client-exec-proxy/README.md",
+    "keps/sig-auth/2718-20210511-client-exec-proxy/README.md"
+  ]
+}

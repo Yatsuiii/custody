@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-647: APIServer Tracing\" in kubernetes/enhancements and I'm considering using \"Introducing a new EgressSelector type\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, introducing a new `EgressSelector` type was considered for **KEP-647: APIServer Tracing**, but it was not adopted.\n\n### Reason:\nExisting egress types were considered more standard because no new traffic target is introduced, and future client configuration needs are better handled elsewhere.\n\n### Evidence:\n* `keps/sig-instrumentation/647-apiserver-tracing/README.md`",
+  "retrieved": [
+    "kep-keps-sig-instrumentation-647-apiserver-tracing::ing::0",
+    "kep-keps-sig-instrumentation-647-apiserver-tracing::ing::1",
+    "kep-keps-sig-instrumentation-647-apiserver-tracing::ing::2",
+    "kep-keps-sig-scheduling-5501-reflect-preenqueue-rejections-in-pod-status::ing::0",
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::ing::1"
+  ]
+}

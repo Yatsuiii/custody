@@ -459,3 +459,75 @@ amendment attached, so a reader can see exactly what was and was not
 tested.
 
 Either way `RESULTS_V2.md` keeps the v2 numbers alongside the v2.1 ones.
+
+---
+
+# Amendment 3 — v2.2, removing a handicap on the RAG arm
+
+Recorded **before** any v2.2 generation or grading call. This one corrects
+an unfairness that runs *against* the result I already have, so it can only
+make the GO harder to keep.
+
+## A3.1 — The defect
+
+In `run_rag` (v0's, inherited unchanged by v2) the decision's own source
+document is indexed as:
+
+```python
+[{"id": "TARGET", "text": doc}]
+```
+
+while every decoy keeps its real identifier — `keps/sig-api-machinery/
+1027-api-unions/README.md`, `elastic/elasticsearch#111968`. The prompt then
+renders each chunk as `[<doc_id>]`. So the **only** document that can
+answer the question is the only one whose identity is hidden, and the
+distractors all announce theirs.
+
+Measured consequence on the v2 KEP arm: the target document is retrieved
+in **65 of 65** cases and RAG states a correct reason in **88%** of them,
+but cites correctly in only **49%**. Retrieval is not RAG's problem and
+reasoning is not RAG's problem. Its combined score is being held down
+almost entirely by a labelling artifact, and citation is precisely the
+metric on which the structured arm wins.
+
+This also explains RAG's 7% hallucinated-citation rate: asked to cite, with
+the right document anonymised and several decoys clearly named, the
+plausible move is to cite a decoy.
+
+Meanwhile the structured card has always rendered `Evidence: <path>`
+inline. So the two conditions were not being asked the same thing.
+
+## A3.2 — The change
+
+One change, RAG-only, applied uniformly to all 83 cases: the target
+document's chunks are labelled with the case's real citation identifier,
+using the same convention the decoys already use — the file path for KEPs,
+`{repo}#{revert_pr}` for revert pairs. Nothing else moves: same retrieval,
+same `TOP_K`, same embedder, same chunking, same corpus, same questions,
+same judge, same thresholds. The cached embeddings are reused; only the
+identifier attached to them changes, so this costs no re-embedding.
+
+`code_only`, `structured` and `structured_ingested` are **not**
+regenerated: their prompts do not contain a target label and are byte-
+identical. Only the condition whose prompt changed is re-run, which is the
+same uniform rule used in Amendment 2.
+
+## A3.3 — Predictions and kill criterion
+
+Fixed now:
+
+1. RAG citation-correct rises materially from 59% pooled / 49% on the KEP
+   arm. RAG's rationale-match should be roughly unchanged near 88%.
+2. RAG combined therefore rises from 55% and **may cross the 70% ceiling**
+   that `verdict_for()` requires for GO.
+3. If it does, the verdict becomes CAUTION — or KILL at 90% or above — and
+   **that is the reported result.** The v2.1 GO does not survive on the
+   strength of a labelling artifact, and I would rather lose it honestly
+   than keep it this way.
+4. Structured's numbers do not move, because nothing in its path changed.
+
+The comparison this produces is the one the project actually wants: both
+arms see what they retrieved and both are told where it came from, so the
+question becomes whether a distilled per-alternative record beats raw
+chunks of the same document. That is the thesis, tested without a thumb on
+either scale.

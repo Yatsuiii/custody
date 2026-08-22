@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-2718: Client Executable Proxy\" in kubernetes/enhancements and I'm considering using \"Alternative Proposal: Request Replacement\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the **Request Replacement** approach was considered for **KEP-2718: Client Executable Proxy**, but it was not adopted for the following reasons:\n\n* **Cumbersome protocol:** Specifying the custom request-response protocol was deemed overly cumbersome.\n* **Lack of flexibility:** It lacked flexibility for broader proxy scenarios.\n* **No TLS offloading:** It could not support TLS offloading.\n\n**Evidence:**\n* `keps/sig-auth/2718-20210511-client-exec-proxy/README.md` (Decision: `[kep-keps-sig-auth-2718-20210511-client-exec-proxy]`)",
+  "retrieved": [
+    "kep-keps-sig-auth-2718-20210511-client-exec-proxy::ing::0",
+    "kep-keps-sig-scheduling-5229-asynchronous-api-calls-during-scheduling::ing::4",
+    "kep-keps-sig-cloud-provider-2133-out-of-tree-credential-provider::ing::0",
+    "kep-keps-sig-scheduling-5501-reflect-preenqueue-rejections-in-pod-status::ing::0",
+    "kep-keps-sig-scheduling-5501-reflect-preenqueue-rejections-in-pod-status::ing::1"
+  ]
+}

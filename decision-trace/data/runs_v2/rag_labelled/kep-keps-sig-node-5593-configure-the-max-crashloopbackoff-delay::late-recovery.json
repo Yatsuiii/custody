@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-5593: Configure the max CrashLoopBackOff delay\" in kubernetes/enhancements and I'm considering using \"Late recovery\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, \"Late recovery\" was considered in **`keps/sig-node/5593-configure-the-max-crashloopbackoff-delay/README.md`**, but it was not adopted for the following reasons:\n\n1. **Specific use cases were either deemed out of scope or unlikely to be addressed:**\n   - **Pods running less than 10 minutes by design:** The document notes this case is unlikely to be addressed by Kubernetes.\n   - **Forcing the decay curve to restart (citing [Kubernetes#50375](https://github.com/kubernetes/kubernetes/issues/50375))** and **application-communicated readiness (such as a restart probe):** Both are considered out of scope for KEP-5593 because the most common use cases focus on the initial recovery period.\n2. **Timing and complexity:**\n   - Early recovery is more approachable and easily modelable compared to late recovery. \n   - Addressing late recovery scenarios was deferred so that if there is still sufficient appetite after KEP-5593 reaches beta, they can be tackled separately without the added noise and change in this KEP.",
+  "retrieved": [
+    "keps/sig-node/4603-tune-crashloopbackoff/README.md",
+    "keps/sig-node/5593-configure-the-max-crashloopbackoff-delay/README.md",
+    "keps/sig-node/4603-tune-crashloopbackoff/README.md",
+    "keps/sig-node/5593-configure-the-max-crashloopbackoff-delay/README.md",
+    "keps/sig-node/5593-configure-the-max-crashloopbackoff-delay/README.md"
+  ]
+}

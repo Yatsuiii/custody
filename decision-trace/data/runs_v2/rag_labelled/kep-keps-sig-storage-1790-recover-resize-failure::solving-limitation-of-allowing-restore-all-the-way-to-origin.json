@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"Recovery from volume expansion failure\" in kubernetes/enhancements and I'm considering using \"Solving limitation of allowing restore all the way to original size\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Based on the retrieved document (`keps/sig-storage/1790-recover-resize-failure/README.md`):\n\nUnder the section **\"Solving limitation of allowing restore all the way to original size\"**, the KEP notes that:\n* It is a known limitation of the KEP that users can only recover up to a size greater than the previous value recorded in `pvc.Status.Cap` (or `pvc.Status.Capacity`).\n\nAdditionally, under the **\"Non-Goals\"** section, it is explicitly stated that:\n* Supporting the shrinking of the underlying volume is not intended.\n* When recovering from volume expansion failures, users must recover to a size slightly larger than the original volume size (for example, if a volume was expanded from `10Gi` to `100Gi` and fails, recovery is only permitted to a size greater than `10Gi`, such as `11Gi` or higher).\n\n*(Note: The retrieved excerpt under the \"Solving limitation of allowing restore all the way to original size\" section ends after stating that limitation, and further details or alternative solutions for it are not included in the provided chunks).*",
+  "retrieved": [
+    "keps/sig-storage/1790-recover-resize-failure/README.md",
+    "keps/sig-storage/1790-recover-resize-failure/README.md",
+    "keps/sig-storage/1790-recover-resize-failure/README.md",
+    "keps/sig-storage/1790-recover-resize-failure/README.md",
+    "keps/sig-storage/1790-recover-resize-failure/README.md"
+  ]
+}

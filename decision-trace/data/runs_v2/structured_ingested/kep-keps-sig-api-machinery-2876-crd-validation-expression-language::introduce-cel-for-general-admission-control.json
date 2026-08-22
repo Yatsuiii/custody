@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-2876: CRD Validation Expression Language\" in kubernetes/enhancements and I'm considering using \"Introduce CEL for General Admission Control\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, using **CEL for general admission control** was considered during the design of **KEP-2876: CRD Validation Expression Language**.\n\n### Why it was not adopted:\nIt was deferred to a future phase because scoped CRD validation addresses a more focused problem and complements broader admission control.\n\n### Evidence:\n* `keps/sig-api-machinery/2876-crd-validation-expression-language/README.md`",
+  "retrieved": [
+    "kep-keps-sig-api-machinery-2876-crd-validation-expression-language::ing::0",
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::ing::4",
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::ing::0",
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::ing::1",
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::ing::5"
+  ]
+}

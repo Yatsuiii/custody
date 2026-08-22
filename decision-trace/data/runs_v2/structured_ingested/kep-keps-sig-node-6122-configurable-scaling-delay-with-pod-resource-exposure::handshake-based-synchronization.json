@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-6122: Configurable Scaling Delay with Pod Resource Exposure\" in kubernetes/enhancements and I'm considering using \"Handshake-Based Synchronization\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, **Handshake-based synchronization** was considered for **KEP-6122: Configurable Scaling Delay with Pod Resource Exposure**, but it was not adopted.\n\n### Why it was not used:\nIt violates architectural separation by letting workload states stall or indefinitely block kubelet scaling actions.\n\n### Evidence:\n* `keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md`",
+  "retrieved": [
+    "kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::ing::3",
+    "kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::ing::6",
+    "kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::ing::7",
+    "kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::ing::5",
+    "kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::ing::2"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "query": "I'm working in rust-lang/rust and I'm planning to reintroduce a change along these lines: \"fix(debuginfo): disable overflow check for recursive non-enum types\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
+  "response": "Yes, this change was previously implemented and subsequently reverted:\n\n* **PR #144407** introduced the change (commit `49eda8edd5c99e4c65c687fff0b8e194eb339a23` with the title *\"fix(debuginfo): disable overflow check for recursive non-enum types\"*).\n* **PR #145979** reverted this commit (`Revert \"fix(debuginfo): disable overflow check for recursive non-enum types\"`).\n* **Reasoning:** According to PR #145979, the matter was discussed during a T-compiler triage meeting, where the decision was made to revert PR #144407 rather than attempt a forward fix.",
+  "retrieved": [
+    "rust-lang/rust#145979",
+    "rust-lang/rust#160969",
+    "rust-lang/rust#160778",
+    "rust-lang/rust#158504",
+    "rust-lang/rust#161075"
+  ]
+}

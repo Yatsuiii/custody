@@ -1,0 +1,11 @@
+{
+  "query": "I'm working in kubernetes/kubernetes and I'm planning to reintroduce a change along these lines: \"fix: preserve options after remount for bind mounting\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
+  "response": "Yes, this exact change has been attempted previously and was later rolled back.\n\n### History & Context\n* **Original PR:** #126599 (*\"fix: preserve options after remount for bind mounting\"*)\n* **Revert PR:** #127899 (*\"Revert 126599: fix: preserve options after remount for bind mounting\"*)\n\n### Reason for Reversion\nThe pull request was rolled back because it introduced regressions that caused automated GCE COS test suites to fail. If you reintroduce this change, you should ensure that the GCE COS test suite regressions are addressed and validated.",
+  "retrieved": [
+    "kubernetes-kubernetes-revert-126599",
+    "kubernetes-kubernetes-revert-127300",
+    "kubernetes-kubernetes-revert-126794",
+    "kubernetes-kubernetes-revert-140448",
+    "kubernetes-kubernetes-revert-306"
+  ]
+}

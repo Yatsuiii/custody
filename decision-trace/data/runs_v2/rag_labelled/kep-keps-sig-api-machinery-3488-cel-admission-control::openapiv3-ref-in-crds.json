@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-3488: CEL for Admission Control\" in kubernetes/enhancements and I'm considering using \"OpenAPIv3 `$ref` in CRDs\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the approach **\"OpenAPIv3 `$ref` in CRDs\"** was considered in the design document for KEP-3488 (`keps/sig-api-machinery/3488-cel-admission-control/README.md`) under the section *Alternatives: Policy definition and configuration separation alternatives*.\n\n### Why it was not adopted (Cons):\n* **Lack of existing support in CRDs:** CustomResourceDefinitions (CRDs) did not yet support OpenAPIv3 `$ref`s. \n* Adding support for OpenAPIv3 `$ref`s in CRDs would need to be implemented first, which would presumably require its own separate KEP.\n\n*(Note: The document noted a pro for this approach\u2014that the match rule schema would be owned by Kubernetes and automatically updated in CRDs as it evolves\u2014but the lack of existing CRD support prevented its immediate adoption).*",
+  "retrieved": [
+    "keps/sig-api-machinery/3488-cel-admission-control/README.md",
+    "keps/sig-api-machinery/3488-cel-admission-control/README.md",
+    "keps/sig-api-machinery/3488-cel-admission-control/README.md",
+    "keps/sig-api-machinery/3488-cel-admission-control/README.md",
+    "keps/sig-api-machinery/3488-cel-admission-control/README.md"
+  ]
+}

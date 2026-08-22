@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-2876: CRD Validation Expression Language\" in kubernetes/enhancements and I'm considering using \"Build our own\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the \"Build our own\" approach was considered in `keps/sig-api-machinery/2876-crd-validation-expression-language/README.md`.\n\nIt was not adopted because:\n* It would require a much larger engineering investment.\n* The authors decided not to entertain building a custom language unless there is strong evidence that none of the existing/available expression languages can support CRD validation use cases well.",
+  "retrieved": [
+    "keps/sig-api-machinery/2876-crd-validation-expression-language/README.md",
+    "keps/sig-api-machinery/2876-crd-validation-expression-language/README.md",
+    "keps/sig-api-machinery/2876-crd-validation-expression-language/README.md",
+    "keps/sig-api-machinery/2876-crd-validation-expression-language/README.md",
+    "keps/sig-api-machinery/2876-crd-validation-expression-language/README.md"
+  ]
+}

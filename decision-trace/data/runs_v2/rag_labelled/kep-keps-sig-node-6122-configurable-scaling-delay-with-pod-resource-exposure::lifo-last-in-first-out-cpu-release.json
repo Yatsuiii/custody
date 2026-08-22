@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-6122: Configurable Scaling Delay with Pod Resource Exposure\" in kubernetes/enhancements and I'm considering using \"LIFO (Last-In, First-Out) CPU Release\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the **LIFO (Last-In, First-Out) CPU Release** approach was already considered and documented under the **Alternatives** section in `keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md`.\n\n### Description of the Approach:\nThe approach proposed tracking the order in which CPUs were allocated and releasing them in reverse order during a scale-down operation.\n\n### Why It Was Not Adopted:\nAccording to the document, it was rejected for the following reasons:\n* **Principle Established by KEP-5554**: KEP-5554 established the principle of preserving the *Original CPUSet* allocated during pod creation.\n* **\"Never-remove-promised-CPUs\" requirement**: The initial CPUs allocated at pod creation must remain in the actuated set throughout the pod's lifetime.\n* **Unnecessary complexity**: LIFO would introduce tracking complexity without offering any additional guarantees. \n\nConsequently, it was rejected during SIG Node meetings as an unnecessary complication.",
+  "retrieved": [
+    "keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md",
+    "keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md",
+    "keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md",
+    "keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md",
+    "keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-2876: CRD Validation Expression Language\" in kubernetes/enhancements and I'm considering using \"Expr\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, using **Expr** was considered as an alternative for **KEP-2876: CRD Validation Expression Language**. \n\nHowever, according to the project records, **no reason was stated in the source** for why it was not adopted.\n\n* **Evidence:** `keps/sig-api-machinery/2876-crd-validation-expression-language/README.md`",
+  "retrieved": [
+    "kep-keps-sig-api-machinery-2876-crd-validation-expression-language::ing::2",
+    "kep-keps-sig-api-machinery-2876-crd-validation-expression-language::ing::5",
+    "kep-keps-sig-api-machinery-2876-crd-validation-expression-language::ing::6",
+    "kep-keps-sig-api-machinery-2876-crd-validation-expression-language::ing::1",
+    "kep-keps-sig-api-machinery-2876-crd-validation-expression-language::ing::0"
+  ]
+}

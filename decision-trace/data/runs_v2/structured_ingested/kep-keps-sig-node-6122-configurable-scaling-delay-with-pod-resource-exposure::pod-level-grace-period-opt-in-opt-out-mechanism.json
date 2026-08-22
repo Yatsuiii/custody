@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-6122: Configurable Scaling Delay with Pod Resource Exposure\" in kubernetes/enhancements and I'm considering using \"Pod-Level Grace Period (Opt-In/Opt-Out Mechanism)\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, that approach was considered under **KEP-6122: Configurable Scaling Delay with Pod Resource Exposure**.\n\n* **Alternative Considered:** Pod-level grace period spec\n* **Why it was not adopted:** It was deferred to Alpha2 or Beta because modifying the core Pod API requires broader community consensus.\n* **Evidence:** `keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md`",
+  "retrieved": [
+    "kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::ing::5",
+    "kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::ing::6",
+    "kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::ing::7",
+    "kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::ing::4",
+    "kep-keps-sig-node-6122-configurable-scaling-delay-with-pod-resource-exposure::ing::2"
+  ]
+}

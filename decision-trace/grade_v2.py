@@ -25,6 +25,12 @@ from grade import judge_one as judge_v0, verdict_for
 from run_conditions_v2 import RUNS_DIR, load_cases
 
 CONDITIONS = ["code_only", "rag", "structured"]
+# v2.1 is graded as a fourth column: identical questions, identical judge,
+# identical rag/code_only responses, but the structured store was rebuilt
+# by an unsupervised ingestion pass. See BENCHMARK_V2_SPEC.md Amendment 2.
+V21 = "structured_ingested"
+# v2.2 relabels the RAG target with its real identity; see Amendment 3.
+V22 = "rag_labelled"
 V2_DIR = Path(__file__).parent / "data" / "v2"
 SCORES_PATH = V2_DIR / "scores.json"
 
@@ -82,11 +88,16 @@ def judge_one(c: dict, response: str) -> dict:
         return {**blank, "judge_error": raw[:200]}
 
 
+def graded_conditions() -> list[str]:
+    extra = [c for c in (V21, V22) if (RUNS_DIR / c).exists()]
+    return CONDITIONS + extra
+
+
 def grade_all(cases: list[dict]) -> dict:
     scores = json.loads(SCORES_PATH.read_text()) if SCORES_PATH.exists() else {}
     for i, c in enumerate(cases):
         cid = c["case_id"]
-        for cond in CONDITIONS:
+        for cond in graded_conditions():
             key = f"{cond}::{cid}"
             if key in scores:
                 continue
@@ -141,7 +152,7 @@ def headline_table(cases, scores) -> tuple[list[str], dict]:
              "Combined (both) | 95% CI | Hallucination | Per-decision mean |",
              "|---|---|---|---|---|---|---|"]
     rates = {}
-    for cond in CONDITIONS:
+    for cond in graded_conditions():
         rows = rows_for(cases, scores, cond)
         n = len(rows)
         cc = sum(1 for s in rows if s.get("citation_correct"))
@@ -161,7 +172,7 @@ def headline_table(cases, scores) -> tuple[list[str], dict]:
 def source_table(cases, scores) -> list[str]:
     lines = ["| Condition | Source | Citation | Rationale | Combined |",
              "|---|---|---|---|---|"]
-    for cond in CONDITIONS:
+    for cond in graded_conditions():
         for src in ("revert_pair", "kep_alternative"):
             rows = rows_for(cases, scores, cond, src)
             if not rows:
@@ -175,18 +186,19 @@ def source_table(cases, scores) -> list[str]:
 
 
 def case_table(cases, scores) -> list[str]:
-    lines = ["| case_id | source | code_only | rag | structured |",
-             "|---|---|---|---|---|"]
+    cols = graded_conditions()
+    lines = ["| case_id | source | " + " | ".join(cols) + " |",
+             "|---|---|" + "---|" * len(cols)]
     for c in cases:
         cells = []
-        for cond in CONDITIONS:
+        for cond in cols:
             s = scores.get(f"{cond}::{c['case_id']}")
             cells.append("-" if s is None else
                          ("C" if s.get("citation_correct") else "c")
                          + ("R" if s.get("rationale_match") else "r")
                          + ("H" if s.get("hallucinated_citation") else ""))
         lines.append(f"| `{c['case_id'][:78]}` | {c['source']} | "
-                     f"{cells[0]} | {cells[1]} | {cells[2]} |")
+                     + " | ".join(cells) + " |")
     return lines
 
 
@@ -208,6 +220,49 @@ v2 is a different task from v0. It is not a corrected score for the same
 question, and the two headline numbers should not be differenced. What is
 comparable is the mechanism: v0 asked a set question and graded one
 element, v2 asks about the element it grades.
+
+## The three confounds, and what actually survives them
+
+Read this before quoting any number in the table. Two of the three inflate
+the structured arm and one deflates the RAG arm, and once all three are
+removed the headline claim does not survive.
+
+**Confound 3 — RAG was never told which document it had retrieved.**
+`run_rag` indexed the answer-bearing document as `{"id": "TARGET"}` while
+every decoy kept its real identifier (`keps/sig-.../README.md`,
+`elastic/elasticsearch#111968`). The prompt renders each chunk as
+`[<doc_id>]`, so the one document that could answer the question was the
+one document whose identity was hidden, and every distractor announced
+its own. The structured card, meanwhile, has always rendered
+`Evidence: <path>` inline. The two arms were not being asked the same
+thing.
+
+Measured: on the KEP arm RAG retrieved the target in **65/65** cases and
+stated a correct reason in **88%** of them, but cited correctly in **49%**.
+Relabelling the target with its real identity — nothing else changed, same
+chunks, same vectors, same questions — moves RAG's KEP citation from 49%
+to **95%** and its combined score from 55% to **89%**.
+
+**What survives.** With the structured store built without ever seeing the
+question list (`structured_ingested`) and RAG told what it retrieved
+(`rag_labelled`), the comparison is **RAG 89% (74/83) versus structured
+87% (72/83)**. The difference is two cases, far inside both Wilson
+intervals. On rationale alone the two are 89% and 87%. The verdict under
+the unchanged thresholds is CAUTION, one point below the KILL line.
+
+**So the structured-versus-RAG advantage this benchmark was built to
+demonstrate is not demonstrated.** v0's apparent gap (76% vs 57%) was two
+artifacts pointing in opposite directions: structured was held down by
+ground truth it could not have matched, and RAG was held down by a
+labelling bug on the only document that mattered. Correct both and the two
+arms are tied.
+
+One asymmetry now runs the *other* way and is worth stating: RAG sees the
+verbatim graded span whenever it retrieves the right chunk, while the
+structured arm only ever sees a paraphrase and never the graded text. That
+structured reaches parity from a distillation is a real qualitative point
+in its favour. It is not what the preregistered threshold asks, and the
+threshold governs.
 
 ## The two confounds that make 99% indefensible
 
@@ -313,6 +368,44 @@ def failure_diagnostics(cases: list[dict], scores: dict) -> list[str]:
     return lines
 
 
+
+def extraction_recall(cases, scores) -> list[str]:
+    """The number v2.1 exists to produce.
+
+    v2's store had one record per question, so retrieval was a key lookup.
+    v2.1's store was built without ever seeing the question list, so a case
+    can fail simply because the ingester never wrote a record for that
+    alternative. This separates that failure from retrieval and generation."""
+    cards = [json.loads(line) for line in (V2_DIR / "cards_ingested.jsonl").open()]
+    by_id = {c["card_id"]: c for c in cards}
+    same_dec = named = 0
+    kep = [c for c in cases if c["source"] == "kep_alternative"]
+    for c in kep:
+        run = RUNS_DIR / V21 / f"{c['case_id']}.json"
+        got = json.loads(run.read_text())["retrieved"] if run.exists() else []
+        recs = [by_id[g] for g in got if g in by_id]
+        if any(r["decision_id"] == c["decision_id"] for r in recs):
+            same_dec += 1
+        want = set(re.findall(r"[a-z0-9]+", c["alternative_name"].lower()))
+        for r in recs:
+            if r["decision_id"] != c["decision_id"]:
+                continue
+            have = set(re.findall(r"[a-z0-9]+", r["alternative_name"].lower()))
+            if want & have and len(want & have) / max(len(want), 1) >= 0.4:
+                named += 1
+                break
+    n = len(kep)
+    return [
+        "\n## v2.1 extraction recall (preregistered metric)\n",
+        f"- ingested records: **{len(cards)}** for {len(cases)} cases "
+        f"({len(cards) / len(cases):.2f} per case), vs v2's exact 1.00",
+        f"- a record from the right decision reached the prompt: "
+        f"**{same_dec}/{n}** ({same_dec / n:.0%})",
+        f"- a record actually *naming* the asked-about alternative reached "
+        f"the prompt: **{named}/{n}** ({named / n:.0%})\n",
+    ]
+
+
 def main() -> None:
     cases = load_cases()
     scores = grade_all(cases)
@@ -345,12 +438,29 @@ def main() -> None:
                  "H = hallucinated a wrong citation.)\n")
     lines += failure_diagnostics(cases, scores)
 
+    if V21 in rates:
+        lines += extraction_recall(cases, scores)
     verdict, reason = verdict_for(rates["rag"], rates["structured"], len(cases))
-    lines.append(f"\n## Verdict: {verdict}\n\n{reason}\n")
+    lines.append(f"\n## Verdict (v2, leaked store): {verdict}\n\n{reason}\n")
+    if V21 in rates:
+        v21, why = verdict_for(rates["rag"], rates[V21], len(cases))
+        lines.append(f"\n## Verdict (v2.1, unsupervised store, unlabelled "
+                     f"RAG): {v21}\n\n{why}\n")
+        verdict = v21
+    if V21 in rates and V22 in rates:
+        v22, why = verdict_for(rates[V22], rates[V21], len(cases))
+        lines.append(
+            f"\n## Verdict (v2.2 — the headline: unsupervised store, "
+            f"labelled RAG): **{v22}**\n\n{why}\n\n"
+            f"This is the comparison with no thumb on either scale: the "
+            f"structured store was built without ever seeing the question "
+            f"list, and RAG is told the identity of every chunk it "
+            f"retrieved, including the one that answers the question.\n")
+        verdict = v22
 
     out = Path(__file__).parent / "RESULTS_V2.md"
     out.write_text("\n".join(lines))
-    print(f"\nwrote {out}\nVERDICT: {verdict}\n{reason}")
+    print(f"\nwrote {out}\nFINAL VERDICT: {verdict}")
 
 
 if __name__ == "__main__":

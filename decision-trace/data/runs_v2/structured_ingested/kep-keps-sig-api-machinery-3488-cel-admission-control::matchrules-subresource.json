@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-3488: CEL for Admission Control\" in kubernetes/enhancements and I'm considering using \"`/matchRules` subresource\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the \"`/matchRules` subresource\" approach was considered as an alternative for **KEP-3488: CEL for Admission Control**. \n\nHowever, no specific reason for why it was not used is stated in the source.\n\n* **Evidence:** `keps/sig-api-machinery/3488-cel-admission-control/README.md`",
+  "retrieved": [
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::ing::6",
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::ing::5",
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::ing::4",
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::ing::1",
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::ing::0"
+  ]
+}

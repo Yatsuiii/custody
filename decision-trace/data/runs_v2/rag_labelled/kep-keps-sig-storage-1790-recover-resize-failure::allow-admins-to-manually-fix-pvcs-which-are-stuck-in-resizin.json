@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"Recovery from volume expansion failure\" in kubernetes/enhancements and I'm considering using \"Allow admins to manually fix PVCs which are stuck in resizing condition\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, that approach was considered as an alternative in `keps/sig-storage/1790-recover-resize-failure/README.md` under the section **\"Allow admins to manually fix PVCs which are stuck in resizing condition\"**.\n\nIt was not adopted because of the following problems:\n- **Blockage of dependent workflows**: Workflows that depend on restarting pods after resizing succeeds cannot complete if resizing remains stuck indefinitely (for example, in the design of the StatefulSet expansion KEP).\n- **Potential for unusable volumes**: If a storage type only supports node expansion and continues to fail, the PVC could become unusable and prevent its usage.",
+  "retrieved": [
+    "keps/sig-storage/1790-recover-resize-failure/README.md",
+    "keps/sig-storage/1790-recover-resize-failure/README.md",
+    "keps/sig-storage/1790-recover-resize-failure/README.md",
+    "keps/sig-storage/1790-recover-resize-failure/README.md",
+    "keps/sig-storage/1790-recover-resize-failure/README.md"
+  ]
+}

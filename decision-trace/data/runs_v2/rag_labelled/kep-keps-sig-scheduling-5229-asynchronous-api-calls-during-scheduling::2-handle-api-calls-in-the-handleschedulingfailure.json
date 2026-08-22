@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-5229: Asynchronous API calls during scheduling\" in kubernetes/enhancements and I'm considering using \"2: Handle API calls in the handleSchedulingFailure\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, this approach was considered under section **\"1.2: Handle API calls in the handleSchedulingFailure\"** in `keps/sig-scheduling/5229-asynchronous-api-calls-during-scheduling/README.md`.\n\nBased on the document, the considerations and drawbacks noted for this approach are:\n\n* **Additional effort to prevent race conditions:** Additional work would be required to prevent race conditions, such as blocking pod retries using `PreEnqueue` (similar to asynchronous preemption) or implementing advanced queueing logic.\n* **Significant refactoring needed for `PreEnqueue` failures:** While the approach covers status updates during scheduling failures, handling pod status updates for `PreEnqueue` plugins would require more refactoring, such as:\n  * Running a simplified scheduling cycle for pods rejected by `PreEnqueue` to update the pod condition. This could negatively impact scheduling performance by consuming scheduling cycles on pods that are ultimately unschedulable.\n  * In such a simplified scheduling cycle, `PreEnqueue` plugins might need to be called within it, or `PreFilter` plugins would have to implement/duplicate the necessary `PreEnqueue` logic.",
+  "retrieved": [
+    "keps/sig-scheduling/5229-asynchronous-api-calls-during-scheduling/README.md",
+    "keps/sig-scheduling/5229-asynchronous-api-calls-during-scheduling/README.md",
+    "keps/sig-scheduling/5229-asynchronous-api-calls-during-scheduling/README.md",
+    "keps/sig-scheduling/5229-asynchronous-api-calls-during-scheduling/README.md",
+    "keps/sig-scheduling/5229-asynchronous-api-calls-during-scheduling/README.md"
+  ]
+}

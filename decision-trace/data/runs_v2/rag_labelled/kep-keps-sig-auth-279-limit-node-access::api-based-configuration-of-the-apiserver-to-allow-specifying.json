@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"Bounding Self-Labeling Kubelets\" in kubernetes/enhancements and I'm considering using \"API-based configuration of the apiserver to allow specifying allowed labels\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, that approach was considered under \"Alternatives Considered\" in `keps/sig-auth/279-limit-node-access/README.md` in the section **\"API-based configuration of the apiserver to allow specifying allowed labels\"**.\n\nIt was not adopted for the following reasons:\n* A fixed set of labels and label prefixes is simpler to reason about and ensures that every cluster behaves consistently.\n* An API object controlling the allowed labels presents a potential escalation path for a compromised node.",
+  "retrieved": [
+    "keps/sig-auth/279-limit-node-access/README.md",
+    "keps/sig-auth/279-limit-node-access/README.md",
+    "keps/sig-auth/279-limit-node-access/README.md",
+    "keps/sig-auth/279-limit-node-access/README.md",
+    "keps/sig-auth/279-limit-node-access/README.md"
+  ]
+}

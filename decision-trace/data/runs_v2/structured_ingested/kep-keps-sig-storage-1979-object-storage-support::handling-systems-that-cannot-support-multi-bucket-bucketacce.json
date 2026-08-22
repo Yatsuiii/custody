@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-1979: Object Storage Support\" in kubernetes/enhancements and I'm considering using \"Handling systems that cannot support multi-bucket BucketAccesses\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Based on the provided decision cards, there is no record of the specific approach **\"Handling systems that cannot support multi-bucket BucketAccesses\"** being considered. None of the retrieved decision cards are relevant to this specific query.",
+  "retrieved": [
+    "kep-keps-sig-storage-1979-object-storage-support::ing::11",
+    "kep-keps-sig-storage-1979-object-storage-support::ing::12",
+    "kep-keps-sig-storage-1979-object-storage-support::ing::14",
+    "kep-keps-sig-storage-1979-object-storage-support::ing::0",
+    "kep-keps-sig-storage-1979-object-storage-support::ing::6"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"Recovery from volume expansion failure\" in kubernetes/enhancements and I'm considering using \"Solving limitation of allowing restore all the way to original size\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the approach of **\"Restoring volume size completely to the original value\"** was considered for **\"Recovery from volume expansion failure\"**.\n\nHowever, the decision card notes that **no reason is stated in the source** for why it was not adopted.\n\n* **Evidence:** `keps/sig-storage/1790-recover-resize-failure/README.md`",
+  "retrieved": [
+    "kep-keps-sig-storage-1790-recover-resize-failure::ing::2",
+    "kep-keps-sig-storage-1790-recover-resize-failure::ing::0",
+    "kep-keps-sig-storage-1790-recover-resize-failure::ing::1",
+    "kubernetes-kubernetes-revert-127300",
+    "kep-keps-sig-storage-2451-service-account-token-volumes::ing::0"
+  ]
+}

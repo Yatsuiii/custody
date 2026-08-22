@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-5681: Conditional Authorization\" in kubernetes/enhancements and I'm considering using \"Require the client to annotate its write request with field or label selectors\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, this approach was considered in **`keps/sig-auth/5681-conditional-authorization/README.md`** under the section **\"Require the client to annotate its write request with field or label selectors\"**, but it was not adopted for the following reasons:\n\n1. **Breaking change for clients / request overhead:** Whenever conditional authorizers entered production usage, every client would need to annotate every request with all selectors \"just in case\" an authorizer might use them to increase the likelihood of getting authorized. This could duplicate a fair amount of request data.\n2. **Ambiguity with updates:** There is an unresolved issue regarding how updates would be handled\u2014specifically, whether the selector would apply only to the request object, only to the stored object, or to both at once.",
+  "retrieved": [
+    "keps/sig-auth/5681-conditional-authorization/README.md",
+    "keps/sig-auth/5681-conditional-authorization/README.md",
+    "keps/sig-auth/5681-conditional-authorization/README.md",
+    "keps/sig-auth/5681-conditional-authorization/README.md",
+    "keps/sig-auth/5681-conditional-authorization/README.md"
+  ]
+}

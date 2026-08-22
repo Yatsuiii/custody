@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-2885: Server Side Unknown Field Validation\" in kubernetes/enhancements and I'm considering using \"HTTP header mechanism\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, an **HTTP header mechanism** was considered for **KEP-2885: Server Side Unknown Field Validation**, but it was not adopted for the following reasons:\n\n* **Reasoning:** Validation strictness is independent of the content type, and patch validation occurs on the resulting object rather than on the incoming request body.\n* **Evidence:** `keps/sig-api-machinery/2885-server-side-unknown-field-validation/README.md`",
+  "retrieved": [
+    "kep-keps-sig-api-machinery-2885-server-side-unknown-field-validation::ing::0",
+    "kep-keps-sig-api-machinery-2885-server-side-unknown-field-validation::ing::3",
+    "kep-keps-sig-api-machinery-2885-server-side-unknown-field-validation::ing::1",
+    "kep-keps-sig-api-machinery-2885-server-side-unknown-field-validation::ing::2",
+    "kep-keps-sig-api-machinery-2876-crd-validation-expression-language::ing::6"
+  ]
+}

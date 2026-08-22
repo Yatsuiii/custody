@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"Consistent Resource Version Semantics for List\" in kubernetes/enhancements and I'm considering using \"Use syntax in the query string\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, using a **query string syntax** was previously considered for \"Consistent Resource Version Semantics for List\".\n\n* **Why it was not adopted:** It complicates exact matching semantics and still forces clients to pass repetitive parameters to maintain backward compatibility.\n* **Evidence:** `keps/sig-api-machinery/2523-consistent-resource-versions-semantics/README.md`",
+  "retrieved": [
+    "kep-keps-sig-api-machinery-2523-consistent-resource-versions-semantics::ing::1",
+    "kep-keps-sig-api-machinery-2523-consistent-resource-versions-semantics::ing::0",
+    "kep-keps-sig-api-machinery-2332-pruning-for-custom-resources::ing::1",
+    "kep-keps-sig-api-machinery-2876-crd-validation-expression-language::ing::5",
+    "kep-keps-sig-api-machinery-2332-pruning-for-custom-resources::ing::2"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-5229: Asynchronous API calls during scheduling\" in kubernetes/enhancements and I'm considering using \"1: Handle API calls in the scheduling queue\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Based on the retrieved chunks from `keps/sig-scheduling/5229-asynchronous-api-calls-during-scheduling/README.md`, under the section **\"1: How to handle Pod rescheduling while waiting for the API call to complete\"**, it is noted that three ways were analyzed and the non-blocking approach (**\"Use advanced queue and don't block the Pod from being scheduled in the meantime\"**) was selected.\n\nHowever, the provided chunks do not contain the details or specific reasons for why the particular approach **\"Handle API calls in the scheduling queue\"** was not adopted.",
+  "retrieved": [
+    "keps/sig-scheduling/5229-asynchronous-api-calls-during-scheduling/README.md",
+    "keps/sig-scheduling/5229-asynchronous-api-calls-during-scheduling/README.md",
+    "keps/sig-scheduling/5229-asynchronous-api-calls-during-scheduling/README.md",
+    "keps/sig-scheduling/5229-asynchronous-api-calls-during-scheduling/README.md",
+    "keps/sig-scheduling/5229-asynchronous-api-calls-during-scheduling/README.md"
+  ]
+}

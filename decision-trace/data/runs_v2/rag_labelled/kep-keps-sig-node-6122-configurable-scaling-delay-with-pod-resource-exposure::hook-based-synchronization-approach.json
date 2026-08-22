@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-6122: Configurable Scaling Delay with Pod Resource Exposure\" in kubernetes/enhancements and I'm considering using \"Hook-Based Synchronization Approach\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Based on `keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md`, the **Hook-Based Synchronization Approach** was indeed considered:\n\n* **Background:** It was suggested by `@ffromani` during the KEP review process as an alternative to the timer-based delay. In this approach, a workload would register a pre-scale-down hook that the kubelet invokes before applying cpuset changes, and the kubelet would wait for the hook to complete (or time out) before actuating the cpuset change.\n* **Adoption Status / Reasoning:** Rather than being rejected, it was deferred for **Future Consideration** and remains a candidate for Alpha2/Beta as a potential mechanism to provide opt-in/opt-out capabilities at the pod or container level.",
+  "retrieved": [
+    "keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md",
+    "keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md",
+    "keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md",
+    "keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md",
+    "keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md"
+  ]
+}

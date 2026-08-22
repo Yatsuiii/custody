@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-1979: Object Storage Support\" in kubernetes/enhancements and I'm considering using \"BucketClass field on Bucket resource\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, that approach was considered in **`keps/sig-storage/1979-object-storage-support/README.md`** under the section **\"BucketClass field on Bucket resource\"**.\n\nAccording to the document:\n* While Persistent Volumes track `StorageClass` on the PV object to control binding during static provisioning, for COSI the intent was that the `Bucket` should contain a copy of any relevant `BucketClass` parameters from when the OSP bucket was provisioned (with the admin copying them over for static provisioning).\n* However, as of **COSI v1alpha2**, the plan shifted to use the Bucket's `BucketClaim` reference as the sole binding control mechanism, rather than requiring the `BucketClass` to be tracked on the `Bucket` object.",
+  "retrieved": [
+    "keps/sig-storage/1979-object-storage-support/README.md",
+    "keps/sig-storage/1979-object-storage-support/README.md",
+    "keps/sig-storage/1979-object-storage-support/README.md",
+    "keps/sig-api-machinery/3962-mutating-admission-policies/README.md",
+    "keps/sig-cloud-provider/1179-building-without-in-tree-providers/README.md"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-647: APIServer Tracing\" in kubernetes/enhancements and I'm considering using \"Other OpenTelemetry Exporters\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the \"Other OpenTelemetry Exporters\" approach was considered as an alternative in **`keps/sig-instrumentation/647-apiserver-tracing/README.md`**.\n\n### Options Considered\nThe alternative options were:\n1. Adding configuration for many exporters in-tree by vendoring multiple \"supported\" exporters as the only compatible backends for tracing in Kubernetes.\n2. Supporting *both* a curated set of in-tree exporters and the collector exporter.\n\n### Why It Wasn't Adopted\n- **Avoids curation burden:** Adding in-tree exporters places the Kubernetes community in the position of curating supported tracing backends.\n- **Out-of-tree backend configuration:** KEP-647 instead proposes using the OpenTelemetry exporter format and the OTLP exporter with the OpenTelemetry Collector. This approach allows importing and configuring exporters for trace storage backends to be handled out-of-tree, in addition to providing other useful features.",
+  "retrieved": [
+    "keps/sig-instrumentation/647-apiserver-tracing/README.md",
+    "keps/sig-instrumentation/647-apiserver-tracing/README.md",
+    "keps/sig-instrumentation/647-apiserver-tracing/README.md",
+    "keps/sig-instrumentation/647-apiserver-tracing/README.md",
+    "keps/sig-instrumentation/647-apiserver-tracing/README.md"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-2876: CRD Validation Expression Language\" in kubernetes/enhancements and I'm considering using \"Starlark (formerly known as Skylark)\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, according to `keps/sig-api-machinery/2876-crd-validation-expression-language/README.md`, **Starlark (formerly known as Skylark)** was evaluated as an alternative, but it was not adopted for the following reasons:\n\n- **Larger language definition:** Its language definition is much larger than other embeddable expression languages evaluated.\n- **No type checking:** It does not provide type checking (it is an untyped dynamic language).\n- **Indentation-aware grammar:** Its indentation-aware grammar is not a good fit for single-line expressions.\n- **Sandboxing/security limitations:** Execution of untrusted code in a sandbox is not a top-level project goal for Starlark.",
+  "retrieved": [
+    "keps/sig-api-machinery/2876-crd-validation-expression-language/README.md",
+    "keps/sig-api-machinery/2876-crd-validation-expression-language/README.md",
+    "keps/sig-api-machinery/2876-crd-validation-expression-language/README.md",
+    "keps/sig-api-machinery/2876-crd-validation-expression-language/README.md",
+    "keps/sig-api-machinery/2876-crd-validation-expression-language/README.md"
+  ]
+}

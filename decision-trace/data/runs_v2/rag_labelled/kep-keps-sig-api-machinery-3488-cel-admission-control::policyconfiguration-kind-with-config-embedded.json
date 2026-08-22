@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-3488: CEL for Admission Control\" in kubernetes/enhancements and I'm considering using \"`PolicyConfiguration` kind with config embedded\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Based on the provided chunks, there is no mention of a \"`PolicyConfiguration` kind with config embedded\" approach or why it was not adopted. The retrieved documents only discuss background/motivation/non-goals for KEP-3488 and an alternative titled \"Alternative: Duck Typed CRDs.\" Therefore, the provided excerpts do not contain relevant information to answer this question.",
+  "retrieved": [
+    "keps/sig-api-machinery/3488-cel-admission-control/README.md",
+    "keps/sig-api-machinery/3488-cel-admission-control/README.md",
+    "keps/sig-api-machinery/3488-cel-admission-control/README.md",
+    "keps/sig-api-machinery/3962-mutating-admission-policies/README.md",
+    "keps/sig-api-machinery/3488-cel-admission-control/README.md"
+  ]
+}

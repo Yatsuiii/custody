@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"Bounding Self-Labeling Kubelets\" in kubernetes/enhancements and I'm considering using \"Forbid all labels regardless of namespace except for a specifically allowed set\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, that approach was considered as an alternative in `keps/sig-auth/279-limit-node-access/README.md` under the section **\"Forbid all labels regardless of namespace except for a specifically allowed set\"** (within *Alternatives Considered*).\n\nIt was not adopted for the following reasons:\n\n* **Disruption to existing workflows:** It was much more disruptive to existing usage of `--node-labels`.\n* **Integration difficulties:** It was much more difficult to integrate with other systems that allow arbitrary topology labels, such as CSI.\n* **Improper namespace restrictions:** It placed restrictions on how labels outside the `kubernetes.io` and `k8s.io` label namespaces could be used, which did not seem proper.",
+  "retrieved": [
+    "keps/sig-auth/279-limit-node-access/README.md",
+    "keps/sig-auth/279-limit-node-access/README.md",
+    "keps/sig-auth/279-limit-node-access/README.md",
+    "keps/sig-auth/279-limit-node-access/README.md",
+    "keps/sig-auth/279-limit-node-access/README.md"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-5229: Asynchronous API calls during scheduling\" in kubernetes/enhancements and I'm considering using \"Proposal B: Make a scheduler's cache managing API calls\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Based on the document `keps/sig-scheduling/5229-asynchronous-api-calls-during-scheduling/README.md` (specifically under the section **\"2.2: Send API calls through a kube-scheduler's cache\"**), sending/managing API calls through the kube-scheduler's cache was considered as an alternative. \n\nRather than adopting a pure cache-only approach, its ideas were combined with a separate queueing component (leading to *Proposal C: Create a separate component managing API calls, but treat the cache as a middleware*). \n\nThe reasons and drawbacks identified for not adopting the cache-only approach alone include:\n\n* **Scope of stored Pods:** The cache currently only stores bound Pods, while pending Pods are stored in the scheduling queue. This would require integrating the approach with the scheduling queue itself for pending Pods.\n* **Complex external/internal update merging:** The cache would need complex logic to handle and merge updates originating from both internal kube-scheduler actions and external API events (e.g., when a user updates a Pod spec or another component updates its status) arriving while an internal update is pending or in progress.\n* **Still relies on queueing concepts:** The cache approach would still need to reuse ideas from the separate queueing component approach to successfully merge or skip API calls.",
+  "retrieved": [
+    "keps/sig-scheduling/5229-asynchronous-api-calls-during-scheduling/README.md",
+    "keps/sig-scheduling/5229-asynchronous-api-calls-during-scheduling/README.md",
+    "keps/sig-scheduling/5229-asynchronous-api-calls-during-scheduling/README.md",
+    "keps/sig-scheduling/5229-asynchronous-api-calls-during-scheduling/README.md",
+    "keps/sig-scheduling/5229-asynchronous-api-calls-during-scheduling/README.md"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-1979: Object Storage Support\" in kubernetes/enhancements and I'm considering using \"Cross-resource protection finalizers\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the use of **finalizers for cross-resource protection** was considered for **KEP-1979: Object Storage Support**.\n\n* **Why it was not adopted:** Administrators frequently delete finalizers while troubleshooting, which leads to broken cluster states and prevents proper driver cleanup.\n* **Evidence:** `keps/sig-storage/1979-object-storage-support/README.md`",
+  "retrieved": [
+    "kep-keps-sig-storage-1979-object-storage-support::ing::2",
+    "kep-keps-sig-storage-1979-object-storage-support::ing::3",
+    "kep-keps-sig-storage-1979-object-storage-support::ing::11",
+    "kep-keps-sig-storage-1979-object-storage-support::ing::0",
+    "kep-keps-sig-storage-1979-object-storage-support::ing::4"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "query": "I'm working in rust-lang/rust and I'm planning to reintroduce a change along these lines: \"Perform many const checks in typeck\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
+  "response": "Yes, this was previously attempted in **PR #149375** and subsequently reverted in **PR #154930** (which fixed issue **#153765**).\n\n### Reasons for the revert:\n* **Errors in dead code:** Moving the const checks to `typeck` caused the compiler to start emitting errors about constants located in dead code. \n* **Difference between MIR and typeck:** Previously, MIR never saw dead code, meaning const checks were never run on it. In contrast, `typeck` inspects all written code and runs checks on it.\n* **Process requirement:** The revert noted that this change led to an unintended regression (such as trait method calls in dead code on beta) and that re-landing it would require a proper types team FCP (Final Comment Period).",
+  "retrieved": [
+    "rust-lang/rust#154930",
+    "rust-lang/rust#158504",
+    "rust-lang/rust#160984",
+    "rust-lang/rust#161083",
+    "rust-lang/rust#161010"
+  ]
+}

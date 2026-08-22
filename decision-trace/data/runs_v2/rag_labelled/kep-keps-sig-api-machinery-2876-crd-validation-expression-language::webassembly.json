@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-2876: CRD Validation Expression Language\" in kubernetes/enhancements and I'm considering using \"WebAssembly\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, WebAssembly was considered for **KEP-2876**, and a proof-of-concept implementation was created (referenced in `keps/sig-api-machinery/2876-crd-validation-expression-language/README.md` at [`https://github.com/jpbetz/omni-webhook/blob/main/validators/wasm.go`](https://github.com/jpbetz/omni-webhook/blob/main/validators/wasm.go); see also `github.com/chimera-kube/chimera-admission`).\n\nAccording to `keps/sig-api-machinery/2876-crd-validation-expression-language/README.md`, WebAssembly was not adopted due to the following reasons:\n\n1. **Poor fit as an embedded expression language:** Binaries would need to be published elsewhere (e.g., Docker images) and referenced in CRD declarations so the apiserver could load and execute them. This is much less convenient for simple validation rules than writing inline expressions.\n2. **Build and integration challenges:** WebAssembly runtimes require `cgo` to build, which might be difficult to integrate into the `kube-apiserver`.\n3. **Developer workflow complexity:** Passing strings across a WebAssembly boundary is currently target-language dependent, meaning any supported target language would require a small shim library.",
+  "retrieved": [
+    "keps/sig-api-machinery/2876-crd-validation-expression-language/README.md",
+    "keps/sig-api-machinery/2876-crd-validation-expression-language/README.md",
+    "keps/sig-api-machinery/2876-crd-validation-expression-language/README.md",
+    "keps/sig-api-machinery/2876-crd-validation-expression-language/README.md",
+    "keps/sig-api-machinery/2876-crd-validation-expression-language/README.md"
+  ]
+}

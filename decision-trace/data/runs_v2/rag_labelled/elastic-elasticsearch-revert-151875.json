@@ -1,0 +1,11 @@
+{
+  "query": "I'm working in elastic/elasticsearch and I'm planning to reintroduce a change along these lines: \"Use a bulk scorer for rescoring vectors\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
+  "response": "Yes, this has been tried and reverted before:\n\n* **Original PR:** [#151875](https://github.com/elastic/elasticsearch/pull/151875) (\"Use a bulk scorer for rescoring vectors\")\n* **Revert PR:** [#152097](https://github.com/elastic/elasticsearch/pull/152097) (Revert \"Use a bulk scorer for rescoring vectors\")\n\n### Why it was reverted\nAccording to PR #152097 (which fixed issues #152093, #152094, and #152099), for certain test seeds, the bulk scorer implementation attempted to read from an exhausted iterator. The exact difference between the old and new code causing that behavior change was not determined at the time of the revert.",
+  "retrieved": [
+    "elastic/elasticsearch#152097",
+    "elastic/elasticsearch#156332",
+    "elastic/elasticsearch#156614",
+    "elastic/elasticsearch#156614",
+    "elastic/elasticsearch#156614"
+  ]
+}

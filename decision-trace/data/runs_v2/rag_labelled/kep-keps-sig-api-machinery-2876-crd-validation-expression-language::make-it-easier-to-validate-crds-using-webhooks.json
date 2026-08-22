@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-2876: CRD Validation Expression Language\" in kubernetes/enhancements and I'm considering using \"Make it easier to validate CRDs using webhooks\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the approach **\"Make it easier to validate CRDs using webhooks\"** was considered in `keps/sig-api-machinery/2876-crd-validation-expression-language/README.md`, but direct in-CRD expression validation was chosen instead for the following reasons:\n\n- **Simplicity for CRD developers:** While the ecosystem has explored webhook solutions (such as Rego, Expr, WebAssembly) and tools like Kubebuilder can automatically create and manage webhooks, exploring this ecosystem and buying into a larger framework is a time-consuming way to solve what should be a simple validation problem. Direct access to an expression language is far simpler.\n- **Operator overhead:** For cluster operators, it is advantageous to install the fewest webhooks possible.\n- **Self-containment and version skew:** As noted under *Descriptive, self contained CRDs*, webhooks must be registered and upgraded independently of the CRD. Moving validation rules directly into the CRD makes them self-contained, easier to author and introspect, and eliminates version skew issues that occur when CRDs and webhooks are updated or rolled back independently.",
+  "retrieved": [
+    "keps/sig-api-machinery/2876-crd-validation-expression-language/README.md",
+    "keps/sig-api-machinery/2876-crd-validation-expression-language/README.md",
+    "keps/sig-api-machinery/2876-crd-validation-expression-language/README.md",
+    "keps/sig-api-machinery/2876-crd-validation-expression-language/README.md",
+    "keps/sig-api-machinery/2876-crd-validation-expression-language/README.md"
+  ]
+}

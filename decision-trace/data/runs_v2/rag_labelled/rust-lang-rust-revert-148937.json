@@ -1,0 +1,11 @@
+{
+  "query": "I'm working in rust-lang/rust and I'm planning to reintroduce a change along these lines: \"Remove initialized-bytes tracking from `BorrowedBuf` and `BorrowedCursor`\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
+  "response": "Yes, this exact change was previously attempted in **PR #148937** (\"Remove initialized-bytes tracking from `BorrowedBuf` and `BorrowedCursor`\") and was subsequently reverted in **PR #150096**.\n\n### Reasons for the Revert\n* **Performance regressions:** The change caused multiple performance regressions due to existing code relying on `Read::read`, which requires full buffer initialization.\n* **Buffer re-use overhead:** When the same buffer was re-used across multiple read calls, it had to be fully re-initialized every time.\n\n### Recommendation from the Prior Attempt\nWhile there was still recognized benefit to landing the API changes, the revert noted that private APIs would need to be added so that the existing infrastructure can continue tracking and avoiding redundant initialization.",
+  "retrieved": [
+    "rust-lang/rust#150096",
+    "rust-lang/rust#158504",
+    "rust-lang/rust#157428",
+    "rust-lang/rust#161046",
+    "rust-lang/rust#161075"
+  ]
+}

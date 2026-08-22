@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-3488: CEL for Admission Control\" in kubernetes/enhancements and I'm considering using \"Duck Typed CRDs\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the **Duck Typed CRDs** approach was already considered for **KEP-3488: CEL for Admission Control**. \n\nAccording to the project's decision records, it was not adopted for the following reasons:\n* Sharing configurations across different policies is problematic.\n* Error handling is complicated.\n* Future schema updates are difficult.\n\n**Evidence:**\n* `keps/sig-api-machinery/3488-cel-admission-control/README.md`",
+  "retrieved": [
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::ing::4",
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::ing::1",
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::ing::0",
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::ing::2",
+    "kep-keps-sig-api-machinery-3488-cel-admission-control::ing::3"
+  ]
+}

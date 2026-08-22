@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"Consistent Resource Version Semantics for List\" in kubernetes/enhancements and I'm considering using \"Use syntax in the query string\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, this approach was considered as an alternative in **`keps/sig-api-machinery/2523-consistent-resource-versions-semantics/README.md`** under the section **\"Alternative: Use syntax in the query string\"** (e.g., using `resourceVersion=234` or `resourceVersion>=234`).\n\nIt was not adopted due to the following disadvantages:\n\n1. **Backward Compatibility Issues:** To maintain backward compatibility with older servers, clients would still end up having to supply redundant parameters like `resourceVersion=234&resourceVersion>=234`.\n2. **Unclear Support for \"Exact\" Matches:** It was not clear how to represent \"Exact\" matches. `==` does not work well in query parameters, necessitating an alternative selection, and `=` was already used for the legacy case.",
+  "retrieved": [
+    "keps/sig-api-machinery/2523-consistent-resource-versions-semantics/README.md",
+    "keps/sig-api-machinery/2523-consistent-resource-versions-semantics/README.md",
+    "keps/sig-api-machinery/2523-consistent-resource-versions-semantics/README.md",
+    "keps/sig-api-machinery/2523-consistent-resource-versions-semantics/README.md",
+    "keps/sig-api-machinery/2523-consistent-resource-versions-semantics/README.md"
+  ]
+}

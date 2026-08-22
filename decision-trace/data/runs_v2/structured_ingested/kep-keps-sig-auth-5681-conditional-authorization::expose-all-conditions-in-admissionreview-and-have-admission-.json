@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-5681: Conditional Authorization\" in kubernetes/enhancements and I'm considering using \"Expose all conditions in AdmissionReview, and have admission plugins \u201cacknowledge\u201d the conditions\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, that approach was previously considered under **KEP-5681: Conditional Authorization** (considered as *\"Expose conditions in AdmissionReview for admission webhook acknowledgement\"*).\n\n### Why it was not adopted:\nIt was rejected because managing webhook permissions, condition dispatching, and resolving conflicting evaluations from dynamically registered webhooks was deemed too complex and insecure.\n\n**Evidence:**\n* `keps/sig-auth/5681-conditional-authorization/README.md`",
+  "retrieved": [
+    "kep-keps-sig-auth-5681-conditional-authorization::ing::0",
+    "kep-keps-sig-auth-5681-conditional-authorization::ing::2",
+    "kep-keps-sig-auth-5681-conditional-authorization::ing::1",
+    "kep-keps-sig-auth-5681-conditional-authorization::ing::5",
+    "kep-keps-sig-auth-5681-conditional-authorization::ing::3"
+  ]
+}

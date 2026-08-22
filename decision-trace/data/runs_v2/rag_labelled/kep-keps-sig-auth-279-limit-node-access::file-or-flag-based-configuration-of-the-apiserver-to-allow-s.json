@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"Bounding Self-Labeling Kubelets\" in kubernetes/enhancements and I'm considering using \"File or flag-based configuration of the apiserver to allow specifying allowed labels\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, that approach was considered as an alternative in **`keps/sig-auth/279-limit-node-access/README.md`** under the section *\"File or flag-based configuration of the apiserver to allow specifying allowed labels\"*.\n\nIt was not adopted for the following reasons:\n\n* **Simplicity and consistency:** A fixed set of labels and label prefixes is simpler to reason about and ensures every cluster behaves consistently.\n* **Inspectability:** File-based configuration is not easily inspectable to verify enforced labels.\n* **Synchronization:** File-based configuration is not easily kept in sync across High Availability (HA) apiserver setups.",
+  "retrieved": [
+    "keps/sig-auth/279-limit-node-access/README.md",
+    "keps/sig-auth/279-limit-node-access/README.md",
+    "keps/sig-auth/279-limit-node-access/README.md",
+    "keps/sig-auth/279-limit-node-access/README.md",
+    "keps/sig-auth/279-limit-node-access/README.md"
+  ]
+}

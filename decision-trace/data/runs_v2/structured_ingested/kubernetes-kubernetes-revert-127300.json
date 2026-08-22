@@ -1,0 +1,11 @@
+{
+  "query": "I'm working in kubernetes/kubernetes and I'm planning to reintroduce a change along these lines: \"[FG:InPlacePodVerticalScaling] kubelet: Propagate error in doPodResizeAction() to the caller\". Before I do, is there anything in this project's history I should know about \u2014 has something like this been tried and undone before, and if so why?",
+  "response": "Yes, this exact change was previously attempted and subsequently reverted:\n\n* **What happened:** The change `[FG:InPlacePodVerticalScaling] kubelet: Propagate error in doPodResizeAction() to the caller` was originally merged in **PR #127300** and later reverted in **PR #128694**.\n* **Why it was reverted:** The commit caused cgroup configuration to constantly trigger errors, which broke the vast majority of pod resizing attempts.\n\n**Evidence:** PR #127300 / revert PR #128694 (Decision `[kubernetes-kubernetes-revert-127300]`).",
+  "retrieved": [
+    "kubernetes-kubernetes-revert-127300",
+    "kep-keps-sig-storage-1790-recover-resize-failure::ing::1",
+    "kubernetes-kubernetes-revert-140448",
+    "kubernetes-kubernetes-revert-126599",
+    "kubernetes-kubernetes-revert-126794"
+  ]
+}

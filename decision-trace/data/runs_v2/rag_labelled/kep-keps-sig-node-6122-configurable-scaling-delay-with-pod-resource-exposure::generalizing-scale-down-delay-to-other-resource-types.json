@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-6122: Configurable Scaling Delay with Pod Resource Exposure\" in kubernetes/enhancements and I'm considering using \"Generalizing Scale-Down Delay to Other Resource Types\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, the approach **\"Generalizing Scale-Down Delay to Other Resource Types\"** was considered in `keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md` under the alternatives/considerations section, but it was not adopted for the initial Alpha implementation (and was deferred to Alpha2/Beta) for the following reasons:\n\n1. **Scope Focus**: The initial implementation focuses exclusively on exclusive CPUs, which is the only resource type currently supporting in-place vertical scaling with guaranteed QoS pods (via KEP-5554). Non-exclusive resources (like general CPU and memory requests) are not distinguishable at the container level for selective resource removal.\n2. **Implementation Complexity**: Extending the mechanism to other resource types (such as memory or Dynamic Resource Allocation / DRA resources) requires coordination across multiple resource managers (Memory Manager, DRA framework, etc.) and potentially new APIs, with each resource type having different semantics for \"graceful release.\"\n3. **Limited Use Cases**: As of today, exclusive CPUs are the primary usecase requiring delayed scale-down; not all other resource types currently have in-place scaling implementations that would benefit from this feature.\n4. **Need for User Feedback**: The SIG Node community agreed to first collect user feedback from the Alpha1 implementation of the CPU-focused delay mechanism to inform whether and how to design a more generalized solution.",
+  "retrieved": [
+    "keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md",
+    "keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md",
+    "keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md",
+    "keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md",
+    "keps/sig-node/6122-configurable-scaling-delay-with-pod-resource-exposure/README.md"
+  ]
+}

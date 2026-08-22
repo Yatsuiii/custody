@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-647: APIServer Tracing\" in kubernetes/enhancements and I'm considering using \"Introducing a new EgressSelector type\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, introducing a new `EgressSelector` type was considered as an alternative in `keps/sig-instrumentation/647-apiserver-tracing/README.md` (under *Alternatives considered* -> *Introducing a new EgressSelector type*). \n\nSpecifically, introducing a new `OpenTelemetry` egress type was considered as a way to configure choosing between a URL on the `ControlPlane` network or a service on the `Cluster` network separately. \n\nIt was not adopted for the following reasons:\n* It does not actually introduce a new destination for traffic, so it is more conventional to make use of existing egress types.\n* The team will likely want to add additional configuration for the OpenTelemetry client in the future.",
+  "retrieved": [
+    "keps/sig-instrumentation/647-apiserver-tracing/README.md",
+    "keps/sig-instrumentation/647-apiserver-tracing/README.md",
+    "keps/sig-instrumentation/647-apiserver-tracing/README.md",
+    "keps/sig-instrumentation/647-apiserver-tracing/README.md",
+    "keps/sig-instrumentation/647-apiserver-tracing/README.md"
+  ]
+}

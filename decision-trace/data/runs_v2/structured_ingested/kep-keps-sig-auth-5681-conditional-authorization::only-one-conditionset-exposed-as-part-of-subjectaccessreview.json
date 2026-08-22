@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-5681: Conditional Authorization\" in kubernetes/enhancements and I'm considering using \"Only one ConditionSet exposed as part of SubjectAccessReview status\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, this approach was already considered for **KEP-5681: Conditional Authorization**.\n\n* **Alternative Considered:** Exposing only a single `ConditionSet` in `SubjectAccessReview` status.\n* **Why it was not adopted:** It was rejected because users would not be able to discover the full set of conditional allows and denies relevant to their requests.\n* **Evidence:** `keps/sig-auth/5681-conditional-authorization/README.md`",
+  "retrieved": [
+    "kep-keps-sig-auth-5681-conditional-authorization::ing::2",
+    "kep-keps-sig-auth-5681-conditional-authorization::ing::0",
+    "kep-keps-sig-auth-5681-conditional-authorization::ing::5",
+    "kep-keps-sig-auth-5681-conditional-authorization::ing::3",
+    "kep-keps-sig-auth-5681-conditional-authorization::ing::1"
+  ]
+}

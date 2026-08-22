@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"Bounding Self-Labeling Kubelets\" in kubernetes/enhancements and I'm considering using \"Allow kubelets to add any labels they wish, and add NoSchedule taints if disallowed labels are added\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, that approach was previously considered under the alternative **\"Permissive labeling with NoSchedule taints for violations\"** for **Bounding Self-Labeling Kubelets**.\n\n### Why it was not adopted:\n* It introduced excessive complexity by requiring an additional cleanup controller.\n* It made it difficult to track which specific labels had triggered the taint.\n\n**Evidence:** \n* `keps/sig-auth/279-limit-node-access/README.md`",
+  "retrieved": [
+    "kep-keps-sig-auth-279-limit-node-access::ing::2",
+    "kep-keps-sig-auth-279-limit-node-access::ing::3",
+    "kep-keps-sig-auth-279-limit-node-access::ing::1",
+    "kep-keps-sig-auth-279-limit-node-access::ing::0",
+    "kep-keps-sig-auth-1205-bound-service-account-tokens::ing::0"
+  ]
+}

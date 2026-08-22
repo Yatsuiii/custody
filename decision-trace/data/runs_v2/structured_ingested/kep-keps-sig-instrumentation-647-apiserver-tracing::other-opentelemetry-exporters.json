@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-647: APIServer Tracing\" in kubernetes/enhancements and I'm considering using \"Other OpenTelemetry Exporters\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Based on the provided decision cards for **KEP-647: APIServer Tracing**, related approaches involving alternative/multiple exporters were considered:\n\n1. **Vendoring multiple in-tree exporters**\n   * **Reason not adopted:** It would force Kubernetes maintainers into the unwanted role of selecting and maintaining supported tracing backends.\n   * **Evidence:** `keps/sig-instrumentation/647-apiserver-tracing/README.md`\n\n2. **Supporting both in-tree and collector exporters**\n   * **Reason not adopted:** No reason was stated in the source.\n   * **Evidence:** `keps/sig-instrumentation/647-apiserver-tracing/README.md`\n\n*(Note: There is no decision card specifically titled \"Other OpenTelemetry Exporters\" in the provided memory, but the cards above document the decisions regarding multiple in-tree/collector exporter options.)*",
+  "retrieved": [
+    "kep-keps-sig-instrumentation-647-apiserver-tracing::ing::1",
+    "kep-keps-sig-instrumentation-647-apiserver-tracing::ing::2",
+    "kep-keps-sig-instrumentation-647-apiserver-tracing::ing::0",
+    "kep-keps-sig-cloud-provider-2133-out-of-tree-credential-provider::ing::0",
+    "kep-keps-sig-storage-1979-object-storage-support::ing::0"
+  ]
+}

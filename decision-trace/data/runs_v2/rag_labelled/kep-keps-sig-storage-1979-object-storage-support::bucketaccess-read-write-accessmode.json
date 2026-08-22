@@ -1,0 +1,11 @@
+{
+  "query": "I'm designing \"KEP-1979: Object Storage Support\" in kubernetes/enhancements and I'm considering using \"BucketAccess Read/Write AccessMode\". Was that approach already considered on this project, and if so, why wasn't it adopted?",
+  "response": "Yes, this was considered in **`keps/sig-storage/1979-object-storage-support/README.md`** under the section **\"BucketAccess Read/Write AccessMode\"**.\n\nThe proposal evaluated three main options for handling Read/Write access modes across different backend behaviors (e.g., S3/GCS separating data and metadata permissions vs. Azure not separating them):\n\n1. **Option 1: Include a single read/write permission applying to all data and metadata access.**\n   * *Drawback / Reason not adopted:* Administrators might want to allow only data read/write access for most users, without exposing behavior-modifying metadata permissions.\n2. **Option 2: Include a single read/write permission applying only to data access.**\n   * *Drawback / Reason not adopted:* Drivers would each have to implement any desired metadata read/write permissions as `BucketClass`/`BucketAccessClass` parameters.\n3. **Option 3: Separate the permissions into data, object metadata, and bucket metadata (`ObjectData`, `ObjectMetadata`, and `BucketMetadata`).**\n   * *Drawback:* More complicated for users and COSI maintainers.\n\n**Outcome:**\nFollowing v1alpha2 review discussions, the design chose **Option 3** (separating the permissions into data, object metadata, and bucket metadata) while COSI maintainers observe feedback.",
+  "retrieved": [
+    "keps/sig-storage/1979-object-storage-support/README.md",
+    "keps/sig-storage/2485-read-write-once-pod-pv-access-mode/README.md",
+    "keps/sig-storage/1979-object-storage-support/README.md",
+    "keps/sig-storage/2485-read-write-once-pod-pv-access-mode/README.md",
+    "keps/sig-storage/1979-object-storage-support/README.md"
+  ]
+}
