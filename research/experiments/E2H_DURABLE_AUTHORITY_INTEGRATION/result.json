@@ -1,0 +1,61 @@
+{
+  "canonical_result_digest": "7dc29bc13602d86847edfe56a3d9e8b919c06e76f9853a3df8ed3647c1e91596",
+  "cleanup": {
+    "cleanup_complete": false,
+    "reason": "Cleanup forbidden because the exact research namespace was non-empty before execution."
+  },
+  "e2g_commit": "bd0fcd3af38b105f326dbe0e4f73149b6da67449",
+  "e2g_result_digest": "05707014de0ed008db4eadd4ab74f7aa21ae530ea4029e2218b448b5fa6e1bac",
+  "environment": {
+    "database": "(default)",
+    "database_class": "Firestore Native",
+    "final_collection_counts": {
+      "custody_research_e2h_20260822_controls": 0,
+      "custody_research_e2h_20260822_dependencies": 0,
+      "custody_research_e2h_20260822_envelopes": 0,
+      "custody_research_e2h_20260822_policies": 1
+    },
+    "initial_collection_counts": {
+      "custody_research_e2h_20260822_controls": 0,
+      "custody_research_e2h_20260822_dependencies": 0,
+      "custody_research_e2h_20260822_envelopes": 0,
+      "custody_research_e2h_20260822_policies": 1
+    },
+    "namespace_prefix": "custody_research_e2h_20260822",
+    "production_isolation_check": true,
+    "project": "project-988bc9fe-092c-4b32-90c",
+    "region": "us-central1"
+  },
+  "experiment_id": "E2H_DURABLE_AUTHORITY_INTEGRATION",
+  "experiment_source_digest": "d29993063e9ad14b90f1797852c746e3403c7e78a31ccf86af53a71f80480a03",
+  "first_failed_gate": "RESEARCH_NAMESPACE_NOT_EMPTY",
+  "leakage_guard": {
+    "runtime_scan": [],
+    "scorer_read_counter_before_actions": 0
+  },
+  "metrics": {},
+  "observed_error": "Read-only limit-one preflight established one document in the exact frozen policies collection. Per preregistration, execution stopped without inspecting or deleting it.",
+  "operation_counts": {
+    "deletes": 0,
+    "model_calls": 0,
+    "reads": 4,
+    "writes": 0
+  },
+  "plan_immutable": true,
+  "plan_sha256": "ae113b5c2bf51f71c68dd5d2ae16084eff51d43b620b6aa61e0be7e6f2d9eff9",
+  "preregistration_commit": "f4e64a5a388ea377eabd1781ad478f9f82996dc3",
+  "process_model": {
+    "gateway": "independent OS process G",
+    "ground_truth_in_processes": false,
+    "policy": "independent OS process P",
+    "writer": "independent OS process W"
+  },
+  "reason": "RESEARCH_NAMESPACE_NOT_EMPTY",
+  "schema": {
+    "controls": "custody_research_e2h_20260822_controls",
+    "dependencies": "custody_research_e2h_20260822_dependencies",
+    "envelopes": "custody_research_e2h_20260822_envelopes",
+    "policies": "custody_research_e2h_20260822_policies"
+  },
+  "verdict": "INTEGRATION-BLOCKED"
+}
