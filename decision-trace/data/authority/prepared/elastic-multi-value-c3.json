@@ -1,0 +1,114 @@
+{
+  "checkpoint_id": "elastic-multi-value-c3",
+  "timeline_id": "elastic-multi-value",
+  "question": "What decision currently governs elasticsearch multi value enforcement after the revert record mentions future work? Return the public decision ID and its authority evidence.",
+  "authority_scope": "elasticsearch-multi-value-enforcement",
+  "visible_history": [
+    {
+      "artifact_id": "elastic/elasticsearch#147071@42d5c67e1c7d81dad6a2dd8780a8b89f49bc2d4c",
+      "decision_id": "elastic/elasticsearch#147071",
+      "sequence": 1,
+      "rendered_sha256": "01b170d0fc5108598d89f60745a79880c46680522c25dd2b95e8f030f71d096b"
+    },
+    {
+      "artifact_id": "elastic/elasticsearch#147360@d3f582051a2756be695eb854a694bd8f71031acd",
+      "decision_id": "elastic/elasticsearch#147360",
+      "sequence": 2,
+      "rendered_sha256": "5e68a4293d50863a3536b23c86bf40896b52562685dcc71ffae3564be2a5aa57"
+    }
+  ],
+  "visible_artifact_text": [
+    "Artifact ID: elastic/elasticsearch#147071@42d5c67e1c7d81dad6a2dd8780a8b89f49bc2d4c\nDecision ID: elastic/elasticsearch#147071\nRepository: elastic/elasticsearch\nTimestamp: 2026-04-23T15:26:35Z\nSource URL: https://github.com/elastic/elasticsearch/pull/147071\nPinned revision: 42d5c67e1c7d81dad6a2dd8780a8b89f49bc2d4c\nLifecycle status: MERGED\nAuthority scope: elasticsearch-multi-value-enforcement\nSource text (verbatim excerpt):\nEnforce single values for fields configured with multi_value=no.",
+    "Artifact ID: elastic/elasticsearch#147360@d3f582051a2756be695eb854a694bd8f71031acd\nDecision ID: elastic/elasticsearch#147360\nRepository: elastic/elasticsearch\nTimestamp: 2026-04-23T23:03:05Z\nSource URL: https://github.com/elastic/elasticsearch/pull/147360\nPinned revision: d3f582051a2756be695eb854a694bd8f71031acd\nLifecycle status: REVERT_MERGED\nAuthority scope: elasticsearch-multi-value-enforcement\nExplicitly reverts: elastic/elasticsearch#147071\nSource text (verbatim excerpt):\nReverts #147071 to unblock CI after test failures."
+  ],
+  "derivations": [
+    {
+      "artifact_id": "elastic/elasticsearch#147071@42d5c67e1c7d81dad6a2dd8780a8b89f49bc2d4c",
+      "decision_id": "elastic/elasticsearch#147071",
+      "status": "IMPLEMENTED",
+      "edges": []
+    },
+    {
+      "artifact_id": "elastic/elasticsearch#147360@d3f582051a2756be695eb854a694bd8f71031acd",
+      "decision_id": "elastic/elasticsearch#147360",
+      "status": "REVERTED",
+      "edges": [
+        [
+          "elastic/elasticsearch#147071",
+          "REVERTS"
+        ]
+      ]
+    }
+  ],
+  "resolver": {
+    "elastic/elasticsearch#147071": {
+      "active_id": "elastic/elasticsearch#147360",
+      "history": [
+        "elastic/elasticsearch#147071",
+        "elastic/elasticsearch#147360"
+      ],
+      "ambiguous": false,
+      "explanation": "elastic/elasticsearch#147360 is active after replaying: elastic/elasticsearch#147360 REVERTS elastic/elasticsearch#147071"
+    },
+    "elastic/elasticsearch#147360": {
+      "active_id": "elastic/elasticsearch#147360",
+      "history": [
+        "elastic/elasticsearch#147071",
+        "elastic/elasticsearch#147360"
+      ],
+      "ambiguous": false,
+      "explanation": "elastic/elasticsearch#147360 is active after replaying: elastic/elasticsearch#147360 REVERTS elastic/elasticsearch#147071"
+    }
+  },
+  "structured": {
+    "retrieved": [
+      {
+        "decision_id": "elastic/elasticsearch#147360",
+        "similarity": 0.804494392185947,
+        "resolution": {
+          "active_id": "elastic/elasticsearch#147360",
+          "history": [
+            "elastic/elasticsearch#147071",
+            "elastic/elasticsearch#147360"
+          ],
+          "ambiguous": false,
+          "explanation": "elastic/elasticsearch#147360 is active after replaying: elastic/elasticsearch#147360 REVERTS elastic/elasticsearch#147071"
+        },
+        "is_current": true
+      },
+      {
+        "decision_id": "elastic/elasticsearch#147071",
+        "similarity": 0.7836420220968315,
+        "resolution": {
+          "active_id": "elastic/elasticsearch#147360",
+          "history": [
+            "elastic/elasticsearch#147071",
+            "elastic/elasticsearch#147360"
+          ],
+          "ambiguous": false,
+          "explanation": "elastic/elasticsearch#147360 is active after replaying: elastic/elasticsearch#147360 REVERTS elastic/elasticsearch#147071"
+        },
+        "is_current": false
+      }
+    ],
+    "prompt": "You are DecisionTrace, an engineering-decision memory assistant.\nYou answer exactly these question types: why a subsystem is designed a\ncertain way, whether an approach was tried before, what constraints apply\nto a subsystem, whether a decision is still current, and what changed\nabout a prior decision.\n\nYou are given a set of retrieved decisions below. For EACH ONE, the\n\"Resolved status\" line is ALREADY DETERMINED by a separate deterministic\nsystem \u2014 you must never contradict it, guess a different current/inactive\nstatus, or imply a reverted/superseded decision might still be active.\nReport it as given fact.\n\nRespond with ONLY a JSON array, no other text. Each element:\n{\n  \"text\": \"one claim, in your own words\",\n  \"category\": one of \"verified_historical_fact\" | \"current_active_decision\" | \"inferred_advice\" | \"missing_or_uncertain\",\n  \"decision_id\": \"the decision id this claim cites, or null if it cites none\"\n}\n\nCategory meanings:\n- verified_historical_fact: a fact directly stated in a decision's\n  evidence/rationale below (e.g. what was originally chosen, why it was\n  rejected/reverted historically).\n- current_active_decision: what IS currently active, per the \"Resolved\n  status\" lines given to you \u2014 never your own guess.\n- inferred_advice: your own reasoning/suggestion that goes beyond what's\n  directly stated (e.g. \"you may want to check X\").\n- missing_or_uncertain: use this explicitly when the retrieved decisions\n  don't actually answer the question, rather than inventing an answer.\n\nIf nothing retrieved is relevant to the question, return a single\nmissing_or_uncertain claim saying so \u2014 do not fabricate a decision.\n\nRetrieved decisions:\n\n--- Decision [elastic/elasticsearch#147360] (similarity 0.80) ---\nSubject: Revert enforce single values when multi_value is no\nChosen approach: Revert enforce single values when multi_value is no\nRationale (verbatim source excerpt): Reverts #147071 to unblock CI after test failures.\nEvidence: https://github.com/elastic/elasticsearch/pull/147360\nResolved status: CURRENTLY ACTIVE (id=elastic/elasticsearch#147360)\nDeterministic lifecycle explanation: elastic/elasticsearch#147360 is active after replaying: elastic/elasticsearch#147360 REVERTS elastic/elasticsearch#147071\n\n--- Decision [elastic/elasticsearch#147071] (similarity 0.78) ---\nSubject: Enforce single values when multi_value is no\nChosen approach: Enforce single values when multi_value is no\nRationale (verbatim source excerpt): Enforce single values for fields configured with multi_value=no.\nEvidence: https://github.com/elastic/elasticsearch/pull/147071\nResolved status: NOT active/superseded/reverted. The currently active decision in this lineage is id='elastic/elasticsearch#147360'.\nDeterministic lifecycle explanation: elastic/elasticsearch#147360 is active after replaying: elastic/elasticsearch#147360 REVERTS elastic/elasticsearch#147071\n\nQuestion: What decision currently governs elasticsearch multi value enforcement after the revert record mentions future work? Return the public decision ID and its authority evidence.",
+    "prompt_sha256": "dad1309395e7e2a683cdfcc14c1b80d0d26699a6049c0096a38f4a3fbf074d38"
+  },
+  "rag": {
+    "retrieved": [
+      {
+        "artifact_id": "elastic/elasticsearch#147071@42d5c67e1c7d81dad6a2dd8780a8b89f49bc2d4c",
+        "text": "Artifact ID: elastic/elasticsearch#147071@42d5c67e1c7d81dad6a2dd8780a8b89f49bc2d4c\nDecision ID: elastic/elasticsearch#147071\nRepository: elastic/elasticsearch\nTimestamp: 2026-04-23T15:26:35Z\nSource URL: https://github.com/elastic/elasticsearch/pull/147071\nPinned revision: 42d5c67e1c7d81dad6a2dd8780a8b89f49bc2d4c\nLifecycle status: MERGED\nAuthority scope: elasticsearch-multi-value-enforcement\nSource text (verbatim excerpt):\nEnforce single values for fields configured with multi_value=no.",
+        "similarity": 0.802805842173664
+      },
+      {
+        "artifact_id": "elastic/elasticsearch#147360@d3f582051a2756be695eb854a694bd8f71031acd",
+        "text": "Artifact ID: elastic/elasticsearch#147360@d3f582051a2756be695eb854a694bd8f71031acd\nDecision ID: elastic/elasticsearch#147360\nRepository: elastic/elasticsearch\nTimestamp: 2026-04-23T23:03:05Z\nSource URL: https://github.com/elastic/elasticsearch/pull/147360\nPinned revision: d3f582051a2756be695eb854a694bd8f71031acd\nLifecycle status: REVERT_MERGED\nAuthority scope: elasticsearch-multi-value-enforcement\nExplicitly reverts: elastic/elasticsearch#147071\nSource text (verbatim excerpt):\nReverts #147071 to unblock CI after test failures.",
+        "similarity": 0.7988524285079105
+      }
+    ],
+    "prompt": "You are resolving organizational engineering authority from raw historical artifacts.\nAnswer what governs NOW at this checkpoint, not what is merely relevant or newest.\nA proposal, open PR, implementation artifact, mention, or recent document is not\nauthoritative by itself. Respect explicit acceptance, replacement, withdrawal,\nrevert, and independent authority scopes. A code revert does not automatically\nwithdraw an accepted policy. If the visible evidence cannot establish one safe\nanswer, use UNRESOLVED; if it establishes that no decision governs, use\nNO_GOVERNING_DECISION.\n\nReturn ONLY one JSON object:\n{\"authority_state\":\"GOVERNING|UNRESOLVED|NO_GOVERNING_DECISION\",\n \"governing_decision_id\":\"public decision ID or null\",\n \"evidence_ids\":[\"public decision/artifact IDs\"],\n \"explanation\":\"brief source-grounded explanation\"}\n\n\nVISIBLE RAW HISTORY\n[elastic/elasticsearch#147071@42d5c67e1c7d81dad6a2dd8780a8b89f49bc2d4c]\nArtifact ID: elastic/elasticsearch#147071@42d5c67e1c7d81dad6a2dd8780a8b89f49bc2d4c\nDecision ID: elastic/elasticsearch#147071\nRepository: elastic/elasticsearch\nTimestamp: 2026-04-23T15:26:35Z\nSource URL: https://github.com/elastic/elasticsearch/pull/147071\nPinned revision: 42d5c67e1c7d81dad6a2dd8780a8b89f49bc2d4c\nLifecycle status: MERGED\nAuthority scope: elasticsearch-multi-value-enforcement\nSource text (verbatim excerpt):\nEnforce single values for fields configured with multi_value=no.\n\n---\n\n[elastic/elasticsearch#147360@d3f582051a2756be695eb854a694bd8f71031acd]\nArtifact ID: elastic/elasticsearch#147360@d3f582051a2756be695eb854a694bd8f71031acd\nDecision ID: elastic/elasticsearch#147360\nRepository: elastic/elasticsearch\nTimestamp: 2026-04-23T23:03:05Z\nSource URL: https://github.com/elastic/elasticsearch/pull/147360\nPinned revision: d3f582051a2756be695eb854a694bd8f71031acd\nLifecycle status: REVERT_MERGED\nAuthority scope: elasticsearch-multi-value-enforcement\nExplicitly reverts: elastic/elasticsearch#147071\nSource text (verbatim excerpt):\nReverts #147071 to unblock CI after test failures.\n\nDEVELOPER QUESTION\nWhat decision currently governs elasticsearch multi value enforcement after the revert record mentions future work? Return the public decision ID and its authority evidence.",
+    "prompt_sha256": "5268657fd9061b0bc3a7193a7f85b96c112b996cab6adf056da3f269079b6ce5"
+  },
+  "embedding_call_units": 4
+}

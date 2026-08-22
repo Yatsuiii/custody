@@ -1,0 +1,114 @@
+{
+  "checkpoint_id": "annotation-semantics-c2",
+  "timeline_id": "annotation-semantics",
+  "question": "What decision currently governs annotation evaluation semantics? Return the public decision ID and its authority evidence.",
+  "authority_scope": "annotation-evaluation-policy",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-563@e3010cb7d2c4a1aaf285170e49227859386a3316",
+      "decision_id": "PEP-563",
+      "sequence": 1,
+      "rendered_sha256": "085c46e81891d201de33530cba0fa6503123f5663c02c9e27bc7891b6ac69fe3"
+    },
+    {
+      "artifact_id": "PEP-649@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-649",
+      "sequence": 2,
+      "rendered_sha256": "ab15d215e0ff25ee09a0d6b869da5b5e336c208d43185e1ae7af51f3f9890ac4"
+    }
+  ],
+  "visible_artifact_text": [
+    "Artifact ID: PEP-563@e3010cb7d2c4a1aaf285170e49227859386a3316\nDecision ID: PEP-563\nRepository: python/peps\nTimestamp: 2017-12-01T00:00:00Z\nSource URL: https://github.com/python/peps/blob/e3010cb7d2c4a1aaf285170e49227859386a3316/pep-0563.rst\nPinned revision: e3010cb7d2c4a1aaf285170e49227859386a3316\nLifecycle status: ACCEPTED\nAuthority scope: annotation-evaluation-policy\nSource text (verbatim excerpt):\nPEP: 563\nTitle: Postponed Evaluation of Annotations\nStatus: Accepted",
+    "Artifact ID: PEP-649@b2120d116aa696f409b4d8333c4020ab8f93c9c7\nDecision ID: PEP-649\nRepository: python/peps\nTimestamp: 2023-05-08T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0649.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: annotation-evaluation-policy\nExplicitly replaces: PEP-563\nSource text (verbatim excerpt):\nPEP: 649\nTitle: Deferred Evaluation Of Annotations Using Descriptors\nStatus: Final\nReplaces: 563"
+  ],
+  "derivations": [
+    {
+      "artifact_id": "PEP-563@e3010cb7d2c4a1aaf285170e49227859386a3316",
+      "decision_id": "PEP-563",
+      "status": "ACCEPTED",
+      "edges": []
+    },
+    {
+      "artifact_id": "PEP-649@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+      "decision_id": "PEP-649",
+      "status": "ACCEPTED",
+      "edges": [
+        [
+          "PEP-563",
+          "SUPERSEDES"
+        ]
+      ]
+    }
+  ],
+  "resolver": {
+    "PEP-563": {
+      "active_id": "PEP-649",
+      "history": [
+        "PEP-563",
+        "PEP-649"
+      ],
+      "ambiguous": false,
+      "explanation": "PEP-649 is active after replaying: PEP-649 SUPERSEDES PEP-563"
+    },
+    "PEP-649": {
+      "active_id": "PEP-649",
+      "history": [
+        "PEP-563",
+        "PEP-649"
+      ],
+      "ambiguous": false,
+      "explanation": "PEP-649 is active after replaying: PEP-649 SUPERSEDES PEP-563"
+    }
+  },
+  "structured": {
+    "retrieved": [
+      {
+        "decision_id": "PEP-563",
+        "similarity": 0.7114951605510261,
+        "resolution": {
+          "active_id": "PEP-649",
+          "history": [
+            "PEP-563",
+            "PEP-649"
+          ],
+          "ambiguous": false,
+          "explanation": "PEP-649 is active after replaying: PEP-649 SUPERSEDES PEP-563"
+        },
+        "is_current": false
+      },
+      {
+        "decision_id": "PEP-649",
+        "similarity": 0.6922832321893835,
+        "resolution": {
+          "active_id": "PEP-649",
+          "history": [
+            "PEP-563",
+            "PEP-649"
+          ],
+          "ambiguous": false,
+          "explanation": "PEP-649 is active after replaying: PEP-649 SUPERSEDES PEP-563"
+        },
+        "is_current": true
+      }
+    ],
+    "prompt": "You are DecisionTrace, an engineering-decision memory assistant.\nYou answer exactly these question types: why a subsystem is designed a\ncertain way, whether an approach was tried before, what constraints apply\nto a subsystem, whether a decision is still current, and what changed\nabout a prior decision.\n\nYou are given a set of retrieved decisions below. For EACH ONE, the\n\"Resolved status\" line is ALREADY DETERMINED by a separate deterministic\nsystem \u2014 you must never contradict it, guess a different current/inactive\nstatus, or imply a reverted/superseded decision might still be active.\nReport it as given fact.\n\nRespond with ONLY a JSON array, no other text. Each element:\n{\n  \"text\": \"one claim, in your own words\",\n  \"category\": one of \"verified_historical_fact\" | \"current_active_decision\" | \"inferred_advice\" | \"missing_or_uncertain\",\n  \"decision_id\": \"the decision id this claim cites, or null if it cites none\"\n}\n\nCategory meanings:\n- verified_historical_fact: a fact directly stated in a decision's\n  evidence/rationale below (e.g. what was originally chosen, why it was\n  rejected/reverted historically).\n- current_active_decision: what IS currently active, per the \"Resolved\n  status\" lines given to you \u2014 never your own guess.\n- inferred_advice: your own reasoning/suggestion that goes beyond what's\n  directly stated (e.g. \"you may want to check X\").\n- missing_or_uncertain: use this explicitly when the retrieved decisions\n  don't actually answer the question, rather than inventing an answer.\n\nIf nothing retrieved is relevant to the question, return a single\nmissing_or_uncertain claim saying so \u2014 do not fabricate a decision.\n\nRetrieved decisions:\n\n--- Decision [PEP-563] (similarity 0.71) ---\nSubject: Postponed Evaluation of Annotations\nChosen approach: Postponed Evaluation of Annotations\nRationale (verbatim source excerpt): PEP: 563\nTitle: Postponed Evaluation of Annotations\nStatus: Accepted\nEvidence: https://github.com/python/peps/blob/e3010cb7d2c4a1aaf285170e49227859386a3316/pep-0563.rst\nResolved status: NOT active/superseded/reverted. The currently active decision in this lineage is id='PEP-649'.\nDeterministic lifecycle explanation: PEP-649 is active after replaying: PEP-649 SUPERSEDES PEP-563\n\n--- Decision [PEP-649] (similarity 0.69) ---\nSubject: Deferred Evaluation Of Annotations Using Descriptors\nChosen approach: Deferred Evaluation Of Annotations Using Descriptors\nRationale (verbatim source excerpt): PEP: 649\nTitle: Deferred Evaluation Of Annotations Using Descriptors\nStatus: Final\nReplaces: 563\nEvidence: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0649.rst\nResolved status: CURRENTLY ACTIVE (id=PEP-649)\nDeterministic lifecycle explanation: PEP-649 is active after replaying: PEP-649 SUPERSEDES PEP-563\n\nQuestion: What decision currently governs annotation evaluation semantics? Return the public decision ID and its authority evidence.",
+    "prompt_sha256": "429de2036355106bc654d4dcfe5c4a854e9dcc77b0226edf3ec3f7ea7fa44303"
+  },
+  "rag": {
+    "retrieved": [
+      {
+        "artifact_id": "PEP-563@e3010cb7d2c4a1aaf285170e49227859386a3316",
+        "text": "Artifact ID: PEP-563@e3010cb7d2c4a1aaf285170e49227859386a3316\nDecision ID: PEP-563\nRepository: python/peps\nTimestamp: 2017-12-01T00:00:00Z\nSource URL: https://github.com/python/peps/blob/e3010cb7d2c4a1aaf285170e49227859386a3316/pep-0563.rst\nPinned revision: e3010cb7d2c4a1aaf285170e49227859386a3316\nLifecycle status: ACCEPTED\nAuthority scope: annotation-evaluation-policy\nSource text (verbatim excerpt):\nPEP: 563\nTitle: Postponed Evaluation of Annotations\nStatus: Accepted",
+        "similarity": 0.698795405171299
+      },
+      {
+        "artifact_id": "PEP-649@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+        "text": "Artifact ID: PEP-649@b2120d116aa696f409b4d8333c4020ab8f93c9c7\nDecision ID: PEP-649\nRepository: python/peps\nTimestamp: 2023-05-08T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0649.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: annotation-evaluation-policy\nExplicitly replaces: PEP-563\nSource text (verbatim excerpt):\nPEP: 649\nTitle: Deferred Evaluation Of Annotations Using Descriptors\nStatus: Final\nReplaces: 563",
+        "similarity": 0.6745147688932489
+      }
+    ],
+    "prompt": "You are resolving organizational engineering authority from raw historical artifacts.\nAnswer what governs NOW at this checkpoint, not what is merely relevant or newest.\nA proposal, open PR, implementation artifact, mention, or recent document is not\nauthoritative by itself. Respect explicit acceptance, replacement, withdrawal,\nrevert, and independent authority scopes. A code revert does not automatically\nwithdraw an accepted policy. If the visible evidence cannot establish one safe\nanswer, use UNRESOLVED; if it establishes that no decision governs, use\nNO_GOVERNING_DECISION.\n\nReturn ONLY one JSON object:\n{\"authority_state\":\"GOVERNING|UNRESOLVED|NO_GOVERNING_DECISION\",\n \"governing_decision_id\":\"public decision ID or null\",\n \"evidence_ids\":[\"public decision/artifact IDs\"],\n \"explanation\":\"brief source-grounded explanation\"}\n\n\nVISIBLE RAW HISTORY\n[PEP-563@e3010cb7d2c4a1aaf285170e49227859386a3316]\nArtifact ID: PEP-563@e3010cb7d2c4a1aaf285170e49227859386a3316\nDecision ID: PEP-563\nRepository: python/peps\nTimestamp: 2017-12-01T00:00:00Z\nSource URL: https://github.com/python/peps/blob/e3010cb7d2c4a1aaf285170e49227859386a3316/pep-0563.rst\nPinned revision: e3010cb7d2c4a1aaf285170e49227859386a3316\nLifecycle status: ACCEPTED\nAuthority scope: annotation-evaluation-policy\nSource text (verbatim excerpt):\nPEP: 563\nTitle: Postponed Evaluation of Annotations\nStatus: Accepted\n\n---\n\n[PEP-649@b2120d116aa696f409b4d8333c4020ab8f93c9c7]\nArtifact ID: PEP-649@b2120d116aa696f409b4d8333c4020ab8f93c9c7\nDecision ID: PEP-649\nRepository: python/peps\nTimestamp: 2023-05-08T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0649.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: annotation-evaluation-policy\nExplicitly replaces: PEP-563\nSource text (verbatim excerpt):\nPEP: 649\nTitle: Deferred Evaluation Of Annotations Using Descriptors\nStatus: Final\nReplaces: 563\n\nDEVELOPER QUESTION\nWhat decision currently governs annotation evaluation semantics? Return the public decision ID and its authority evidence.",
+    "prompt_sha256": "d86e501ddd258de1aee8865dba3d1b5b0435d650292b81c42a2767bba1f3a020"
+  },
+  "embedding_call_units": 4
+}

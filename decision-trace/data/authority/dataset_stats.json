@@ -1,0 +1,60 @@
+{
+  "adapter_coverage": 1.0,
+  "adapter_eligible_events": 21,
+  "adapter_represented_events": 21,
+  "composition": {
+    "fully_real": 7,
+    "hybrid": 8
+  },
+  "excluded_cases": 0,
+  "final_checkpoints": 32,
+  "intermediate_checkpoints": 29,
+  "lifecycle_type_counts": {
+    "implementation_edges": 2,
+    "proposal_artifacts": 6,
+    "revert_edges": 6,
+    "supersession_edges": 18
+  },
+  "real_artifacts": 39,
+  "repositories": [
+    "elastic/elasticsearch",
+    "kubernetes/kubernetes",
+    "python/peps",
+    "python/peps + python/cpython",
+    "rust-lang/rust"
+  ],
+  "scenario_checkpoint_counts": {
+    "conflicting_evidence": 5,
+    "implementation_revert_policy_survives": 8,
+    "mention_without_supersession": 5,
+    "multi_hop_supersession": 5,
+    "parallel_decisions": 12,
+    "proposal_after_current": 9,
+    "revert_after_supersession": 15,
+    "simple_supersession": 11
+  },
+  "scenario_timeline_counts": {
+    "conflicting_evidence": 3,
+    "implementation_revert_policy_survives": 2,
+    "mention_without_supersession": 3,
+    "multi_hop_supersession": 2,
+    "parallel_decisions": 3,
+    "proposal_after_current": 4,
+    "revert_after_supersession": 4,
+    "simple_supersession": 6
+  },
+  "status_counts": {
+    "ACCEPTED": 5,
+    "ACTIVE": 4,
+    "DRAFT": 5,
+    "FINAL": 14,
+    "MERGED": 6,
+    "OPEN": 1,
+    "REJECTED": 1,
+    "REVERT_MERGED": 6,
+    "WITHDRAWN": 2
+  },
+  "synthetic_queries": 61,
+  "total_checkpoints": 61,
+  "total_timelines": 15
+}

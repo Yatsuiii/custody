@@ -1,0 +1,1097 @@
+[
+  {
+    "timeline_id": "metadata-redesign",
+    "repository": "python/peps",
+    "composition": "hybrid",
+    "synthetic_elements": [
+      "developer question",
+      "checkpoint timing"
+    ],
+    "artifacts": [
+      {
+        "artifact_id": "PEP-345@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+        "decision_id": "PEP-345",
+        "title": "Metadata for Python Software Packages 1.2",
+        "subject": "Metadata for Python Software Packages 1.2",
+        "status": "ACCEPTED",
+        "timestamp": "2010-02-01T00:00:00Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/a0d411a7e334ddede263fdf9862f06bfc035f21c/pep-0345.txt",
+        "pinned_revision": "a0d411a7e334ddede263fdf9862f06bfc035f21c",
+        "source_text": "PEP: 345\nTitle: Metadata for Python Software Packages 1.2\nStatus: Accepted",
+        "scopes": [
+          "python-package-metadata"
+        ],
+        "sequence": 1,
+        "replaces": [],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      },
+      {
+        "artifact_id": "PEP-426@8ae8b612",
+        "decision_id": "PEP-426",
+        "title": "Metadata for Python Software Packages 2.0",
+        "subject": "Metadata for Python Software Packages 2.0",
+        "status": "DRAFT",
+        "timestamp": "2017-03-10T09:10:30Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/8ae8b612d4ea8b3bf5d8a7b795ae8aec48bbb7a3/pep-0426.txt",
+        "pinned_revision": "8ae8b612d4ea8b3bf5d8a7b795ae8aec48bbb7a3",
+        "source_text": "PEP: 426\nTitle: Metadata for Python Software Packages 2.0\nStatus: Draft\nReplaces: 345\nThis PEP describes a mechanism for publishing and exchanging metadata related to Python distributions.",
+        "scopes": [
+          "python-package-metadata"
+        ],
+        "sequence": 2,
+        "replaces": [
+          "PEP-345"
+        ],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      },
+      {
+        "artifact_id": "PEP-426@0977d33b",
+        "decision_id": "PEP-426",
+        "title": "Metadata for Python Software Packages 2.0",
+        "subject": "Metadata for Python Software Packages 2.0",
+        "status": "WITHDRAWN",
+        "timestamp": "2018-02-21T11:21:31Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/0977d33b02920d4619c024b64e35a693220cc3cf/pep-0426.txt",
+        "pinned_revision": "0977d33b02920d4619c024b64e35a693220cc3cf",
+        "source_text": "PEP: 426\nStatus: Withdrawn\nReplaces: 345\nThe ground-up metadata redesign proposed in this PEP has been withdrawn in favour of the more modest proposal in PEP 566.",
+        "scopes": [
+          "python-package-metadata"
+        ],
+        "sequence": 3,
+        "replaces": [
+          "PEP-345"
+        ],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      },
+      {
+        "artifact_id": "PEP-566@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+        "decision_id": "PEP-566",
+        "title": "Metadata for Python Software Packages 2.1",
+        "subject": "Metadata for Python Software Packages 2.1",
+        "status": "FINAL",
+        "timestamp": "2018-02-21T12:00:00Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0566.rst",
+        "pinned_revision": "b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+        "source_text": "PEP: 566\nTitle: Metadata for Python Software Packages 2.1\nStatus: Final\nReplaces: 345",
+        "scopes": [
+          "python-package-metadata"
+        ],
+        "sequence": 4,
+        "replaces": [
+          "PEP-345"
+        ],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      }
+    ]
+  },
+  {
+    "timeline_id": "manylinux-policy",
+    "repository": "python/peps",
+    "composition": "hybrid",
+    "synthetic_elements": [
+      "developer question",
+      "checkpoint timing"
+    ],
+    "artifacts": [
+      {
+        "artifact_id": "PEP-513@9f3a93dc85318aa5adafc232ff50e8cc858cd642",
+        "decision_id": "PEP-513",
+        "title": "A Platform Tag for Portable Linux Built Distributions",
+        "subject": "A Platform Tag for Portable Linux Built Distributions",
+        "status": "ACTIVE",
+        "timestamp": "2016-01-29T00:00:00Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/9f3a93dc85318aa5adafc232ff50e8cc858cd642/pep-0513.txt",
+        "pinned_revision": "9f3a93dc85318aa5adafc232ff50e8cc858cd642",
+        "source_text": "PEP: 513\nTitle: A Platform Tag for Portable Linux Built Distributions\nStatus: Active",
+        "scopes": [
+          "manylinux1"
+        ],
+        "sequence": 1,
+        "replaces": [],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      },
+      {
+        "artifact_id": "PEP-571@d4a5364baf4e814c522079262df1535808da113a",
+        "decision_id": "PEP-571",
+        "title": "The manylinux2010 Platform Tag",
+        "subject": "The manylinux2010 Platform Tag",
+        "status": "ACTIVE",
+        "timestamp": "2018-04-01T00:00:00Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/d4a5364baf4e814c522079262df1535808da113a/pep-0571.rst",
+        "pinned_revision": "d4a5364baf4e814c522079262df1535808da113a",
+        "source_text": "PEP: 571\nTitle: The manylinux2010 Platform Tag\nStatus: Active",
+        "scopes": [
+          "manylinux2010"
+        ],
+        "sequence": 2,
+        "replaces": [],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      },
+      {
+        "artifact_id": "PEP-599@4e7952166bbf3b9a13f0f5a4a8a77e1723b8eb20",
+        "decision_id": "PEP-599",
+        "title": "The manylinux2014 Platform Tag",
+        "subject": "The manylinux2014 Platform Tag",
+        "status": "ACCEPTED",
+        "timestamp": "2019-04-29T00:00:00Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/4e7952166bbf3b9a13f0f5a4a8a77e1723b8eb20/pep-0599.rst",
+        "pinned_revision": "4e7952166bbf3b9a13f0f5a4a8a77e1723b8eb20",
+        "source_text": "PEP: 599\nTitle: The manylinux2014 Platform Tag\nStatus: Accepted",
+        "scopes": [
+          "manylinux2014"
+        ],
+        "sequence": 3,
+        "replaces": [],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      },
+      {
+        "artifact_id": "PEP-600@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+        "decision_id": "PEP-600",
+        "title": "Future manylinux Platform Tags",
+        "subject": "Future manylinux Platform Tags",
+        "status": "FINAL",
+        "timestamp": "2020-01-01T00:00:00Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0600.rst",
+        "pinned_revision": "b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+        "source_text": "PEP: 600\nTitle: Future manylinux Platform Tags\nStatus: Final\nReplaces: 513, 571, 599",
+        "scopes": [
+          "future-manylinux-policy"
+        ],
+        "sequence": 4,
+        "replaces": [
+          "PEP-513",
+          "PEP-571",
+          "PEP-599"
+        ],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      }
+    ]
+  },
+  {
+    "timeline_id": "metadata-1-1",
+    "repository": "python/peps",
+    "composition": "hybrid",
+    "synthetic_elements": [
+      "developer question",
+      "checkpoint timing"
+    ],
+    "artifacts": [
+      {
+        "artifact_id": "PEP-241@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+        "decision_id": "PEP-241",
+        "title": "Metadata for Python Software Packages",
+        "subject": "Metadata for Python Software Packages",
+        "status": "FINAL",
+        "timestamp": "2001-03-19T00:00:00Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/a0d411a7e334ddede263fdf9862f06bfc035f21c/pep-0241.txt",
+        "pinned_revision": "a0d411a7e334ddede263fdf9862f06bfc035f21c",
+        "source_text": "PEP: 241\nTitle: Metadata for Python Software Packages\nStatus: Final",
+        "scopes": [
+          "python-metadata-1-1"
+        ],
+        "sequence": 1,
+        "replaces": [],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      },
+      {
+        "artifact_id": "PEP-314@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+        "decision_id": "PEP-314",
+        "title": "Metadata for Python Software Packages 1.1",
+        "subject": "Metadata for Python Software Packages 1.1",
+        "status": "FINAL",
+        "timestamp": "2003-04-29T00:00:00Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/a0d411a7e334ddede263fdf9862f06bfc035f21c/pep-0314.txt",
+        "pinned_revision": "a0d411a7e334ddede263fdf9862f06bfc035f21c",
+        "source_text": "PEP: 314\nTitle: Metadata for Python Software Packages 1.1\nStatus: Final\nReplaces: 241",
+        "scopes": [
+          "python-metadata-1-1"
+        ],
+        "sequence": 2,
+        "replaces": [
+          "PEP-241"
+        ],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      }
+    ]
+  },
+  {
+    "timeline_id": "metadata-1-2",
+    "repository": "python/peps",
+    "composition": "hybrid",
+    "synthetic_elements": [
+      "developer question",
+      "checkpoint timing"
+    ],
+    "artifacts": [
+      {
+        "artifact_id": "PEP-241@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+        "decision_id": "PEP-241",
+        "title": "Metadata for Python Software Packages",
+        "subject": "Metadata for Python Software Packages",
+        "status": "FINAL",
+        "timestamp": "2001-03-19T00:00:00Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/a0d411a7e334ddede263fdf9862f06bfc035f21c/pep-0241.txt",
+        "pinned_revision": "a0d411a7e334ddede263fdf9862f06bfc035f21c",
+        "source_text": "PEP: 241\nTitle: Metadata for Python Software Packages\nStatus: Final",
+        "scopes": [
+          "python-metadata-chain"
+        ],
+        "sequence": 1,
+        "replaces": [],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      },
+      {
+        "artifact_id": "PEP-314@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+        "decision_id": "PEP-314",
+        "title": "Metadata for Python Software Packages 1.1",
+        "subject": "Metadata for Python Software Packages 1.1",
+        "status": "FINAL",
+        "timestamp": "2003-04-29T00:00:00Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/a0d411a7e334ddede263fdf9862f06bfc035f21c/pep-0314.txt",
+        "pinned_revision": "a0d411a7e334ddede263fdf9862f06bfc035f21c",
+        "source_text": "PEP: 314\nTitle: Metadata for Python Software Packages 1.1\nStatus: Final\nReplaces: 241",
+        "scopes": [
+          "python-metadata-chain"
+        ],
+        "sequence": 2,
+        "replaces": [
+          "PEP-241"
+        ],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      },
+      {
+        "artifact_id": "PEP-345@a0d411a7e334ddede263fdf9862f06bfc035f21c",
+        "decision_id": "PEP-345",
+        "title": "Metadata for Python Software Packages 1.2",
+        "subject": "Metadata for Python Software Packages 1.2",
+        "status": "ACCEPTED",
+        "timestamp": "2010-02-01T00:00:00Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/a0d411a7e334ddede263fdf9862f06bfc035f21c/pep-0345.txt",
+        "pinned_revision": "a0d411a7e334ddede263fdf9862f06bfc035f21c",
+        "source_text": "PEP: 345\nTitle: Metadata for Python Software Packages 1.2\nStatus: Accepted\nReplaces: 314",
+        "scopes": [
+          "python-metadata-chain"
+        ],
+        "sequence": 3,
+        "replaces": [
+          "PEP-314"
+        ],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      }
+    ]
+  },
+  {
+    "timeline_id": "manylinux-unified",
+    "repository": "python/peps",
+    "composition": "hybrid",
+    "synthetic_elements": [
+      "developer question",
+      "checkpoint timing"
+    ],
+    "artifacts": [
+      {
+        "artifact_id": "PEP-513@9f3a93dc85318aa5adafc232ff50e8cc858cd642",
+        "decision_id": "PEP-513",
+        "title": "A Platform Tag for Portable Linux Built Distributions",
+        "subject": "A Platform Tag for Portable Linux Built Distributions",
+        "status": "ACTIVE",
+        "timestamp": "2016-01-29T00:00:00Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/9f3a93dc85318aa5adafc232ff50e8cc858cd642/pep-0513.txt",
+        "pinned_revision": "9f3a93dc85318aa5adafc232ff50e8cc858cd642",
+        "source_text": "PEP: 513\nTitle: A Platform Tag for Portable Linux Built Distributions\nStatus: Active",
+        "scopes": [
+          "manylinux-policy"
+        ],
+        "sequence": 1,
+        "replaces": [],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      },
+      {
+        "artifact_id": "PEP-600@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+        "decision_id": "PEP-600",
+        "title": "Future manylinux Platform Tags",
+        "subject": "Future manylinux Platform Tags",
+        "status": "FINAL",
+        "timestamp": "2020-01-01T00:00:00Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0600.rst",
+        "pinned_revision": "b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+        "source_text": "PEP: 600\nTitle: Future manylinux Platform Tags\nStatus: Final\nReplaces: 513",
+        "scopes": [
+          "manylinux-policy"
+        ],
+        "sequence": 2,
+        "replaces": [
+          "PEP-513"
+        ],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      }
+    ]
+  },
+  {
+    "timeline_id": "packaging-governance",
+    "repository": "python/peps",
+    "composition": "fully_real",
+    "synthetic_elements": [
+      "developer question",
+      "checkpoint timing"
+    ],
+    "artifacts": [
+      {
+        "artifact_id": "PEP-609@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+        "decision_id": "PEP-609",
+        "title": "Python Packaging Authority Governance",
+        "subject": "Python Packaging Authority Governance",
+        "status": "ACTIVE",
+        "timestamp": "2019-11-05T00:00:00Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0609.rst",
+        "pinned_revision": "b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+        "source_text": "PEP: 609\nTitle: Python Packaging Authority Governance\nStatus: Active",
+        "scopes": [
+          "python-packaging-governance"
+        ],
+        "sequence": 1,
+        "replaces": [],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      },
+      {
+        "artifact_id": "PEP-772@e95aa672",
+        "decision_id": "PEP-772",
+        "title": "Packaging governance process",
+        "subject": "Packaging governance process",
+        "status": "DRAFT",
+        "timestamp": "2025-02-06T00:00:00Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/e95aa6726cfc/peps/pep-0772.rst",
+        "pinned_revision": "e95aa6726cfc",
+        "source_text": "PEP: 772\nTitle: Packaging governance process\nStatus: Draft\nReplaces: 609\nThis PEP proposes a Python Packaging Council with broad authority over packaging standards, tools, and implementations.",
+        "scopes": [
+          "python-packaging-governance"
+        ],
+        "sequence": 2,
+        "replaces": [
+          "PEP-609"
+        ],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      },
+      {
+        "artifact_id": "PEP-772@850f4f70",
+        "decision_id": "PEP-772",
+        "title": "Packaging governance process",
+        "subject": "Packaging governance process",
+        "status": "DRAFT",
+        "timestamp": "2026-04-14T16:04:52Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/850f4f7050ee65e29dd4a949a4c51b495c0c53c9/peps/pep-0772.rst",
+        "pinned_revision": "850f4f7050ee65e29dd4a949a4c51b495c0c53c9",
+        "source_text": "PEP: 772\nTitle: Packaging governance process\nStatus: Draft\nReplaces: 609\nCommit: PEP 772: Fix minor typo (#4910)",
+        "scopes": [
+          "python-packaging-governance"
+        ],
+        "sequence": 3,
+        "replaces": [
+          "PEP-609"
+        ],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      },
+      {
+        "artifact_id": "PEP-772@7cab606",
+        "decision_id": "PEP-772",
+        "title": "Packaging governance process",
+        "subject": "Packaging governance process",
+        "status": "ACCEPTED",
+        "timestamp": "2026-04-16T00:00:00Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/7cab60601426/peps/pep-0772.rst",
+        "pinned_revision": "7cab60601426",
+        "source_text": "PEP: 772\nStatus: Accepted\nReplaces: 609\nResolution: 16-Apr-2026\nThis PEP proposes a Python Packaging Council with broad authority over packaging standards, tools, and implementations.",
+        "scopes": [
+          "python-packaging-governance"
+        ],
+        "sequence": 4,
+        "replaces": [
+          "PEP-609"
+        ],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      }
+    ]
+  },
+  {
+    "timeline_id": "single-file-metadata",
+    "repository": "python/peps",
+    "composition": "hybrid",
+    "synthetic_elements": [
+      "developer question",
+      "checkpoint timing"
+    ],
+    "artifacts": [
+      {
+        "artifact_id": "PEP-722@08d688fdcafc1557bf7fc53573e5c84b31b78b5d",
+        "decision_id": "PEP-722",
+        "title": "Dependency specification for single-file scripts",
+        "subject": "Dependency specification for single-file scripts",
+        "status": "DRAFT",
+        "timestamp": "2023-07-19T00:00:00Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/08d688fdcafc1557bf7fc53573e5c84b31b78b5d/peps/pep-0722.rst",
+        "pinned_revision": "08d688fdcafc1557bf7fc53573e5c84b31b78b5d",
+        "source_text": "PEP: 722\nTitle: Dependency specification for single-file scripts\nStatus: Draft",
+        "scopes": [
+          "single-file-script-metadata"
+        ],
+        "sequence": 1,
+        "replaces": [],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      },
+      {
+        "artifact_id": "PEP-723@08d688fdcafc1557bf7fc53573e5c84b31b78b5d",
+        "decision_id": "PEP-723",
+        "title": "Inline script metadata",
+        "subject": "Inline script metadata",
+        "status": "DRAFT",
+        "timestamp": "2023-08-04T00:00:00Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/08d688fdcafc1557bf7fc53573e5c84b31b78b5d/peps/pep-0723.rst",
+        "pinned_revision": "08d688fdcafc1557bf7fc53573e5c84b31b78b5d",
+        "source_text": "PEP: 723\nTitle: Inline script metadata\nStatus: Draft\nReplaces: 722",
+        "scopes": [
+          "single-file-script-metadata"
+        ],
+        "sequence": 2,
+        "replaces": [
+          "PEP-722"
+        ],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      },
+      {
+        "artifact_id": "PEP-722@7e39ae246b29",
+        "decision_id": "PEP-722",
+        "title": "Dependency specification for single-file scripts",
+        "subject": "Dependency specification for single-file scripts",
+        "status": "REJECTED",
+        "timestamp": "2023-10-21T00:00:00Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/7e39ae246b29/peps/pep-0722.rst",
+        "pinned_revision": "7e39ae246b29",
+        "source_text": "PEP: 722\nTitle: Dependency specification for single-file scripts\nStatus: Rejected",
+        "scopes": [
+          "single-file-script-metadata"
+        ],
+        "sequence": 3,
+        "replaces": [],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      },
+      {
+        "artifact_id": "PEP-723@928d64",
+        "decision_id": "PEP-723",
+        "title": "Inline script metadata",
+        "subject": "Inline script metadata",
+        "status": "FINAL",
+        "timestamp": "2024-05-16T00:00:00Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/928d64/peps/pep-0723.rst",
+        "pinned_revision": "928d64",
+        "source_text": "PEP: 723\nTitle: Inline script metadata\nStatus: Final\nReplaces: 722",
+        "scopes": [
+          "single-file-script-metadata"
+        ],
+        "sequence": 4,
+        "replaces": [
+          "PEP-722"
+        ],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      }
+    ]
+  },
+  {
+    "timeline_id": "annotation-semantics",
+    "repository": "python/peps",
+    "composition": "hybrid",
+    "synthetic_elements": [
+      "developer question",
+      "checkpoint timing"
+    ],
+    "artifacts": [
+      {
+        "artifact_id": "PEP-563@e3010cb7d2c4a1aaf285170e49227859386a3316",
+        "decision_id": "PEP-563",
+        "title": "Postponed Evaluation of Annotations",
+        "subject": "Postponed Evaluation of Annotations",
+        "status": "ACCEPTED",
+        "timestamp": "2017-12-01T00:00:00Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/e3010cb7d2c4a1aaf285170e49227859386a3316/pep-0563.rst",
+        "pinned_revision": "e3010cb7d2c4a1aaf285170e49227859386a3316",
+        "source_text": "PEP: 563\nTitle: Postponed Evaluation of Annotations\nStatus: Accepted",
+        "scopes": [
+          "annotation-evaluation-policy"
+        ],
+        "sequence": 1,
+        "replaces": [],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      },
+      {
+        "artifact_id": "PEP-649@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+        "decision_id": "PEP-649",
+        "title": "Deferred Evaluation Of Annotations Using Descriptors",
+        "subject": "Deferred Evaluation Of Annotations Using Descriptors",
+        "status": "FINAL",
+        "timestamp": "2023-05-08T00:00:00Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0649.rst",
+        "pinned_revision": "b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+        "source_text": "PEP: 649\nTitle: Deferred Evaluation Of Annotations Using Descriptors\nStatus: Final\nReplaces: 563",
+        "scopes": [
+          "annotation-evaluation-policy"
+        ],
+        "sequence": 2,
+        "replaces": [
+          "PEP-563"
+        ],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      },
+      {
+        "artifact_id": "PEP-749@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+        "decision_id": "PEP-749",
+        "title": "Implementing PEP 649",
+        "subject": "Implementing PEP 649",
+        "status": "FINAL",
+        "timestamp": "2025-05-05T00:00:00Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0749.rst",
+        "pinned_revision": "b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+        "source_text": "PEP: 749\nTitle: Implementing PEP 649\nStatus: Final\nRequires: 649",
+        "scopes": [
+          "annotation-implementation-details"
+        ],
+        "sequence": 3,
+        "replaces": [],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      }
+    ]
+  },
+  {
+    "timeline_id": "pypi-mirror-split",
+    "repository": "python/peps",
+    "composition": "hybrid",
+    "synthetic_elements": [
+      "developer question",
+      "checkpoint timing"
+    ],
+    "artifacts": [
+      {
+        "artifact_id": "PEP-381@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+        "decision_id": "PEP-381",
+        "title": "Mirroring infrastructure for PyPI",
+        "subject": "Mirroring infrastructure for PyPI",
+        "status": "WITHDRAWN",
+        "timestamp": "2013-08-01T00:00:00Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0381.rst",
+        "pinned_revision": "b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+        "source_text": "PEP: 381\nTitle: Mirroring infrastructure for PyPI\nStatus: Withdrawn",
+        "scopes": [
+          "pypi-mirroring"
+        ],
+        "sequence": 1,
+        "replaces": [],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      },
+      {
+        "artifact_id": "PEP-449@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+        "decision_id": "PEP-449",
+        "title": "Removal of the PyPI Mirror Auto Discovery and Naming Scheme",
+        "subject": "Removal of the PyPI Mirror Auto Discovery and Naming Scheme",
+        "status": "FINAL",
+        "timestamp": "2013-08-04T00:00:00Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0449.rst",
+        "pinned_revision": "b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+        "source_text": "PEP: 449\nTitle: Removal of the PyPI Mirror Auto Discovery and Naming Scheme\nStatus: Final\nReplaces: 381",
+        "scopes": [
+          "pypi-mirror-discovery"
+        ],
+        "sequence": 2,
+        "replaces": [
+          "PEP-381"
+        ],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      },
+      {
+        "artifact_id": "PEP-464@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+        "decision_id": "PEP-464",
+        "title": "Removal of the PyPI Mirror Authenticity API",
+        "subject": "Removal of the PyPI Mirror Authenticity API",
+        "status": "FINAL",
+        "timestamp": "2014-03-04T00:00:00Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0464.rst",
+        "pinned_revision": "b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+        "source_text": "PEP: 464\nTitle: Removal of the PyPI Mirror Authenticity API\nStatus: Final\nReplaces: 381",
+        "scopes": [
+          "pypi-mirror-authenticity"
+        ],
+        "sequence": 3,
+        "replaces": [
+          "PEP-381"
+        ],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      }
+    ]
+  },
+  {
+    "timeline_id": "rust-str-as-str",
+    "repository": "rust-lang/rust",
+    "composition": "fully_real",
+    "synthetic_elements": [
+      "developer question",
+      "checkpoint timing"
+    ],
+    "artifacts": [
+      {
+        "artifact_id": "rust-lang/rust#151603@a919df8b1b3c250f14a41d879013c870a0477b20",
+        "decision_id": "rust-lang/rust#151603",
+        "title": "Stabilize str_as_str",
+        "subject": "Stabilize str_as_str",
+        "status": "MERGED",
+        "timestamp": "2026-02-21T23:30:21Z",
+        "repository": "rust-lang/rust",
+        "source_url": "https://github.com/rust-lang/rust/pull/151603",
+        "pinned_revision": "a919df8b1b3c250f14a41d879013c870a0477b20",
+        "source_text": "Stabilize `str_as_str`. Closes tracking issue #130366.",
+        "scopes": [
+          "rust-str-as-str-stability"
+        ],
+        "sequence": 1,
+        "replaces": [],
+        "reverts": [],
+        "implements": [],
+        "source_type": "pr"
+      },
+      {
+        "artifact_id": "rust-lang/rust#152963@867a480232dcf6429e4ca78cc6b7a6c4ead0f560",
+        "decision_id": "rust-lang/rust#152963",
+        "title": "Revert Stabilize str_as_str",
+        "subject": "Revert Stabilize str_as_str",
+        "status": "REVERT_MERGED",
+        "timestamp": "2026-02-23T06:18:28Z",
+        "repository": "rust-lang/rust",
+        "source_url": "https://github.com/rust-lang/rust/pull/152963",
+        "pinned_revision": "867a480232dcf6429e4ca78cc6b7a6c4ead0f560",
+        "source_text": "Reverts rust-lang/rust#151603. This is a clean revert of the stabilization and fixes #152961.",
+        "scopes": [
+          "rust-str-as-str-stability"
+        ],
+        "sequence": 2,
+        "replaces": [],
+        "reverts": [
+          "rust-lang/rust#151603"
+        ],
+        "implements": [],
+        "source_type": "pr"
+      },
+      {
+        "artifact_id": "rust-lang/rust#152971@df3bedb88be1c3a7fe14d607788f4c85e55b2474",
+        "decision_id": "rust-lang/rust#152971",
+        "title": "DO NOT MERGE: Revert the revert of Stabilize str_as_str",
+        "subject": "DO NOT MERGE: Revert the revert of Stabilize str_as_str",
+        "status": "OPEN",
+        "timestamp": "2026-02-23T12:00:00Z",
+        "repository": "rust-lang/rust",
+        "source_url": "https://github.com/rust-lang/rust/pull/152971",
+        "pinned_revision": "df3bedb88be1c3a7fe14d607788f4c85e55b2474",
+        "source_text": "This PR re-stabilizes str_as_str for a crater run after the revert. DO NOT MERGE.",
+        "scopes": [
+          "rust-str-as-str-stability"
+        ],
+        "sequence": 3,
+        "replaces": [],
+        "reverts": [],
+        "implements": [],
+        "source_type": "pr"
+      }
+    ]
+  },
+  {
+    "timeline_id": "rust-const-checks",
+    "repository": "rust-lang/rust",
+    "composition": "fully_real",
+    "synthetic_elements": [
+      "developer question",
+      "checkpoint timing"
+    ],
+    "artifacts": [
+      {
+        "artifact_id": "rust-lang/rust#149375@7f99507f57e6c4aa0dce3daf6a13cca8cd4dd312",
+        "decision_id": "rust-lang/rust#149375",
+        "title": "Perform many const checks in typeck",
+        "subject": "Perform many const checks in typeck",
+        "status": "MERGED",
+        "timestamp": "2026-02-19T22:02:47Z",
+        "repository": "rust-lang/rust",
+        "source_url": "https://github.com/rust-lang/rust/pull/149375",
+        "pinned_revision": "7f99507f57e6c4aa0dce3daf6a13cca8cd4dd312",
+        "source_text": "Perform many basic const checks during type checking.",
+        "scopes": [
+          "rust-const-checks"
+        ],
+        "sequence": 1,
+        "replaces": [],
+        "reverts": [],
+        "implements": [],
+        "source_type": "pr"
+      },
+      {
+        "artifact_id": "rust-lang/rust#154930@db99e16ae366e4f167a8fa32d35483d6962a2d6d",
+        "decision_id": "rust-lang/rust#154930",
+        "title": "Revert performing basic const checks in typeck",
+        "subject": "Revert performing basic const checks in typeck",
+        "status": "REVERT_MERGED",
+        "timestamp": "2026-04-09T20:25:06Z",
+        "repository": "rust-lang/rust",
+        "source_url": "https://github.com/rust-lang/rust/pull/154930",
+        "pinned_revision": "db99e16ae366e4f167a8fa32d35483d6962a2d6d",
+        "source_text": "This reverts #149375 because it caused unintended errors in dead code. We'll land this again, with a proper types FCP and everything.",
+        "scopes": [
+          "rust-const-checks"
+        ],
+        "sequence": 2,
+        "replaces": [],
+        "reverts": [
+          "rust-lang/rust#149375"
+        ],
+        "implements": [],
+        "source_type": "pr"
+      }
+    ]
+  },
+  {
+    "timeline_id": "kubernetes-delayed-preemption",
+    "repository": "kubernetes/kubernetes",
+    "composition": "fully_real",
+    "synthetic_elements": [
+      "developer question",
+      "checkpoint timing"
+    ],
+    "artifacts": [
+      {
+        "artifact_id": "kubernetes/kubernetes#136254@338a3bcef88f4991cee61ee03105f058b34eb276",
+        "decision_id": "kubernetes/kubernetes#136254",
+        "title": "Extend PostFilterResult with list victim Pods",
+        "subject": "Extend PostFilterResult with list victim Pods",
+        "status": "MERGED",
+        "timestamp": "2026-02-17T18:53:38Z",
+        "repository": "kubernetes/kubernetes",
+        "source_url": "https://github.com/kubernetes/kubernetes/pull/136254",
+        "pinned_revision": "338a3bcef88f4991cee61ee03105f058b34eb276",
+        "source_text": "This is the first step toward the delayed preemption mechanism.",
+        "scopes": [
+          "kubernetes-delayed-preemption"
+        ],
+        "sequence": 1,
+        "replaces": [],
+        "reverts": [],
+        "implements": [],
+        "source_type": "pr"
+      },
+      {
+        "artifact_id": "kubernetes/kubernetes#137662@9874e76ac44442ebfa33c824e2c57bcb9f0d2e5e",
+        "decision_id": "kubernetes/kubernetes#137662",
+        "title": "Revert Extend PostFilterResult with list victim Pods",
+        "subject": "Revert Extend PostFilterResult with list victim Pods",
+        "status": "REVERT_MERGED",
+        "timestamp": "2026-03-12T12:03:42Z",
+        "repository": "kubernetes/kubernetes",
+        "source_url": "https://github.com/kubernetes/kubernetes/pull/137662",
+        "pinned_revision": "9874e76ac44442ebfa33c824e2c57bcb9f0d2e5e",
+        "source_text": "Reverts #136254 because delayed preemption was dropped from the WAS work planned for 1.36 and the complexity is unnecessary.",
+        "scopes": [
+          "kubernetes-delayed-preemption"
+        ],
+        "sequence": 2,
+        "replaces": [],
+        "reverts": [
+          "kubernetes/kubernetes#136254"
+        ],
+        "implements": [],
+        "source_type": "pr"
+      }
+    ]
+  },
+  {
+    "timeline_id": "elastic-multi-value",
+    "repository": "elastic/elasticsearch",
+    "composition": "fully_real",
+    "synthetic_elements": [
+      "developer question",
+      "checkpoint timing"
+    ],
+    "artifacts": [
+      {
+        "artifact_id": "elastic/elasticsearch#147071@42d5c67e1c7d81dad6a2dd8780a8b89f49bc2d4c",
+        "decision_id": "elastic/elasticsearch#147071",
+        "title": "Enforce single values when multi_value is no",
+        "subject": "Enforce single values when multi_value is no",
+        "status": "MERGED",
+        "timestamp": "2026-04-23T15:26:35Z",
+        "repository": "elastic/elasticsearch",
+        "source_url": "https://github.com/elastic/elasticsearch/pull/147071",
+        "pinned_revision": "42d5c67e1c7d81dad6a2dd8780a8b89f49bc2d4c",
+        "source_text": "Enforce single values for fields configured with multi_value=no.",
+        "scopes": [
+          "elasticsearch-multi-value-enforcement"
+        ],
+        "sequence": 1,
+        "replaces": [],
+        "reverts": [],
+        "implements": [],
+        "source_type": "pr"
+      },
+      {
+        "artifact_id": "elastic/elasticsearch#147360@d3f582051a2756be695eb854a694bd8f71031acd",
+        "decision_id": "elastic/elasticsearch#147360",
+        "title": "Revert enforce single values when multi_value is no",
+        "subject": "Revert enforce single values when multi_value is no",
+        "status": "REVERT_MERGED",
+        "timestamp": "2026-04-23T23:03:05Z",
+        "repository": "elastic/elasticsearch",
+        "source_url": "https://github.com/elastic/elasticsearch/pull/147360",
+        "pinned_revision": "d3f582051a2756be695eb854a694bd8f71031acd",
+        "source_text": "Reverts #147071 to unblock CI after test failures.",
+        "scopes": [
+          "elasticsearch-multi-value-enforcement"
+        ],
+        "sequence": 2,
+        "replaces": [],
+        "reverts": [
+          "elastic/elasticsearch#147071"
+        ],
+        "implements": [],
+        "source_type": "pr"
+      }
+    ]
+  },
+  {
+    "timeline_id": "python-encoding-warning",
+    "repository": "python/peps + python/cpython",
+    "composition": "fully_real",
+    "synthetic_elements": [
+      "developer question",
+      "checkpoint timing"
+    ],
+    "artifacts": [
+      {
+        "artifact_id": "PEP-597@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+        "decision_id": "PEP-597",
+        "title": "Add optional EncodingWarning",
+        "subject": "Add optional EncodingWarning",
+        "status": "FINAL",
+        "timestamp": "2021-03-31T05:26:000Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0597.rst",
+        "pinned_revision": "b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+        "source_text": "PEP: 597\nTitle: Add optional EncodingWarning\nStatus: Final",
+        "scopes": [
+          "python-encoding-warning"
+        ],
+        "sequence": 1,
+        "replaces": [],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      },
+      {
+        "artifact_id": "python/cpython#25103@ff3c9739bd69aa8b58007e63c9e40e6708b4761e",
+        "decision_id": "python/cpython#25103",
+        "title": "Accept encoding=locale in binary mode",
+        "subject": "Accept encoding=locale in binary mode",
+        "status": "MERGED",
+        "timestamp": "2021-03-31T05:26:08Z",
+        "repository": "python/cpython",
+        "source_url": "https://github.com/python/cpython/pull/25103",
+        "pinned_revision": "ff3c9739bd69aa8b58007e63c9e40e6708b4761e",
+        "source_text": "Implement part of PEP 597 by accepting encoding='locale' in binary mode.",
+        "scopes": [
+          "python-encoding-warning"
+        ],
+        "sequence": 2,
+        "replaces": [],
+        "reverts": [],
+        "implements": [
+          "PEP-597"
+        ],
+        "source_type": "pr"
+      },
+      {
+        "artifact_id": "python/cpython#25108@cfa176685a5e788bafc7749d7a93f43ea3e4de9f",
+        "decision_id": "python/cpython#25108",
+        "title": "Revert encoding=locale binary change",
+        "subject": "Revert encoding=locale binary change",
+        "status": "REVERT_MERGED",
+        "timestamp": "2021-03-31T09:49:42Z",
+        "repository": "python/cpython",
+        "source_url": "https://github.com/python/cpython/pull/25108",
+        "pinned_revision": "cfa176685a5e788bafc7749d7a93f43ea3e4de9f",
+        "source_text": "Reverts python/cpython#25103.",
+        "scopes": [
+          "python-encoding-warning"
+        ],
+        "sequence": 3,
+        "replaces": [],
+        "reverts": [
+          "python/cpython#25103"
+        ],
+        "implements": [],
+        "source_type": "pr"
+      }
+    ]
+  },
+  {
+    "timeline_id": "python-multiphase-init",
+    "repository": "python/peps + python/cpython",
+    "composition": "fully_real",
+    "synthetic_elements": [
+      "developer question",
+      "checkpoint timing"
+    ],
+    "artifacts": [
+      {
+        "artifact_id": "PEP-489@b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+        "decision_id": "PEP-489",
+        "title": "Multi-phase extension module initialization",
+        "subject": "Multi-phase extension module initialization",
+        "status": "FINAL",
+        "timestamp": "2020-03-20T00:00:000Z",
+        "repository": "python/peps",
+        "source_url": "https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0489.rst",
+        "pinned_revision": "b2120d116aa696f409b4d8333c4020ab8f93c9c7",
+        "source_text": "PEP: 489\nTitle: Multi-phase extension module initialization\nStatus: Final",
+        "scopes": [
+          "python-multiphase-extension-init"
+        ],
+        "sequence": 1,
+        "replaces": [],
+        "reverts": [],
+        "implements": [],
+        "source_type": "proposal"
+      },
+      {
+        "artifact_id": "python/cpython#19084@8334f30a74abcf7e469b901afc307887aa85a888",
+        "decision_id": "python/cpython#19084",
+        "title": "Port _weakref extension to multiphase initialization",
+        "subject": "Port _weakref extension to multiphase initialization",
+        "status": "MERGED",
+        "timestamp": "2020-03-20T08:16:45Z",
+        "repository": "python/cpython",
+        "source_url": "https://github.com/python/cpython/pull/19084",
+        "pinned_revision": "8334f30a74abcf7e469b901afc307887aa85a888",
+        "source_text": "Port _weakref to multi-phase initialization under PEP 489.",
+        "scopes": [
+          "python-multiphase-extension-init"
+        ],
+        "sequence": 2,
+        "replaces": [],
+        "reverts": [],
+        "implements": [
+          "PEP-489"
+        ],
+        "source_type": "pr"
+      },
+      {
+        "artifact_id": "python/cpython#19128@188078c39dec24aa5b3f2073bdc9a68ebaae42de",
+        "decision_id": "python/cpython#19128",
+        "title": "Revert _weakref multiphase initialization",
+        "subject": "Revert _weakref multiphase initialization",
+        "status": "REVERT_MERGED",
+        "timestamp": "2020-03-23T23:48:03Z",
+        "repository": "python/cpython",
+        "source_url": "https://github.com/python/cpython/pull/19128",
+        "pinned_revision": "188078c39dec24aa5b3f2073bdc9a68ebaae42de",
+        "source_text": "Reverts the commit from python/cpython#19084.",
+        "scopes": [
+          "python-multiphase-extension-init"
+        ],
+        "sequence": 3,
+        "replaces": [],
+        "reverts": [
+          "python/cpython#19084"
+        ],
+        "implements": [],
+        "source_type": "pr"
+      }
+    ]
+  }
+]

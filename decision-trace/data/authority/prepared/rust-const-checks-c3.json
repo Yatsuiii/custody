@@ -1,0 +1,114 @@
+{
+  "checkpoint_id": "rust-const-checks-c3",
+  "timeline_id": "rust-const-checks",
+  "question": "What decision currently governs rust const checks after the revert record mentions future work? Return the public decision ID and its authority evidence.",
+  "authority_scope": "rust-const-checks",
+  "visible_history": [
+    {
+      "artifact_id": "rust-lang/rust#149375@7f99507f57e6c4aa0dce3daf6a13cca8cd4dd312",
+      "decision_id": "rust-lang/rust#149375",
+      "sequence": 1,
+      "rendered_sha256": "07e205f342c9e6d64aed452a25e042d602596ed0d3763540d7ddf973592b8591"
+    },
+    {
+      "artifact_id": "rust-lang/rust#154930@db99e16ae366e4f167a8fa32d35483d6962a2d6d",
+      "decision_id": "rust-lang/rust#154930",
+      "sequence": 2,
+      "rendered_sha256": "919480c958e4bb66171670a3900922a12ad26e31853938731c2626a85c75d937"
+    }
+  ],
+  "visible_artifact_text": [
+    "Artifact ID: rust-lang/rust#149375@7f99507f57e6c4aa0dce3daf6a13cca8cd4dd312\nDecision ID: rust-lang/rust#149375\nRepository: rust-lang/rust\nTimestamp: 2026-02-19T22:02:47Z\nSource URL: https://github.com/rust-lang/rust/pull/149375\nPinned revision: 7f99507f57e6c4aa0dce3daf6a13cca8cd4dd312\nLifecycle status: MERGED\nAuthority scope: rust-const-checks\nSource text (verbatim excerpt):\nPerform many basic const checks during type checking.",
+    "Artifact ID: rust-lang/rust#154930@db99e16ae366e4f167a8fa32d35483d6962a2d6d\nDecision ID: rust-lang/rust#154930\nRepository: rust-lang/rust\nTimestamp: 2026-04-09T20:25:06Z\nSource URL: https://github.com/rust-lang/rust/pull/154930\nPinned revision: db99e16ae366e4f167a8fa32d35483d6962a2d6d\nLifecycle status: REVERT_MERGED\nAuthority scope: rust-const-checks\nExplicitly reverts: rust-lang/rust#149375\nSource text (verbatim excerpt):\nThis reverts #149375 because it caused unintended errors in dead code. We'll land this again, with a proper types FCP and everything."
+  ],
+  "derivations": [
+    {
+      "artifact_id": "rust-lang/rust#149375@7f99507f57e6c4aa0dce3daf6a13cca8cd4dd312",
+      "decision_id": "rust-lang/rust#149375",
+      "status": "IMPLEMENTED",
+      "edges": []
+    },
+    {
+      "artifact_id": "rust-lang/rust#154930@db99e16ae366e4f167a8fa32d35483d6962a2d6d",
+      "decision_id": "rust-lang/rust#154930",
+      "status": "REVERTED",
+      "edges": [
+        [
+          "rust-lang/rust#149375",
+          "REVERTS"
+        ]
+      ]
+    }
+  ],
+  "resolver": {
+    "rust-lang/rust#149375": {
+      "active_id": "rust-lang/rust#154930",
+      "history": [
+        "rust-lang/rust#149375",
+        "rust-lang/rust#154930"
+      ],
+      "ambiguous": false,
+      "explanation": "rust-lang/rust#154930 is active after replaying: rust-lang/rust#154930 REVERTS rust-lang/rust#149375"
+    },
+    "rust-lang/rust#154930": {
+      "active_id": "rust-lang/rust#154930",
+      "history": [
+        "rust-lang/rust#149375",
+        "rust-lang/rust#154930"
+      ],
+      "ambiguous": false,
+      "explanation": "rust-lang/rust#154930 is active after replaying: rust-lang/rust#154930 REVERTS rust-lang/rust#149375"
+    }
+  },
+  "structured": {
+    "retrieved": [
+      {
+        "decision_id": "rust-lang/rust#149375",
+        "similarity": 0.7916487788718319,
+        "resolution": {
+          "active_id": "rust-lang/rust#154930",
+          "history": [
+            "rust-lang/rust#149375",
+            "rust-lang/rust#154930"
+          ],
+          "ambiguous": false,
+          "explanation": "rust-lang/rust#154930 is active after replaying: rust-lang/rust#154930 REVERTS rust-lang/rust#149375"
+        },
+        "is_current": false
+      },
+      {
+        "decision_id": "rust-lang/rust#154930",
+        "similarity": 0.7776575062632688,
+        "resolution": {
+          "active_id": "rust-lang/rust#154930",
+          "history": [
+            "rust-lang/rust#149375",
+            "rust-lang/rust#154930"
+          ],
+          "ambiguous": false,
+          "explanation": "rust-lang/rust#154930 is active after replaying: rust-lang/rust#154930 REVERTS rust-lang/rust#149375"
+        },
+        "is_current": true
+      }
+    ],
+    "prompt": "You are DecisionTrace, an engineering-decision memory assistant.\nYou answer exactly these question types: why a subsystem is designed a\ncertain way, whether an approach was tried before, what constraints apply\nto a subsystem, whether a decision is still current, and what changed\nabout a prior decision.\n\nYou are given a set of retrieved decisions below. For EACH ONE, the\n\"Resolved status\" line is ALREADY DETERMINED by a separate deterministic\nsystem \u2014 you must never contradict it, guess a different current/inactive\nstatus, or imply a reverted/superseded decision might still be active.\nReport it as given fact.\n\nRespond with ONLY a JSON array, no other text. Each element:\n{\n  \"text\": \"one claim, in your own words\",\n  \"category\": one of \"verified_historical_fact\" | \"current_active_decision\" | \"inferred_advice\" | \"missing_or_uncertain\",\n  \"decision_id\": \"the decision id this claim cites, or null if it cites none\"\n}\n\nCategory meanings:\n- verified_historical_fact: a fact directly stated in a decision's\n  evidence/rationale below (e.g. what was originally chosen, why it was\n  rejected/reverted historically).\n- current_active_decision: what IS currently active, per the \"Resolved\n  status\" lines given to you \u2014 never your own guess.\n- inferred_advice: your own reasoning/suggestion that goes beyond what's\n  directly stated (e.g. \"you may want to check X\").\n- missing_or_uncertain: use this explicitly when the retrieved decisions\n  don't actually answer the question, rather than inventing an answer.\n\nIf nothing retrieved is relevant to the question, return a single\nmissing_or_uncertain claim saying so \u2014 do not fabricate a decision.\n\nRetrieved decisions:\n\n--- Decision [rust-lang/rust#149375] (similarity 0.79) ---\nSubject: Perform many const checks in typeck\nChosen approach: Perform many const checks in typeck\nRationale (verbatim source excerpt): Perform many basic const checks during type checking.\nEvidence: https://github.com/rust-lang/rust/pull/149375\nResolved status: NOT active/superseded/reverted. The currently active decision in this lineage is id='rust-lang/rust#154930'.\nDeterministic lifecycle explanation: rust-lang/rust#154930 is active after replaying: rust-lang/rust#154930 REVERTS rust-lang/rust#149375\n\n--- Decision [rust-lang/rust#154930] (similarity 0.78) ---\nSubject: Revert performing basic const checks in typeck\nChosen approach: Revert performing basic const checks in typeck\nRationale (verbatim source excerpt): This reverts #149375 because it caused unintended errors in dead code. We'll land this again, with a proper types FCP and everything.\nEvidence: https://github.com/rust-lang/rust/pull/154930\nResolved status: CURRENTLY ACTIVE (id=rust-lang/rust#154930)\nDeterministic lifecycle explanation: rust-lang/rust#154930 is active after replaying: rust-lang/rust#154930 REVERTS rust-lang/rust#149375\n\nQuestion: What decision currently governs rust const checks after the revert record mentions future work? Return the public decision ID and its authority evidence.",
+    "prompt_sha256": "49300eaad094114f606dd2163cd65c240b0efb4352df6d8716888a4be18b82b4"
+  },
+  "rag": {
+    "retrieved": [
+      {
+        "artifact_id": "rust-lang/rust#149375@7f99507f57e6c4aa0dce3daf6a13cca8cd4dd312",
+        "text": "Artifact ID: rust-lang/rust#149375@7f99507f57e6c4aa0dce3daf6a13cca8cd4dd312\nDecision ID: rust-lang/rust#149375\nRepository: rust-lang/rust\nTimestamp: 2026-02-19T22:02:47Z\nSource URL: https://github.com/rust-lang/rust/pull/149375\nPinned revision: 7f99507f57e6c4aa0dce3daf6a13cca8cd4dd312\nLifecycle status: MERGED\nAuthority scope: rust-const-checks\nSource text (verbatim excerpt):\nPerform many basic const checks during type checking.",
+        "similarity": 0.8343603210484674
+      },
+      {
+        "artifact_id": "rust-lang/rust#154930@db99e16ae366e4f167a8fa32d35483d6962a2d6d",
+        "text": "Artifact ID: rust-lang/rust#154930@db99e16ae366e4f167a8fa32d35483d6962a2d6d\nDecision ID: rust-lang/rust#154930\nRepository: rust-lang/rust\nTimestamp: 2026-04-09T20:25:06Z\nSource URL: https://github.com/rust-lang/rust/pull/154930\nPinned revision: db99e16ae366e4f167a8fa32d35483d6962a2d6d\nLifecycle status: REVERT_MERGED\nAuthority scope: rust-const-checks\nExplicitly reverts: rust-lang/rust#149375\nSource text (verbatim excerpt):\nThis reverts #149375 because it caused unintended errors in dead code. We'll land this again, with a proper types FCP and everything.",
+        "similarity": 0.7897849152968969
+      }
+    ],
+    "prompt": "You are resolving organizational engineering authority from raw historical artifacts.\nAnswer what governs NOW at this checkpoint, not what is merely relevant or newest.\nA proposal, open PR, implementation artifact, mention, or recent document is not\nauthoritative by itself. Respect explicit acceptance, replacement, withdrawal,\nrevert, and independent authority scopes. A code revert does not automatically\nwithdraw an accepted policy. If the visible evidence cannot establish one safe\nanswer, use UNRESOLVED; if it establishes that no decision governs, use\nNO_GOVERNING_DECISION.\n\nReturn ONLY one JSON object:\n{\"authority_state\":\"GOVERNING|UNRESOLVED|NO_GOVERNING_DECISION\",\n \"governing_decision_id\":\"public decision ID or null\",\n \"evidence_ids\":[\"public decision/artifact IDs\"],\n \"explanation\":\"brief source-grounded explanation\"}\n\n\nVISIBLE RAW HISTORY\n[rust-lang/rust#149375@7f99507f57e6c4aa0dce3daf6a13cca8cd4dd312]\nArtifact ID: rust-lang/rust#149375@7f99507f57e6c4aa0dce3daf6a13cca8cd4dd312\nDecision ID: rust-lang/rust#149375\nRepository: rust-lang/rust\nTimestamp: 2026-02-19T22:02:47Z\nSource URL: https://github.com/rust-lang/rust/pull/149375\nPinned revision: 7f99507f57e6c4aa0dce3daf6a13cca8cd4dd312\nLifecycle status: MERGED\nAuthority scope: rust-const-checks\nSource text (verbatim excerpt):\nPerform many basic const checks during type checking.\n\n---\n\n[rust-lang/rust#154930@db99e16ae366e4f167a8fa32d35483d6962a2d6d]\nArtifact ID: rust-lang/rust#154930@db99e16ae366e4f167a8fa32d35483d6962a2d6d\nDecision ID: rust-lang/rust#154930\nRepository: rust-lang/rust\nTimestamp: 2026-04-09T20:25:06Z\nSource URL: https://github.com/rust-lang/rust/pull/154930\nPinned revision: db99e16ae366e4f167a8fa32d35483d6962a2d6d\nLifecycle status: REVERT_MERGED\nAuthority scope: rust-const-checks\nExplicitly reverts: rust-lang/rust#149375\nSource text (verbatim excerpt):\nThis reverts #149375 because it caused unintended errors in dead code. We'll land this again, with a proper types FCP and everything.\n\nDEVELOPER QUESTION\nWhat decision currently governs rust const checks after the revert record mentions future work? Return the public decision ID and its authority evidence.",
+    "prompt_sha256": "62e9361ad7db96bcf37426779460da0dc8bd4423d7323b482da222413edf0617"
+  },
+  "embedding_call_units": 4
+}

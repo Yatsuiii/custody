@@ -1,0 +1,9 @@
+{
+  "mode": "prepare",
+  "model": "gemini-3.7-flash",
+  "embedder": "text-embedding-005",
+  "checkpoints": 61,
+  "generation_calls": 0,
+  "embedding_call_units": 244,
+  "errors": []
+}
