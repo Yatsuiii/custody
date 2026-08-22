@@ -1,0 +1,64 @@
+{
+  "checkpoint_id": "rust-rpit-capture-c1",
+  "timeline_id": "rust-rpit-capture",
+  "question": "What organizational decision currently governs Rust impl Trait capture rules? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "RFC-1522@merged",
+      "decision_id": "RFC-1522",
+      "sequence": 1,
+      "rendered_sha256": "2e9b3019645df37915e8f602eb79a28088b1ddeb679b4cec9f998de78e6dd004"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "RFC-1522@merged"
+    ],
+    "rag_embedding": [
+      "RFC-1522@merged"
+    ],
+    "rag_full_context": [
+      "RFC-1522@merged"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 0,
+      "artifact_id": "RFC-1522@merged",
+      "chunk_index": 0,
+      "similarity": 0.8185067375756224
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "RFC-1522@merged"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-1522"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-1522@merged"
+    ],
+    "resolver_explanation": "rust-impl-trait-capture-rules: RFC-1522 is the sole eligible active decision in scope 'rust-impl-trait-capture-rules'.",
+    "derivations": [
+      {
+        "artifact_id": "RFC-1522@merged",
+        "decision_id": "RFC-1522",
+        "status": "IMPLEMENTED",
+        "edges": []
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"RFC-1522\"]\nResolver explanation: rust-impl-trait-capture-rules: RFC-1522 is the sole eligible active decision in scope 'rust-impl-trait-capture-rules'.\n\nEvidence:\nArtifact ID: RFC-1522@merged\nDecision ID: RFC-1522\nRepository: rust-lang/rfcs\nTimestamp: 2016-06-27T22:28:41Z\nSource URL: https://github.com/rust-lang/rfcs/pull/1522\nPinned revision: b48ef3700842391b28fb96298d274edeb12edf6c\nLifecycle status: MERGED\nAuthority scope: rust-impl-trait-capture-rules\nSource text (verbatim excerpt):\nMinimal `impl Trait`\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs Rust impl Trait capture rules? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact RFC-1522@merged chunk 0]\nArtifact ID: RFC-1522@merged\nDecision ID: RFC-1522\nRepository: rust-lang/rfcs\nTimestamp: 2016-06-27T22:28:41Z\nSource URL: https://github.com/rust-lang/rfcs/pull/1522\nPinned revision: b48ef3700842391b28fb96298d274edeb12edf6c\nLifecycle status: MERGED\nAuthority scope: rust-impl-trait-capture-rules\nSource text (verbatim excerpt):\nMinimal `impl Trait`\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs Rust impl Trait capture rules? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: RFC-1522@merged\nDecision ID: RFC-1522\nRepository: rust-lang/rfcs\nTimestamp: 2016-06-27T22:28:41Z\nSource URL: https://github.com/rust-lang/rfcs/pull/1522\nPinned revision: b48ef3700842391b28fb96298d274edeb12edf6c\nLifecycle status: MERGED\nAuthority scope: rust-impl-trait-capture-rules\nSource text (verbatim excerpt):\nMinimal `impl Trait`\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs Rust impl Trait capture rules? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "c6baa51a1da7dcc9b4a66e388eb49ea1ab2545b2b7128e3a95153ab550e97ecd",
+    "rag_embedding": "4e7dec1639ad189cdca345ceb2d5f4a6f7597ef1a8a01773bc4e81688811ecc2",
+    "rag_full_context": "9248ddfb62d36102204e6a75f15cb2aac2e07ae25405b95b67dd2b60bc498b17"
+  },
+  "expected_answer_fields_present": false
+}

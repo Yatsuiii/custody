@@ -1,0 +1,64 @@
+{
+  "checkpoint_id": "python-db-api-c1",
+  "timeline_id": "python-db-api",
+  "question": "What organizational decision currently governs python db api? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-248@accepted",
+      "decision_id": "PEP-248",
+      "sequence": 1,
+      "rendered_sha256": "f04318087c077d96c52c61430100fde1371c2cbd0960a13638a2539d55b8dfb7"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "PEP-248@accepted"
+    ],
+    "rag_embedding": [
+      "PEP-248@accepted"
+    ],
+    "rag_full_context": [
+      "PEP-248@accepted"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 0,
+      "artifact_id": "PEP-248@accepted",
+      "chunk_index": 0,
+      "similarity": 0.7771786040240596
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "PEP-248@accepted"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-248"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-248@accepted"
+    ],
+    "resolver_explanation": "python-db-api: PEP-248 is the sole eligible active decision in scope 'python-db-api'.",
+    "derivations": [
+      {
+        "artifact_id": "PEP-248@accepted",
+        "decision_id": "PEP-248",
+        "status": "ACCEPTED",
+        "edges": []
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"PEP-248\"]\nResolver explanation: python-db-api: PEP-248 is the sole eligible active decision in scope 'python-db-api'.\n\nEvidence:\nArtifact ID: PEP-248@accepted\nDecision ID: PEP-248\nRepository: python/peps\nTimestamp: 1996-05-08T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0248.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-db-api\nSource text (verbatim excerpt):\nPEP: 248\nTitle: Python Database API Specification v1.0\nStatus: Final\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs python db api? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact PEP-248@accepted chunk 0]\nArtifact ID: PEP-248@accepted\nDecision ID: PEP-248\nRepository: python/peps\nTimestamp: 1996-05-08T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0248.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-db-api\nSource text (verbatim excerpt):\nPEP: 248\nTitle: Python Database API Specification v1.0\nStatus: Final\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs python db api? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: PEP-248@accepted\nDecision ID: PEP-248\nRepository: python/peps\nTimestamp: 1996-05-08T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0248.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-db-api\nSource text (verbatim excerpt):\nPEP: 248\nTitle: Python Database API Specification v1.0\nStatus: Final\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs python db api? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "4c529c47bffaac021c514434af477b5f0cb9c1025f9e356483ac9ec7ad2692a2",
+    "rag_embedding": "e91d1f02724cf4093938a30c360ccb56fa390efe9728421efa95dbe8898ed5cb",
+    "rag_full_context": "3e74d44784e5bd03845e6bf6f3d6eff044ca1bf3fd4f0b0d3f313091c43227a4"
+  },
+  "expected_answer_fields_present": false
+}

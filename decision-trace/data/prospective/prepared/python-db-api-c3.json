@@ -1,0 +1,113 @@
+{
+  "checkpoint_id": "python-db-api-c3",
+  "timeline_id": "python-db-api",
+  "question": "What organizational decision currently governs python db api after the newer registry notice? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-248@accepted",
+      "decision_id": "PEP-248",
+      "sequence": 1,
+      "rendered_sha256": "f04318087c077d96c52c61430100fde1371c2cbd0960a13638a2539d55b8dfb7"
+    },
+    {
+      "artifact_id": "PEP-249@accepted",
+      "decision_id": "PEP-249",
+      "sequence": 2,
+      "rendered_sha256": "1aeeae81d6a4f1f0e187c22f9b5de82d8503126d439a16404de458e65925ac33"
+    },
+    {
+      "artifact_id": "PEP-248@current-note",
+      "decision_id": "PEP-248",
+      "sequence": 3,
+      "rendered_sha256": "03074f549910e2ffdaa4614e79ee99c7b29d666bca5d992e965933ba8c4e8ff3"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "PEP-248@accepted",
+      "PEP-249@accepted",
+      "PEP-248@current-note"
+    ],
+    "rag_embedding": [
+      "PEP-248@accepted",
+      "PEP-249@accepted",
+      "PEP-248@current-note"
+    ],
+    "rag_full_context": [
+      "PEP-248@accepted",
+      "PEP-249@accepted",
+      "PEP-248@current-note"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 0,
+      "artifact_id": "PEP-248@accepted",
+      "chunk_index": 0,
+      "similarity": 0.7314455253141023
+    },
+    {
+      "ordinal": 1,
+      "artifact_id": "PEP-249@accepted",
+      "chunk_index": 0,
+      "similarity": 0.7289073014569629
+    },
+    {
+      "ordinal": 2,
+      "artifact_id": "PEP-248@current-note",
+      "chunk_index": 0,
+      "similarity": 0.7075237456358392
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "PEP-248@accepted",
+    "PEP-249@accepted",
+    "PEP-248@current-note"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-249"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-249@accepted"
+    ],
+    "resolver_explanation": "python-db-api: PEP-249 is the sole eligible active decision in scope 'python-db-api'.",
+    "derivations": [
+      {
+        "artifact_id": "PEP-248@accepted",
+        "decision_id": "PEP-248",
+        "status": "ACCEPTED",
+        "edges": []
+      },
+      {
+        "artifact_id": "PEP-249@accepted",
+        "decision_id": "PEP-249",
+        "status": "ACCEPTED",
+        "edges": [
+          [
+            "PEP-248",
+            "SUPERSEDES"
+          ]
+        ]
+      },
+      {
+        "artifact_id": "PEP-248@current-note",
+        "decision_id": null,
+        "action": "evidence_only",
+        "reason": "NOTE has no authority transition"
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"PEP-249\"]\nResolver explanation: python-db-api: PEP-249 is the sole eligible active decision in scope 'python-db-api'.\n\nEvidence:\nArtifact ID: PEP-249@accepted\nDecision ID: PEP-249\nRepository: python/peps\nTimestamp: 1999-04-12T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0249.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-db-api\nExplicitly replaces: PEP-248\nSource text (verbatim excerpt):\nPEP: 249\nTitle: Python Database API Specification v2.0\nStatus: Final\nReplaces: 248\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs python db api after the newer registry notice? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact PEP-248@accepted chunk 0]\nArtifact ID: PEP-248@accepted\nDecision ID: PEP-248\nRepository: python/peps\nTimestamp: 1996-05-08T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0248.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-db-api\nSource text (verbatim excerpt):\nPEP: 248\nTitle: Python Database API Specification v1.0\nStatus: Final\nDecision role: POLICY\n\n[Retrieved artifact PEP-249@accepted chunk 0]\nArtifact ID: PEP-249@accepted\nDecision ID: PEP-249\nRepository: python/peps\nTimestamp: 1999-04-12T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0249.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-db-api\nExplicitly replaces: PEP-248\nSource text (verbatim excerpt):\nPEP: 249\nTitle: Python Database API Specification v2.0\nStatus: Final\nReplaces: 248\nDecision role: POLICY\n\n[Retrieved artifact PEP-248@current-note chunk 0]\nArtifact ID: PEP-248@current-note\nDecision ID: PEP-248\nRepository: python/peps\nTimestamp: 2026-08-22T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0248.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: NOTE\nAuthority scope: python-db-api\nSource text (verbatim excerpt):\nSuperseded-By: 249\nDecision role: MENTION\n\nDeveloper question: What organizational decision currently governs python db api after the newer registry notice? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: PEP-248@accepted\nDecision ID: PEP-248\nRepository: python/peps\nTimestamp: 1996-05-08T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0248.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-db-api\nSource text (verbatim excerpt):\nPEP: 248\nTitle: Python Database API Specification v1.0\nStatus: Final\nDecision role: POLICY\n\nArtifact ID: PEP-249@accepted\nDecision ID: PEP-249\nRepository: python/peps\nTimestamp: 1999-04-12T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0249.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-db-api\nExplicitly replaces: PEP-248\nSource text (verbatim excerpt):\nPEP: 249\nTitle: Python Database API Specification v2.0\nStatus: Final\nReplaces: 248\nDecision role: POLICY\n\nArtifact ID: PEP-248@current-note\nDecision ID: PEP-248\nRepository: python/peps\nTimestamp: 2026-08-22T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0248.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: NOTE\nAuthority scope: python-db-api\nSource text (verbatim excerpt):\nSuperseded-By: 249\nDecision role: MENTION\n\nDeveloper question: What organizational decision currently governs python db api after the newer registry notice? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "ba2f3e245f210f8653a4b322c49d269c50d87b080c1e378bcc72349259998e55",
+    "rag_embedding": "9ec259baa533f37dc9b3e721883b0e5880aac355500474e8412b4f1a4da231b1",
+    "rag_full_context": "be3b3e325d33e7d042a8d9f82967ab02b755c7d5c2474a8cacff7c75cfb31ec2"
+  },
+  "expected_answer_fields_present": false
+}

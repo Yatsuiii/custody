@@ -1,0 +1,86 @@
+{
+  "checkpoint_id": "rust-inline-const-c2",
+  "timeline_id": "rust-inline-const",
+  "question": "What organizational decision currently governs rust const repeat simple case while the successor RFC is open? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "RFC-2203@merged",
+      "decision_id": "RFC-2203",
+      "sequence": 1,
+      "rendered_sha256": "f3687c9d0bb05bd066208fdd0956385d72fc34a94994dd6147530b2c495bdf37"
+    },
+    {
+      "artifact_id": "RFC-2920@open",
+      "decision_id": "RFC-2920",
+      "sequence": 2,
+      "rendered_sha256": "2dc61f69dd394465177e7eebe410c9b6c59be5538cef60f4f464de8acac5d04f"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "RFC-2203@merged",
+      "RFC-2920@open"
+    ],
+    "rag_embedding": [
+      "RFC-2203@merged",
+      "RFC-2920@open"
+    ],
+    "rag_full_context": [
+      "RFC-2203@merged",
+      "RFC-2920@open"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 0,
+      "artifact_id": "RFC-2203@merged",
+      "chunk_index": 0,
+      "similarity": 0.8135676815220445
+    },
+    {
+      "ordinal": 1,
+      "artifact_id": "RFC-2920@open",
+      "chunk_index": 0,
+      "similarity": 0.7745574415992608
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "RFC-2203@merged",
+    "RFC-2920@open"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-2203"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-2203@merged"
+    ],
+    "resolver_explanation": "rust-const-repeat-simple-case: RFC-2203 is the sole eligible active decision in scope 'rust-const-repeat-simple-case'.",
+    "derivations": [
+      {
+        "artifact_id": "RFC-2203@merged",
+        "decision_id": "RFC-2203",
+        "status": "IMPLEMENTED",
+        "edges": []
+      },
+      {
+        "artifact_id": "RFC-2920@open",
+        "decision_id": "RFC-2920",
+        "status": "PROPOSED",
+        "edges": []
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"RFC-2203\"]\nResolver explanation: rust-const-repeat-simple-case: RFC-2203 is the sole eligible active decision in scope 'rust-const-repeat-simple-case'.\n\nEvidence:\nArtifact ID: RFC-2203@merged\nDecision ID: RFC-2203\nRepository: rust-lang/rfcs\nTimestamp: 2018-03-18T20:55:04Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/2203-const-repeat-expr.md\nPinned revision: f8a83dd072b04c5a97a91f388f28c03a13cd62c8\nLifecycle status: MERGED\nAuthority scope: rust-const-repeat-simple-case\nSource text (verbatim excerpt):\nRFC: Constants in array repeat expressions\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs rust const repeat simple case while the successor RFC is open? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact RFC-2203@merged chunk 0]\nArtifact ID: RFC-2203@merged\nDecision ID: RFC-2203\nRepository: rust-lang/rfcs\nTimestamp: 2018-03-18T20:55:04Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/2203-const-repeat-expr.md\nPinned revision: f8a83dd072b04c5a97a91f388f28c03a13cd62c8\nLifecycle status: MERGED\nAuthority scope: rust-const-repeat-simple-case\nSource text (verbatim excerpt):\nRFC: Constants in array repeat expressions\nDecision role: POLICY\n\n[Retrieved artifact RFC-2920@open chunk 0]\nArtifact ID: RFC-2920@open\nDecision ID: RFC-2920\nRepository: rust-lang/rfcs\nTimestamp: 2020-05-04T18:50:34Z\nSource URL: https://github.com/rust-lang/rfcs/pull/2920\nPinned revision: github-open-event-2020-05-04T18:50:34Z\nLifecycle status: OPEN\nAuthority scope: rust-inline-const\nExplicitly replaces: RFC-2203\nSource text (verbatim excerpt):\nInline `const` expressions and patterns\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs rust const repeat simple case while the successor RFC is open? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: RFC-2203@merged\nDecision ID: RFC-2203\nRepository: rust-lang/rfcs\nTimestamp: 2018-03-18T20:55:04Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/2203-const-repeat-expr.md\nPinned revision: f8a83dd072b04c5a97a91f388f28c03a13cd62c8\nLifecycle status: MERGED\nAuthority scope: rust-const-repeat-simple-case\nSource text (verbatim excerpt):\nRFC: Constants in array repeat expressions\nDecision role: POLICY\n\nArtifact ID: RFC-2920@open\nDecision ID: RFC-2920\nRepository: rust-lang/rfcs\nTimestamp: 2020-05-04T18:50:34Z\nSource URL: https://github.com/rust-lang/rfcs/pull/2920\nPinned revision: github-open-event-2020-05-04T18:50:34Z\nLifecycle status: OPEN\nAuthority scope: rust-inline-const\nExplicitly replaces: RFC-2203\nSource text (verbatim excerpt):\nInline `const` expressions and patterns\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs rust const repeat simple case while the successor RFC is open? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "861761f42632dc8e0fffcacfae9f4137fa44547b7deb2c8b90a3bde3b607ebe3",
+    "rag_embedding": "f80a6646bf2efacddd35843348bbd18ef91343c07368b774d12d8fbd6b15d6c9",
+    "rag_full_context": "faed19a65de84b1aa7819a9a65df59416c001faeb3423241652ab13e88a51241"
+  },
+  "expected_answer_fields_present": false
+}

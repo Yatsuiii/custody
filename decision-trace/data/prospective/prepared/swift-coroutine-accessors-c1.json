@@ -1,0 +1,64 @@
+{
+  "checkpoint_id": "swift-coroutine-accessors-c1",
+  "timeline_id": "swift-coroutine-accessors",
+  "question": "What organizational decision currently governs swift yielding accessor policy? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "SE-0474@accepted",
+      "decision_id": "SE-0474",
+      "sequence": 1,
+      "rendered_sha256": "43dc282421054c6ac5ad48bf852de2c47d9e6430318dcb429ab4ae6765a30de1"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "SE-0474@accepted"
+    ],
+    "rag_embedding": [
+      "SE-0474@accepted"
+    ],
+    "rag_full_context": [
+      "SE-0474@accepted"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 0,
+      "artifact_id": "SE-0474@accepted",
+      "chunk_index": 0,
+      "similarity": 0.6964588942420408
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "SE-0474@accepted"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "SE-0474"
+    ],
+    "evidence_artifact_ids": [
+      "SE-0474@accepted"
+    ],
+    "resolver_explanation": "swift-yielding-accessor-policy: SE-0474 is the sole eligible active decision in scope 'swift-yielding-accessor-policy'.",
+    "derivations": [
+      {
+        "artifact_id": "SE-0474@accepted",
+        "decision_id": "SE-0474",
+        "status": "ACCEPTED",
+        "edges": []
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"SE-0474\"]\nResolver explanation: swift-yielding-accessor-policy: SE-0474 is the sole eligible active decision in scope 'swift-yielding-accessor-policy'.\n\nEvidence:\nArtifact ID: SE-0474@accepted\nDecision ID: SE-0474\nRepository: swiftlang/swift-evolution\nTimestamp: 2025-01-01T00:00:00Z\nSource URL: https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0474-yielding-accessors.md\nPinned revision: 0105e139a22938561c700cfbb89ddc3ebe402f0c\nLifecycle status: ACCEPTED\nAuthority scope: swift-yielding-accessor-policy\nSource text (verbatim excerpt):\n* Status: **Accepted**\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs swift yielding accessor policy? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact SE-0474@accepted chunk 0]\nArtifact ID: SE-0474@accepted\nDecision ID: SE-0474\nRepository: swiftlang/swift-evolution\nTimestamp: 2025-01-01T00:00:00Z\nSource URL: https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0474-yielding-accessors.md\nPinned revision: 0105e139a22938561c700cfbb89ddc3ebe402f0c\nLifecycle status: ACCEPTED\nAuthority scope: swift-yielding-accessor-policy\nSource text (verbatim excerpt):\n* Status: **Accepted**\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs swift yielding accessor policy? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: SE-0474@accepted\nDecision ID: SE-0474\nRepository: swiftlang/swift-evolution\nTimestamp: 2025-01-01T00:00:00Z\nSource URL: https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0474-yielding-accessors.md\nPinned revision: 0105e139a22938561c700cfbb89ddc3ebe402f0c\nLifecycle status: ACCEPTED\nAuthority scope: swift-yielding-accessor-policy\nSource text (verbatim excerpt):\n* Status: **Accepted**\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs swift yielding accessor policy? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "a2572fdd7ee8fdc63a4f08b80b973b07f2cef9fb0e252349bedde73b3f6cbffa",
+    "rag_embedding": "9723aa1a7a9396f653b21577698cb03e076d61b3cbd171dc37bff4669009358e",
+    "rag_full_context": "cb3e20c1099f0656b67917db948663af19d5a88096b5e3244e1a2cf707bae8c8"
+  },
+  "expected_answer_fields_present": false
+}

@@ -1,0 +1,122 @@
+{
+  "checkpoint_id": "terraform-iam-role-chaining-c3",
+  "timeline_id": "terraform-iam-role-chaining",
+  "question": "What organizational decision currently governs terraform s3 iam role chaining while rollback is proposed? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "hashicorp/terraform#35720@open",
+      "decision_id": "hashicorp/terraform#35720",
+      "sequence": 1,
+      "rendered_sha256": "e9c105d6ee15ea579df72576d89c9f96fb80bbb8ecb040f9fdfee49b357c0cdd"
+    },
+    {
+      "artifact_id": "hashicorp/terraform#35720@merged",
+      "decision_id": "hashicorp/terraform#35720",
+      "sequence": 2,
+      "rendered_sha256": "60b084dfac157eacd21a80bd76723d679b0237be80543edd965dab044343e72f"
+    },
+    {
+      "artifact_id": "hashicorp/terraform#35827@open",
+      "decision_id": "hashicorp/terraform#35827",
+      "sequence": 3,
+      "rendered_sha256": "a645c19b849a9ded2014840df8e44d4aba383a3f8b85c8d6ab5a299c232a7842"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "hashicorp/terraform#35720@open",
+      "hashicorp/terraform#35720@merged",
+      "hashicorp/terraform#35827@open"
+    ],
+    "rag_embedding": [
+      "hashicorp/terraform#35720@open",
+      "hashicorp/terraform#35720@merged",
+      "hashicorp/terraform#35827@open"
+    ],
+    "rag_full_context": [
+      "hashicorp/terraform#35720@open",
+      "hashicorp/terraform#35720@merged",
+      "hashicorp/terraform#35827@open"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 4,
+      "artifact_id": "hashicorp/terraform#35827@open",
+      "chunk_index": 0,
+      "similarity": 0.8376208112642533
+    },
+    {
+      "ordinal": 2,
+      "artifact_id": "hashicorp/terraform#35720@merged",
+      "chunk_index": 0,
+      "similarity": 0.8055225609292403
+    },
+    {
+      "ordinal": 0,
+      "artifact_id": "hashicorp/terraform#35720@open",
+      "chunk_index": 0,
+      "similarity": 0.8023407114481798
+    },
+    {
+      "ordinal": 1,
+      "artifact_id": "hashicorp/terraform#35720@open",
+      "chunk_index": 1,
+      "similarity": 0.7070335252934548
+    },
+    {
+      "ordinal": 3,
+      "artifact_id": "hashicorp/terraform#35720@merged",
+      "chunk_index": 1,
+      "similarity": 0.6955064105963146
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "hashicorp/terraform#35827@open",
+    "hashicorp/terraform#35720@merged",
+    "hashicorp/terraform#35720@open",
+    "hashicorp/terraform#35720@open",
+    "hashicorp/terraform#35720@merged"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "hashicorp/terraform#35720"
+    ],
+    "evidence_artifact_ids": [
+      "hashicorp/terraform#35720@merged"
+    ],
+    "resolver_explanation": "terraform-s3-iam-role-chaining: hashicorp/terraform#35720 is the sole eligible active decision in scope 'terraform-s3-iam-role-chaining'.",
+    "derivations": [
+      {
+        "artifact_id": "hashicorp/terraform#35720@open",
+        "decision_id": "hashicorp/terraform#35720",
+        "status": "PROPOSED",
+        "edges": []
+      },
+      {
+        "artifact_id": "hashicorp/terraform#35720@merged",
+        "decision_id": "hashicorp/terraform#35720",
+        "status": "IMPLEMENTED",
+        "edges": []
+      },
+      {
+        "artifact_id": "hashicorp/terraform#35827@open",
+        "decision_id": "hashicorp/terraform#35827",
+        "status": "PROPOSED",
+        "edges": []
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"hashicorp/terraform#35720\"]\nResolver explanation: terraform-s3-iam-role-chaining: hashicorp/terraform#35720 is the sole eligible active decision in scope 'terraform-s3-iam-role-chaining'.\n\nEvidence:\nArtifact ID: hashicorp/terraform#35720@merged\nDecision ID: hashicorp/terraform#35720\nRepository: hashicorp/terraform\nTimestamp: 2024-09-23T21:26:38Z\nSource URL: https://github.com/hashicorp/terraform/pull/35720\nPinned revision: 305775e9f0be14f09051a237fdc70394c30dc287\nLifecycle status: MERGED\nAuthority scope: terraform-s3-iam-role-chaining\nSource text (verbatim excerpt):\nbackend/s3: Adds support for IAM role chaining\nAdds support to the S3 backend for [IAM role chaining](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html#id_roles_terms-and-concepts) when authenticating with AWS. Provides parity with [the AWS provider v5.67.0](https://github.com/hashicorp/terraform-provider-aws/pull/39255)\r\n\r\n## Target Release\r\n\r\n<!--\r\n\r\nIn normal circumstances we only target changes at the upcoming minor\r\nrelease, or as a patch to the current minor version. If you need to\r\nport a security fix to an older release, highlight this here by listing\r\nall targeted releases.\r\n\r\nIf targeting the next patch release, also add the relevant x.y-backport\r\nlabel to enable the backport bot.\r\n\r\n-->\r\n\r\n1.10.0\r\n\r\n## Draft CHANGELOG entry\r\n\r\n<!--\r\n\r\nChoose a category, delete the others:\r\n\r\n-->\r\n\r\n### ENHANCEMENTS\r\n\r\n<!--\r\n\r\nWrite a short description of the user-facing change. Examples:\r\n\r\n- `terraform show -json`: Fixed crash with sensitive set values.\r\n- When rendering a diff, Terraform now quotes the name of any object attribute whose string representation is not a valid identifier.\r\n- The local token configuration in the cloud and remote backend now has higher priority than a token specified in a credentials block in the CLI configuration.\r\n\r\n--> \r\n\r\n-  backend/s3: Adds support for IAM role chaining. The backend attribute `assume_role` now accepts multiple elements.\r\n\nDecision role: IMPLEMENTATION\n\nDeveloper question: What organizational decision currently governs terraform s3 iam role chaining while rollback is proposed? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact hashicorp/terraform#35827@open chunk 0]\nArtifact ID: hashicorp/terraform#35827@open\nDecision ID: hashicorp/terraform#35827\nRepository: hashicorp/terraform\nTimestamp: 2024-10-08T22:01:36Z\nSource URL: https://github.com/hashicorp/terraform/pull/35827\nPinned revision: github-open-event-2024-10-08T22:01:36Z\nLifecycle status: OPEN\nAuthority scope: terraform-s3-iam-role-chaining\nExplicitly reverts: hashicorp/terraform#35720\nSource text (verbatim excerpt):\nbackend/s3: Revert IAM role chaining support\nThe PR #35720 introduced a breaking change to the S3 backend\r\n\r\nIAM role chaining will be re-introduced at a later date\r\n\r\nFixes #35816\r\n\r\n## Draft CHANGELOG entry\r\n\r\nNo CHANGELOG entry: reverts feature only present in alpha build\nDecision role: IMPLEMENTATION\n\n[Retrieved artifact hashicorp/terraform#35720@merged chunk 0]\nArtifact ID: hashicorp/terraform#35720@merged\nDecision ID: hashicorp/terraform#35720\nRepository: hashicorp/terraform\nTimestamp: 2024-09-23T21:26:38Z\nSource URL: https://github.com/hashicorp/terraform/pull/35720\nPinned revision: 305775e9f0be14f09051a237fdc70394c30dc287\nLifecycle status: MERGED\nAuthority scope: terraform-s3-iam-role-chaining\nSource text (verbatim excerpt):\nbackend/s3: Adds support for IAM role chaining\nAdds support to the S3 backend for [IAM role chaining](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html#id_roles_terms-and-concepts) when authenticating with AWS. Provides parity with [the AWS provider v5.67.0](https://github.com/hashicorp/terraform-provider-aws/pull/39255)\r\n\r\n## Target Release\r\n\r\n<!--\r\n\r\nIn normal circumstances we only target changes at the upcoming minor\r\nrelease, or as a patch to the current minor version. If you need to\r\nport a security fix to an older release, highlight this here by listing\r\nall targeted releases.\r\n\r\nIf targeting the next patch release, also add the relevant x.y-backport\r\nlabel to enable the backport bot.\r\n\r\n-->\r\n\r\n1.10.0\r\n\r\n## Draft CHANGELOG entry\r\n\r\n<!--\r\n\r\nChoose a category, delete the others:\r\n\r\n-->\r\n\r\n### ENHANCEMENTS\r\n\r\n<!--\r\n\r\nWrite a short description of the user-facing change. Examples:\r\n\r\n- `terraform show -json`: Fixed crash with sensitive set values.\r\n- When rendering a diff, Terraform now quotes the name of any object attribute whose string representation is not a valid identifier.\r\n- The local token configuration in the cloud and remote backend now has higher priority than a token specified in \n\n[Retrieved artifact hashicorp/terraform#35720@open chunk 0]\nArtifact ID: hashicorp/terraform#35720@open\nDecision ID: hashicorp/terraform#35720\nRepository: hashicorp/terraform\nTimestamp: 2024-09-12T17:49:14Z\nSource URL: https://github.com/hashicorp/terraform/pull/35720\nPinned revision: github-open-event-2024-09-12T17:49:14Z\nLifecycle status: OPEN\nAuthority scope: terraform-s3-iam-role-chaining\nSource text (verbatim excerpt):\nbackend/s3: Adds support for IAM role chaining\nAdds support to the S3 backend for [IAM role chaining](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html#id_roles_terms-and-concepts) when authenticating with AWS. Provides parity with [the AWS provider v5.67.0](https://github.com/hashicorp/terraform-provider-aws/pull/39255)\r\n\r\n## Target Release\r\n\r\n<!--\r\n\r\nIn normal circumstances we only target changes at the upcoming minor\r\nrelease, or as a patch to the current minor version. If you need to\r\nport a security fix to an older release, highlight this here by listing\r\nall targeted releases.\r\n\r\nIf targeting the next patch release, also add the relevant x.y-backport\r\nlabel to enable the backport bot.\r\n\r\n-->\r\n\r\n1.10.0\r\n\r\n## Draft CHANGELOG entry\r\n\r\n<!--\r\n\r\nChoose a category, delete the others:\r\n\r\n-->\r\n\r\n### ENHANCEMENTS\r\n\r\n<!--\r\n\r\nWrite a short description of the user-facing change. Examples:\r\n\r\n- `terraform show -json`: Fixed crash with sensitive set values.\r\n- When rendering a diff, Terraform now quotes the name of any object attribute whose string representation is not a valid identifier.\r\n- The local token configuration in the cloud and remote backend now has higher priority than a token specified in a cred\n\n[Retrieved artifact hashicorp/terraform#35720@open chunk 1]\nof any object attribute whose string representation is not a valid identifier.\r\n- The local token configuration in the cloud and remote backend now has higher priority than a token specified in a credentials block in the CLI configuration.\r\n\r\n--> \r\n\r\n-  backend/s3: Adds support for IAM role chaining. The backend attribute `assume_role` now accepts multiple elements.\r\n\nDecision role: IMPLEMENTATION\n\n[Retrieved artifact hashicorp/terraform#35720@merged chunk 1]\n name of any object attribute whose string representation is not a valid identifier.\r\n- The local token configuration in the cloud and remote backend now has higher priority than a token specified in a credentials block in the CLI configuration.\r\n\r\n--> \r\n\r\n-  backend/s3: Adds support for IAM role chaining. The backend attribute `assume_role` now accepts multiple elements.\r\n\nDecision role: IMPLEMENTATION\n\nDeveloper question: What organizational decision currently governs terraform s3 iam role chaining while rollback is proposed? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: hashicorp/terraform#35720@open\nDecision ID: hashicorp/terraform#35720\nRepository: hashicorp/terraform\nTimestamp: 2024-09-12T17:49:14Z\nSource URL: https://github.com/hashicorp/terraform/pull/35720\nPinned revision: github-open-event-2024-09-12T17:49:14Z\nLifecycle status: OPEN\nAuthority scope: terraform-s3-iam-role-chaining\nSource text (verbatim excerpt):\nbackend/s3: Adds support for IAM role chaining\nAdds support to the S3 backend for [IAM role chaining](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html#id_roles_terms-and-concepts) when authenticating with AWS. Provides parity with [the AWS provider v5.67.0](https://github.com/hashicorp/terraform-provider-aws/pull/39255)\r\n\r\n## Target Release\r\n\r\n<!--\r\n\r\nIn normal circumstances we only target changes at the upcoming minor\r\nrelease, or as a patch to the current minor version. If you need to\r\nport a security fix to an older release, highlight this here by listing\r\nall targeted releases.\r\n\r\nIf targeting the next patch release, also add the relevant x.y-backport\r\nlabel to enable the backport bot.\r\n\r\n-->\r\n\r\n1.10.0\r\n\r\n## Draft CHANGELOG entry\r\n\r\n<!--\r\n\r\nChoose a category, delete the others:\r\n\r\n-->\r\n\r\n### ENHANCEMENTS\r\n\r\n<!--\r\n\r\nWrite a short description of the user-facing change. Examples:\r\n\r\n- `terraform show -json`: Fixed crash with sensitive set values.\r\n- When rendering a diff, Terraform now quotes the name of any object attribute whose string representation is not a valid identifier.\r\n- The local token configuration in the cloud and remote backend now has higher priority than a token specified in a credentials block in the CLI configuration.\r\n\r\n--> \r\n\r\n-  backend/s3: Adds support for IAM role chaining. The backend attribute `assume_role` now accepts multiple elements.\r\n\nDecision role: IMPLEMENTATION\n\nArtifact ID: hashicorp/terraform#35720@merged\nDecision ID: hashicorp/terraform#35720\nRepository: hashicorp/terraform\nTimestamp: 2024-09-23T21:26:38Z\nSource URL: https://github.com/hashicorp/terraform/pull/35720\nPinned revision: 305775e9f0be14f09051a237fdc70394c30dc287\nLifecycle status: MERGED\nAuthority scope: terraform-s3-iam-role-chaining\nSource text (verbatim excerpt):\nbackend/s3: Adds support for IAM role chaining\nAdds support to the S3 backend for [IAM role chaining](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html#id_roles_terms-and-concepts) when authenticating with AWS. Provides parity with [the AWS provider v5.67.0](https://github.com/hashicorp/terraform-provider-aws/pull/39255)\r\n\r\n## Target Release\r\n\r\n<!--\r\n\r\nIn normal circumstances we only target changes at the upcoming minor\r\nrelease, or as a patch to the current minor version. If you need to\r\nport a security fix to an older release, highlight this here by listing\r\nall targeted releases.\r\n\r\nIf targeting the next patch release, also add the relevant x.y-backport\r\nlabel to enable the backport bot.\r\n\r\n-->\r\n\r\n1.10.0\r\n\r\n## Draft CHANGELOG entry\r\n\r\n<!--\r\n\r\nChoose a category, delete the others:\r\n\r\n-->\r\n\r\n### ENHANCEMENTS\r\n\r\n<!--\r\n\r\nWrite a short description of the user-facing change. Examples:\r\n\r\n- `terraform show -json`: Fixed crash with sensitive set values.\r\n- When rendering a diff, Terraform now quotes the name of any object attribute whose string representation is not a valid identifier.\r\n- The local token configuration in the cloud and remote backend now has higher priority than a token specified in a credentials block in the CLI configuration.\r\n\r\n--> \r\n\r\n-  backend/s3: Adds support for IAM role chaining. The backend attribute `assume_role` now accepts multiple elements.\r\n\nDecision role: IMPLEMENTATION\n\nArtifact ID: hashicorp/terraform#35827@open\nDecision ID: hashicorp/terraform#35827\nRepository: hashicorp/terraform\nTimestamp: 2024-10-08T22:01:36Z\nSource URL: https://github.com/hashicorp/terraform/pull/35827\nPinned revision: github-open-event-2024-10-08T22:01:36Z\nLifecycle status: OPEN\nAuthority scope: terraform-s3-iam-role-chaining\nExplicitly reverts: hashicorp/terraform#35720\nSource text (verbatim excerpt):\nbackend/s3: Revert IAM role chaining support\nThe PR #35720 introduced a breaking change to the S3 backend\r\n\r\nIAM role chaining will be re-introduced at a later date\r\n\r\nFixes #35816\r\n\r\n## Draft CHANGELOG entry\r\n\r\nNo CHANGELOG entry: reverts feature only present in alpha build\nDecision role: IMPLEMENTATION\n\nDeveloper question: What organizational decision currently governs terraform s3 iam role chaining while rollback is proposed? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "d2f6d61e1d151db129e85f00fb890f64e93371a46c5b45cba8e172119496eab3",
+    "rag_embedding": "fad8b457fbd48dda1faa1532687a32655ece815fda80b7ca16fa94c6505b3832",
+    "rag_full_context": "3d83200fafec8b6af4f745e88ab9424db227c1967587148186b90d4df8b38bc9"
+  },
+  "expected_answer_fields_present": false
+}

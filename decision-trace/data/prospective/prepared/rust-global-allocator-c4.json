@@ -1,0 +1,113 @@
+{
+  "checkpoint_id": "rust-global-allocator-c4",
+  "timeline_id": "rust-global-allocator",
+  "question": "Which RFC is authoritative now for rust global allocator?",
+  "visible_history": [
+    {
+      "artifact_id": "RFC-1183@merged",
+      "decision_id": "RFC-1183",
+      "sequence": 1,
+      "rendered_sha256": "d2fac7c4f88e6849d73ab0a96d18d480256f3db3b1cc80744e0c7d3027e3d794"
+    },
+    {
+      "artifact_id": "RFC-1974@open",
+      "decision_id": "RFC-1974",
+      "sequence": 2,
+      "rendered_sha256": "d90098a3083968bcea9de5baf1fd2180f77734a2ef221ccca167b69633cc7cb8"
+    },
+    {
+      "artifact_id": "RFC-1974@current-authority",
+      "decision_id": "RFC-1974",
+      "sequence": 3,
+      "rendered_sha256": "db8778d55adb9e85166740d0c6b169f3708bc1307a20c385d9d1c82f28427e45"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "RFC-1183@merged",
+      "RFC-1974@open",
+      "RFC-1974@current-authority"
+    ],
+    "rag_embedding": [
+      "RFC-1183@merged",
+      "RFC-1974@open",
+      "RFC-1974@current-authority"
+    ],
+    "rag_full_context": [
+      "RFC-1183@merged",
+      "RFC-1974@open",
+      "RFC-1974@current-authority"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 2,
+      "artifact_id": "RFC-1974@current-authority",
+      "chunk_index": 0,
+      "similarity": 0.812913171035427
+    },
+    {
+      "ordinal": 1,
+      "artifact_id": "RFC-1974@open",
+      "chunk_index": 0,
+      "similarity": 0.7892721977568388
+    },
+    {
+      "ordinal": 0,
+      "artifact_id": "RFC-1183@merged",
+      "chunk_index": 0,
+      "similarity": 0.7528010797079552
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "RFC-1974@current-authority",
+    "RFC-1974@open",
+    "RFC-1183@merged"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-1974"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-1974@current-authority"
+    ],
+    "resolver_explanation": "rust-global-allocator: RFC-1974 is the sole eligible active decision in scope 'rust-global-allocator'.",
+    "derivations": [
+      {
+        "artifact_id": "RFC-1183@merged",
+        "decision_id": "RFC-1183",
+        "status": "IMPLEMENTED",
+        "edges": []
+      },
+      {
+        "artifact_id": "RFC-1974@open",
+        "decision_id": "RFC-1974",
+        "status": "PROPOSED",
+        "edges": []
+      },
+      {
+        "artifact_id": "RFC-1974@current-authority",
+        "decision_id": "RFC-1974",
+        "status": "IMPLEMENTED",
+        "edges": [
+          [
+            "RFC-1183",
+            "SUPERSEDES"
+          ]
+        ]
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"RFC-1974\"]\nResolver explanation: rust-global-allocator: RFC-1974 is the sole eligible active decision in scope 'rust-global-allocator'.\n\nEvidence:\nArtifact ID: RFC-1974@current-authority\nDecision ID: RFC-1974\nRepository: rust-lang/rfcs\nTimestamp: 2026-08-22T00:00:00Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1974-global-allocators.md\nPinned revision: 354518a8c9025f40be6f730452c1bfe71a12dc22\nLifecycle status: MERGED\nAuthority scope: rust-global-allocator\nExplicitly replaces: RFC-1183\nSource text (verbatim excerpt):\nPrepare global allocators for stabilization\n*Note:* this RFC has been superseded by [RFC 1974][].\nDecision role: POLICY\n\nDeveloper question: Which RFC is authoritative now for rust global allocator?\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact RFC-1974@current-authority chunk 0]\nArtifact ID: RFC-1974@current-authority\nDecision ID: RFC-1974\nRepository: rust-lang/rfcs\nTimestamp: 2026-08-22T00:00:00Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1974-global-allocators.md\nPinned revision: 354518a8c9025f40be6f730452c1bfe71a12dc22\nLifecycle status: MERGED\nAuthority scope: rust-global-allocator\nExplicitly replaces: RFC-1183\nSource text (verbatim excerpt):\nPrepare global allocators for stabilization\n*Note:* this RFC has been superseded by [RFC 1974][].\nDecision role: POLICY\n\n[Retrieved artifact RFC-1974@open chunk 0]\nArtifact ID: RFC-1974@open\nDecision ID: RFC-1974\nRepository: rust-lang/rfcs\nTimestamp: 2017-04-16T20:52:56Z\nSource URL: https://github.com/rust-lang/rfcs/pull/1974\nPinned revision: github-open-event-2017-04-16T20:52:56Z\nLifecycle status: OPEN\nAuthority scope: rust-global-allocator\nExplicitly replaces: RFC-1183\nSource text (verbatim excerpt):\nPrepare global allocators for stabilization\nDecision role: POLICY\n\n[Retrieved artifact RFC-1183@merged chunk 0]\nArtifact ID: RFC-1183@merged\nDecision ID: RFC-1183\nRepository: rust-lang/rfcs\nTimestamp: 2015-07-29T21:39:23Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1183-swap-out-jemalloc.md\nPinned revision: 3282a5648465b7e63a51d41835581fb888e568a9\nLifecycle status: MERGED\nAuthority scope: rust-global-allocator\nSource text (verbatim excerpt):\nRFC: Allow changing the default allocator\nDecision role: POLICY\n\nDeveloper question: Which RFC is authoritative now for rust global allocator?\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: RFC-1183@merged\nDecision ID: RFC-1183\nRepository: rust-lang/rfcs\nTimestamp: 2015-07-29T21:39:23Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1183-swap-out-jemalloc.md\nPinned revision: 3282a5648465b7e63a51d41835581fb888e568a9\nLifecycle status: MERGED\nAuthority scope: rust-global-allocator\nSource text (verbatim excerpt):\nRFC: Allow changing the default allocator\nDecision role: POLICY\n\nArtifact ID: RFC-1974@open\nDecision ID: RFC-1974\nRepository: rust-lang/rfcs\nTimestamp: 2017-04-16T20:52:56Z\nSource URL: https://github.com/rust-lang/rfcs/pull/1974\nPinned revision: github-open-event-2017-04-16T20:52:56Z\nLifecycle status: OPEN\nAuthority scope: rust-global-allocator\nExplicitly replaces: RFC-1183\nSource text (verbatim excerpt):\nPrepare global allocators for stabilization\nDecision role: POLICY\n\nArtifact ID: RFC-1974@current-authority\nDecision ID: RFC-1974\nRepository: rust-lang/rfcs\nTimestamp: 2026-08-22T00:00:00Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1974-global-allocators.md\nPinned revision: 354518a8c9025f40be6f730452c1bfe71a12dc22\nLifecycle status: MERGED\nAuthority scope: rust-global-allocator\nExplicitly replaces: RFC-1183\nSource text (verbatim excerpt):\nPrepare global allocators for stabilization\n*Note:* this RFC has been superseded by [RFC 1974][].\nDecision role: POLICY\n\nDeveloper question: Which RFC is authoritative now for rust global allocator?\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "5c3b90dffbccd475f05987b6682b4732e2b7618259fadaa697ba40816920d47e",
+    "rag_embedding": "3db2e6d47ff520049b4631e44faec2270015e430d9f4f5225a5e5d88e543e6e1",
+    "rag_full_context": "cdc4368bf20faa801220609f785912cb04edf6a06814bef55757848f67b058c7"
+  },
+  "expected_answer_fields_present": false
+}

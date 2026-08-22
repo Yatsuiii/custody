@@ -1,0 +1,113 @@
+{
+  "checkpoint_id": "rust-rpit-capture-c3",
+  "timeline_id": "rust-rpit-capture",
+  "question": "What organizational decision currently governs Rust impl Trait capture rules after the expansion was accepted? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "RFC-1522@merged",
+      "decision_id": "RFC-1522",
+      "sequence": 1,
+      "rendered_sha256": "2e9b3019645df37915e8f602eb79a28088b1ddeb679b4cec9f998de78e6dd004"
+    },
+    {
+      "artifact_id": "RFC-1951@open",
+      "decision_id": "RFC-1951",
+      "sequence": 2,
+      "rendered_sha256": "719d612a9aae3a366d500e8cb08d0d8e15d56dbcf3ec015c0d4b2edeccc4d994"
+    },
+    {
+      "artifact_id": "RFC-1951@merged",
+      "decision_id": "RFC-1951",
+      "sequence": 3,
+      "rendered_sha256": "62929e2042691b049f6bd73e91c14bd7bfec5c766f023dddb91e451cdbfc7e5c"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "RFC-1522@merged",
+      "RFC-1951@open",
+      "RFC-1951@merged"
+    ],
+    "rag_embedding": [
+      "RFC-1522@merged",
+      "RFC-1951@open",
+      "RFC-1951@merged"
+    ],
+    "rag_full_context": [
+      "RFC-1522@merged",
+      "RFC-1951@open",
+      "RFC-1951@merged"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 1,
+      "artifact_id": "RFC-1951@open",
+      "chunk_index": 0,
+      "similarity": 0.8170043872501788
+    },
+    {
+      "ordinal": 2,
+      "artifact_id": "RFC-1951@merged",
+      "chunk_index": 0,
+      "similarity": 0.8054847138323087
+    },
+    {
+      "ordinal": 0,
+      "artifact_id": "RFC-1522@merged",
+      "chunk_index": 0,
+      "similarity": 0.8010783084113977
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "RFC-1951@open",
+    "RFC-1951@merged",
+    "RFC-1522@merged"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-1951"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-1951@merged"
+    ],
+    "resolver_explanation": "rust-impl-trait-capture-rules: RFC-1951 is the sole eligible active decision in scope 'rust-impl-trait-capture-rules'.",
+    "derivations": [
+      {
+        "artifact_id": "RFC-1522@merged",
+        "decision_id": "RFC-1522",
+        "status": "IMPLEMENTED",
+        "edges": []
+      },
+      {
+        "artifact_id": "RFC-1951@open",
+        "decision_id": "RFC-1951",
+        "status": "PROPOSED",
+        "edges": []
+      },
+      {
+        "artifact_id": "RFC-1951@merged",
+        "decision_id": "RFC-1951",
+        "status": "IMPLEMENTED",
+        "edges": [
+          [
+            "RFC-1522",
+            "SUPERSEDES"
+          ]
+        ]
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"RFC-1951\"]\nResolver explanation: rust-impl-trait-capture-rules: RFC-1951 is the sole eligible active decision in scope 'rust-impl-trait-capture-rules'.\n\nEvidence:\nArtifact ID: RFC-1951@merged\nDecision ID: RFC-1951\nRepository: rust-lang/rfcs\nTimestamp: 2017-05-24T01:07:59Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1951-expand-impl-trait.md\nPinned revision: 0f130f5341574a881283fc00b36166ab4109d669\nLifecycle status: MERGED\nAuthority scope: rust-impl-trait-capture-rules\nExplicitly replaces: RFC-1522\nSource text (verbatim excerpt):\nRFC: Finalize syntax and parameter scoping for `impl Trait`, while expanding it to arguments\nThis RFC proposes to stabilize the `impl Trait` feature with its current syntax,\nwhile also expanding it to encompass argument position.\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs Rust impl Trait capture rules after the expansion was accepted? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact RFC-1951@open chunk 0]\nArtifact ID: RFC-1951@open\nDecision ID: RFC-1951\nRepository: rust-lang/rfcs\nTimestamp: 2017-03-15T06:04:11Z\nSource URL: https://github.com/rust-lang/rfcs/pull/1951\nPinned revision: github-open-event-2017-03-15T06:04:11Z\nLifecycle status: OPEN\nAuthority scope: rust-impl-trait-capture-rules\nExplicitly replaces: RFC-1522\nSource text (verbatim excerpt):\nRFC: Finalize syntax and parameter scoping for `impl Trait`, while expanding it to arguments\nDecision role: POLICY\n\n[Retrieved artifact RFC-1951@merged chunk 0]\nArtifact ID: RFC-1951@merged\nDecision ID: RFC-1951\nRepository: rust-lang/rfcs\nTimestamp: 2017-05-24T01:07:59Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1951-expand-impl-trait.md\nPinned revision: 0f130f5341574a881283fc00b36166ab4109d669\nLifecycle status: MERGED\nAuthority scope: rust-impl-trait-capture-rules\nExplicitly replaces: RFC-1522\nSource text (verbatim excerpt):\nRFC: Finalize syntax and parameter scoping for `impl Trait`, while expanding it to arguments\nThis RFC proposes to stabilize the `impl Trait` feature with its current syntax,\nwhile also expanding it to encompass argument position.\nDecision role: POLICY\n\n[Retrieved artifact RFC-1522@merged chunk 0]\nArtifact ID: RFC-1522@merged\nDecision ID: RFC-1522\nRepository: rust-lang/rfcs\nTimestamp: 2016-06-27T22:28:41Z\nSource URL: https://github.com/rust-lang/rfcs/pull/1522\nPinned revision: b48ef3700842391b28fb96298d274edeb12edf6c\nLifecycle status: MERGED\nAuthority scope: rust-impl-trait-capture-rules\nSource text (verbatim excerpt):\nMinimal `impl Trait`\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs Rust impl Trait capture rules after the expansion was accepted? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: RFC-1522@merged\nDecision ID: RFC-1522\nRepository: rust-lang/rfcs\nTimestamp: 2016-06-27T22:28:41Z\nSource URL: https://github.com/rust-lang/rfcs/pull/1522\nPinned revision: b48ef3700842391b28fb96298d274edeb12edf6c\nLifecycle status: MERGED\nAuthority scope: rust-impl-trait-capture-rules\nSource text (verbatim excerpt):\nMinimal `impl Trait`\nDecision role: POLICY\n\nArtifact ID: RFC-1951@open\nDecision ID: RFC-1951\nRepository: rust-lang/rfcs\nTimestamp: 2017-03-15T06:04:11Z\nSource URL: https://github.com/rust-lang/rfcs/pull/1951\nPinned revision: github-open-event-2017-03-15T06:04:11Z\nLifecycle status: OPEN\nAuthority scope: rust-impl-trait-capture-rules\nExplicitly replaces: RFC-1522\nSource text (verbatim excerpt):\nRFC: Finalize syntax and parameter scoping for `impl Trait`, while expanding it to arguments\nDecision role: POLICY\n\nArtifact ID: RFC-1951@merged\nDecision ID: RFC-1951\nRepository: rust-lang/rfcs\nTimestamp: 2017-05-24T01:07:59Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1951-expand-impl-trait.md\nPinned revision: 0f130f5341574a881283fc00b36166ab4109d669\nLifecycle status: MERGED\nAuthority scope: rust-impl-trait-capture-rules\nExplicitly replaces: RFC-1522\nSource text (verbatim excerpt):\nRFC: Finalize syntax and parameter scoping for `impl Trait`, while expanding it to arguments\nThis RFC proposes to stabilize the `impl Trait` feature with its current syntax,\nwhile also expanding it to encompass argument position.\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs Rust impl Trait capture rules after the expansion was accepted? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "c2c9ab19dc5e00a37bc6592e419a64a45c2ada6733a1220f367f4ee67bd9a282",
+    "rag_embedding": "5ee6933759833ddbfbee33ab18dd0c8c934616fbda3bd0fb939a01f25adf2606",
+    "rag_full_context": "3390fe5bc7b46afc8f3ffaf03a5e9c379eb13162ec14ceb753b6697479a49868"
+  },
+  "expected_answer_fields_present": false
+}

@@ -1,0 +1,122 @@
+{
+  "checkpoint_id": "kubernetes-gang-scheduling-c3",
+  "timeline_id": "kubernetes-gang-scheduling",
+  "question": "What organizational decision currently governs Kubernetes gang scheduling policy in the current KEP registry? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "KEP-583@current",
+      "decision_id": "KEP-583",
+      "sequence": 1,
+      "rendered_sha256": "4139dcf1cf896f3b4581b4412a21f5e75097897f88888f10a9c76486ab60ffc6"
+    },
+    {
+      "artifact_id": "KEP-5832@current",
+      "decision_id": "KEP-5832",
+      "sequence": 2,
+      "rendered_sha256": "2db8afb036968cb8ba7910d40674789ec86471b401507bbfd2779d60ac1e5db9"
+    },
+    {
+      "artifact_id": "KEP-4671@current",
+      "decision_id": "KEP-4671",
+      "sequence": 3,
+      "rendered_sha256": "60df26e0b49cc64c462ab3237536c389e9b39f5cfca680d342c165841ba0af2a"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "KEP-583@current",
+      "KEP-5832@current",
+      "KEP-4671@current"
+    ],
+    "rag_embedding": [
+      "KEP-583@current",
+      "KEP-5832@current",
+      "KEP-4671@current"
+    ],
+    "rag_full_context": [
+      "KEP-583@current",
+      "KEP-5832@current",
+      "KEP-4671@current"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 2,
+      "artifact_id": "KEP-4671@current",
+      "chunk_index": 0,
+      "similarity": 0.77278793431163
+    },
+    {
+      "ordinal": 0,
+      "artifact_id": "KEP-583@current",
+      "chunk_index": 0,
+      "similarity": 0.7719530043138711
+    },
+    {
+      "ordinal": 1,
+      "artifact_id": "KEP-5832@current",
+      "chunk_index": 0,
+      "similarity": 0.7466367691419845
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "KEP-4671@current",
+    "KEP-583@current",
+    "KEP-5832@current"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "KEP-4671"
+    ],
+    "evidence_artifact_ids": [
+      "KEP-4671@current"
+    ],
+    "resolver_explanation": "kubernetes-gang-scheduling-policy: KEP-4671 is the sole eligible active decision in scope 'kubernetes-gang-scheduling-policy'.",
+    "derivations": [
+      {
+        "artifact_id": "KEP-583@current",
+        "decision_id": "KEP-583",
+        "status": "PROPOSED",
+        "edges": []
+      },
+      {
+        "artifact_id": "KEP-5832@current",
+        "decision_id": "KEP-5832",
+        "status": "ACCEPTED",
+        "edges": [
+          [
+            "KEP-583",
+            "SUPERSEDES"
+          ]
+        ]
+      },
+      {
+        "artifact_id": "KEP-4671@current",
+        "decision_id": "KEP-4671",
+        "status": "ACCEPTED",
+        "edges": [
+          [
+            "KEP-5832",
+            "SUPERSEDES"
+          ],
+          [
+            "KEP-583",
+            "SUPERSEDES"
+          ]
+        ]
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"KEP-4671\"]\nResolver explanation: kubernetes-gang-scheduling-policy: KEP-4671 is the sole eligible active decision in scope 'kubernetes-gang-scheduling-policy'.\n\nEvidence:\nArtifact ID: KEP-4671@current\nDecision ID: KEP-4671\nRepository: kubernetes/enhancements\nTimestamp: 2026-08-22T00:00:00Z\nSource URL: https://github.com/kubernetes/enhancements/blob/c4f439c2dd4acb928094660be0ea771bf63f2b76/keps/sig-scheduling/4671-gang-scheduling/kep.yaml\nPinned revision: c4f439c2dd4acb928094660be0ea771bf63f2b76\nLifecycle status: ACCEPTED\nAuthority scope: kubernetes-gang-scheduling-policy\nExplicitly replaces: KEP-5832, KEP-583\nSource text (verbatim excerpt):\nstatus: implementable\n  - \"/keps/sig-scheduling/5832-decouple-podgroup-api\"\n  - \"/keps/sig-scheduling/583-coscheduling\"\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs Kubernetes gang scheduling policy in the current KEP registry? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact KEP-4671@current chunk 0]\nArtifact ID: KEP-4671@current\nDecision ID: KEP-4671\nRepository: kubernetes/enhancements\nTimestamp: 2026-08-22T00:00:00Z\nSource URL: https://github.com/kubernetes/enhancements/blob/c4f439c2dd4acb928094660be0ea771bf63f2b76/keps/sig-scheduling/4671-gang-scheduling/kep.yaml\nPinned revision: c4f439c2dd4acb928094660be0ea771bf63f2b76\nLifecycle status: ACCEPTED\nAuthority scope: kubernetes-gang-scheduling-policy\nExplicitly replaces: KEP-5832, KEP-583\nSource text (verbatim excerpt):\nstatus: implementable\n  - \"/keps/sig-scheduling/5832-decouple-podgroup-api\"\n  - \"/keps/sig-scheduling/583-coscheduling\"\nDecision role: POLICY\n\n[Retrieved artifact KEP-583@current chunk 0]\nArtifact ID: KEP-583@current\nDecision ID: KEP-583\nRepository: kubernetes/enhancements\nTimestamp: 2018-07-03T00:00:00Z\nSource URL: https://github.com/kubernetes/enhancements/blob/c4f439c2dd4acb928094660be0ea771bf63f2b76/keps/sig-scheduling/583-coscheduling/kep.yaml\nPinned revision: c4f439c2dd4acb928094660be0ea771bf63f2b76\nLifecycle status: DRAFT\nAuthority scope: kubernetes-gang-scheduling-policy\nSource text (verbatim excerpt):\nstatus: provisional\nDecision role: POLICY\n\n[Retrieved artifact KEP-5832@current chunk 0]\nArtifact ID: KEP-5832@current\nDecision ID: KEP-5832\nRepository: kubernetes/enhancements\nTimestamp: 2026-01-23T00:00:00Z\nSource URL: https://github.com/kubernetes/enhancements/blob/c4f439c2dd4acb928094660be0ea771bf63f2b76/keps/sig-scheduling/5832-decouple-podgroup-api/kep.yaml\nPinned revision: c4f439c2dd4acb928094660be0ea771bf63f2b76\nLifecycle status: ACCEPTED\nAuthority scope: kubernetes-gang-scheduling-policy\nExplicitly replaces: KEP-583\nSource text (verbatim excerpt):\nstatus: implementable\n  - \"/keps/sig-scheduling/583-coscheduling\"\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs Kubernetes gang scheduling policy in the current KEP registry? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: KEP-583@current\nDecision ID: KEP-583\nRepository: kubernetes/enhancements\nTimestamp: 2018-07-03T00:00:00Z\nSource URL: https://github.com/kubernetes/enhancements/blob/c4f439c2dd4acb928094660be0ea771bf63f2b76/keps/sig-scheduling/583-coscheduling/kep.yaml\nPinned revision: c4f439c2dd4acb928094660be0ea771bf63f2b76\nLifecycle status: DRAFT\nAuthority scope: kubernetes-gang-scheduling-policy\nSource text (verbatim excerpt):\nstatus: provisional\nDecision role: POLICY\n\nArtifact ID: KEP-5832@current\nDecision ID: KEP-5832\nRepository: kubernetes/enhancements\nTimestamp: 2026-01-23T00:00:00Z\nSource URL: https://github.com/kubernetes/enhancements/blob/c4f439c2dd4acb928094660be0ea771bf63f2b76/keps/sig-scheduling/5832-decouple-podgroup-api/kep.yaml\nPinned revision: c4f439c2dd4acb928094660be0ea771bf63f2b76\nLifecycle status: ACCEPTED\nAuthority scope: kubernetes-gang-scheduling-policy\nExplicitly replaces: KEP-583\nSource text (verbatim excerpt):\nstatus: implementable\n  - \"/keps/sig-scheduling/583-coscheduling\"\nDecision role: POLICY\n\nArtifact ID: KEP-4671@current\nDecision ID: KEP-4671\nRepository: kubernetes/enhancements\nTimestamp: 2026-08-22T00:00:00Z\nSource URL: https://github.com/kubernetes/enhancements/blob/c4f439c2dd4acb928094660be0ea771bf63f2b76/keps/sig-scheduling/4671-gang-scheduling/kep.yaml\nPinned revision: c4f439c2dd4acb928094660be0ea771bf63f2b76\nLifecycle status: ACCEPTED\nAuthority scope: kubernetes-gang-scheduling-policy\nExplicitly replaces: KEP-5832, KEP-583\nSource text (verbatim excerpt):\nstatus: implementable\n  - \"/keps/sig-scheduling/5832-decouple-podgroup-api\"\n  - \"/keps/sig-scheduling/583-coscheduling\"\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs Kubernetes gang scheduling policy in the current KEP registry? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "154dffba331233f20060c9c3a625260c241926d1d4da4a126b540badb8d00386",
+    "rag_embedding": "76acf0a2145c19cef7587dda1aebd2d40be5fff9e88ddcdc2109d90dec3be370",
+    "rag_full_context": "fe547190f54ddc42f81dae8d6ae1b23571e0c5d112b7497593995b53280b2157"
+  },
+  "expected_answer_fields_present": false
+}

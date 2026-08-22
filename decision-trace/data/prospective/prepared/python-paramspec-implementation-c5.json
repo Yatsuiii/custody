@@ -1,0 +1,181 @@
+{
+  "checkpoint_id": "python-paramspec-implementation-c5",
+  "timeline_id": "python-paramspec-implementation",
+  "question": "What organizational decision currently governs python paramspec policy after the code rollback? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-612@final",
+      "decision_id": "PEP-612",
+      "sequence": 1,
+      "rendered_sha256": "53c2bfa3ebd1e23f21b69ad6d004986658bb9363a5a3afbcbb8d976629d226df"
+    },
+    {
+      "artifact_id": "python/cpython#23702@open",
+      "decision_id": "python/cpython#23702",
+      "sequence": 2,
+      "rendered_sha256": "b4aac7243c05ab1f91a1fe8dae7ed3f8a02c60e8ac1639399409aa8b0fdc890d"
+    },
+    {
+      "artifact_id": "python/cpython#23702@merged",
+      "decision_id": "python/cpython#23702",
+      "sequence": 3,
+      "rendered_sha256": "ce2279ae18b55f42bb660f326dc5ecdf1938bfd57f7a7338d668e0e76bbf7718"
+    },
+    {
+      "artifact_id": "python/cpython#25449@open",
+      "decision_id": "python/cpython#25449",
+      "sequence": 4,
+      "rendered_sha256": "39e471ed1363b27ec2386ba77aecd111a73f1160f354daa242758e49007528f8"
+    },
+    {
+      "artifact_id": "python/cpython#25449@merged",
+      "decision_id": "python/cpython#25449",
+      "sequence": 5,
+      "rendered_sha256": "03ca5ec1e6107ce42f38887ef60a79656ede5970919e644f2285c9e20121a5a0"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "PEP-612@final",
+      "python/cpython#23702@open",
+      "python/cpython#23702@merged",
+      "python/cpython#25449@open",
+      "python/cpython#25449@merged"
+    ],
+    "rag_embedding": [
+      "PEP-612@final",
+      "python/cpython#23702@open",
+      "python/cpython#23702@merged",
+      "python/cpython#25449@open",
+      "python/cpython#25449@merged"
+    ],
+    "rag_full_context": [
+      "PEP-612@final",
+      "python/cpython#23702@open",
+      "python/cpython#23702@merged",
+      "python/cpython#25449@open",
+      "python/cpython#25449@merged"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 0,
+      "artifact_id": "PEP-612@final",
+      "chunk_index": 0,
+      "similarity": 0.7274842733348363
+    },
+    {
+      "ordinal": 5,
+      "artifact_id": "python/cpython#25449@merged",
+      "chunk_index": 0,
+      "similarity": 0.7072097519487788
+    },
+    {
+      "ordinal": 3,
+      "artifact_id": "python/cpython#25449@open",
+      "chunk_index": 0,
+      "similarity": 0.7041340521763176
+    },
+    {
+      "ordinal": 1,
+      "artifact_id": "python/cpython#23702@open",
+      "chunk_index": 0,
+      "similarity": 0.7026766719133626
+    },
+    {
+      "ordinal": 2,
+      "artifact_id": "python/cpython#23702@merged",
+      "chunk_index": 0,
+      "similarity": 0.7017207884363483
+    },
+    {
+      "ordinal": 6,
+      "artifact_id": "python/cpython#25449@merged",
+      "chunk_index": 1,
+      "similarity": 0.5516963413087158
+    },
+    {
+      "ordinal": 4,
+      "artifact_id": "python/cpython#25449@open",
+      "chunk_index": 1,
+      "similarity": 0.5489526009441842
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "PEP-612@final",
+    "python/cpython#25449@merged",
+    "python/cpython#25449@open",
+    "python/cpython#23702@open",
+    "python/cpython#23702@merged",
+    "python/cpython#25449@merged",
+    "python/cpython#25449@open"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-612"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-612@final"
+    ],
+    "resolver_explanation": "python-paramspec-policy: PEP-612 is the sole eligible active decision in scope 'python-paramspec-policy'.",
+    "derivations": [
+      {
+        "artifact_id": "PEP-612@final",
+        "decision_id": "PEP-612",
+        "status": "ACCEPTED",
+        "edges": []
+      },
+      {
+        "artifact_id": "python/cpython#23702@open",
+        "decision_id": "python/cpython#23702",
+        "status": "PROPOSED",
+        "edges": [
+          [
+            "PEP-612",
+            "IMPLEMENTS"
+          ]
+        ]
+      },
+      {
+        "artifact_id": "python/cpython#23702@merged",
+        "decision_id": "python/cpython#23702",
+        "status": "IMPLEMENTED",
+        "edges": [
+          [
+            "PEP-612",
+            "IMPLEMENTS"
+          ]
+        ]
+      },
+      {
+        "artifact_id": "python/cpython#25449@open",
+        "decision_id": "python/cpython#25449",
+        "status": "PROPOSED",
+        "edges": []
+      },
+      {
+        "artifact_id": "python/cpython#25449@merged",
+        "decision_id": "python/cpython#25449",
+        "status": "REVERTED",
+        "edges": [
+          [
+            "python/cpython#23702",
+            "REVERTS"
+          ]
+        ]
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"PEP-612\"]\nResolver explanation: python-paramspec-policy: PEP-612 is the sole eligible active decision in scope 'python-paramspec-policy'.\n\nEvidence:\nArtifact ID: PEP-612@final\nDecision ID: PEP-612\nRepository: python/peps\nTimestamp: 2020-12-01T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0612.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-paramspec-policy\nSource text (verbatim excerpt):\nPEP: 612\nStatus: Final\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs python paramspec policy after the code rollback? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact PEP-612@final chunk 0]\nArtifact ID: PEP-612@final\nDecision ID: PEP-612\nRepository: python/peps\nTimestamp: 2020-12-01T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0612.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-paramspec-policy\nSource text (verbatim excerpt):\nPEP: 612\nStatus: Final\nDecision role: POLICY\n\n[Retrieved artifact python/cpython#25449@merged chunk 0]\nArtifact ID: python/cpython#25449@merged\nDecision ID: python/cpython#25449\nRepository: python/cpython\nTimestamp: 2021-04-28T15:38:15Z\nSource URL: https://github.com/python/cpython/pull/25449\nPinned revision: 859577c24981d6b36960d309f99f7fc810fe75c2\nLifecycle status: REVERT_MERGED\nAuthority scope: python-paramspec-implementation\nExplicitly reverts: python/cpython#23702\nSource text (verbatim excerpt):\nbpo-41559: Change PEP 612 implementation to pure Python\n- Reverted changes in ``genericaliasobject.c`` to commit 463c7d3d149283814d879a9bb8411af64e656c8e (right before PEP 612) via a clean ``git checkout 463c7d3d149283814d879a9bb8411af64e656c8e -- genericaliasobject.c``.\r\n- Implemented PEP 612 behavior only in ``collections.abc.Callable`` in pure Python.\r\n\r\nPR 1/2, another update to typing.py is coming later, but that's not urgent.\r\n\r\nThe intention of this change is to conform more strictly to PEP 612. Specifically, this snippet:\r\n> As before, parameters_expressions by themselves are not acceptable in places where a type is expected\r\n\r\nhttps://www.python.org/dev/peps/pep-0612/#valid-use-locations\r\n\r\nThe current implementation leaks extra behavior into all builtin ``GenericAlias`` types just for the sake of ``collections.abc.Callable``, which is out of the scope of the PEP. Since there is no need to support ``ParamSpec`` in other places, it's valid to not have them in ``__parameters__`` of all builtin generics. except for ``collections.abc.Callable``.\r\n\r\nThis will also speed up builtin ``GenericAlias`` as it has to do less checks, and reduce the amount of confusing code in ``Gene\n\n[Retrieved artifact python/cpython#25449@open chunk 0]\nArtifact ID: python/cpython#25449@open\nDecision ID: python/cpython#25449\nRepository: python/cpython\nTimestamp: 2021-04-17T02:46:15Z\nSource URL: https://github.com/python/cpython/pull/25449\nPinned revision: github-open-event-2021-04-17T02:46:15Z\nLifecycle status: OPEN\nAuthority scope: python-paramspec-implementation\nExplicitly reverts: python/cpython#23702\nSource text (verbatim excerpt):\nbpo-41559: Change PEP 612 implementation to pure Python\n- Reverted changes in ``genericaliasobject.c`` to commit 463c7d3d149283814d879a9bb8411af64e656c8e (right before PEP 612) via a clean ``git checkout 463c7d3d149283814d879a9bb8411af64e656c8e -- genericaliasobject.c``.\r\n- Implemented PEP 612 behavior only in ``collections.abc.Callable`` in pure Python.\r\n\r\nPR 1/2, another update to typing.py is coming later, but that's not urgent.\r\n\r\nThe intention of this change is to conform more strictly to PEP 612. Specifically, this snippet:\r\n> As before, parameters_expressions by themselves are not acceptable in places where a type is expected\r\n\r\nhttps://www.python.org/dev/peps/pep-0612/#valid-use-locations\r\n\r\nThe current implementation leaks extra behavior into all builtin ``GenericAlias`` types just for the sake of ``collections.abc.Callable``, which is out of the scope of the PEP. Since there is no need to support ``ParamSpec`` in other places, it's valid to not have them in ``__parameters__`` of all builtin generics. except for ``collections.abc.Callable``.\r\n\r\nThis will also speed up builtin ``GenericAlias`` as it has to do less checks, and reduce the amount of confusing code in ``GenericAlias`` (t\n\n[Retrieved artifact python/cpython#23702@open chunk 0]\nArtifact ID: python/cpython#23702@open\nDecision ID: python/cpython#23702\nRepository: python/cpython\nTimestamp: 2020-12-08T17:21:09Z\nSource URL: https://github.com/python/cpython/pull/23702\nPinned revision: github-open-event-2020-12-08T17:21:09Z\nLifecycle status: OPEN\nAuthority scope: python-paramspec-implementation\nExplicitly implements: PEP-612\nSource text (verbatim excerpt):\nbpo-41559: Implement PEP 612 - Add ParamSpec and Concatenate to typing\nChanges:\r\n\r\n- [X] Add ParamSpec and Concatenate to typing.\r\n- [X] Allow both in Callable\r\n- [X] Allow ParamSpec in Generic \r\n- [X] Treat ParamSpec as a TypeVar  (add them to ``__parameters__`` ) in: \r\n  - [X] typing generics\r\n  - [X] types.GenericAlias\r\n- [X] Generics parameterized with ParamSpec and subscripted with lists should cast those lists to tuple:\r\n  - [X] typing.Generic\r\n  - [X] types.GenericAlias\r\n- [X] Tests for ParamSpec\r\n  - [X] Test specified use cases with typing.Callable.\r\n  - [X] Test specified use cases with collections.abc.Callable.\r\n  - [X] Test user defined generics\r\n  - [X] TypeVar like substitution\r\n- [X] Tests for Concatenate\r\n- [X] Loosened Generic and GenericAlias type checks to allow for nearly anything.\r\n\r\nDocumentation will be another patch. \r\n\r\n<!-- issue-number: [bpo-41559](https://bugs.python.org/issue41559) -->\r\nhttps://bugs.python.org/issue41559\r\n<!-- /issue-number -->\r\n\nDecision role: IMPLEMENTATION\n\n[Retrieved artifact python/cpython#23702@merged chunk 0]\nArtifact ID: python/cpython#23702@merged\nDecision ID: python/cpython#23702\nRepository: python/cpython\nTimestamp: 2020-12-24T04:33:49Z\nSource URL: https://github.com/python/cpython/pull/23702\nPinned revision: 73607be68668ab7f4bee53507c8dc7b5a46c9cb4\nLifecycle status: MERGED\nAuthority scope: python-paramspec-implementation\nExplicitly implements: PEP-612\nSource text (verbatim excerpt):\nbpo-41559: Implement PEP 612 - Add ParamSpec and Concatenate to typing\nChanges:\r\n\r\n- [X] Add ParamSpec and Concatenate to typing.\r\n- [X] Allow both in Callable\r\n- [X] Allow ParamSpec in Generic \r\n- [X] Treat ParamSpec as a TypeVar  (add them to ``__parameters__`` ) in: \r\n  - [X] typing generics\r\n  - [X] types.GenericAlias\r\n- [X] Generics parameterized with ParamSpec and subscripted with lists should cast those lists to tuple:\r\n  - [X] typing.Generic\r\n  - [X] types.GenericAlias\r\n- [X] Tests for ParamSpec\r\n  - [X] Test specified use cases with typing.Callable.\r\n  - [X] Test specified use cases with collections.abc.Callable.\r\n  - [X] Test user defined generics\r\n  - [X] TypeVar like substitution\r\n- [X] Tests for Concatenate\r\n- [X] Loosened Generic and GenericAlias type checks to allow for nearly anything.\r\n\r\nDocumentation will be another patch. \r\n\r\n<!-- issue-number: [bpo-41559](https://bugs.python.org/issue41559) -->\r\nhttps://bugs.python.org/issue41559\r\n<!-- /issue-number -->\r\n\nDecision role: IMPLEMENTATION\n\n[Retrieved artifact python/cpython#25449@merged chunk 1]\n_`` of all builtin generics. except for ``collections.abc.Callable``.\r\n\r\nThis will also speed up builtin ``GenericAlias`` as it has to do less checks, and reduce the amount of confusing code in ``GenericAlias`` (though it defers that to ``collections.abc.Callable``.)\r\n\r\n<!-- issue-number: [bpo-41559](https://bugs.python.org/issue41559) -->\r\nhttps://bugs.python.org/issue41559\r\n<!-- /issue-number -->\nDecision role: IMPLEMENTATION\n\n[Retrieved artifact python/cpython#25449@open chunk 1]\niltin generics. except for ``collections.abc.Callable``.\r\n\r\nThis will also speed up builtin ``GenericAlias`` as it has to do less checks, and reduce the amount of confusing code in ``GenericAlias`` (though it defers that to ``collections.abc.Callable``.)\r\n\r\n<!-- issue-number: [bpo-41559](https://bugs.python.org/issue41559) -->\r\nhttps://bugs.python.org/issue41559\r\n<!-- /issue-number -->\nDecision role: IMPLEMENTATION\n\nDeveloper question: What organizational decision currently governs python paramspec policy after the code rollback? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: PEP-612@final\nDecision ID: PEP-612\nRepository: python/peps\nTimestamp: 2020-12-01T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0612.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-paramspec-policy\nSource text (verbatim excerpt):\nPEP: 612\nStatus: Final\nDecision role: POLICY\n\nArtifact ID: python/cpython#23702@open\nDecision ID: python/cpython#23702\nRepository: python/cpython\nTimestamp: 2020-12-08T17:21:09Z\nSource URL: https://github.com/python/cpython/pull/23702\nPinned revision: github-open-event-2020-12-08T17:21:09Z\nLifecycle status: OPEN\nAuthority scope: python-paramspec-implementation\nExplicitly implements: PEP-612\nSource text (verbatim excerpt):\nbpo-41559: Implement PEP 612 - Add ParamSpec and Concatenate to typing\nChanges:\r\n\r\n- [X] Add ParamSpec and Concatenate to typing.\r\n- [X] Allow both in Callable\r\n- [X] Allow ParamSpec in Generic \r\n- [X] Treat ParamSpec as a TypeVar  (add them to ``__parameters__`` ) in: \r\n  - [X] typing generics\r\n  - [X] types.GenericAlias\r\n- [X] Generics parameterized with ParamSpec and subscripted with lists should cast those lists to tuple:\r\n  - [X] typing.Generic\r\n  - [X] types.GenericAlias\r\n- [X] Tests for ParamSpec\r\n  - [X] Test specified use cases with typing.Callable.\r\n  - [X] Test specified use cases with collections.abc.Callable.\r\n  - [X] Test user defined generics\r\n  - [X] TypeVar like substitution\r\n- [X] Tests for Concatenate\r\n- [X] Loosened Generic and GenericAlias type checks to allow for nearly anything.\r\n\r\nDocumentation will be another patch. \r\n\r\n<!-- issue-number: [bpo-41559](https://bugs.python.org/issue41559) -->\r\nhttps://bugs.python.org/issue41559\r\n<!-- /issue-number -->\r\n\nDecision role: IMPLEMENTATION\n\nArtifact ID: python/cpython#23702@merged\nDecision ID: python/cpython#23702\nRepository: python/cpython\nTimestamp: 2020-12-24T04:33:49Z\nSource URL: https://github.com/python/cpython/pull/23702\nPinned revision: 73607be68668ab7f4bee53507c8dc7b5a46c9cb4\nLifecycle status: MERGED\nAuthority scope: python-paramspec-implementation\nExplicitly implements: PEP-612\nSource text (verbatim excerpt):\nbpo-41559: Implement PEP 612 - Add ParamSpec and Concatenate to typing\nChanges:\r\n\r\n- [X] Add ParamSpec and Concatenate to typing.\r\n- [X] Allow both in Callable\r\n- [X] Allow ParamSpec in Generic \r\n- [X] Treat ParamSpec as a TypeVar  (add them to ``__parameters__`` ) in: \r\n  - [X] typing generics\r\n  - [X] types.GenericAlias\r\n- [X] Generics parameterized with ParamSpec and subscripted with lists should cast those lists to tuple:\r\n  - [X] typing.Generic\r\n  - [X] types.GenericAlias\r\n- [X] Tests for ParamSpec\r\n  - [X] Test specified use cases with typing.Callable.\r\n  - [X] Test specified use cases with collections.abc.Callable.\r\n  - [X] Test user defined generics\r\n  - [X] TypeVar like substitution\r\n- [X] Tests for Concatenate\r\n- [X] Loosened Generic and GenericAlias type checks to allow for nearly anything.\r\n\r\nDocumentation will be another patch. \r\n\r\n<!-- issue-number: [bpo-41559](https://bugs.python.org/issue41559) -->\r\nhttps://bugs.python.org/issue41559\r\n<!-- /issue-number -->\r\n\nDecision role: IMPLEMENTATION\n\nArtifact ID: python/cpython#25449@open\nDecision ID: python/cpython#25449\nRepository: python/cpython\nTimestamp: 2021-04-17T02:46:15Z\nSource URL: https://github.com/python/cpython/pull/25449\nPinned revision: github-open-event-2021-04-17T02:46:15Z\nLifecycle status: OPEN\nAuthority scope: python-paramspec-implementation\nExplicitly reverts: python/cpython#23702\nSource text (verbatim excerpt):\nbpo-41559: Change PEP 612 implementation to pure Python\n- Reverted changes in ``genericaliasobject.c`` to commit 463c7d3d149283814d879a9bb8411af64e656c8e (right before PEP 612) via a clean ``git checkout 463c7d3d149283814d879a9bb8411af64e656c8e -- genericaliasobject.c``.\r\n- Implemented PEP 612 behavior only in ``collections.abc.Callable`` in pure Python.\r\n\r\nPR 1/2, another update to typing.py is coming later, but that's not urgent.\r\n\r\nThe intention of this change is to conform more strictly to PEP 612. Specifically, this snippet:\r\n> As before, parameters_expressions by themselves are not acceptable in places where a type is expected\r\n\r\nhttps://www.python.org/dev/peps/pep-0612/#valid-use-locations\r\n\r\nThe current implementation leaks extra behavior into all builtin ``GenericAlias`` types just for the sake of ``collections.abc.Callable``, which is out of the scope of the PEP. Since there is no need to support ``ParamSpec`` in other places, it's valid to not have them in ``__parameters__`` of all builtin generics. except for ``collections.abc.Callable``.\r\n\r\nThis will also speed up builtin ``GenericAlias`` as it has to do less checks, and reduce the amount of confusing code in ``GenericAlias`` (though it defers that to ``collections.abc.Callable``.)\r\n\r\n<!-- issue-number: [bpo-41559](https://bugs.python.org/issue41559) -->\r\nhttps://bugs.python.org/issue41559\r\n<!-- /issue-number -->\nDecision role: IMPLEMENTATION\n\nArtifact ID: python/cpython#25449@merged\nDecision ID: python/cpython#25449\nRepository: python/cpython\nTimestamp: 2021-04-28T15:38:15Z\nSource URL: https://github.com/python/cpython/pull/25449\nPinned revision: 859577c24981d6b36960d309f99f7fc810fe75c2\nLifecycle status: REVERT_MERGED\nAuthority scope: python-paramspec-implementation\nExplicitly reverts: python/cpython#23702\nSource text (verbatim excerpt):\nbpo-41559: Change PEP 612 implementation to pure Python\n- Reverted changes in ``genericaliasobject.c`` to commit 463c7d3d149283814d879a9bb8411af64e656c8e (right before PEP 612) via a clean ``git checkout 463c7d3d149283814d879a9bb8411af64e656c8e -- genericaliasobject.c``.\r\n- Implemented PEP 612 behavior only in ``collections.abc.Callable`` in pure Python.\r\n\r\nPR 1/2, another update to typing.py is coming later, but that's not urgent.\r\n\r\nThe intention of this change is to conform more strictly to PEP 612. Specifically, this snippet:\r\n> As before, parameters_expressions by themselves are not acceptable in places where a type is expected\r\n\r\nhttps://www.python.org/dev/peps/pep-0612/#valid-use-locations\r\n\r\nThe current implementation leaks extra behavior into all builtin ``GenericAlias`` types just for the sake of ``collections.abc.Callable``, which is out of the scope of the PEP. Since there is no need to support ``ParamSpec`` in other places, it's valid to not have them in ``__parameters__`` of all builtin generics. except for ``collections.abc.Callable``.\r\n\r\nThis will also speed up builtin ``GenericAlias`` as it has to do less checks, and reduce the amount of confusing code in ``GenericAlias`` (though it defers that to ``collections.abc.Callable``.)\r\n\r\n<!-- issue-number: [bpo-41559](https://bugs.python.org/issue41559) -->\r\nhttps://bugs.python.org/issue41559\r\n<!-- /issue-number -->\nDecision role: IMPLEMENTATION\n\nDeveloper question: What organizational decision currently governs python paramspec policy after the code rollback? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "0c8c9a178b594a498a7b7cc85b395d77e0b5e2889bbaac8dbcc2c282d32031e3",
+    "rag_embedding": "39c6b9cfa676c903d87a5a2f23cd45ed369eaeaf667dbd09dfc0fd08a06e3b72",
+    "rag_full_context": "c317292569d5cba22f4c745ded4c3ee4b2726a0938d87b4e15701e2f069f5060"
+  },
+  "expected_answer_fields_present": false
+}

@@ -1,0 +1,64 @@
+{
+  "checkpoint_id": "rust-global-allocator-c1",
+  "timeline_id": "rust-global-allocator",
+  "question": "What organizational decision currently governs rust global allocator? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "RFC-1183@merged",
+      "decision_id": "RFC-1183",
+      "sequence": 1,
+      "rendered_sha256": "d2fac7c4f88e6849d73ab0a96d18d480256f3db3b1cc80744e0c7d3027e3d794"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "RFC-1183@merged"
+    ],
+    "rag_embedding": [
+      "RFC-1183@merged"
+    ],
+    "rag_full_context": [
+      "RFC-1183@merged"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 0,
+      "artifact_id": "RFC-1183@merged",
+      "chunk_index": 0,
+      "similarity": 0.7951092366532677
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "RFC-1183@merged"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-1183"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-1183@merged"
+    ],
+    "resolver_explanation": "rust-global-allocator: RFC-1183 is the sole eligible active decision in scope 'rust-global-allocator'.",
+    "derivations": [
+      {
+        "artifact_id": "RFC-1183@merged",
+        "decision_id": "RFC-1183",
+        "status": "IMPLEMENTED",
+        "edges": []
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"RFC-1183\"]\nResolver explanation: rust-global-allocator: RFC-1183 is the sole eligible active decision in scope 'rust-global-allocator'.\n\nEvidence:\nArtifact ID: RFC-1183@merged\nDecision ID: RFC-1183\nRepository: rust-lang/rfcs\nTimestamp: 2015-07-29T21:39:23Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1183-swap-out-jemalloc.md\nPinned revision: 3282a5648465b7e63a51d41835581fb888e568a9\nLifecycle status: MERGED\nAuthority scope: rust-global-allocator\nSource text (verbatim excerpt):\nRFC: Allow changing the default allocator\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs rust global allocator? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact RFC-1183@merged chunk 0]\nArtifact ID: RFC-1183@merged\nDecision ID: RFC-1183\nRepository: rust-lang/rfcs\nTimestamp: 2015-07-29T21:39:23Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1183-swap-out-jemalloc.md\nPinned revision: 3282a5648465b7e63a51d41835581fb888e568a9\nLifecycle status: MERGED\nAuthority scope: rust-global-allocator\nSource text (verbatim excerpt):\nRFC: Allow changing the default allocator\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs rust global allocator? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: RFC-1183@merged\nDecision ID: RFC-1183\nRepository: rust-lang/rfcs\nTimestamp: 2015-07-29T21:39:23Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1183-swap-out-jemalloc.md\nPinned revision: 3282a5648465b7e63a51d41835581fb888e568a9\nLifecycle status: MERGED\nAuthority scope: rust-global-allocator\nSource text (verbatim excerpt):\nRFC: Allow changing the default allocator\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs rust global allocator? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "5a9cb7a586769b24275142800ea9db021f5b6685f0a1c9ffe4bace947f7e6574",
+    "rag_embedding": "fe8b4b4a289ad4f4403abb0b097d6bf7d4bbf75bdd7f5eee9567f20f87fc4638",
+    "rag_full_context": "8e61b2b1110ad1b9fab7a9d55a27cd62d766f1595d21bbd55de1808b8d189949"
+  },
+  "expected_answer_fields_present": false
+}

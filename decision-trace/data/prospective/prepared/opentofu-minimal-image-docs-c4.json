@@ -1,0 +1,149 @@
+{
+  "checkpoint_id": "opentofu-minimal-image-docs-c4",
+  "timeline_id": "opentofu-minimal-image-docs",
+  "question": "What organizational decision currently governs opentofu minimal image docs after rollback merged? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "opentofu/opentofu#2403@open",
+      "decision_id": "opentofu/opentofu#2403",
+      "sequence": 1,
+      "rendered_sha256": "936ee4d1de02b42893bfbae1337128888d342a31d3906c4cfc875a27da0448db"
+    },
+    {
+      "artifact_id": "opentofu/opentofu#2403@merged",
+      "decision_id": "opentofu/opentofu#2403",
+      "sequence": 2,
+      "rendered_sha256": "6320ffd9338eb7ed8d6f9288e53f4eaa67a51cfb68ac97878cc598c32628c392"
+    },
+    {
+      "artifact_id": "opentofu/opentofu#2404@open",
+      "decision_id": "opentofu/opentofu#2404",
+      "sequence": 3,
+      "rendered_sha256": "a2c7069a26386ef9b82d16e09d646a6a7a1502103dbddfd62ef44ffc84e86d5e"
+    },
+    {
+      "artifact_id": "opentofu/opentofu#2404@merged",
+      "decision_id": "opentofu/opentofu#2404",
+      "sequence": 4,
+      "rendered_sha256": "07bc606d3dab515a6d306b18e597dce1cfb1073b837957252f474b3a0d93c096"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "opentofu/opentofu#2403@open",
+      "opentofu/opentofu#2403@merged",
+      "opentofu/opentofu#2404@open",
+      "opentofu/opentofu#2404@merged"
+    ],
+    "rag_embedding": [
+      "opentofu/opentofu#2403@open",
+      "opentofu/opentofu#2403@merged",
+      "opentofu/opentofu#2404@open",
+      "opentofu/opentofu#2404@merged"
+    ],
+    "rag_full_context": [
+      "opentofu/opentofu#2403@open",
+      "opentofu/opentofu#2403@merged",
+      "opentofu/opentofu#2404@open",
+      "opentofu/opentofu#2404@merged"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 5,
+      "artifact_id": "opentofu/opentofu#2404@merged",
+      "chunk_index": 0,
+      "similarity": 0.8367077584062314
+    },
+    {
+      "ordinal": 4,
+      "artifact_id": "opentofu/opentofu#2404@open",
+      "chunk_index": 0,
+      "similarity": 0.8360892494494353
+    },
+    {
+      "ordinal": 2,
+      "artifact_id": "opentofu/opentofu#2403@merged",
+      "chunk_index": 0,
+      "similarity": 0.8095092481049325
+    },
+    {
+      "ordinal": 0,
+      "artifact_id": "opentofu/opentofu#2403@open",
+      "chunk_index": 0,
+      "similarity": 0.8004947477689495
+    },
+    {
+      "ordinal": 1,
+      "artifact_id": "opentofu/opentofu#2403@open",
+      "chunk_index": 1,
+      "similarity": 0.6603939894596405
+    },
+    {
+      "ordinal": 3,
+      "artifact_id": "opentofu/opentofu#2403@merged",
+      "chunk_index": 1,
+      "similarity": 0.6591800203494808
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "opentofu/opentofu#2404@merged",
+    "opentofu/opentofu#2404@open",
+    "opentofu/opentofu#2403@merged",
+    "opentofu/opentofu#2403@open",
+    "opentofu/opentofu#2403@open",
+    "opentofu/opentofu#2403@merged"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "opentofu/opentofu#2404"
+    ],
+    "evidence_artifact_ids": [
+      "opentofu/opentofu#2404@merged"
+    ],
+    "resolver_explanation": "opentofu-minimal-image-docs: opentofu/opentofu#2404 is the sole eligible active decision in scope 'opentofu-minimal-image-docs'.",
+    "derivations": [
+      {
+        "artifact_id": "opentofu/opentofu#2403@open",
+        "decision_id": "opentofu/opentofu#2403",
+        "status": "PROPOSED",
+        "edges": []
+      },
+      {
+        "artifact_id": "opentofu/opentofu#2403@merged",
+        "decision_id": "opentofu/opentofu#2403",
+        "status": "IMPLEMENTED",
+        "edges": []
+      },
+      {
+        "artifact_id": "opentofu/opentofu#2404@open",
+        "decision_id": "opentofu/opentofu#2404",
+        "status": "PROPOSED",
+        "edges": []
+      },
+      {
+        "artifact_id": "opentofu/opentofu#2404@merged",
+        "decision_id": "opentofu/opentofu#2404",
+        "status": "REVERTED",
+        "edges": [
+          [
+            "opentofu/opentofu#2403",
+            "REVERTS"
+          ]
+        ]
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"opentofu/opentofu#2404\"]\nResolver explanation: opentofu-minimal-image-docs: opentofu/opentofu#2404 is the sole eligible active decision in scope 'opentofu-minimal-image-docs'.\n\nEvidence:\nArtifact ID: opentofu/opentofu#2404@merged\nDecision ID: opentofu/opentofu#2404\nRepository: opentofu/opentofu\nTimestamp: 2025-04-25T11:22:19Z\nSource URL: https://github.com/opentofu/opentofu/pull/2404\nPinned revision: f6f5d109038ca278f57e20e788309d55e4226ab1\nLifecycle status: REVERT_MERGED\nAuthority scope: opentofu-minimal-image-docs\nExplicitly reverts: opentofu/opentofu#2403\nSource text (verbatim excerpt):\nRevert \"Temporary revert minimal image docs\"\nReverts opentofu/opentofu#2403\r\n\r\n\u26a0\ufe0f To be merged just before or after the 1.9.1 release.\nDecision role: IMPLEMENTATION\n\nDeveloper question: What organizational decision currently governs opentofu minimal image docs after rollback merged? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact opentofu/opentofu#2404@merged chunk 0]\nArtifact ID: opentofu/opentofu#2404@merged\nDecision ID: opentofu/opentofu#2404\nRepository: opentofu/opentofu\nTimestamp: 2025-04-25T11:22:19Z\nSource URL: https://github.com/opentofu/opentofu/pull/2404\nPinned revision: f6f5d109038ca278f57e20e788309d55e4226ab1\nLifecycle status: REVERT_MERGED\nAuthority scope: opentofu-minimal-image-docs\nExplicitly reverts: opentofu/opentofu#2403\nSource text (verbatim excerpt):\nRevert \"Temporary revert minimal image docs\"\nReverts opentofu/opentofu#2403\r\n\r\n\u26a0\ufe0f To be merged just before or after the 1.9.1 release.\nDecision role: IMPLEMENTATION\n\n[Retrieved artifact opentofu/opentofu#2404@open chunk 0]\nArtifact ID: opentofu/opentofu#2404@open\nDecision ID: opentofu/opentofu#2404\nRepository: opentofu/opentofu\nTimestamp: 2025-01-21T13:04:54Z\nSource URL: https://github.com/opentofu/opentofu/pull/2404\nPinned revision: github-open-event-2025-01-21T13:04:54Z\nLifecycle status: OPEN\nAuthority scope: opentofu-minimal-image-docs\nExplicitly reverts: opentofu/opentofu#2403\nSource text (verbatim excerpt):\nRevert \"Temporary revert minimal image docs\"\nReverts opentofu/opentofu#2403\r\n\r\n\u26a0\ufe0f To be merged just before or after the 1.9.1 release.\nDecision role: IMPLEMENTATION\n\n[Retrieved artifact opentofu/opentofu#2403@merged chunk 0]\nArtifact ID: opentofu/opentofu#2403@merged\nDecision ID: opentofu/opentofu#2403\nRepository: opentofu/opentofu\nTimestamp: 2025-01-21T13:04:03Z\nSource URL: https://github.com/opentofu/opentofu/pull/2403\nPinned revision: a36af7ba8a7587ec2923b6043d8d01cc3ca83779\nLifecycle status: MERGED\nAuthority scope: opentofu-minimal-image-docs\nSource text (verbatim excerpt):\nTemporary revert minimal image docs\n## Target Release\r\n\r\n1.9.0\r\n\r\n## Checklist\r\n\r\n<!-- Please check of ALL items in this list for all PRs: -->\r\n\r\n- [X] I have read the [contribution guide](https://github.com/opentofu/opentofu/blob/main/CONTRIBUTING.md).\r\n- [X] I have not used an AI coding assistant to create this PR.\r\n- [X] I have written all code in this PR myself OR I have marked all code I have not written myself (including modified code, e.g. copied from other places and then modified) with a comment indicating where it came from.\r\n- [X] I (and other contributors to this PR) have not looked at the Terraform source code while implementing this PR.\r\n\r\n### Go checklist\r\n\r\n<!-- If your PR contains Go code, please make sure you check off all items on this list: --> \r\n\r\n- [ ] I have run golangci-lint on my change and receive no errors relevant to my code.\r\n- [ ] I have run existing tests to ensure my code doesn't break anything.\r\n- [ ] I have added tests for all relevant use cases of my code, and those tests are passing.\r\n- [ ] I have only exported functions, variables and structs that should be used from other packages.\r\n- [ ] I have added meaningful comments to all exported functions, variables, and structs.\r\n\r\n### Websi\n\n[Retrieved artifact opentofu/opentofu#2403@open chunk 0]\nArtifact ID: opentofu/opentofu#2403@open\nDecision ID: opentofu/opentofu#2403\nRepository: opentofu/opentofu\nTimestamp: 2025-01-21T12:53:14Z\nSource URL: https://github.com/opentofu/opentofu/pull/2403\nPinned revision: github-open-event-2025-01-21T12:53:14Z\nLifecycle status: OPEN\nAuthority scope: opentofu-minimal-image-docs\nSource text (verbatim excerpt):\nTemporary revert minimal image docs\n## Target Release\r\n\r\n1.9.0\r\n\r\n## Checklist\r\n\r\n<!-- Please check of ALL items in this list for all PRs: -->\r\n\r\n- [X] I have read the [contribution guide](https://github.com/opentofu/opentofu/blob/main/CONTRIBUTING.md).\r\n- [X] I have not used an AI coding assistant to create this PR.\r\n- [X] I have written all code in this PR myself OR I have marked all code I have not written myself (including modified code, e.g. copied from other places and then modified) with a comment indicating where it came from.\r\n- [X] I (and other contributors to this PR) have not looked at the Terraform source code while implementing this PR.\r\n\r\n### Go checklist\r\n\r\n<!-- If your PR contains Go code, please make sure you check off all items on this list: --> \r\n\r\n- [ ] I have run golangci-lint on my change and receive no errors relevant to my code.\r\n- [ ] I have run existing tests to ensure my code doesn't break anything.\r\n- [ ] I have added tests for all relevant use cases of my code, and those tests are passing.\r\n- [ ] I have only exported functions, variables and structs that should be used from other packages.\r\n- [ ] I have added meaningful comments to all exported functions, variables, and structs.\r\n\r\n### Website/doc\n\n[Retrieved artifact opentofu/opentofu#2403@open chunk 1]\nve only exported functions, variables and structs that should be used from other packages.\r\n- [ ] I have added meaningful comments to all exported functions, variables, and structs.\r\n\r\n### Website/documentation checklist\r\n\r\n<!-- If you have changed the website, please follow this checklist: -->\r\n\r\n- [ ] I have locally started the website as [described here](https://github.com/opentofu/opentofu/blob/main/website/README.md) and checked my changes.\r\n\nDecision role: IMPLEMENTATION\n\n[Retrieved artifact opentofu/opentofu#2403@merged chunk 1]\n] I have only exported functions, variables and structs that should be used from other packages.\r\n- [ ] I have added meaningful comments to all exported functions, variables, and structs.\r\n\r\n### Website/documentation checklist\r\n\r\n<!-- If you have changed the website, please follow this checklist: -->\r\n\r\n- [ ] I have locally started the website as [described here](https://github.com/opentofu/opentofu/blob/main/website/README.md) and checked my changes.\r\n\nDecision role: IMPLEMENTATION\n\nDeveloper question: What organizational decision currently governs opentofu minimal image docs after rollback merged? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: opentofu/opentofu#2403@open\nDecision ID: opentofu/opentofu#2403\nRepository: opentofu/opentofu\nTimestamp: 2025-01-21T12:53:14Z\nSource URL: https://github.com/opentofu/opentofu/pull/2403\nPinned revision: github-open-event-2025-01-21T12:53:14Z\nLifecycle status: OPEN\nAuthority scope: opentofu-minimal-image-docs\nSource text (verbatim excerpt):\nTemporary revert minimal image docs\n## Target Release\r\n\r\n1.9.0\r\n\r\n## Checklist\r\n\r\n<!-- Please check of ALL items in this list for all PRs: -->\r\n\r\n- [X] I have read the [contribution guide](https://github.com/opentofu/opentofu/blob/main/CONTRIBUTING.md).\r\n- [X] I have not used an AI coding assistant to create this PR.\r\n- [X] I have written all code in this PR myself OR I have marked all code I have not written myself (including modified code, e.g. copied from other places and then modified) with a comment indicating where it came from.\r\n- [X] I (and other contributors to this PR) have not looked at the Terraform source code while implementing this PR.\r\n\r\n### Go checklist\r\n\r\n<!-- If your PR contains Go code, please make sure you check off all items on this list: --> \r\n\r\n- [ ] I have run golangci-lint on my change and receive no errors relevant to my code.\r\n- [ ] I have run existing tests to ensure my code doesn't break anything.\r\n- [ ] I have added tests for all relevant use cases of my code, and those tests are passing.\r\n- [ ] I have only exported functions, variables and structs that should be used from other packages.\r\n- [ ] I have added meaningful comments to all exported functions, variables, and structs.\r\n\r\n### Website/documentation checklist\r\n\r\n<!-- If you have changed the website, please follow this checklist: -->\r\n\r\n- [ ] I have locally started the website as [described here](https://github.com/opentofu/opentofu/blob/main/website/README.md) and checked my changes.\r\n\nDecision role: IMPLEMENTATION\n\nArtifact ID: opentofu/opentofu#2403@merged\nDecision ID: opentofu/opentofu#2403\nRepository: opentofu/opentofu\nTimestamp: 2025-01-21T13:04:03Z\nSource URL: https://github.com/opentofu/opentofu/pull/2403\nPinned revision: a36af7ba8a7587ec2923b6043d8d01cc3ca83779\nLifecycle status: MERGED\nAuthority scope: opentofu-minimal-image-docs\nSource text (verbatim excerpt):\nTemporary revert minimal image docs\n## Target Release\r\n\r\n1.9.0\r\n\r\n## Checklist\r\n\r\n<!-- Please check of ALL items in this list for all PRs: -->\r\n\r\n- [X] I have read the [contribution guide](https://github.com/opentofu/opentofu/blob/main/CONTRIBUTING.md).\r\n- [X] I have not used an AI coding assistant to create this PR.\r\n- [X] I have written all code in this PR myself OR I have marked all code I have not written myself (including modified code, e.g. copied from other places and then modified) with a comment indicating where it came from.\r\n- [X] I (and other contributors to this PR) have not looked at the Terraform source code while implementing this PR.\r\n\r\n### Go checklist\r\n\r\n<!-- If your PR contains Go code, please make sure you check off all items on this list: --> \r\n\r\n- [ ] I have run golangci-lint on my change and receive no errors relevant to my code.\r\n- [ ] I have run existing tests to ensure my code doesn't break anything.\r\n- [ ] I have added tests for all relevant use cases of my code, and those tests are passing.\r\n- [ ] I have only exported functions, variables and structs that should be used from other packages.\r\n- [ ] I have added meaningful comments to all exported functions, variables, and structs.\r\n\r\n### Website/documentation checklist\r\n\r\n<!-- If you have changed the website, please follow this checklist: -->\r\n\r\n- [ ] I have locally started the website as [described here](https://github.com/opentofu/opentofu/blob/main/website/README.md) and checked my changes.\r\n\nDecision role: IMPLEMENTATION\n\nArtifact ID: opentofu/opentofu#2404@open\nDecision ID: opentofu/opentofu#2404\nRepository: opentofu/opentofu\nTimestamp: 2025-01-21T13:04:54Z\nSource URL: https://github.com/opentofu/opentofu/pull/2404\nPinned revision: github-open-event-2025-01-21T13:04:54Z\nLifecycle status: OPEN\nAuthority scope: opentofu-minimal-image-docs\nExplicitly reverts: opentofu/opentofu#2403\nSource text (verbatim excerpt):\nRevert \"Temporary revert minimal image docs\"\nReverts opentofu/opentofu#2403\r\n\r\n\u26a0\ufe0f To be merged just before or after the 1.9.1 release.\nDecision role: IMPLEMENTATION\n\nArtifact ID: opentofu/opentofu#2404@merged\nDecision ID: opentofu/opentofu#2404\nRepository: opentofu/opentofu\nTimestamp: 2025-04-25T11:22:19Z\nSource URL: https://github.com/opentofu/opentofu/pull/2404\nPinned revision: f6f5d109038ca278f57e20e788309d55e4226ab1\nLifecycle status: REVERT_MERGED\nAuthority scope: opentofu-minimal-image-docs\nExplicitly reverts: opentofu/opentofu#2403\nSource text (verbatim excerpt):\nRevert \"Temporary revert minimal image docs\"\nReverts opentofu/opentofu#2403\r\n\r\n\u26a0\ufe0f To be merged just before or after the 1.9.1 release.\nDecision role: IMPLEMENTATION\n\nDeveloper question: What organizational decision currently governs opentofu minimal image docs after rollback merged? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "30302423e0eb44a1818b3b535246f623c4b49a10bae0b67cf71f28a4df2dcdae",
+    "rag_embedding": "f0cc9f2aeae7436ce135b41db9737eb5f7508c2e4992b8f9c87df9e37c72efea",
+    "rag_full_context": "a41e3a0501067996df950858cc61ac31bbeeed48f6d4700ecb5b964915fa2b5a"
+  },
+  "expected_answer_fields_present": false
+}

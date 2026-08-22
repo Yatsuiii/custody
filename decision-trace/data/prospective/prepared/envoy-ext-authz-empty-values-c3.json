@@ -1,0 +1,108 @@
+{
+  "checkpoint_id": "envoy-ext-authz-empty-values-c3",
+  "timeline_id": "envoy-ext-authz-empty-values",
+  "question": "What organizational decision currently governs envoy ext authz empty values while rollback is proposed? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "envoyproxy/envoy#45103@open",
+      "decision_id": "envoyproxy/envoy#45103",
+      "sequence": 1,
+      "rendered_sha256": "d21eddf3d466855d0043374782ff363405a6cc1e0935de4cd3894c6b6ac33bd4"
+    },
+    {
+      "artifact_id": "envoyproxy/envoy#45103@merged",
+      "decision_id": "envoyproxy/envoy#45103",
+      "sequence": 2,
+      "rendered_sha256": "315302bc50b305489519a1f7a0634cd7baad52b53e1ab489283867dfd607b5e4"
+    },
+    {
+      "artifact_id": "envoyproxy/envoy#45321@open",
+      "decision_id": "envoyproxy/envoy#45321",
+      "sequence": 3,
+      "rendered_sha256": "aaafefd2f5344e7348419c6fbf4b818a9bcb20d2c33bddbd69d6bc8a216d35e9"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "envoyproxy/envoy#45103@open",
+      "envoyproxy/envoy#45103@merged",
+      "envoyproxy/envoy#45321@open"
+    ],
+    "rag_embedding": [
+      "envoyproxy/envoy#45103@open",
+      "envoyproxy/envoy#45103@merged",
+      "envoyproxy/envoy#45321@open"
+    ],
+    "rag_full_context": [
+      "envoyproxy/envoy#45103@open",
+      "envoyproxy/envoy#45103@merged",
+      "envoyproxy/envoy#45321@open"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 2,
+      "artifact_id": "envoyproxy/envoy#45321@open",
+      "chunk_index": 0,
+      "similarity": 0.8060507689915409
+    },
+    {
+      "ordinal": 1,
+      "artifact_id": "envoyproxy/envoy#45103@merged",
+      "chunk_index": 0,
+      "similarity": 0.7761474061713701
+    },
+    {
+      "ordinal": 0,
+      "artifact_id": "envoyproxy/envoy#45103@open",
+      "chunk_index": 0,
+      "similarity": 0.7716199904041589
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "envoyproxy/envoy#45321@open",
+    "envoyproxy/envoy#45103@merged",
+    "envoyproxy/envoy#45103@open"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "envoyproxy/envoy#45103"
+    ],
+    "evidence_artifact_ids": [
+      "envoyproxy/envoy#45103@merged"
+    ],
+    "resolver_explanation": "envoy-ext-authz-empty-values: envoyproxy/envoy#45103 is the sole eligible active decision in scope 'envoy-ext-authz-empty-values'.",
+    "derivations": [
+      {
+        "artifact_id": "envoyproxy/envoy#45103@open",
+        "decision_id": "envoyproxy/envoy#45103",
+        "status": "PROPOSED",
+        "edges": []
+      },
+      {
+        "artifact_id": "envoyproxy/envoy#45103@merged",
+        "decision_id": "envoyproxy/envoy#45103",
+        "status": "IMPLEMENTED",
+        "edges": []
+      },
+      {
+        "artifact_id": "envoyproxy/envoy#45321@open",
+        "decision_id": "envoyproxy/envoy#45321",
+        "status": "PROPOSED",
+        "edges": []
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"envoyproxy/envoy#45103\"]\nResolver explanation: envoy-ext-authz-empty-values: envoyproxy/envoy#45103 is the sole eligible active decision in scope 'envoy-ext-authz-empty-values'.\n\nEvidence:\nArtifact ID: envoyproxy/envoy#45103@merged\nDecision ID: envoyproxy/envoy#45103\nRepository: envoyproxy/envoy\nTimestamp: 2026-05-24T01:08:21Z\nSource URL: https://github.com/envoyproxy/envoy/pull/45103\nPinned revision: c3ab9e5a3d3ab77a3eddec72d6ff8c54ad237ad3\nLifecycle status: MERGED\nAuthority scope: envoy-ext-authz-empty-values\nSource text (verbatim excerpt):\next_authz: respect keep_empty_value in HeaderValueOption\nCommit Message: ext_authz: respect keep_empty_value in HeaderValueOption\r\n\r\nAdditional Description:\r\next_authz was ignoring the keep_empty_value field in HeaderValueOption\r\nand blindly adding all headers from auth responses, including empty-valued\r\nones. Added a check in copyHeaderFieldIntoResponse and copyOkResponseMutations\r\nto skip empty-valued headers when keep_empty_value is false (default).\r\n\r\nRisk Level: low\r\nTesting: CI\r\nDocs Changes: none\r\nRelease Notes: added changelog entry for ext_authz keep_empty_value fix\r\n\r\nI used AI to help navigate the codebase for this change. I own the change.\r\n\r\nFixes #45003\nDecision role: IMPLEMENTATION\n\nDeveloper question: What organizational decision currently governs envoy ext authz empty values while rollback is proposed? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact envoyproxy/envoy#45321@open chunk 0]\nArtifact ID: envoyproxy/envoy#45321@open\nDecision ID: envoyproxy/envoy#45321\nRepository: envoyproxy/envoy\nTimestamp: 2026-05-27T20:39:43Z\nSource URL: https://github.com/envoyproxy/envoy/pull/45321\nPinned revision: github-open-event-2026-05-27T20:39:43Z\nLifecycle status: OPEN\nAuthority scope: envoy-ext-authz-empty-values\nExplicitly reverts: envoyproxy/envoy#45103\nSource text (verbatim excerpt):\nRevert \"ext_authz: respect keep_empty_value in HeaderValueOption (#45103)\"\n\r\nThis reverts https://github.com/envoyproxy/envoy/pull/45103\r\n\r\n\nDecision role: IMPLEMENTATION\n\n[Retrieved artifact envoyproxy/envoy#45103@merged chunk 0]\nArtifact ID: envoyproxy/envoy#45103@merged\nDecision ID: envoyproxy/envoy#45103\nRepository: envoyproxy/envoy\nTimestamp: 2026-05-24T01:08:21Z\nSource URL: https://github.com/envoyproxy/envoy/pull/45103\nPinned revision: c3ab9e5a3d3ab77a3eddec72d6ff8c54ad237ad3\nLifecycle status: MERGED\nAuthority scope: envoy-ext-authz-empty-values\nSource text (verbatim excerpt):\next_authz: respect keep_empty_value in HeaderValueOption\nCommit Message: ext_authz: respect keep_empty_value in HeaderValueOption\r\n\r\nAdditional Description:\r\next_authz was ignoring the keep_empty_value field in HeaderValueOption\r\nand blindly adding all headers from auth responses, including empty-valued\r\nones. Added a check in copyHeaderFieldIntoResponse and copyOkResponseMutations\r\nto skip empty-valued headers when keep_empty_value is false (default).\r\n\r\nRisk Level: low\r\nTesting: CI\r\nDocs Changes: none\r\nRelease Notes: added changelog entry for ext_authz keep_empty_value fix\r\n\r\nI used AI to help navigate the codebase for this change. I own the change.\r\n\r\nFixes #45003\nDecision role: IMPLEMENTATION\n\n[Retrieved artifact envoyproxy/envoy#45103@open chunk 0]\nArtifact ID: envoyproxy/envoy#45103@open\nDecision ID: envoyproxy/envoy#45103\nRepository: envoyproxy/envoy\nTimestamp: 2026-05-17T06:43:15Z\nSource URL: https://github.com/envoyproxy/envoy/pull/45103\nPinned revision: github-open-event-2026-05-17T06:43:15Z\nLifecycle status: OPEN\nAuthority scope: envoy-ext-authz-empty-values\nSource text (verbatim excerpt):\next_authz: respect keep_empty_value in HeaderValueOption\nCommit Message: ext_authz: respect keep_empty_value in HeaderValueOption\r\n\r\nAdditional Description:\r\next_authz was ignoring the keep_empty_value field in HeaderValueOption\r\nand blindly adding all headers from auth responses, including empty-valued\r\nones. Added a check in copyHeaderFieldIntoResponse and copyOkResponseMutations\r\nto skip empty-valued headers when keep_empty_value is false (default).\r\n\r\nRisk Level: low\r\nTesting: CI\r\nDocs Changes: none\r\nRelease Notes: added changelog entry for ext_authz keep_empty_value fix\r\n\r\nI used AI to help navigate the codebase for this change. I own the change.\r\n\r\nFixes #45003\nDecision role: IMPLEMENTATION\n\nDeveloper question: What organizational decision currently governs envoy ext authz empty values while rollback is proposed? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: envoyproxy/envoy#45103@open\nDecision ID: envoyproxy/envoy#45103\nRepository: envoyproxy/envoy\nTimestamp: 2026-05-17T06:43:15Z\nSource URL: https://github.com/envoyproxy/envoy/pull/45103\nPinned revision: github-open-event-2026-05-17T06:43:15Z\nLifecycle status: OPEN\nAuthority scope: envoy-ext-authz-empty-values\nSource text (verbatim excerpt):\next_authz: respect keep_empty_value in HeaderValueOption\nCommit Message: ext_authz: respect keep_empty_value in HeaderValueOption\r\n\r\nAdditional Description:\r\next_authz was ignoring the keep_empty_value field in HeaderValueOption\r\nand blindly adding all headers from auth responses, including empty-valued\r\nones. Added a check in copyHeaderFieldIntoResponse and copyOkResponseMutations\r\nto skip empty-valued headers when keep_empty_value is false (default).\r\n\r\nRisk Level: low\r\nTesting: CI\r\nDocs Changes: none\r\nRelease Notes: added changelog entry for ext_authz keep_empty_value fix\r\n\r\nI used AI to help navigate the codebase for this change. I own the change.\r\n\r\nFixes #45003\nDecision role: IMPLEMENTATION\n\nArtifact ID: envoyproxy/envoy#45103@merged\nDecision ID: envoyproxy/envoy#45103\nRepository: envoyproxy/envoy\nTimestamp: 2026-05-24T01:08:21Z\nSource URL: https://github.com/envoyproxy/envoy/pull/45103\nPinned revision: c3ab9e5a3d3ab77a3eddec72d6ff8c54ad237ad3\nLifecycle status: MERGED\nAuthority scope: envoy-ext-authz-empty-values\nSource text (verbatim excerpt):\next_authz: respect keep_empty_value in HeaderValueOption\nCommit Message: ext_authz: respect keep_empty_value in HeaderValueOption\r\n\r\nAdditional Description:\r\next_authz was ignoring the keep_empty_value field in HeaderValueOption\r\nand blindly adding all headers from auth responses, including empty-valued\r\nones. Added a check in copyHeaderFieldIntoResponse and copyOkResponseMutations\r\nto skip empty-valued headers when keep_empty_value is false (default).\r\n\r\nRisk Level: low\r\nTesting: CI\r\nDocs Changes: none\r\nRelease Notes: added changelog entry for ext_authz keep_empty_value fix\r\n\r\nI used AI to help navigate the codebase for this change. I own the change.\r\n\r\nFixes #45003\nDecision role: IMPLEMENTATION\n\nArtifact ID: envoyproxy/envoy#45321@open\nDecision ID: envoyproxy/envoy#45321\nRepository: envoyproxy/envoy\nTimestamp: 2026-05-27T20:39:43Z\nSource URL: https://github.com/envoyproxy/envoy/pull/45321\nPinned revision: github-open-event-2026-05-27T20:39:43Z\nLifecycle status: OPEN\nAuthority scope: envoy-ext-authz-empty-values\nExplicitly reverts: envoyproxy/envoy#45103\nSource text (verbatim excerpt):\nRevert \"ext_authz: respect keep_empty_value in HeaderValueOption (#45103)\"\n\r\nThis reverts https://github.com/envoyproxy/envoy/pull/45103\r\n\r\n\nDecision role: IMPLEMENTATION\n\nDeveloper question: What organizational decision currently governs envoy ext authz empty values while rollback is proposed? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "65251ae752e79714fc7f1c23c8fb8e9711c1a5dd6c687288d58aadc2db40a3bf",
+    "rag_embedding": "304939a4d45d89c09302aa2a6162679b8b55a351dafb1cec8bdbe35b716cfb25",
+    "rag_full_context": "43066bd05a983e93994d0722d5bed21a37f756e19f6d468c74d2b4957df22572"
+  },
+  "expected_answer_fields_present": false
+}

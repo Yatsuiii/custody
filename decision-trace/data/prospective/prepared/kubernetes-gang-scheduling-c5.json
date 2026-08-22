@@ -1,0 +1,190 @@
+{
+  "checkpoint_id": "kubernetes-gang-scheduling-c5",
+  "timeline_id": "kubernetes-gang-scheduling",
+  "question": "What organizational decision currently governs Kubernetes gang scheduling policy after PodGroup admission code was reverted? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "KEP-583@current",
+      "decision_id": "KEP-583",
+      "sequence": 1,
+      "rendered_sha256": "4139dcf1cf896f3b4581b4412a21f5e75097897f88888f10a9c76486ab60ffc6"
+    },
+    {
+      "artifact_id": "KEP-5832@current",
+      "decision_id": "KEP-5832",
+      "sequence": 2,
+      "rendered_sha256": "2db8afb036968cb8ba7910d40674789ec86471b401507bbfd2779d60ac1e5db9"
+    },
+    {
+      "artifact_id": "KEP-4671@current",
+      "decision_id": "KEP-4671",
+      "sequence": 3,
+      "rendered_sha256": "60df26e0b49cc64c462ab3237536c389e9b39f5cfca680d342c165841ba0af2a"
+    },
+    {
+      "artifact_id": "kubernetes/kubernetes#137464@merged",
+      "decision_id": "kubernetes/kubernetes#137464",
+      "sequence": 4,
+      "rendered_sha256": "7b73fc9c209d8f9e9aec3bd57f9359fcf51f57bb04470c6c812418d849a21b94"
+    },
+    {
+      "artifact_id": "kubernetes/kubernetes#139008@merged",
+      "decision_id": "kubernetes/kubernetes#139008",
+      "sequence": 5,
+      "rendered_sha256": "3c07b0979f0e1720173a6b4b6c37386abbf40726437b4297e1cad343b73d5a2a"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "KEP-583@current",
+      "KEP-5832@current",
+      "KEP-4671@current",
+      "kubernetes/kubernetes#137464@merged",
+      "kubernetes/kubernetes#139008@merged"
+    ],
+    "rag_embedding": [
+      "KEP-583@current",
+      "KEP-5832@current",
+      "KEP-4671@current",
+      "kubernetes/kubernetes#137464@merged",
+      "kubernetes/kubernetes#139008@merged"
+    ],
+    "rag_full_context": [
+      "KEP-583@current",
+      "KEP-5832@current",
+      "KEP-4671@current",
+      "kubernetes/kubernetes#137464@merged",
+      "kubernetes/kubernetes#139008@merged"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 5,
+      "artifact_id": "kubernetes/kubernetes#139008@merged",
+      "chunk_index": 0,
+      "similarity": 0.7679247563708188
+    },
+    {
+      "ordinal": 2,
+      "artifact_id": "KEP-4671@current",
+      "chunk_index": 0,
+      "similarity": 0.7651975568845943
+    },
+    {
+      "ordinal": 3,
+      "artifact_id": "kubernetes/kubernetes#137464@merged",
+      "chunk_index": 0,
+      "similarity": 0.7499479999231493
+    },
+    {
+      "ordinal": 1,
+      "artifact_id": "KEP-5832@current",
+      "chunk_index": 0,
+      "similarity": 0.7447435043419692
+    },
+    {
+      "ordinal": 0,
+      "artifact_id": "KEP-583@current",
+      "chunk_index": 0,
+      "similarity": 0.7412103968693626
+    },
+    {
+      "ordinal": 6,
+      "artifact_id": "kubernetes/kubernetes#139008@merged",
+      "chunk_index": 1,
+      "similarity": 0.7342353327297495
+    },
+    {
+      "ordinal": 4,
+      "artifact_id": "kubernetes/kubernetes#137464@merged",
+      "chunk_index": 1,
+      "similarity": 0.713228538963327
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "kubernetes/kubernetes#139008@merged",
+    "KEP-4671@current",
+    "kubernetes/kubernetes#137464@merged",
+    "KEP-5832@current",
+    "KEP-583@current",
+    "kubernetes/kubernetes#139008@merged",
+    "kubernetes/kubernetes#137464@merged"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "KEP-4671"
+    ],
+    "evidence_artifact_ids": [
+      "KEP-4671@current"
+    ],
+    "resolver_explanation": "kubernetes-gang-scheduling-policy: KEP-4671 is the sole eligible active decision in scope 'kubernetes-gang-scheduling-policy'.",
+    "derivations": [
+      {
+        "artifact_id": "KEP-583@current",
+        "decision_id": "KEP-583",
+        "status": "PROPOSED",
+        "edges": []
+      },
+      {
+        "artifact_id": "KEP-5832@current",
+        "decision_id": "KEP-5832",
+        "status": "ACCEPTED",
+        "edges": [
+          [
+            "KEP-583",
+            "SUPERSEDES"
+          ]
+        ]
+      },
+      {
+        "artifact_id": "KEP-4671@current",
+        "decision_id": "KEP-4671",
+        "status": "ACCEPTED",
+        "edges": [
+          [
+            "KEP-5832",
+            "SUPERSEDES"
+          ],
+          [
+            "KEP-583",
+            "SUPERSEDES"
+          ]
+        ]
+      },
+      {
+        "artifact_id": "kubernetes/kubernetes#137464@merged",
+        "decision_id": "kubernetes/kubernetes#137464",
+        "status": "IMPLEMENTED",
+        "edges": [
+          [
+            "KEP-5832",
+            "IMPLEMENTS"
+          ]
+        ]
+      },
+      {
+        "artifact_id": "kubernetes/kubernetes#139008@merged",
+        "decision_id": "kubernetes/kubernetes#139008",
+        "status": "REVERTED",
+        "edges": [
+          [
+            "kubernetes/kubernetes#137464",
+            "REVERTS"
+          ]
+        ]
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"KEP-4671\"]\nResolver explanation: kubernetes-gang-scheduling-policy: KEP-4671 is the sole eligible active decision in scope 'kubernetes-gang-scheduling-policy'.\n\nEvidence:\nArtifact ID: KEP-4671@current\nDecision ID: KEP-4671\nRepository: kubernetes/enhancements\nTimestamp: 2026-08-22T00:00:00Z\nSource URL: https://github.com/kubernetes/enhancements/blob/c4f439c2dd4acb928094660be0ea771bf63f2b76/keps/sig-scheduling/4671-gang-scheduling/kep.yaml\nPinned revision: c4f439c2dd4acb928094660be0ea771bf63f2b76\nLifecycle status: ACCEPTED\nAuthority scope: kubernetes-gang-scheduling-policy\nExplicitly replaces: KEP-5832, KEP-583\nSource text (verbatim excerpt):\nstatus: implementable\n  - \"/keps/sig-scheduling/5832-decouple-podgroup-api\"\n  - \"/keps/sig-scheduling/583-coscheduling\"\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs Kubernetes gang scheduling policy after PodGroup admission code was reverted? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact kubernetes/kubernetes#139008@merged chunk 0]\nArtifact ID: kubernetes/kubernetes#139008@merged\nDecision ID: kubernetes/kubernetes#139008\nRepository: kubernetes/kubernetes\nTimestamp: 2026-05-13T13:31:48Z\nSource URL: https://github.com/kubernetes/kubernetes/pull/139008\nPinned revision: cc9fd614c429f43e67fd8ded5e160fd784d860a8\nLifecycle status: REVERT_MERGED\nAuthority scope: kubernetes-podgroup-admission-implementation\nExplicitly reverts: kubernetes/kubernetes#137464\nSource text (verbatim excerpt):\nRevert \"KEP-5832: Implement PodGroup admission (#137464)\nThe original thinking was that even though the races are obviously possible (e.g. one apiserver admits the PodGroup and the other deletes the Workload at the same time), those are corner cases, and the UX improvement related to the fact that I made a typo in my PodGroup and referenced non-existing Workload and I get immediate feedback is worth it.\r\n\r\nBut, (while it's a valid usecase now, as controllers are not yet integrated with the Workload/PodGroup APIs), we do not expect users to manage the Workload/PodGroup objects themselves. It should all happen behind the scenes and be managed by controllers.\r\n\r\nIn such case, the typos and UX are not really a problem, but the complexity and impact (e.g. on scalability if we would decide to have consistent reads) is present.\r\n\r\nTo address that, we actually will remove this admission plugin completely.\r\n\r\n\r\nThe PR was done with AI (Gemini) assistance.\r\n\r\n/kind bug\r\n/sig scheduling\r\n\r\nRef #138012\r\nRef #138224\r\n\r\n```release-note\r\nRemove [alpha] admission plugin that validates PodGroup resources reference an existing Workload and match\n\n[Retrieved artifact KEP-4671@current chunk 0]\nArtifact ID: KEP-4671@current\nDecision ID: KEP-4671\nRepository: kubernetes/enhancements\nTimestamp: 2026-08-22T00:00:00Z\nSource URL: https://github.com/kubernetes/enhancements/blob/c4f439c2dd4acb928094660be0ea771bf63f2b76/keps/sig-scheduling/4671-gang-scheduling/kep.yaml\nPinned revision: c4f439c2dd4acb928094660be0ea771bf63f2b76\nLifecycle status: ACCEPTED\nAuthority scope: kubernetes-gang-scheduling-policy\nExplicitly replaces: KEP-5832, KEP-583\nSource text (verbatim excerpt):\nstatus: implementable\n  - \"/keps/sig-scheduling/5832-decouple-podgroup-api\"\n  - \"/keps/sig-scheduling/583-coscheduling\"\nDecision role: POLICY\n\n[Retrieved artifact kubernetes/kubernetes#137464@merged chunk 0]\nArtifact ID: kubernetes/kubernetes#137464@merged\nDecision ID: kubernetes/kubernetes#137464\nRepository: kubernetes/kubernetes\nTimestamp: 2026-03-19T16:02:34Z\nSource URL: https://github.com/kubernetes/kubernetes/pull/137464\nPinned revision: cf5ba01d1353a138053955e6d8f3ce079b4afee0\nLifecycle status: MERGED\nAuthority scope: kubernetes-podgroup-admission-implementation\nExplicitly implements: KEP-5832\nSource text (verbatim excerpt):\nKEP-5832: Implement PodGroup admission\n\r\n\r\n#### What type of PR is this?\r\n\r\n/kind feature\r\n/sig scheduling\r\n/sig apps\r\n/area workload-aware\r\n\r\n#### What this PR does / why we need it:\r\nThis PR introduces an admission plugin as part of KEP-5832. The plugin enforces referential integrity between PodGroup and Workload resources at admission time. Specifically, it validates on PodGroup creation that:\r\n\r\n- If a PodGroup references a Workload via workloadRef, the referenced Workload must already exist in the same namespace.\r\n- The PodGroup spec fields must match the corresponding PodGroupTemplate defined in the referenced Workload. \r\n- Standalone PodGroup resources (no workloadRef) pass through without validation.\r\n\r\nThis prevents drift between the template declared on the Workload and the actual PodGroup being created.\r\n\r\nIt also:\r\n- Adds integration tests covering valid creation, missing workload rejection, spec mismatch rejection, standalone PodGroup creation, and invalid template references.\r\n- Updates test/integration/etcd/data.go to use a standalone PodGroup stub so existing storage encoding tests remain unaffected.\r\n\r\n#### Which issue(s) this PR is r\n\n[Retrieved artifact KEP-5832@current chunk 0]\nArtifact ID: KEP-5832@current\nDecision ID: KEP-5832\nRepository: kubernetes/enhancements\nTimestamp: 2026-01-23T00:00:00Z\nSource URL: https://github.com/kubernetes/enhancements/blob/c4f439c2dd4acb928094660be0ea771bf63f2b76/keps/sig-scheduling/5832-decouple-podgroup-api/kep.yaml\nPinned revision: c4f439c2dd4acb928094660be0ea771bf63f2b76\nLifecycle status: ACCEPTED\nAuthority scope: kubernetes-gang-scheduling-policy\nExplicitly replaces: KEP-583\nSource text (verbatim excerpt):\nstatus: implementable\n  - \"/keps/sig-scheduling/583-coscheduling\"\nDecision role: POLICY\n\n[Retrieved artifact KEP-583@current chunk 0]\nArtifact ID: KEP-583@current\nDecision ID: KEP-583\nRepository: kubernetes/enhancements\nTimestamp: 2018-07-03T00:00:00Z\nSource URL: https://github.com/kubernetes/enhancements/blob/c4f439c2dd4acb928094660be0ea771bf63f2b76/keps/sig-scheduling/583-coscheduling/kep.yaml\nPinned revision: c4f439c2dd4acb928094660be0ea771bf63f2b76\nLifecycle status: DRAFT\nAuthority scope: kubernetes-gang-scheduling-policy\nSource text (verbatim excerpt):\nstatus: provisional\nDecision role: POLICY\n\n[Retrieved artifact kubernetes/kubernetes#139008@merged chunk 1]\nni) assistance.\r\n\r\n/kind bug\r\n/sig scheduling\r\n\r\nRef #138012\r\nRef #138224\r\n\r\n```release-note\r\nRemove [alpha] admission plugin that validates PodGroup resources reference an existing Workload and match the declared PodGroupTemplate spec.\r\n```\r\n\r\n\nDecision role: IMPLEMENTATION\n\n[Retrieved artifact kubernetes/kubernetes#137464@merged chunk 1]\nn, and invalid template references.\r\n- Updates test/integration/etcd/data.go to use a standalone PodGroup stub so existing storage encoding tests remain unaffected.\r\n\r\n#### Which issue(s) this PR is related to:\r\nKEP-5832: [Decouple PodGroup API](https://github.com/kubernetes/enhancements/tree/master/keps/sig-scheduling/5832-decouple-podgroup-api)\r\nRelated: \r\n- #137611 \r\n- #137641  \r\n#### Special notes for your reviewer:\r\n\r\n#### Does this PR introduce a user-facing change?\r\n```release-note\r\nAdd admission plugin that validates PodGroup resources reference an existing Workload and match the declared PodGroupTemplate spec.\r\n```\r\n\r\n#### Additional documentation e.g., KEPs (Kubernetes Enhancement Proposals), usage docs, etc.:\r\n\r\n- KEP-5832: [link](https://github.com/kubernetes/enhancements/tree/master/keps/sig-scheduling/5832-decouple-podgroup-api) \r\n\r\n```docs\r\n\r\n```\r\n\nDecision role: IMPLEMENTATION\n\nDeveloper question: What organizational decision currently governs Kubernetes gang scheduling policy after PodGroup admission code was reverted? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: KEP-583@current\nDecision ID: KEP-583\nRepository: kubernetes/enhancements\nTimestamp: 2018-07-03T00:00:00Z\nSource URL: https://github.com/kubernetes/enhancements/blob/c4f439c2dd4acb928094660be0ea771bf63f2b76/keps/sig-scheduling/583-coscheduling/kep.yaml\nPinned revision: c4f439c2dd4acb928094660be0ea771bf63f2b76\nLifecycle status: DRAFT\nAuthority scope: kubernetes-gang-scheduling-policy\nSource text (verbatim excerpt):\nstatus: provisional\nDecision role: POLICY\n\nArtifact ID: KEP-5832@current\nDecision ID: KEP-5832\nRepository: kubernetes/enhancements\nTimestamp: 2026-01-23T00:00:00Z\nSource URL: https://github.com/kubernetes/enhancements/blob/c4f439c2dd4acb928094660be0ea771bf63f2b76/keps/sig-scheduling/5832-decouple-podgroup-api/kep.yaml\nPinned revision: c4f439c2dd4acb928094660be0ea771bf63f2b76\nLifecycle status: ACCEPTED\nAuthority scope: kubernetes-gang-scheduling-policy\nExplicitly replaces: KEP-583\nSource text (verbatim excerpt):\nstatus: implementable\n  - \"/keps/sig-scheduling/583-coscheduling\"\nDecision role: POLICY\n\nArtifact ID: KEP-4671@current\nDecision ID: KEP-4671\nRepository: kubernetes/enhancements\nTimestamp: 2026-08-22T00:00:00Z\nSource URL: https://github.com/kubernetes/enhancements/blob/c4f439c2dd4acb928094660be0ea771bf63f2b76/keps/sig-scheduling/4671-gang-scheduling/kep.yaml\nPinned revision: c4f439c2dd4acb928094660be0ea771bf63f2b76\nLifecycle status: ACCEPTED\nAuthority scope: kubernetes-gang-scheduling-policy\nExplicitly replaces: KEP-5832, KEP-583\nSource text (verbatim excerpt):\nstatus: implementable\n  - \"/keps/sig-scheduling/5832-decouple-podgroup-api\"\n  - \"/keps/sig-scheduling/583-coscheduling\"\nDecision role: POLICY\n\nArtifact ID: kubernetes/kubernetes#137464@merged\nDecision ID: kubernetes/kubernetes#137464\nRepository: kubernetes/kubernetes\nTimestamp: 2026-03-19T16:02:34Z\nSource URL: https://github.com/kubernetes/kubernetes/pull/137464\nPinned revision: cf5ba01d1353a138053955e6d8f3ce079b4afee0\nLifecycle status: MERGED\nAuthority scope: kubernetes-podgroup-admission-implementation\nExplicitly implements: KEP-5832\nSource text (verbatim excerpt):\nKEP-5832: Implement PodGroup admission\n\r\n\r\n#### What type of PR is this?\r\n\r\n/kind feature\r\n/sig scheduling\r\n/sig apps\r\n/area workload-aware\r\n\r\n#### What this PR does / why we need it:\r\nThis PR introduces an admission plugin as part of KEP-5832. The plugin enforces referential integrity between PodGroup and Workload resources at admission time. Specifically, it validates on PodGroup creation that:\r\n\r\n- If a PodGroup references a Workload via workloadRef, the referenced Workload must already exist in the same namespace.\r\n- The PodGroup spec fields must match the corresponding PodGroupTemplate defined in the referenced Workload. \r\n- Standalone PodGroup resources (no workloadRef) pass through without validation.\r\n\r\nThis prevents drift between the template declared on the Workload and the actual PodGroup being created.\r\n\r\nIt also:\r\n- Adds integration tests covering valid creation, missing workload rejection, spec mismatch rejection, standalone PodGroup creation, and invalid template references.\r\n- Updates test/integration/etcd/data.go to use a standalone PodGroup stub so existing storage encoding tests remain unaffected.\r\n\r\n#### Which issue(s) this PR is related to:\r\nKEP-5832: [Decouple PodGroup API](https://github.com/kubernetes/enhancements/tree/master/keps/sig-scheduling/5832-decouple-podgroup-api)\r\nRelated: \r\n- #137611 \r\n- #137641  \r\n#### Special notes for your reviewer:\r\n\r\n#### Does this PR introduce a user-facing change?\r\n```release-note\r\nAdd admission plugin that validates PodGroup resources reference an existing Workload and match the declared PodGroupTemplate spec.\r\n```\r\n\r\n#### Additional documentation e.g., KEPs (Kubernetes Enhancement Proposals), usage docs, etc.:\r\n\r\n- KEP-5832: [link](https://github.com/kubernetes/enhancements/tree/master/keps/sig-scheduling/5832-decouple-podgroup-api) \r\n\r\n```docs\r\n\r\n```\r\n\nDecision role: IMPLEMENTATION\n\nArtifact ID: kubernetes/kubernetes#139008@merged\nDecision ID: kubernetes/kubernetes#139008\nRepository: kubernetes/kubernetes\nTimestamp: 2026-05-13T13:31:48Z\nSource URL: https://github.com/kubernetes/kubernetes/pull/139008\nPinned revision: cc9fd614c429f43e67fd8ded5e160fd784d860a8\nLifecycle status: REVERT_MERGED\nAuthority scope: kubernetes-podgroup-admission-implementation\nExplicitly reverts: kubernetes/kubernetes#137464\nSource text (verbatim excerpt):\nRevert \"KEP-5832: Implement PodGroup admission (#137464)\nThe original thinking was that even though the races are obviously possible (e.g. one apiserver admits the PodGroup and the other deletes the Workload at the same time), those are corner cases, and the UX improvement related to the fact that I made a typo in my PodGroup and referenced non-existing Workload and I get immediate feedback is worth it.\r\n\r\nBut, (while it's a valid usecase now, as controllers are not yet integrated with the Workload/PodGroup APIs), we do not expect users to manage the Workload/PodGroup objects themselves. It should all happen behind the scenes and be managed by controllers.\r\n\r\nIn such case, the typos and UX are not really a problem, but the complexity and impact (e.g. on scalability if we would decide to have consistent reads) is present.\r\n\r\nTo address that, we actually will remove this admission plugin completely.\r\n\r\n\r\nThe PR was done with AI (Gemini) assistance.\r\n\r\n/kind bug\r\n/sig scheduling\r\n\r\nRef #138012\r\nRef #138224\r\n\r\n```release-note\r\nRemove [alpha] admission plugin that validates PodGroup resources reference an existing Workload and match the declared PodGroupTemplate spec.\r\n```\r\n\r\n\nDecision role: IMPLEMENTATION\n\nDeveloper question: What organizational decision currently governs Kubernetes gang scheduling policy after PodGroup admission code was reverted? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "a6bf374a68015c352d9dd9c4fccf546f45567499a54348f8fd5faefdda15c0b1",
+    "rag_embedding": "e1a2f0058c9d0434b44ce271f596c4dcdfe7fec41e5cfcd5b6f61cd66138d85a",
+    "rag_full_context": "0a36d46da37f6ad1db153a7b04633380448ebbdca917f2c8f24b37d039e3039a"
+  },
+  "expected_answer_fields_present": false
+}

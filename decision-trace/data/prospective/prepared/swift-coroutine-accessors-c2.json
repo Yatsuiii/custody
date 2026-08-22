@@ -1,0 +1,87 @@
+{
+  "checkpoint_id": "swift-coroutine-accessors-c2",
+  "timeline_id": "swift-coroutine-accessors",
+  "question": "What organizational decision currently governs swift coroutine accessor implementation while implementation is proposed? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "SE-0474@accepted",
+      "decision_id": "SE-0474",
+      "sequence": 1,
+      "rendered_sha256": "43dc282421054c6ac5ad48bf852de2c47d9e6430318dcb429ab4ae6765a30de1"
+    },
+    {
+      "artifact_id": "swiftlang/swift#90516@open",
+      "decision_id": "swiftlang/swift#90516",
+      "sequence": 2,
+      "rendered_sha256": "abc254e4cdafe91cfd9683e49e1ad75479309d795bc23ea30dbfcd6fe7979cca"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "SE-0474@accepted",
+      "swiftlang/swift#90516@open"
+    ],
+    "rag_embedding": [
+      "SE-0474@accepted",
+      "swiftlang/swift#90516@open"
+    ],
+    "rag_full_context": [
+      "SE-0474@accepted",
+      "swiftlang/swift#90516@open"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 1,
+      "artifact_id": "swiftlang/swift#90516@open",
+      "chunk_index": 0,
+      "similarity": 0.7789743578447424
+    },
+    {
+      "ordinal": 0,
+      "artifact_id": "SE-0474@accepted",
+      "chunk_index": 0,
+      "similarity": 0.7716670366893021
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "swiftlang/swift#90516@open",
+    "SE-0474@accepted"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "UNRESOLVED",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [],
+    "resolver_explanation": "swift-coroutine-accessor-implementation: Visible authority exists, but none has the requested explicit scope; refusing a semantic guess.",
+    "derivations": [
+      {
+        "artifact_id": "SE-0474@accepted",
+        "decision_id": "SE-0474",
+        "status": "ACCEPTED",
+        "edges": []
+      },
+      {
+        "artifact_id": "swiftlang/swift#90516@open",
+        "decision_id": "swiftlang/swift#90516",
+        "status": "PROPOSED",
+        "edges": [
+          [
+            "SE-0474",
+            "IMPLEMENTS"
+          ]
+        ]
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: UNRESOLVED\nGoverning decision IDs: []\nResolver explanation: swift-coroutine-accessor-implementation: Visible authority exists, but none has the requested explicit scope; refusing a semantic guess.\n\nEvidence:\n(none)\n\nDeveloper question: What organizational decision currently governs swift coroutine accessor implementation while implementation is proposed? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact swiftlang/swift#90516@open chunk 0]\nArtifact ID: swiftlang/swift#90516@open\nDecision ID: swiftlang/swift#90516\nRepository: swiftlang/swift\nTimestamp: 2026-07-08T20:10:24Z\nSource URL: https://github.com/swiftlang/swift/pull/90516\nPinned revision: github-open-event-2026-07-08T20:10:24Z\nLifecycle status: OPEN\nAuthority scope: swift-coroutine-accessor-implementation\nExplicitly implements: SE-0474\nSource text (verbatim excerpt):\n[Embedded] Support CoroutineAccessors in no-allocations embedded\nThe -no-allocations check in the EmbeddedSwiftDiagnostics SIL pass rejected *every* begin_apply (coroutine call).  That was correct for the old ABI which always heap-allocated, but the new ABI supports stack allocation.\r\n\r\nMove the check to IRGen, where the allocator kind is known and inlining has already run: when considering a non-inlined begin_apply of a callee-allocated coroutine, diagnose when the coroutine allocator kind is a heap allocation. (Permit default/pass-through, explicit Stack allocation, and explicit Async stack allocation.)\r\n\r\nThis lets stack-allocated and inlined coroutine accessors be used under -no-allocations while rejecting genuine heap allocations.\r\n\r\nResolves rdar://181713977\nDecision role: IMPLEMENTATION\n\n[Retrieved artifact SE-0474@accepted chunk 0]\nArtifact ID: SE-0474@accepted\nDecision ID: SE-0474\nRepository: swiftlang/swift-evolution\nTimestamp: 2025-01-01T00:00:00Z\nSource URL: https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0474-yielding-accessors.md\nPinned revision: 0105e139a22938561c700cfbb89ddc3ebe402f0c\nLifecycle status: ACCEPTED\nAuthority scope: swift-yielding-accessor-policy\nSource text (verbatim excerpt):\n* Status: **Accepted**\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs swift coroutine accessor implementation while implementation is proposed? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: SE-0474@accepted\nDecision ID: SE-0474\nRepository: swiftlang/swift-evolution\nTimestamp: 2025-01-01T00:00:00Z\nSource URL: https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0474-yielding-accessors.md\nPinned revision: 0105e139a22938561c700cfbb89ddc3ebe402f0c\nLifecycle status: ACCEPTED\nAuthority scope: swift-yielding-accessor-policy\nSource text (verbatim excerpt):\n* Status: **Accepted**\nDecision role: POLICY\n\nArtifact ID: swiftlang/swift#90516@open\nDecision ID: swiftlang/swift#90516\nRepository: swiftlang/swift\nTimestamp: 2026-07-08T20:10:24Z\nSource URL: https://github.com/swiftlang/swift/pull/90516\nPinned revision: github-open-event-2026-07-08T20:10:24Z\nLifecycle status: OPEN\nAuthority scope: swift-coroutine-accessor-implementation\nExplicitly implements: SE-0474\nSource text (verbatim excerpt):\n[Embedded] Support CoroutineAccessors in no-allocations embedded\nThe -no-allocations check in the EmbeddedSwiftDiagnostics SIL pass rejected *every* begin_apply (coroutine call).  That was correct for the old ABI which always heap-allocated, but the new ABI supports stack allocation.\r\n\r\nMove the check to IRGen, where the allocator kind is known and inlining has already run: when considering a non-inlined begin_apply of a callee-allocated coroutine, diagnose when the coroutine allocator kind is a heap allocation. (Permit default/pass-through, explicit Stack allocation, and explicit Async stack allocation.)\r\n\r\nThis lets stack-allocated and inlined coroutine accessors be used under -no-allocations while rejecting genuine heap allocations.\r\n\r\nResolves rdar://181713977\nDecision role: IMPLEMENTATION\n\nDeveloper question: What organizational decision currently governs swift coroutine accessor implementation while implementation is proposed? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "9145bda8d7f5e921675051d4e06aca39300e38a1f1cd1bc754f8e7fc6aa93eed",
+    "rag_embedding": "edf2eb7107dd58dc799c5207103fc482df8e446da2d3181b3ebf1f8f93a4bdac",
+    "rag_full_context": "49e315b9d7d12a5d2d7850e33ebd03cef432a5dfd88906bb60cc18ef86eafd57"
+  },
+  "expected_answer_fields_present": false
+}

@@ -1,0 +1,168 @@
+{
+  "checkpoint_id": "swift-coroutine-accessors-c4",
+  "timeline_id": "swift-coroutine-accessors",
+  "question": "What organizational decision currently governs swift coroutine accessor implementation while rollback is proposed? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "SE-0474@accepted",
+      "decision_id": "SE-0474",
+      "sequence": 1,
+      "rendered_sha256": "43dc282421054c6ac5ad48bf852de2c47d9e6430318dcb429ab4ae6765a30de1"
+    },
+    {
+      "artifact_id": "swiftlang/swift#90516@open",
+      "decision_id": "swiftlang/swift#90516",
+      "sequence": 2,
+      "rendered_sha256": "abc254e4cdafe91cfd9683e49e1ad75479309d795bc23ea30dbfcd6fe7979cca"
+    },
+    {
+      "artifact_id": "swiftlang/swift#90516@merged",
+      "decision_id": "swiftlang/swift#90516",
+      "sequence": 3,
+      "rendered_sha256": "2b466a17f4271c68a9b8920d679a204a134d53da0228dbc94b017e97f8a7ef91"
+    },
+    {
+      "artifact_id": "swiftlang/swift#91475@open",
+      "decision_id": "swiftlang/swift#91475",
+      "sequence": 4,
+      "rendered_sha256": "fb7d58ccf41abe523302cb827f1bda9460097731c6c75007ca028b70d2a716a7"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "SE-0474@accepted",
+      "swiftlang/swift#90516@open",
+      "swiftlang/swift#90516@merged",
+      "swiftlang/swift#91475@open"
+    ],
+    "rag_embedding": [
+      "SE-0474@accepted",
+      "swiftlang/swift#90516@open",
+      "swiftlang/swift#90516@merged",
+      "swiftlang/swift#91475@open"
+    ],
+    "rag_full_context": [
+      "SE-0474@accepted",
+      "swiftlang/swift#90516@open",
+      "swiftlang/swift#90516@merged",
+      "swiftlang/swift#91475@open"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 1,
+      "artifact_id": "swiftlang/swift#90516@open",
+      "chunk_index": 0,
+      "similarity": 0.774052704976727
+    },
+    {
+      "ordinal": 2,
+      "artifact_id": "swiftlang/swift#90516@merged",
+      "chunk_index": 0,
+      "similarity": 0.7716298099774586
+    },
+    {
+      "ordinal": 0,
+      "artifact_id": "SE-0474@accepted",
+      "chunk_index": 0,
+      "similarity": 0.7599955605722328
+    },
+    {
+      "ordinal": 3,
+      "artifact_id": "swiftlang/swift#91475@open",
+      "chunk_index": 0,
+      "similarity": 0.7271815755288504
+    },
+    {
+      "ordinal": 5,
+      "artifact_id": "swiftlang/swift#91475@open",
+      "chunk_index": 2,
+      "similarity": 0.6399442568465281
+    },
+    {
+      "ordinal": 7,
+      "artifact_id": "swiftlang/swift#91475@open",
+      "chunk_index": 4,
+      "similarity": 0.6373315159477485
+    },
+    {
+      "ordinal": 8,
+      "artifact_id": "swiftlang/swift#91475@open",
+      "chunk_index": 5,
+      "similarity": 0.617793619553343
+    },
+    {
+      "ordinal": 4,
+      "artifact_id": "swiftlang/swift#91475@open",
+      "chunk_index": 1,
+      "similarity": 0.6072369939662418
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "swiftlang/swift#90516@open",
+    "swiftlang/swift#90516@merged",
+    "SE-0474@accepted",
+    "swiftlang/swift#91475@open",
+    "swiftlang/swift#91475@open",
+    "swiftlang/swift#91475@open",
+    "swiftlang/swift#91475@open",
+    "swiftlang/swift#91475@open"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "swiftlang/swift#90516"
+    ],
+    "evidence_artifact_ids": [
+      "swiftlang/swift#90516@merged"
+    ],
+    "resolver_explanation": "swift-coroutine-accessor-implementation: swiftlang/swift#90516 is the sole eligible active decision in scope 'swift-coroutine-accessor-implementation'.",
+    "derivations": [
+      {
+        "artifact_id": "SE-0474@accepted",
+        "decision_id": "SE-0474",
+        "status": "ACCEPTED",
+        "edges": []
+      },
+      {
+        "artifact_id": "swiftlang/swift#90516@open",
+        "decision_id": "swiftlang/swift#90516",
+        "status": "PROPOSED",
+        "edges": [
+          [
+            "SE-0474",
+            "IMPLEMENTS"
+          ]
+        ]
+      },
+      {
+        "artifact_id": "swiftlang/swift#90516@merged",
+        "decision_id": "swiftlang/swift#90516",
+        "status": "IMPLEMENTED",
+        "edges": [
+          [
+            "SE-0474",
+            "IMPLEMENTS"
+          ]
+        ]
+      },
+      {
+        "artifact_id": "swiftlang/swift#91475@open",
+        "decision_id": "swiftlang/swift#91475",
+        "status": "PROPOSED",
+        "edges": []
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"swiftlang/swift#90516\"]\nResolver explanation: swift-coroutine-accessor-implementation: swiftlang/swift#90516 is the sole eligible active decision in scope 'swift-coroutine-accessor-implementation'.\n\nEvidence:\nArtifact ID: swiftlang/swift#90516@merged\nDecision ID: swiftlang/swift#90516\nRepository: swiftlang/swift\nTimestamp: 2026-08-12T09:01:48Z\nSource URL: https://github.com/swiftlang/swift/pull/90516\nPinned revision: 0416f827ae0e7e7fc3e988d671cdd9404f96aa19\nLifecycle status: MERGED\nAuthority scope: swift-coroutine-accessor-implementation\nExplicitly implements: SE-0474\nSource text (verbatim excerpt):\n[Embedded] Support CoroutineAccessors in no-allocations embedded\nThe -no-allocations check in the EmbeddedSwiftDiagnostics SIL pass rejected *every* begin_apply (coroutine call).  That was correct for the old ABI which always heap-allocated, but the new ABI supports stack allocation.\r\n\r\nMove the check to IRGen, where the allocator kind is known and inlining has already run: when considering a non-inlined begin_apply of a callee-allocated coroutine, diagnose when the coroutine allocator kind is a heap allocation. (Permit default/pass-through, explicit Stack allocation, and explicit Async stack allocation.)\r\n\r\nThis lets stack-allocated and inlined coroutine accessors be used under -no-allocations while rejecting genuine heap allocations.\r\n\r\nResolves rdar://181713977\nDecision role: IMPLEMENTATION\n\nDeveloper question: What organizational decision currently governs swift coroutine accessor implementation while rollback is proposed? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact swiftlang/swift#90516@open chunk 0]\nArtifact ID: swiftlang/swift#90516@open\nDecision ID: swiftlang/swift#90516\nRepository: swiftlang/swift\nTimestamp: 2026-07-08T20:10:24Z\nSource URL: https://github.com/swiftlang/swift/pull/90516\nPinned revision: github-open-event-2026-07-08T20:10:24Z\nLifecycle status: OPEN\nAuthority scope: swift-coroutine-accessor-implementation\nExplicitly implements: SE-0474\nSource text (verbatim excerpt):\n[Embedded] Support CoroutineAccessors in no-allocations embedded\nThe -no-allocations check in the EmbeddedSwiftDiagnostics SIL pass rejected *every* begin_apply (coroutine call).  That was correct for the old ABI which always heap-allocated, but the new ABI supports stack allocation.\r\n\r\nMove the check to IRGen, where the allocator kind is known and inlining has already run: when considering a non-inlined begin_apply of a callee-allocated coroutine, diagnose when the coroutine allocator kind is a heap allocation. (Permit default/pass-through, explicit Stack allocation, and explicit Async stack allocation.)\r\n\r\nThis lets stack-allocated and inlined coroutine accessors be used under -no-allocations while rejecting genuine heap allocations.\r\n\r\nResolves rdar://181713977\nDecision role: IMPLEMENTATION\n\n[Retrieved artifact swiftlang/swift#90516@merged chunk 0]\nArtifact ID: swiftlang/swift#90516@merged\nDecision ID: swiftlang/swift#90516\nRepository: swiftlang/swift\nTimestamp: 2026-08-12T09:01:48Z\nSource URL: https://github.com/swiftlang/swift/pull/90516\nPinned revision: 0416f827ae0e7e7fc3e988d671cdd9404f96aa19\nLifecycle status: MERGED\nAuthority scope: swift-coroutine-accessor-implementation\nExplicitly implements: SE-0474\nSource text (verbatim excerpt):\n[Embedded] Support CoroutineAccessors in no-allocations embedded\nThe -no-allocations check in the EmbeddedSwiftDiagnostics SIL pass rejected *every* begin_apply (coroutine call).  That was correct for the old ABI which always heap-allocated, but the new ABI supports stack allocation.\r\n\r\nMove the check to IRGen, where the allocator kind is known and inlining has already run: when considering a non-inlined begin_apply of a callee-allocated coroutine, diagnose when the coroutine allocator kind is a heap allocation. (Permit default/pass-through, explicit Stack allocation, and explicit Async stack allocation.)\r\n\r\nThis lets stack-allocated and inlined coroutine accessors be used under -no-allocations while rejecting genuine heap allocations.\r\n\r\nResolves rdar://181713977\nDecision role: IMPLEMENTATION\n\n[Retrieved artifact SE-0474@accepted chunk 0]\nArtifact ID: SE-0474@accepted\nDecision ID: SE-0474\nRepository: swiftlang/swift-evolution\nTimestamp: 2025-01-01T00:00:00Z\nSource URL: https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0474-yielding-accessors.md\nPinned revision: 0105e139a22938561c700cfbb89ddc3ebe402f0c\nLifecycle status: ACCEPTED\nAuthority scope: swift-yielding-accessor-policy\nSource text (verbatim excerpt):\n* Status: **Accepted**\nDecision role: POLICY\n\n[Retrieved artifact swiftlang/swift#91475@open chunk 0]\nArtifact ID: swiftlang/swift#91475@open\nDecision ID: swiftlang/swift#91475\nRepository: swiftlang/swift\nTimestamp: 2026-08-14T06:24:43Z\nSource URL: https://github.com/swiftlang/swift/pull/91475\nPinned revision: github-open-event-2026-08-14T06:24:43Z\nLifecycle status: OPEN\nAuthority scope: swift-coroutine-accessor-implementation\nExplicitly reverts: swiftlang/swift#90516\nSource text (verbatim excerpt):\nRevert \"[Embedded] Support CoroutineAccessors in no-allocations embedded\"\nReverts swiftlang/swift#90516\r\n\r\nTo unblock nightly toolchain\r\n\r\n```\r\n ******************** TEST 'Swift(linux-x86_64) :: embedded/no-allocations-coroutine-legacy.swift' FAILED ********************\r\n01:13:01.651  Exit Code: 1\r\n01:13:01.651  \r\n01:13:01.651  Command Output (stdout):\r\n01:13:01.651  --\r\n01:13:01.651  # RUN: at line 5\r\n01:13:01.651  not /home/build-user/build/buildbot_linux/swift-linux-x86_64/bin/swift-frontend -target x86_64-unknown-linux-gnu  -module-cache-path /home/build-user/build/buildbot_linux/swift-linux-x86_64/swift-test-results/x86_64-unknown-linux-gnu/clang-module-cache -swift-version 4  -define-availability 'SwiftStdlib 9999:macOS 9999, iOS 9999, watchOS 9999, tvOS 9999, visionOS 9999' -define-availability 'SwiftStdlib 5.0:macOS 10.14.4, iOS 12.2, watchOS 5.2, tvOS 12.2' -define-availability 'SwiftStdlib 5.1:macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0' -define-availability 'SwiftStdlib 5.2:macOS 10.15.4, iOS 13.4, watchOS 6.2, tvOS 13.4' -define-availability 'SwiftStdlib 5.3:macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0' -define-availability 'SwiftStdlib 5.4:macOS 11.3, iOS 14.5, wa\n\n[Retrieved artifact swiftlang/swift#91475@open chunk 2]\nlity 'Backtracing 6.2: macOS 26.0'  -typo-correction-limit 10 -solver-enable-diagnose-valid-salvage  -emit-ir /home/build-user/swift/test/embedded/no-allocations-coroutine-legacy.swift -enable-experimental-feature Embedded -enable-experimental-feature CoroutineAccessors -no-allocations -wmo 2>&1 | /usr/bin/python3.10 /home/build-user/swift/utils/PathSanitizingFileCheck --allow-unused-prefixes --sanitize TMP_DIR=/home/build-user/build/buildbot_linux/swift-linux-x86_64/test-linux-x86_64/embedded/Output/no-allocations-coroutine-legacy.swift.tmp --sanitize BUILD_DIR=/home/build-user/build/buildbot_linux/swift-linux-x86_64 --sanitize SOURCE_DIR=/home/build-user/swift --ignore-runtime-warnings --use-filecheck /home/build-user/build/buildbot_linux/llvm-linux-x86_64/bin/FileCheck   /home/build-user/swift/test/embedded/no-allocations-coroutine-legacy.swift\r\n01:13:01.651  # executed command: not /home/build-user/build/buildbot_linux/swift-linux-x86_64/bin/swift-frontend -target x86_64-unknown-linux-gnu -module-cache-path /home/build-user/build/buildbot_linux/swift-linux-x86_64/swift-test-results/x86_64-unknown-linux-gnu/clang-module-cache -swift-version 4 -define-availability 'SwiftStdlib 9999:macOS 9999, iOS 9999, watchOS 9999, tvOS 9999, visionOS 9999' -define-availability 'SwiftStdlib 5.0:macOS 10.14.4, iOS 12.2, watchOS 5.2, tvOS 12.2' -define-availability 'SwiftStdlib 5.1:macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0' -define-availability 'SwiftStdlib 5.2:macOS 10.15.4, iOS 13.4, watchOS 6.2, tvOS 13.4' -define-availability 'SwiftStdlib 5.3:macOS 11.0, iOS 14.0, watchOS 7.0, tvO\n\n[Retrieved artifact swiftlang/swift#91475@open chunk 4]\n.0, iOS 26.0, watchOS 26.0, tvOS 26.0, visionOS 26.0' -define-availability 'Backtracing 6.2: macOS 26.0' -typo-correction-limit 10 -solver-enable-diagnose-valid-salvage -emit-ir /home/build-user/swift/test/embedded/no-allocations-coroutine-legacy.swift -enable-experimental-feature Embedded -enable-experimental-feature CoroutineAccessors -no-allocations -wmo\r\n01:13:01.651  # note: command had no output on stdout or stderr\r\n01:13:01.651  # error: command failed with exit status: 1\r\n01:13:01.651  # executed command: /usr/bin/python3.10 /home/build-user/swift/utils/PathSanitizingFileCheck --allow-unused-prefixes --sanitize TMP_DIR=/home/build-user/build/buildbot_linux/swift-linux-x86_64/test-linux-x86_64/embedded/Output/no-allocations-coroutine-legacy.swift.tmp --sanitize BUILD_DIR=/home/build-user/build/buildbot_linux/swift-linux-x86_64 --sanitize SOURCE_DIR=/home/build-user/swift --ignore-runtime-warnings --use-filecheck /home/build-user/build/buildbot_linux/llvm-linux-x86_64/bin/FileCheck /home/build-user/swift/test/embedded/no-allocations-coroutine-legacy.swift\r\n01:13:01.651  # .---command stderr------------\r\n01:13:01.652  # | /home/build-user/swift/test/embedded/no-allocations-coroutine-legacy.swift:12:11: error: CHECK: expected string not found in input\r\n01:13:01.652  # | // CHECK: error: coroutine accessor involves heap allocation [#PerformanceHints::HeapAllocation]\r\n01:13:01.652  # |           ^\r\n01:13:01.652  # | <stdin>:1:1: note: scanning from here\r\n01:13:01.652  # | ; ModuleID = '<swift-imported-modules>'\r\n01:13:01.652  # | ^\r\n01:13:01.652  # | \r\n01:13:01.652  # | I\n\n[Retrieved artifact swiftlang/swift#91475@open chunk 5]\n1.652  # |           ^\r\n01:13:01.652  # | <stdin>:1:1: note: scanning from here\r\n01:13:01.652  # | ; ModuleID = '<swift-imported-modules>'\r\n01:13:01.652  # | ^\r\n01:13:01.652  # | \r\n01:13:01.652  # | Input file: <stdin>\r\n01:13:01.652  # | Check file: /home/build-user/swift/test/embedded/no-allocations-coroutine-legacy.swift\r\n01:13:01.652  # | \r\n01:13:01.652  # | -dump-input=help explains the following input dump.\r\n01:13:01.652  # | \r\n01:13:01.652  # | Input was:\r\n01:13:01.652  # | <<<<<<\r\n01:13:01.652  # |           1: ; ModuleID = '<swift-imported-modules>' \r\n01:13:01.652  # | check:12     X~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ error: no match found\r\n01:13:01.652  # |           2: source_filename = \"<swift-imported-modules>\" \r\n01:13:01.652  # | check:12     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n01:13:01.652  # |           3: target datalayout = \"e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-i128:128-f80:128-n8:16:32:64-S128\" \r\n01:13:01.652  # | check:12     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n01:13:01.652  # |           4: target triple = \"x86_64-unknown-linux-gnu\" \r\n01:13:01.652  # | check:12     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n01:13:01.652  # |           5:  \r\n01:13:01.652  # | check:12     ~\r\n01:13:01.652  # |           6: %swift.coro_func_pointer = type <{ i32, i32, i64 }> \r\n01:13:01.652  # | check:12     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n01:13:01.652  # |           .\r\n01:13:01.652  # |           .\r\n01:13:01.652  # |           .\r\n01:13:01.652  # | >>>>>>\r\n01:1\n\n[Retrieved artifact swiftlang/swift#91475@open chunk 1]\n 5.2:macOS 10.15.4, iOS 13.4, watchOS 6.2, tvOS 13.4' -define-availability 'SwiftStdlib 5.3:macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0' -define-availability 'SwiftStdlib 5.4:macOS 11.3, iOS 14.5, watchOS 7.4, tvOS 14.5' -define-availability 'SwiftStdlib 5.5:macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0' -define-availability 'SwiftStdlib 5.6:macOS 12.3, iOS 15.4, watchOS 8.5, tvOS 15.4' -define-availability 'SwiftStdlib 5.7:macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0' -define-availability 'SwiftStdlib 5.8:macOS 13.3, iOS 16.4, watchOS 9.4, tvOS 16.4' -define-availability 'SwiftStdlib 5.9:macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0' -define-availability 'SwiftStdlib 5.10:macOS 14.4, iOS 17.4, watchOS 10.4, tvOS 17.4, visionOS 1.1' -define-availability 'SwiftStdlib 6.0:macOS 15.0, iOS 18.0, watchOS 11.0, tvOS 18.0, visionOS 2.0' -define-availability 'SwiftStdlib 6.1:macOS 15.4, iOS 18.4, watchOS 11.4, tvOS 18.4, visionOS 2.4' -define-availability 'SwiftStdlib 6.2:anyAppleOS 26.0' -define-availability 'SwiftStdlib 6.3:anyAppleOS 26.4' -define-availability 'SwiftStdlib 6.4:anyAppleOS 27.0' -define-availability 'SwiftStdlib 6.5:anyAppleOS 9999' -define-availability 'SwiftCompatibilitySpan 5.0:macOS 10.14.4, iOS 12.2, watchOS 5.2, tvOS 12.2, visionOS 1.0' -define-availability 'SwiftCompatibilitySpan 6.2:macOS 26.0, iOS 26.0, watchOS 26.0, tvOS 26.0, visionOS 26.0' -define-availability 'Backtracing 6.2: macOS 26.0'  -typo-correction-limit 10 -solver-enable-diagnose-valid-salvage  -emit-ir /home/build-user/swift/test/embedded/no-allocations-coroutine-legacy.swift -enable-experim\n\nDeveloper question: What organizational decision currently governs swift coroutine accessor implementation while rollback is proposed? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: SE-0474@accepted\nDecision ID: SE-0474\nRepository: swiftlang/swift-evolution\nTimestamp: 2025-01-01T00:00:00Z\nSource URL: https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0474-yielding-accessors.md\nPinned revision: 0105e139a22938561c700cfbb89ddc3ebe402f0c\nLifecycle status: ACCEPTED\nAuthority scope: swift-yielding-accessor-policy\nSource text (verbatim excerpt):\n* Status: **Accepted**\nDecision role: POLICY\n\nArtifact ID: swiftlang/swift#90516@open\nDecision ID: swiftlang/swift#90516\nRepository: swiftlang/swift\nTimestamp: 2026-07-08T20:10:24Z\nSource URL: https://github.com/swiftlang/swift/pull/90516\nPinned revision: github-open-event-2026-07-08T20:10:24Z\nLifecycle status: OPEN\nAuthority scope: swift-coroutine-accessor-implementation\nExplicitly implements: SE-0474\nSource text (verbatim excerpt):\n[Embedded] Support CoroutineAccessors in no-allocations embedded\nThe -no-allocations check in the EmbeddedSwiftDiagnostics SIL pass rejected *every* begin_apply (coroutine call).  That was correct for the old ABI which always heap-allocated, but the new ABI supports stack allocation.\r\n\r\nMove the check to IRGen, where the allocator kind is known and inlining has already run: when considering a non-inlined begin_apply of a callee-allocated coroutine, diagnose when the coroutine allocator kind is a heap allocation. (Permit default/pass-through, explicit Stack allocation, and explicit Async stack allocation.)\r\n\r\nThis lets stack-allocated and inlined coroutine accessors be used under -no-allocations while rejecting genuine heap allocations.\r\n\r\nResolves rdar://181713977\nDecision role: IMPLEMENTATION\n\nArtifact ID: swiftlang/swift#90516@merged\nDecision ID: swiftlang/swift#90516\nRepository: swiftlang/swift\nTimestamp: 2026-08-12T09:01:48Z\nSource URL: https://github.com/swiftlang/swift/pull/90516\nPinned revision: 0416f827ae0e7e7fc3e988d671cdd9404f96aa19\nLifecycle status: MERGED\nAuthority scope: swift-coroutine-accessor-implementation\nExplicitly implements: SE-0474\nSource text (verbatim excerpt):\n[Embedded] Support CoroutineAccessors in no-allocations embedded\nThe -no-allocations check in the EmbeddedSwiftDiagnostics SIL pass rejected *every* begin_apply (coroutine call).  That was correct for the old ABI which always heap-allocated, but the new ABI supports stack allocation.\r\n\r\nMove the check to IRGen, where the allocator kind is known and inlining has already run: when considering a non-inlined begin_apply of a callee-allocated coroutine, diagnose when the coroutine allocator kind is a heap allocation. (Permit default/pass-through, explicit Stack allocation, and explicit Async stack allocation.)\r\n\r\nThis lets stack-allocated and inlined coroutine accessors be used under -no-allocations while rejecting genuine heap allocations.\r\n\r\nResolves rdar://181713977\nDecision role: IMPLEMENTATION\n\nArtifact ID: swiftlang/swift#91475@open\nDecision ID: swiftlang/swift#91475\nRepository: swiftlang/swift\nTimestamp: 2026-08-14T06:24:43Z\nSource URL: https://github.com/swiftlang/swift/pull/91475\nPinned revision: github-open-event-2026-08-14T06:24:43Z\nLifecycle status: OPEN\nAuthority scope: swift-coroutine-accessor-implementation\nExplicitly reverts: swiftlang/swift#90516\nSource text (verbatim excerpt):\nRevert \"[Embedded] Support CoroutineAccessors in no-allocations embedded\"\nReverts swiftlang/swift#90516\r\n\r\nTo unblock nightly toolchain\r\n\r\n```\r\n ******************** TEST 'Swift(linux-x86_64) :: embedded/no-allocations-coroutine-legacy.swift' FAILED ********************\r\n01:13:01.651  Exit Code: 1\r\n01:13:01.651  \r\n01:13:01.651  Command Output (stdout):\r\n01:13:01.651  --\r\n01:13:01.651  # RUN: at line 5\r\n01:13:01.651  not /home/build-user/build/buildbot_linux/swift-linux-x86_64/bin/swift-frontend -target x86_64-unknown-linux-gnu  -module-cache-path /home/build-user/build/buildbot_linux/swift-linux-x86_64/swift-test-results/x86_64-unknown-linux-gnu/clang-module-cache -swift-version 4  -define-availability 'SwiftStdlib 9999:macOS 9999, iOS 9999, watchOS 9999, tvOS 9999, visionOS 9999' -define-availability 'SwiftStdlib 5.0:macOS 10.14.4, iOS 12.2, watchOS 5.2, tvOS 12.2' -define-availability 'SwiftStdlib 5.1:macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0' -define-availability 'SwiftStdlib 5.2:macOS 10.15.4, iOS 13.4, watchOS 6.2, tvOS 13.4' -define-availability 'SwiftStdlib 5.3:macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0' -define-availability 'SwiftStdlib 5.4:macOS 11.3, iOS 14.5, watchOS 7.4, tvOS 14.5' -define-availability 'SwiftStdlib 5.5:macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0' -define-availability 'SwiftStdlib 5.6:macOS 12.3, iOS 15.4, watchOS 8.5, tvOS 15.4' -define-availability 'SwiftStdlib 5.7:macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0' -define-availability 'SwiftStdlib 5.8:macOS 13.3, iOS 16.4, watchOS 9.4, tvOS 16.4' -define-availability 'SwiftStdlib 5.9:macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0' -define-availability 'SwiftStdlib 5.10:macOS 14.4, iOS 17.4, watchOS 10.4, tvOS 17.4, visionOS 1.1' -define-availability 'SwiftStdlib 6.0:macOS 15.0, iOS 18.0, watchOS 11.0, tvOS 18.0, visionOS 2.0' -define-availability 'SwiftStdlib 6.1:macOS 15.4, iOS 18.4, watchOS 11.4, tvOS 18.4, visionOS 2.4' -define-availability 'SwiftStdlib 6.2:anyAppleOS 26.0' -define-availability 'SwiftStdlib 6.3:anyAppleOS 26.4' -define-availability 'SwiftStdlib 6.4:anyAppleOS 27.0' -define-availability 'SwiftStdlib 6.5:anyAppleOS 9999' -define-availability 'SwiftCompatibilitySpan 5.0:macOS 10.14.4, iOS 12.2, watchOS 5.2, tvOS 12.2, visionOS 1.0' -define-availability 'SwiftCompatibilitySpan 6.2:macOS 26.0, iOS 26.0, watchOS 26.0, tvOS 26.0, visionOS 26.0' -define-availability 'Backtracing 6.2: macOS 26.0'  -typo-correction-limit 10 -solver-enable-diagnose-valid-salvage  -emit-ir /home/build-user/swift/test/embedded/no-allocations-coroutine-legacy.swift -enable-experimental-feature Embedded -enable-experimental-feature CoroutineAccessors -no-allocations -wmo 2>&1 | /usr/bin/python3.10 /home/build-user/swift/utils/PathSanitizingFileCheck --allow-unused-prefixes --sanitize TMP_DIR=/home/build-user/build/buildbot_linux/swift-linux-x86_64/test-linux-x86_64/embedded/Output/no-allocations-coroutine-legacy.swift.tmp --sanitize BUILD_DIR=/home/build-user/build/buildbot_linux/swift-linux-x86_64 --sanitize SOURCE_DIR=/home/build-user/swift --ignore-runtime-warnings --use-filecheck /home/build-user/build/buildbot_linux/llvm-linux-x86_64/bin/FileCheck   /home/build-user/swift/test/embedded/no-allocations-coroutine-legacy.swift\r\n01:13:01.651  # executed command: not /home/build-user/build/buildbot_linux/swift-linux-x86_64/bin/swift-frontend -target x86_64-unknown-linux-gnu -module-cache-path /home/build-user/build/buildbot_linux/swift-linux-x86_64/swift-test-results/x86_64-unknown-linux-gnu/clang-module-cache -swift-version 4 -define-availability 'SwiftStdlib 9999:macOS 9999, iOS 9999, watchOS 9999, tvOS 9999, visionOS 9999' -define-availability 'SwiftStdlib 5.0:macOS 10.14.4, iOS 12.2, watchOS 5.2, tvOS 12.2' -define-availability 'SwiftStdlib 5.1:macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0' -define-availability 'SwiftStdlib 5.2:macOS 10.15.4, iOS 13.4, watchOS 6.2, tvOS 13.4' -define-availability 'SwiftStdlib 5.3:macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0' -define-availability 'SwiftStdlib 5.4:macOS 11.3, iOS 14.5, watchOS 7.4, tvOS 14.5' -define-availability 'SwiftStdlib 5.5:macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0' -define-availability 'SwiftStdlib 5.6:macOS 12.3, iOS 15.4, watchOS 8.5, tvOS 15.4' -define-availability 'SwiftStdlib 5.7:macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0' -define-availability 'SwiftStdlib 5.8:macOS 13.3, iOS 16.4, watchOS 9.4, tvOS 16.4' -define-availability 'SwiftStdlib 5.9:macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0' -define-availability 'SwiftStdlib 5.10:macOS 14.4, iOS 17.4, watchOS 10.4, tvOS 17.4, visionOS 1.1' -define-availability 'SwiftStdlib 6.0:macOS 15.0, iOS 18.0, watchOS 11.0, tvOS 18.0, visionOS 2.0' -define-availability 'SwiftStdlib 6.1:macOS 15.4, iOS 18.4, watchOS 11.4, tvOS 18.4, visionOS 2.4' -define-availability 'SwiftStdlib 6.2:anyAppleOS 26.0' -define-availability 'SwiftStdlib 6.3:anyAppleOS 26.4' -define-availability 'SwiftStdlib 6.4:anyAppleOS 27.0' -define-availability 'SwiftStdlib 6.5:anyAppleOS 9999' -define-availability 'SwiftCompatibilitySpan 5.0:macOS 10.14.4, iOS 12.2, watchOS 5.2, tvOS 12.2, visionOS 1.0' -define-availability 'SwiftCompatibilitySpan 6.2:macOS 26.0, iOS 26.0, watchOS 26.0, tvOS 26.0, visionOS 26.0' -define-availability 'Backtracing 6.2: macOS 26.0' -typo-correction-limit 10 -solver-enable-diagnose-valid-salvage -emit-ir /home/build-user/swift/test/embedded/no-allocations-coroutine-legacy.swift -enable-experimental-feature Embedded -enable-experimental-feature CoroutineAccessors -no-allocations -wmo\r\n01:13:01.651  # note: command had no output on stdout or stderr\r\n01:13:01.651  # error: command failed with exit status: 1\r\n01:13:01.651  # executed command: /usr/bin/python3.10 /home/build-user/swift/utils/PathSanitizingFileCheck --allow-unused-prefixes --sanitize TMP_DIR=/home/build-user/build/buildbot_linux/swift-linux-x86_64/test-linux-x86_64/embedded/Output/no-allocations-coroutine-legacy.swift.tmp --sanitize BUILD_DIR=/home/build-user/build/buildbot_linux/swift-linux-x86_64 --sanitize SOURCE_DIR=/home/build-user/swift --ignore-runtime-warnings --use-filecheck /home/build-user/build/buildbot_linux/llvm-linux-x86_64/bin/FileCheck /home/build-user/swift/test/embedded/no-allocations-coroutine-legacy.swift\r\n01:13:01.651  # .---command stderr------------\r\n01:13:01.652  # | /home/build-user/swift/test/embedded/no-allocations-coroutine-legacy.swift:12:11: error: CHECK: expected string not found in input\r\n01:13:01.652  # | // CHECK: error: coroutine accessor involves heap allocation [#PerformanceHints::HeapAllocation]\r\n01:13:01.652  # |           ^\r\n01:13:01.652  # | <stdin>:1:1: note: scanning from here\r\n01:13:01.652  # | ; ModuleID = '<swift-imported-modules>'\r\n01:13:01.652  # | ^\r\n01:13:01.652  # | \r\n01:13:01.652  # | Input file: <stdin>\r\n01:13:01.652  # | Check file: /home/build-user/swift/test/embedded/no-allocations-coroutine-legacy.swift\r\n01:13:01.652  # | \r\n01:13:01.652  # | -dump-input=help explains the following input dump.\r\n01:13:01.652  # | \r\n01:13:01.652  # | Input was:\r\n01:13:01.652  # | <<<<<<\r\n01:13:01.652  # |           1: ; ModuleID = '<swift-imported-modules>' \r\n01:13:01.652  # | check:12     X~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ error: no match found\r\n01:13:01.652  # |           2: source_filename = \"<swift-imported-modules>\" \r\n01:13:01.652  # | check:12     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n01:13:01.652  # |           3: target datalayout = \"e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-i128:128-f80:128-n8:16:32:64-S128\" \r\n01:13:01.652  # | check:12     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n01:13:01.652  # |           4: target triple = \"x86_64-unknown-linux-gnu\" \r\n01:13:01.652  # | check:12     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n01:13:01.652  # |           5:  \r\n01:13:01.652  # | check:12     ~\r\n01:13:01.652  # |           6: %swift.coro_func_pointer = type <{ i32, i32, i64 }> \r\n01:13:01.652  # | check:12     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n01:13:01.652  # |           .\r\n01:13:01.652  # |           .\r\n01:13:01.652  # |           .\r\n01:13:01.652  # | >>>>>>\r\n01:13:01.652  # `-----------------------------\r\n01:13:01.652  # error: command failed with exit status: 1\r\n01:13:01.652  \r\n01:13:01.652  --\r\n01:13:01.652  \r\n01:13:01.652  ********************\r\n```\nDecision role: IMPLEMENTATION\n\nDeveloper question: What organizational decision currently governs swift coroutine accessor implementation while rollback is proposed? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "c9e2912ff85af4febcccf53627fd61e269e0e26fc287c53768ff8c44d5d20b4c",
+    "rag_embedding": "43adc674742b830856f0f3df19c88f68e4f00e5b3b60cb3922e13d5a79cc7923",
+    "rag_full_context": "29d419dc1e70380d1f902e2c40c2e5aaa8b68051d6fdeeefd002914220d8c4f2"
+  },
+  "expected_answer_fields_present": false
+}

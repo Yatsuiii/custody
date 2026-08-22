@@ -1,0 +1,64 @@
+{
+  "checkpoint_id": "python-wsgi-c1",
+  "timeline_id": "python-wsgi",
+  "question": "What organizational decision currently governs python wsgi? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-333@accepted",
+      "decision_id": "PEP-333",
+      "sequence": 1,
+      "rendered_sha256": "0072c651a19930c2f7d9ae371362d00cfddbe74a4434ecbd1a9169af5dad358f"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "PEP-333@accepted"
+    ],
+    "rag_embedding": [
+      "PEP-333@accepted"
+    ],
+    "rag_full_context": [
+      "PEP-333@accepted"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 0,
+      "artifact_id": "PEP-333@accepted",
+      "chunk_index": 0,
+      "similarity": 0.7758654064959631
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "PEP-333@accepted"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-333"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-333@accepted"
+    ],
+    "resolver_explanation": "python-wsgi: PEP-333 is the sole eligible active decision in scope 'python-wsgi'.",
+    "derivations": [
+      {
+        "artifact_id": "PEP-333@accepted",
+        "decision_id": "PEP-333",
+        "status": "ACCEPTED",
+        "edges": []
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"PEP-333\"]\nResolver explanation: python-wsgi: PEP-333 is the sole eligible active decision in scope 'python-wsgi'.\n\nEvidence:\nArtifact ID: PEP-333@accepted\nDecision ID: PEP-333\nRepository: python/peps\nTimestamp: 2003-12-07T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0333.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-wsgi\nSource text (verbatim excerpt):\nPEP: 333\nTitle: Python Web Server Gateway Interface v1.0\nStatus: Final\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs python wsgi? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact PEP-333@accepted chunk 0]\nArtifact ID: PEP-333@accepted\nDecision ID: PEP-333\nRepository: python/peps\nTimestamp: 2003-12-07T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0333.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-wsgi\nSource text (verbatim excerpt):\nPEP: 333\nTitle: Python Web Server Gateway Interface v1.0\nStatus: Final\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs python wsgi? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: PEP-333@accepted\nDecision ID: PEP-333\nRepository: python/peps\nTimestamp: 2003-12-07T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0333.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-wsgi\nSource text (verbatim excerpt):\nPEP: 333\nTitle: Python Web Server Gateway Interface v1.0\nStatus: Final\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs python wsgi? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "dd9a43ba234090ba46bb50b22a73fd2c195c636c29bf3ec6e51cc087484df201",
+    "rag_embedding": "a04fe2890f6ccb91b2571742d2da35c7785b360a94f8d3a2dfb3dce0e798f6f3",
+    "rag_full_context": "3bd6606dbdeeeb7b43cdffe2d4f3cb7d26329b32848d32db6244712396f3e3ea"
+  },
+  "expected_answer_fields_present": false
+}

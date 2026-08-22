@@ -1,0 +1,113 @@
+{
+  "checkpoint_id": "python-wsgi-c3",
+  "timeline_id": "python-wsgi",
+  "question": "What organizational decision currently governs python wsgi after the newer registry notice? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-333@accepted",
+      "decision_id": "PEP-333",
+      "sequence": 1,
+      "rendered_sha256": "0072c651a19930c2f7d9ae371362d00cfddbe74a4434ecbd1a9169af5dad358f"
+    },
+    {
+      "artifact_id": "PEP-3333@accepted",
+      "decision_id": "PEP-3333",
+      "sequence": 2,
+      "rendered_sha256": "a1f63584628b23a087512a61bbea31e7d01b316492fe7eaea7af3f99065dc8aa"
+    },
+    {
+      "artifact_id": "PEP-333@current-note",
+      "decision_id": "PEP-333",
+      "sequence": 3,
+      "rendered_sha256": "8c96fc1aeccde6bb2f007917669ad06db4a5ef9582cb693b7b87b18f53b4119b"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "PEP-333@accepted",
+      "PEP-3333@accepted",
+      "PEP-333@current-note"
+    ],
+    "rag_embedding": [
+      "PEP-333@accepted",
+      "PEP-3333@accepted",
+      "PEP-333@current-note"
+    ],
+    "rag_full_context": [
+      "PEP-333@accepted",
+      "PEP-3333@accepted",
+      "PEP-333@current-note"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 0,
+      "artifact_id": "PEP-333@accepted",
+      "chunk_index": 0,
+      "similarity": 0.7369131963647582
+    },
+    {
+      "ordinal": 1,
+      "artifact_id": "PEP-3333@accepted",
+      "chunk_index": 0,
+      "similarity": 0.7351185718668247
+    },
+    {
+      "ordinal": 2,
+      "artifact_id": "PEP-333@current-note",
+      "chunk_index": 0,
+      "similarity": 0.7270846323306558
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "PEP-333@accepted",
+    "PEP-3333@accepted",
+    "PEP-333@current-note"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-3333"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-3333@accepted"
+    ],
+    "resolver_explanation": "python-wsgi: PEP-3333 is the sole eligible active decision in scope 'python-wsgi'.",
+    "derivations": [
+      {
+        "artifact_id": "PEP-333@accepted",
+        "decision_id": "PEP-333",
+        "status": "ACCEPTED",
+        "edges": []
+      },
+      {
+        "artifact_id": "PEP-3333@accepted",
+        "decision_id": "PEP-3333",
+        "status": "ACCEPTED",
+        "edges": [
+          [
+            "PEP-333",
+            "SUPERSEDES"
+          ]
+        ]
+      },
+      {
+        "artifact_id": "PEP-333@current-note",
+        "decision_id": null,
+        "action": "evidence_only",
+        "reason": "NOTE has no authority transition"
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"PEP-3333\"]\nResolver explanation: python-wsgi: PEP-3333 is the sole eligible active decision in scope 'python-wsgi'.\n\nEvidence:\nArtifact ID: PEP-3333@accepted\nDecision ID: PEP-3333\nRepository: python/peps\nTimestamp: 2010-09-26T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-3333.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-wsgi\nExplicitly replaces: PEP-333\nSource text (verbatim excerpt):\nPEP: 3333\nTitle: Python Web Server Gateway Interface v1.0.1\nStatus: Final\nReplaces: 333\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs python wsgi after the newer registry notice? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact PEP-333@accepted chunk 0]\nArtifact ID: PEP-333@accepted\nDecision ID: PEP-333\nRepository: python/peps\nTimestamp: 2003-12-07T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0333.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-wsgi\nSource text (verbatim excerpt):\nPEP: 333\nTitle: Python Web Server Gateway Interface v1.0\nStatus: Final\nDecision role: POLICY\n\n[Retrieved artifact PEP-3333@accepted chunk 0]\nArtifact ID: PEP-3333@accepted\nDecision ID: PEP-3333\nRepository: python/peps\nTimestamp: 2010-09-26T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-3333.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-wsgi\nExplicitly replaces: PEP-333\nSource text (verbatim excerpt):\nPEP: 3333\nTitle: Python Web Server Gateway Interface v1.0.1\nStatus: Final\nReplaces: 333\nDecision role: POLICY\n\n[Retrieved artifact PEP-333@current-note chunk 0]\nArtifact ID: PEP-333@current-note\nDecision ID: PEP-333\nRepository: python/peps\nTimestamp: 2026-08-22T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0333.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: NOTE\nAuthority scope: python-wsgi\nSource text (verbatim excerpt):\nSuperseded-By: 3333\nDecision role: MENTION\n\nDeveloper question: What organizational decision currently governs python wsgi after the newer registry notice? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: PEP-333@accepted\nDecision ID: PEP-333\nRepository: python/peps\nTimestamp: 2003-12-07T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0333.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-wsgi\nSource text (verbatim excerpt):\nPEP: 333\nTitle: Python Web Server Gateway Interface v1.0\nStatus: Final\nDecision role: POLICY\n\nArtifact ID: PEP-3333@accepted\nDecision ID: PEP-3333\nRepository: python/peps\nTimestamp: 2010-09-26T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-3333.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-wsgi\nExplicitly replaces: PEP-333\nSource text (verbatim excerpt):\nPEP: 3333\nTitle: Python Web Server Gateway Interface v1.0.1\nStatus: Final\nReplaces: 333\nDecision role: POLICY\n\nArtifact ID: PEP-333@current-note\nDecision ID: PEP-333\nRepository: python/peps\nTimestamp: 2026-08-22T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0333.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: NOTE\nAuthority scope: python-wsgi\nSource text (verbatim excerpt):\nSuperseded-By: 3333\nDecision role: MENTION\n\nDeveloper question: What organizational decision currently governs python wsgi after the newer registry notice? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "6a745def8a128903601b6fdd32164b351e206b270b9501c8c0d85de477736a78",
+    "rag_embedding": "1e554b6eba0d74f94b6bf1b0b457b3c333eadec263970ec639affab05da5443a",
+    "rag_full_context": "7165ad127b06ea5f9400c1258c932dbc11ea7e6558222264f70c66fde620a3ab"
+  },
+  "expected_answer_fields_present": false
+}

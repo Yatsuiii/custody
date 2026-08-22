@@ -1,0 +1,64 @@
+{
+  "checkpoint_id": "rust-drop-check-c1",
+  "timeline_id": "rust-drop-check",
+  "question": "What organizational decision currently governs rust generic drop safety? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "RFC-769@merged",
+      "decision_id": "RFC-769",
+      "sequence": 1,
+      "rendered_sha256": "f9d0a4a48041f19c1108cc2810250dcc064347e0db4ae25a811b880e5eedb368"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "RFC-769@merged"
+    ],
+    "rag_embedding": [
+      "RFC-769@merged"
+    ],
+    "rag_full_context": [
+      "RFC-769@merged"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 0,
+      "artifact_id": "RFC-769@merged",
+      "chunk_index": 0,
+      "similarity": 0.7516246493038423
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "RFC-769@merged"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-769"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-769@merged"
+    ],
+    "resolver_explanation": "rust-generic-drop-safety: RFC-769 is the sole eligible active decision in scope 'rust-generic-drop-safety'.",
+    "derivations": [
+      {
+        "artifact_id": "RFC-769@merged",
+        "decision_id": "RFC-769",
+        "status": "IMPLEMENTED",
+        "edges": []
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"RFC-769\"]\nResolver explanation: rust-generic-drop-safety: RFC-769 is the sole eligible active decision in scope 'rust-generic-drop-safety'.\n\nEvidence:\nArtifact ID: RFC-769@merged\nDecision ID: RFC-769\nRepository: rust-lang/rfcs\nTimestamp: 2015-02-10T17:19:59Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/0769-sound-generic-drop.md\nPinned revision: github-merged-event-2015-02-10T17:19:59Z\nLifecycle status: MERGED\nAuthority scope: rust-generic-drop-safety\nSource text (verbatim excerpt):\n(It turned out to be Un-)sound Generic Drop\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs rust generic drop safety? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact RFC-769@merged chunk 0]\nArtifact ID: RFC-769@merged\nDecision ID: RFC-769\nRepository: rust-lang/rfcs\nTimestamp: 2015-02-10T17:19:59Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/0769-sound-generic-drop.md\nPinned revision: github-merged-event-2015-02-10T17:19:59Z\nLifecycle status: MERGED\nAuthority scope: rust-generic-drop-safety\nSource text (verbatim excerpt):\n(It turned out to be Un-)sound Generic Drop\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs rust generic drop safety? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: RFC-769@merged\nDecision ID: RFC-769\nRepository: rust-lang/rfcs\nTimestamp: 2015-02-10T17:19:59Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/0769-sound-generic-drop.md\nPinned revision: github-merged-event-2015-02-10T17:19:59Z\nLifecycle status: MERGED\nAuthority scope: rust-generic-drop-safety\nSource text (verbatim excerpt):\n(It turned out to be Un-)sound Generic Drop\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs rust generic drop safety? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "7194f5dfa047b60c1ff7ccadba9f2e018f66206205b048672477925dedfa7d22",
+    "rag_embedding": "d365f6b05301404ff60f559c441426c3ec5fbd2ee0fc20b2d181ee9639cd2660",
+    "rag_full_context": "a14394606235704bd99188be0ccc8c0fcfc7bc044741abc403f23e29c20ed88d"
+  },
+  "expected_answer_fields_present": false
+}

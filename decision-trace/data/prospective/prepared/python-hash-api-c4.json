@@ -1,0 +1,113 @@
+{
+  "checkpoint_id": "python-hash-api-c4",
+  "timeline_id": "python-hash-api",
+  "question": "Which accepted standard is authoritative for python hash api now?",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-247@accepted",
+      "decision_id": "PEP-247",
+      "sequence": 1,
+      "rendered_sha256": "fa240f71fb176d964fdbc2546fb4b1a974e272b695393a68b31bbfd080c43095"
+    },
+    {
+      "artifact_id": "PEP-452@accepted",
+      "decision_id": "PEP-452",
+      "sequence": 2,
+      "rendered_sha256": "58d1500c448b910e6ca3b2566cc668776c440d4fce59a34af8ff68a4a69da612"
+    },
+    {
+      "artifact_id": "PEP-247@current-note",
+      "decision_id": "PEP-247",
+      "sequence": 3,
+      "rendered_sha256": "870c94e5e22d970ad0f1c8166cbd82a2bbb9affc714ebe4853e64aea6180aa14"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "PEP-247@accepted",
+      "PEP-452@accepted",
+      "PEP-247@current-note"
+    ],
+    "rag_embedding": [
+      "PEP-247@accepted",
+      "PEP-452@accepted",
+      "PEP-247@current-note"
+    ],
+    "rag_full_context": [
+      "PEP-247@accepted",
+      "PEP-452@accepted",
+      "PEP-247@current-note"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 0,
+      "artifact_id": "PEP-247@accepted",
+      "chunk_index": 0,
+      "similarity": 0.7583506886609729
+    },
+    {
+      "ordinal": 1,
+      "artifact_id": "PEP-452@accepted",
+      "chunk_index": 0,
+      "similarity": 0.7524478830810601
+    },
+    {
+      "ordinal": 2,
+      "artifact_id": "PEP-247@current-note",
+      "chunk_index": 0,
+      "similarity": 0.7306442168984398
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "PEP-247@accepted",
+    "PEP-452@accepted",
+    "PEP-247@current-note"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-452"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-452@accepted"
+    ],
+    "resolver_explanation": "python-hash-api: PEP-452 is the sole eligible active decision in scope 'python-hash-api'.",
+    "derivations": [
+      {
+        "artifact_id": "PEP-247@accepted",
+        "decision_id": "PEP-247",
+        "status": "ACCEPTED",
+        "edges": []
+      },
+      {
+        "artifact_id": "PEP-452@accepted",
+        "decision_id": "PEP-452",
+        "status": "ACCEPTED",
+        "edges": [
+          [
+            "PEP-247",
+            "SUPERSEDES"
+          ]
+        ]
+      },
+      {
+        "artifact_id": "PEP-247@current-note",
+        "decision_id": null,
+        "action": "evidence_only",
+        "reason": "NOTE has no authority transition"
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"PEP-452\"]\nResolver explanation: python-hash-api: PEP-452 is the sole eligible active decision in scope 'python-hash-api'.\n\nEvidence:\nArtifact ID: PEP-452@accepted\nDecision ID: PEP-452\nRepository: python/peps\nTimestamp: 2013-08-15T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0452.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-hash-api\nExplicitly replaces: PEP-247\nSource text (verbatim excerpt):\nPEP: 452\nTitle: API for Cryptographic Hash Functions v2.0\nStatus: Final\nReplaces: 247\nDecision role: POLICY\n\nDeveloper question: Which accepted standard is authoritative for python hash api now?\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact PEP-247@accepted chunk 0]\nArtifact ID: PEP-247@accepted\nDecision ID: PEP-247\nRepository: python/peps\nTimestamp: 2001-03-23T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0247.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-hash-api\nSource text (verbatim excerpt):\nPEP: 247\nTitle: API for Cryptographic Hash Functions\nStatus: Final\nDecision role: POLICY\n\n[Retrieved artifact PEP-452@accepted chunk 0]\nArtifact ID: PEP-452@accepted\nDecision ID: PEP-452\nRepository: python/peps\nTimestamp: 2013-08-15T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0452.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-hash-api\nExplicitly replaces: PEP-247\nSource text (verbatim excerpt):\nPEP: 452\nTitle: API for Cryptographic Hash Functions v2.0\nStatus: Final\nReplaces: 247\nDecision role: POLICY\n\n[Retrieved artifact PEP-247@current-note chunk 0]\nArtifact ID: PEP-247@current-note\nDecision ID: PEP-247\nRepository: python/peps\nTimestamp: 2026-08-22T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0452.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: NOTE\nAuthority scope: python-hash-api\nSource text (verbatim excerpt):\nReplaces: 247\nDecision role: MENTION\n\nDeveloper question: Which accepted standard is authoritative for python hash api now?\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: PEP-247@accepted\nDecision ID: PEP-247\nRepository: python/peps\nTimestamp: 2001-03-23T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0247.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-hash-api\nSource text (verbatim excerpt):\nPEP: 247\nTitle: API for Cryptographic Hash Functions\nStatus: Final\nDecision role: POLICY\n\nArtifact ID: PEP-452@accepted\nDecision ID: PEP-452\nRepository: python/peps\nTimestamp: 2013-08-15T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0452.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-hash-api\nExplicitly replaces: PEP-247\nSource text (verbatim excerpt):\nPEP: 452\nTitle: API for Cryptographic Hash Functions v2.0\nStatus: Final\nReplaces: 247\nDecision role: POLICY\n\nArtifact ID: PEP-247@current-note\nDecision ID: PEP-247\nRepository: python/peps\nTimestamp: 2026-08-22T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0452.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: NOTE\nAuthority scope: python-hash-api\nSource text (verbatim excerpt):\nReplaces: 247\nDecision role: MENTION\n\nDeveloper question: Which accepted standard is authoritative for python hash api now?\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "985ec9bb4dbef8e3baca7415ac5bae0c0e22785bff2b6d5add77797c82d01b8f",
+    "rag_embedding": "9b8cb7617d7fe0fc7c819c3337a30cadab3fd0fe188b22ba56e65b12e07b5da0",
+    "rag_full_context": "4ad684853733d1d609346897d8c983f318600820a1df74ba5e64846aa646b6ff"
+  },
+  "expected_answer_fields_present": false
+}

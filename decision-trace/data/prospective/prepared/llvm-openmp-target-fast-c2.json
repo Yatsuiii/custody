@@ -1,0 +1,86 @@
+{
+  "checkpoint_id": "llvm-openmp-target-fast-c2",
+  "timeline_id": "llvm-openmp-target-fast",
+  "question": "What organizational decision currently governs llvm openmp target fast? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "llvm/llvm-project#205775@open",
+      "decision_id": "llvm/llvm-project#205775",
+      "sequence": 1,
+      "rendered_sha256": "6f47349c983d50f186c9712a93dea62c925e12c4d0388d4dc2be03ea0057b012"
+    },
+    {
+      "artifact_id": "llvm/llvm-project#205775@merged",
+      "decision_id": "llvm/llvm-project#205775",
+      "sequence": 2,
+      "rendered_sha256": "1c44fceebb3db724893e767d3e95c0d52bd771ab7fc048e4ea95227827835229"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "llvm/llvm-project#205775@open",
+      "llvm/llvm-project#205775@merged"
+    ],
+    "rag_embedding": [
+      "llvm/llvm-project#205775@open",
+      "llvm/llvm-project#205775@merged"
+    ],
+    "rag_full_context": [
+      "llvm/llvm-project#205775@open",
+      "llvm/llvm-project#205775@merged"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 0,
+      "artifact_id": "llvm/llvm-project#205775@open",
+      "chunk_index": 0,
+      "similarity": 0.8179452278322621
+    },
+    {
+      "ordinal": 1,
+      "artifact_id": "llvm/llvm-project#205775@merged",
+      "chunk_index": 0,
+      "similarity": 0.8169265396083844
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "llvm/llvm-project#205775@open",
+    "llvm/llvm-project#205775@merged"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "llvm/llvm-project#205775"
+    ],
+    "evidence_artifact_ids": [
+      "llvm/llvm-project#205775@merged"
+    ],
+    "resolver_explanation": "llvm-openmp-target-fast: llvm/llvm-project#205775 is the sole eligible active decision in scope 'llvm-openmp-target-fast'.",
+    "derivations": [
+      {
+        "artifact_id": "llvm/llvm-project#205775@open",
+        "decision_id": "llvm/llvm-project#205775",
+        "status": "PROPOSED",
+        "edges": []
+      },
+      {
+        "artifact_id": "llvm/llvm-project#205775@merged",
+        "decision_id": "llvm/llvm-project#205775",
+        "status": "IMPLEMENTED",
+        "edges": []
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"llvm/llvm-project#205775\"]\nResolver explanation: llvm-openmp-target-fast: llvm/llvm-project#205775 is the sole eligible active decision in scope 'llvm-openmp-target-fast'.\n\nEvidence:\nArtifact ID: llvm/llvm-project#205775@merged\nDecision ID: llvm/llvm-project#205775\nRepository: llvm/llvm-project\nTimestamp: 2026-08-03T13:21:04Z\nSource URL: https://github.com/llvm/llvm-project/pull/205775\nPinned revision: 981286a235471cfffbf2b18201aea926a0803b9c\nLifecycle status: MERGED\nAuthority scope: llvm-openmp-target-fast\nSource text (verbatim excerpt):\n[OpenMP] target-fast implies teams/threads oversubscription\nEnable -fopenmp-assume-teams-oversubscription and\n-fopenmp-assume-threads-oversubscription by default under\n-fopenmp-target-fast. Adds driver test coverage for both.\n\nSplit out of #205325 as a standalone change.\nDecision role: IMPLEMENTATION\n\nDeveloper question: What organizational decision currently governs llvm openmp target fast? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact llvm/llvm-project#205775@open chunk 0]\nArtifact ID: llvm/llvm-project#205775@open\nDecision ID: llvm/llvm-project#205775\nRepository: llvm/llvm-project\nTimestamp: 2026-06-25T11:11:44Z\nSource URL: https://github.com/llvm/llvm-project/pull/205775\nPinned revision: github-open-event-2026-06-25T11:11:44Z\nLifecycle status: OPEN\nAuthority scope: llvm-openmp-target-fast\nSource text (verbatim excerpt):\n[OpenMP] target-fast implies teams/threads oversubscription\nEnable -fopenmp-assume-teams-oversubscription and\n-fopenmp-assume-threads-oversubscription by default under\n-fopenmp-target-fast. Adds driver test coverage for both.\n\nSplit out of #205325 as a standalone change.\nDecision role: IMPLEMENTATION\n\n[Retrieved artifact llvm/llvm-project#205775@merged chunk 0]\nArtifact ID: llvm/llvm-project#205775@merged\nDecision ID: llvm/llvm-project#205775\nRepository: llvm/llvm-project\nTimestamp: 2026-08-03T13:21:04Z\nSource URL: https://github.com/llvm/llvm-project/pull/205775\nPinned revision: 981286a235471cfffbf2b18201aea926a0803b9c\nLifecycle status: MERGED\nAuthority scope: llvm-openmp-target-fast\nSource text (verbatim excerpt):\n[OpenMP] target-fast implies teams/threads oversubscription\nEnable -fopenmp-assume-teams-oversubscription and\n-fopenmp-assume-threads-oversubscription by default under\n-fopenmp-target-fast. Adds driver test coverage for both.\n\nSplit out of #205325 as a standalone change.\nDecision role: IMPLEMENTATION\n\nDeveloper question: What organizational decision currently governs llvm openmp target fast? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: llvm/llvm-project#205775@open\nDecision ID: llvm/llvm-project#205775\nRepository: llvm/llvm-project\nTimestamp: 2026-06-25T11:11:44Z\nSource URL: https://github.com/llvm/llvm-project/pull/205775\nPinned revision: github-open-event-2026-06-25T11:11:44Z\nLifecycle status: OPEN\nAuthority scope: llvm-openmp-target-fast\nSource text (verbatim excerpt):\n[OpenMP] target-fast implies teams/threads oversubscription\nEnable -fopenmp-assume-teams-oversubscription and\n-fopenmp-assume-threads-oversubscription by default under\n-fopenmp-target-fast. Adds driver test coverage for both.\n\nSplit out of #205325 as a standalone change.\nDecision role: IMPLEMENTATION\n\nArtifact ID: llvm/llvm-project#205775@merged\nDecision ID: llvm/llvm-project#205775\nRepository: llvm/llvm-project\nTimestamp: 2026-08-03T13:21:04Z\nSource URL: https://github.com/llvm/llvm-project/pull/205775\nPinned revision: 981286a235471cfffbf2b18201aea926a0803b9c\nLifecycle status: MERGED\nAuthority scope: llvm-openmp-target-fast\nSource text (verbatim excerpt):\n[OpenMP] target-fast implies teams/threads oversubscription\nEnable -fopenmp-assume-teams-oversubscription and\n-fopenmp-assume-threads-oversubscription by default under\n-fopenmp-target-fast. Adds driver test coverage for both.\n\nSplit out of #205325 as a standalone change.\nDecision role: IMPLEMENTATION\n\nDeveloper question: What organizational decision currently governs llvm openmp target fast? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "186a608ce074cc99b26428c90b6c0af40a3d781d6790360502eddafe2135e7d9",
+    "rag_embedding": "39b61fefe8e040ba19c193c346d79b285ad8f97f75c5154a86373a35100b512c",
+    "rag_full_context": "108620959a871f34f0f10a7cba5db111e559ed1b4fad738b830ab703729b627d"
+  },
+  "expected_answer_fields_present": false
+}

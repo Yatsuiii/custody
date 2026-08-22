@@ -1,0 +1,60 @@
+{
+  "checkpoint_id": "kubernetes-gang-scheduling-c1",
+  "timeline_id": "kubernetes-gang-scheduling",
+  "question": "What organizational decision currently governs Kubernetes gang scheduling while only the provisional KEP is visible? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "KEP-583@current",
+      "decision_id": "KEP-583",
+      "sequence": 1,
+      "rendered_sha256": "4139dcf1cf896f3b4581b4412a21f5e75097897f88888f10a9c76486ab60ffc6"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "KEP-583@current"
+    ],
+    "rag_embedding": [
+      "KEP-583@current"
+    ],
+    "rag_full_context": [
+      "KEP-583@current"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 0,
+      "artifact_id": "KEP-583@current",
+      "chunk_index": 0,
+      "similarity": 0.7894414515763915
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "KEP-583@current"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [],
+    "resolver_explanation": "kubernetes-gang-scheduling-policy: No visible accepted or implemented decision is eligible to govern.",
+    "derivations": [
+      {
+        "artifact_id": "KEP-583@current",
+        "decision_id": "KEP-583",
+        "status": "PROPOSED",
+        "edges": []
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: NO_GOVERNING_DECISION\nGoverning decision IDs: []\nResolver explanation: kubernetes-gang-scheduling-policy: No visible accepted or implemented decision is eligible to govern.\n\nEvidence:\n(none)\n\nDeveloper question: What organizational decision currently governs Kubernetes gang scheduling while only the provisional KEP is visible? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact KEP-583@current chunk 0]\nArtifact ID: KEP-583@current\nDecision ID: KEP-583\nRepository: kubernetes/enhancements\nTimestamp: 2018-07-03T00:00:00Z\nSource URL: https://github.com/kubernetes/enhancements/blob/c4f439c2dd4acb928094660be0ea771bf63f2b76/keps/sig-scheduling/583-coscheduling/kep.yaml\nPinned revision: c4f439c2dd4acb928094660be0ea771bf63f2b76\nLifecycle status: DRAFT\nAuthority scope: kubernetes-gang-scheduling-policy\nSource text (verbatim excerpt):\nstatus: provisional\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs Kubernetes gang scheduling while only the provisional KEP is visible? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: KEP-583@current\nDecision ID: KEP-583\nRepository: kubernetes/enhancements\nTimestamp: 2018-07-03T00:00:00Z\nSource URL: https://github.com/kubernetes/enhancements/blob/c4f439c2dd4acb928094660be0ea771bf63f2b76/keps/sig-scheduling/583-coscheduling/kep.yaml\nPinned revision: c4f439c2dd4acb928094660be0ea771bf63f2b76\nLifecycle status: DRAFT\nAuthority scope: kubernetes-gang-scheduling-policy\nSource text (verbatim excerpt):\nstatus: provisional\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs Kubernetes gang scheduling while only the provisional KEP is visible? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "f2be3bcd3fbb1db3117a5319607a0aaf0a923066fcb49cd89c9372209a0c15b3",
+    "rag_embedding": "9513ec6299fa078d6d2c291887e9909d8b93b2b366baa0a326927193ba01e56e",
+    "rag_full_context": "4afa461faebbd408b3ecb0da66018a3f5dafc045e8fed87ae3d660c99b99316a"
+  },
+  "expected_answer_fields_present": false
+}

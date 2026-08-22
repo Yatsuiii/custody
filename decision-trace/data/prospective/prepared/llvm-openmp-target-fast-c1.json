@@ -1,0 +1,60 @@
+{
+  "checkpoint_id": "llvm-openmp-target-fast-c1",
+  "timeline_id": "llvm-openmp-target-fast",
+  "question": "What organizational decision currently governs llvm openmp target fast while the original change is proposed? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "llvm/llvm-project#205775@open",
+      "decision_id": "llvm/llvm-project#205775",
+      "sequence": 1,
+      "rendered_sha256": "6f47349c983d50f186c9712a93dea62c925e12c4d0388d4dc2be03ea0057b012"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "llvm/llvm-project#205775@open"
+    ],
+    "rag_embedding": [
+      "llvm/llvm-project#205775@open"
+    ],
+    "rag_full_context": [
+      "llvm/llvm-project#205775@open"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 0,
+      "artifact_id": "llvm/llvm-project#205775@open",
+      "chunk_index": 0,
+      "similarity": 0.824561773362619
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "llvm/llvm-project#205775@open"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [],
+    "resolver_explanation": "llvm-openmp-target-fast: No visible accepted or implemented decision is eligible to govern.",
+    "derivations": [
+      {
+        "artifact_id": "llvm/llvm-project#205775@open",
+        "decision_id": "llvm/llvm-project#205775",
+        "status": "PROPOSED",
+        "edges": []
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: NO_GOVERNING_DECISION\nGoverning decision IDs: []\nResolver explanation: llvm-openmp-target-fast: No visible accepted or implemented decision is eligible to govern.\n\nEvidence:\n(none)\n\nDeveloper question: What organizational decision currently governs llvm openmp target fast while the original change is proposed? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact llvm/llvm-project#205775@open chunk 0]\nArtifact ID: llvm/llvm-project#205775@open\nDecision ID: llvm/llvm-project#205775\nRepository: llvm/llvm-project\nTimestamp: 2026-06-25T11:11:44Z\nSource URL: https://github.com/llvm/llvm-project/pull/205775\nPinned revision: github-open-event-2026-06-25T11:11:44Z\nLifecycle status: OPEN\nAuthority scope: llvm-openmp-target-fast\nSource text (verbatim excerpt):\n[OpenMP] target-fast implies teams/threads oversubscription\nEnable -fopenmp-assume-teams-oversubscription and\n-fopenmp-assume-threads-oversubscription by default under\n-fopenmp-target-fast. Adds driver test coverage for both.\n\nSplit out of #205325 as a standalone change.\nDecision role: IMPLEMENTATION\n\nDeveloper question: What organizational decision currently governs llvm openmp target fast while the original change is proposed? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: llvm/llvm-project#205775@open\nDecision ID: llvm/llvm-project#205775\nRepository: llvm/llvm-project\nTimestamp: 2026-06-25T11:11:44Z\nSource URL: https://github.com/llvm/llvm-project/pull/205775\nPinned revision: github-open-event-2026-06-25T11:11:44Z\nLifecycle status: OPEN\nAuthority scope: llvm-openmp-target-fast\nSource text (verbatim excerpt):\n[OpenMP] target-fast implies teams/threads oversubscription\nEnable -fopenmp-assume-teams-oversubscription and\n-fopenmp-assume-threads-oversubscription by default under\n-fopenmp-target-fast. Adds driver test coverage for both.\n\nSplit out of #205325 as a standalone change.\nDecision role: IMPLEMENTATION\n\nDeveloper question: What organizational decision currently governs llvm openmp target fast while the original change is proposed? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "933804ab9c85159a5d88304a01d9aaf242aed9e4206495285a6218eceb36feb7",
+    "rag_embedding": "91007ec4c9b30fba527952f807b7953094e4ad95944c4940ccbb2c8e6be8cc1b",
+    "rag_full_context": "72ed130f135646d207410cde18ab02772afad2fa33a0943b88afd578ab0fae8a"
+  },
+  "expected_answer_fields_present": false
+}

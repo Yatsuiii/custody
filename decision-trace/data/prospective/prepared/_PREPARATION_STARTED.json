@@ -1,0 +1,5 @@
+{
+  "started_at": "2026-08-22T08:05:50.835887+00:00",
+  "git_sha": "5a49f83bb163fe358b5b80b0973c9f2cabc37fbc",
+  "run_once_guard": "Directory creation precedes the first embedding call."
+}

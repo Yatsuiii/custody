@@ -1,0 +1,64 @@
+{
+  "checkpoint_id": "rust-inline-const-c1",
+  "timeline_id": "rust-inline-const",
+  "question": "What organizational decision currently governs rust const repeat simple case? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "RFC-2203@merged",
+      "decision_id": "RFC-2203",
+      "sequence": 1,
+      "rendered_sha256": "f3687c9d0bb05bd066208fdd0956385d72fc34a94994dd6147530b2c495bdf37"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "RFC-2203@merged"
+    ],
+    "rag_embedding": [
+      "RFC-2203@merged"
+    ],
+    "rag_full_context": [
+      "RFC-2203@merged"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 0,
+      "artifact_id": "RFC-2203@merged",
+      "chunk_index": 0,
+      "similarity": 0.8192939045182097
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "RFC-2203@merged"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-2203"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-2203@merged"
+    ],
+    "resolver_explanation": "rust-const-repeat-simple-case: RFC-2203 is the sole eligible active decision in scope 'rust-const-repeat-simple-case'.",
+    "derivations": [
+      {
+        "artifact_id": "RFC-2203@merged",
+        "decision_id": "RFC-2203",
+        "status": "IMPLEMENTED",
+        "edges": []
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"RFC-2203\"]\nResolver explanation: rust-const-repeat-simple-case: RFC-2203 is the sole eligible active decision in scope 'rust-const-repeat-simple-case'.\n\nEvidence:\nArtifact ID: RFC-2203@merged\nDecision ID: RFC-2203\nRepository: rust-lang/rfcs\nTimestamp: 2018-03-18T20:55:04Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/2203-const-repeat-expr.md\nPinned revision: f8a83dd072b04c5a97a91f388f28c03a13cd62c8\nLifecycle status: MERGED\nAuthority scope: rust-const-repeat-simple-case\nSource text (verbatim excerpt):\nRFC: Constants in array repeat expressions\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs rust const repeat simple case? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact RFC-2203@merged chunk 0]\nArtifact ID: RFC-2203@merged\nDecision ID: RFC-2203\nRepository: rust-lang/rfcs\nTimestamp: 2018-03-18T20:55:04Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/2203-const-repeat-expr.md\nPinned revision: f8a83dd072b04c5a97a91f388f28c03a13cd62c8\nLifecycle status: MERGED\nAuthority scope: rust-const-repeat-simple-case\nSource text (verbatim excerpt):\nRFC: Constants in array repeat expressions\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs rust const repeat simple case? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: RFC-2203@merged\nDecision ID: RFC-2203\nRepository: rust-lang/rfcs\nTimestamp: 2018-03-18T20:55:04Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/2203-const-repeat-expr.md\nPinned revision: f8a83dd072b04c5a97a91f388f28c03a13cd62c8\nLifecycle status: MERGED\nAuthority scope: rust-const-repeat-simple-case\nSource text (verbatim excerpt):\nRFC: Constants in array repeat expressions\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs rust const repeat simple case? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "2cb4f68e41c25a2282b9747a4c492b426c1ced05cf2e87c7ff57db09b4634d8e",
+    "rag_embedding": "35449fa69f91c1ba51d7ca50abf0e07081234fb57d98208bab4470d98cee1de5",
+    "rag_full_context": "2a7ccb05576e5c86e1ef7507881f3e32d9c34570d690b8520ff68614beca9fa1"
+  },
+  "expected_answer_fields_present": false
+}

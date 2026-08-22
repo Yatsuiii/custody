@@ -1,0 +1,89 @@
+{
+  "checkpoint_id": "go-type-parameters-c2",
+  "timeline_id": "go-type-parameters",
+  "question": "What organizational decision currently governs go type parameters while the proposal is open? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "go-contracts@superseded",
+      "decision_id": "go-contracts",
+      "sequence": 1,
+      "rendered_sha256": "c844396da0ff4b7bdc742f33b5eab4e894fb7fb1bf5b6223f2eb40de1b22c673"
+    },
+    {
+      "artifact_id": "golang/go#43651@open",
+      "decision_id": "golang/go#43651",
+      "sequence": 2,
+      "rendered_sha256": "9cc3aee1de4b0d8831dce6588ba0b3970b64c6e7bf4b84ee429224494e0aadff"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "go-contracts@superseded",
+      "golang/go#43651@open"
+    ],
+    "rag_embedding": [
+      "go-contracts@superseded",
+      "golang/go#43651@open"
+    ],
+    "rag_full_context": [
+      "go-contracts@superseded",
+      "golang/go#43651@open"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 0,
+      "artifact_id": "go-contracts@superseded",
+      "chunk_index": 0,
+      "similarity": 0.7182717125262754
+    },
+    {
+      "ordinal": 1,
+      "artifact_id": "golang/go#43651@open",
+      "chunk_index": 0,
+      "similarity": 0.6845898124205964
+    },
+    {
+      "ordinal": 2,
+      "artifact_id": "golang/go#43651@open",
+      "chunk_index": 1,
+      "similarity": 0.6635634779729068
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "go-contracts@superseded",
+    "golang/go#43651@open",
+    "golang/go#43651@open"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [],
+    "resolver_explanation": "go-type-parameters: No visible accepted or implemented decision is eligible to govern.",
+    "derivations": [
+      {
+        "artifact_id": "go-contracts@superseded",
+        "decision_id": "go-contracts",
+        "status": "REVERTED",
+        "edges": []
+      },
+      {
+        "artifact_id": "golang/go#43651@open",
+        "decision_id": "golang/go#43651",
+        "status": "PROPOSED",
+        "edges": []
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: NO_GOVERNING_DECISION\nGoverning decision IDs: []\nResolver explanation: go-type-parameters: No visible accepted or implemented decision is eligible to govern.\n\nEvidence:\n(none)\n\nDeveloper question: What organizational decision currently governs go type parameters while the proposal is open? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact go-contracts@superseded chunk 0]\nArtifact ID: go-contracts@superseded\nDecision ID: go-contracts\nRepository: golang/proposal\nTimestamp: 2021-01-12T00:00:00Z\nSource URL: https://github.com/golang/proposal/blob/0be13090fdb0cbae0d71641bb676d924bc1c94de/design/go2draft-contracts.md\nPinned revision: 0be13090fdb0cbae0d71641bb676d924bc1c94de\nLifecycle status: WITHDRAWN\nAuthority scope: go-type-parameters\nSource text (verbatim excerpt):\n## Superseded\nWe will not be pursuing the approach outlined in this design draft.\nDecision role: POLICY\n\n[Retrieved artifact golang/go#43651@open chunk 0]\nArtifact ID: golang/go#43651@open\nDecision ID: golang/go#43651\nRepository: golang/go\nTimestamp: 2021-01-12T17:40:04Z\nSource URL: https://github.com/golang/go/issues/43651\nPinned revision: github-open-event-2021-01-12T17:40:04Z\nLifecycle status: OPEN\nAuthority scope: go-type-parameters\nExplicitly replaces: go-contracts\nSource text (verbatim excerpt):\nspec: add generic programming using type parameters\nWe propose adding support for type parameters to Go.  This will change the Go language to support a form of generic programming.\r\n\r\nA [detailed proposal document](https://go.googlesource.com/proposal/+/refs/heads/master/design/43651-type-parameters.md) has been published, with input from many members of the Go community.  We are now taking the next step and proposing that this document become a part of the language.\r\n\r\nA very high level overview of the proposed changes:\r\n\r\n* Functions can have an additional type parameter list that uses square brackets but otherwise looks like an ordinary parameter list: `func F[T any](p T) { ... }`.\r\n* These type parameters can be used by the regular parameters and in the function body.\r\n* Types can also have a type parameter list: `type MySlice[T any] []T`.\r\n* Each type parameter has a type constraint, just as each ordinary parameter has a type: `func F[T Constraint](p T) { ... }`.\r\n* Type constraints are interface types.\r\n* The new predeclared name `any` is a type constraint that permits any type.\r\n* Interface types used as type constraints can have a list of predeclared types; only type arguments that match one of those types satisfy the co\n\n[Retrieved artifact golang/go#43651@open chunk 1]\name `any` is a type constraint that permits any type.\r\n* Interface types used as type constraints can have a list of predeclared types; only type arguments that match one of those types satisfy the constraint.\r\n* Generic functions may only use operations permitted by their type constraints.\r\n* Using a generic function or type requires passing type arguments.\r\n* Type inference permits omitting the type arguments of a function call in common cases.\r\n\r\nFor more background on this proposal, see [the recent blog post](https://blog.golang.org/generics-proposal).\r\n\r\nIn the discussion on this issue, we invite substantive criticisms and comments, but please try to avoid repeating earlier comments, and please try to [avoid simple plus-one and minus-one comments](https://golang.org/wiki/NoPlusOne).  Instead, add thumbs-up/thumbs-down emoji reactions to comments with which you agree or disagree, or to the proposal as a whole.\r\n\r\nIf you don't understand parts of the design please consider asking questions in a forum, rather than on this issue, to keep the discussion here more focused.  See https://golang.org/wiki/Questions.\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs go type parameters while the proposal is open? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: go-contracts@superseded\nDecision ID: go-contracts\nRepository: golang/proposal\nTimestamp: 2021-01-12T00:00:00Z\nSource URL: https://github.com/golang/proposal/blob/0be13090fdb0cbae0d71641bb676d924bc1c94de/design/go2draft-contracts.md\nPinned revision: 0be13090fdb0cbae0d71641bb676d924bc1c94de\nLifecycle status: WITHDRAWN\nAuthority scope: go-type-parameters\nSource text (verbatim excerpt):\n## Superseded\nWe will not be pursuing the approach outlined in this design draft.\nDecision role: POLICY\n\nArtifact ID: golang/go#43651@open\nDecision ID: golang/go#43651\nRepository: golang/go\nTimestamp: 2021-01-12T17:40:04Z\nSource URL: https://github.com/golang/go/issues/43651\nPinned revision: github-open-event-2021-01-12T17:40:04Z\nLifecycle status: OPEN\nAuthority scope: go-type-parameters\nExplicitly replaces: go-contracts\nSource text (verbatim excerpt):\nspec: add generic programming using type parameters\nWe propose adding support for type parameters to Go.  This will change the Go language to support a form of generic programming.\r\n\r\nA [detailed proposal document](https://go.googlesource.com/proposal/+/refs/heads/master/design/43651-type-parameters.md) has been published, with input from many members of the Go community.  We are now taking the next step and proposing that this document become a part of the language.\r\n\r\nA very high level overview of the proposed changes:\r\n\r\n* Functions can have an additional type parameter list that uses square brackets but otherwise looks like an ordinary parameter list: `func F[T any](p T) { ... }`.\r\n* These type parameters can be used by the regular parameters and in the function body.\r\n* Types can also have a type parameter list: `type MySlice[T any] []T`.\r\n* Each type parameter has a type constraint, just as each ordinary parameter has a type: `func F[T Constraint](p T) { ... }`.\r\n* Type constraints are interface types.\r\n* The new predeclared name `any` is a type constraint that permits any type.\r\n* Interface types used as type constraints can have a list of predeclared types; only type arguments that match one of those types satisfy the constraint.\r\n* Generic functions may only use operations permitted by their type constraints.\r\n* Using a generic function or type requires passing type arguments.\r\n* Type inference permits omitting the type arguments of a function call in common cases.\r\n\r\nFor more background on this proposal, see [the recent blog post](https://blog.golang.org/generics-proposal).\r\n\r\nIn the discussion on this issue, we invite substantive criticisms and comments, but please try to avoid repeating earlier comments, and please try to [avoid simple plus-one and minus-one comments](https://golang.org/wiki/NoPlusOne).  Instead, add thumbs-up/thumbs-down emoji reactions to comments with which you agree or disagree, or to the proposal as a whole.\r\n\r\nIf you don't understand parts of the design please consider asking questions in a forum, rather than on this issue, to keep the discussion here more focused.  See https://golang.org/wiki/Questions.\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs go type parameters while the proposal is open? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "d260bab5c47bd0ffce39888fc2e0b6bb7287f480a3ca5dfd3f2473f5a245f0ae",
+    "rag_embedding": "8a1fafd2801322ed4417f890609954b9ae690759f955d37609d61b96208a53e9",
+    "rag_full_context": "de0108ca664bae9b6c7600e8eeaa0b0a585c1f340f2cc57f95201f1f0c86fe09"
+  },
+  "expected_answer_fields_present": false
+}

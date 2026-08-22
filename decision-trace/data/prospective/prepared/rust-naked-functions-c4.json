@@ -1,0 +1,113 @@
+{
+  "checkpoint_id": "rust-naked-functions-c4",
+  "timeline_id": "rust-naked-functions",
+  "question": "Which RFC is authoritative now for rust naked functions?",
+  "visible_history": [
+    {
+      "artifact_id": "RFC-1201@merged",
+      "decision_id": "RFC-1201",
+      "sequence": 1,
+      "rendered_sha256": "15206380ebe949e8fe7d4ca0a16e24e0bd3be4656d96458b5680f540a396e1c8"
+    },
+    {
+      "artifact_id": "RFC-2972@open",
+      "decision_id": "RFC-2972",
+      "sequence": 2,
+      "rendered_sha256": "c522abdd32870fa396bda4fc22c084d712ac794d80d9691aff9dc28ea5fe8943"
+    },
+    {
+      "artifact_id": "RFC-2972@current-authority",
+      "decision_id": "RFC-2972",
+      "sequence": 3,
+      "rendered_sha256": "3239adbe64383418f8e0b803e6f67626bcd75eebbe37c4a3d8e09aa3f2727571"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "RFC-1201@merged",
+      "RFC-2972@open",
+      "RFC-2972@current-authority"
+    ],
+    "rag_embedding": [
+      "RFC-1201@merged",
+      "RFC-2972@open",
+      "RFC-2972@current-authority"
+    ],
+    "rag_full_context": [
+      "RFC-1201@merged",
+      "RFC-2972@open",
+      "RFC-2972@current-authority"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 2,
+      "artifact_id": "RFC-2972@current-authority",
+      "chunk_index": 0,
+      "similarity": 0.7983113226235219
+    },
+    {
+      "ordinal": 1,
+      "artifact_id": "RFC-2972@open",
+      "chunk_index": 0,
+      "similarity": 0.7943465967301679
+    },
+    {
+      "ordinal": 0,
+      "artifact_id": "RFC-1201@merged",
+      "chunk_index": 0,
+      "similarity": 0.7840598467072895
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "RFC-2972@current-authority",
+    "RFC-2972@open",
+    "RFC-1201@merged"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-2972"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-2972@current-authority"
+    ],
+    "resolver_explanation": "rust-naked-functions: RFC-2972 is the sole eligible active decision in scope 'rust-naked-functions'.",
+    "derivations": [
+      {
+        "artifact_id": "RFC-1201@merged",
+        "decision_id": "RFC-1201",
+        "status": "IMPLEMENTED",
+        "edges": []
+      },
+      {
+        "artifact_id": "RFC-2972@open",
+        "decision_id": "RFC-2972",
+        "status": "PROPOSED",
+        "edges": []
+      },
+      {
+        "artifact_id": "RFC-2972@current-authority",
+        "decision_id": "RFC-2972",
+        "status": "IMPLEMENTED",
+        "edges": [
+          [
+            "RFC-1201",
+            "SUPERSEDES"
+          ]
+        ]
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"RFC-2972\"]\nResolver explanation: rust-naked-functions: RFC-2972 is the sole eligible active decision in scope 'rust-naked-functions'.\n\nEvidence:\nArtifact ID: RFC-2972@current-authority\nDecision ID: RFC-2972\nRepository: rust-lang/rfcs\nTimestamp: 2026-08-22T00:00:00Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/2972-constrained-naked.md\nPinned revision: 354518a8c9025f40be6f730452c1bfe71a12dc22\nLifecycle status: MERGED\nAuthority scope: rust-naked-functions\nExplicitly replaces: RFC-1201\nSource text (verbatim excerpt):\nConstrained Naked Functions\nIn short this RFC was superseded by RFC 2972. For details see the [summary comment].\nDecision role: POLICY\n\nDeveloper question: Which RFC is authoritative now for rust naked functions?\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact RFC-2972@current-authority chunk 0]\nArtifact ID: RFC-2972@current-authority\nDecision ID: RFC-2972\nRepository: rust-lang/rfcs\nTimestamp: 2026-08-22T00:00:00Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/2972-constrained-naked.md\nPinned revision: 354518a8c9025f40be6f730452c1bfe71a12dc22\nLifecycle status: MERGED\nAuthority scope: rust-naked-functions\nExplicitly replaces: RFC-1201\nSource text (verbatim excerpt):\nConstrained Naked Functions\nIn short this RFC was superseded by RFC 2972. For details see the [summary comment].\nDecision role: POLICY\n\n[Retrieved artifact RFC-2972@open chunk 0]\nArtifact ID: RFC-2972@open\nDecision ID: RFC-2972\nRepository: rust-lang/rfcs\nTimestamp: 2020-08-07T13:27:05Z\nSource URL: https://github.com/rust-lang/rfcs/pull/2972\nPinned revision: github-open-event-2020-08-07T13:27:05Z\nLifecycle status: OPEN\nAuthority scope: rust-naked-functions\nExplicitly replaces: RFC-1201\nSource text (verbatim excerpt):\nConstrained Naked Functions\nDecision role: POLICY\n\n[Retrieved artifact RFC-1201@merged chunk 0]\nArtifact ID: RFC-1201@merged\nDecision ID: RFC-1201\nRepository: rust-lang/rfcs\nTimestamp: 2016-03-21T19:39:06Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1201-naked-fns.md\nPinned revision: 4e61ad08a822e5cfc0850f8d583265bce2096491\nLifecycle status: MERGED\nAuthority scope: rust-naked-functions\nSource text (verbatim excerpt):\nAdd support for naked functions.\nDecision role: POLICY\n\nDeveloper question: Which RFC is authoritative now for rust naked functions?\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: RFC-1201@merged\nDecision ID: RFC-1201\nRepository: rust-lang/rfcs\nTimestamp: 2016-03-21T19:39:06Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1201-naked-fns.md\nPinned revision: 4e61ad08a822e5cfc0850f8d583265bce2096491\nLifecycle status: MERGED\nAuthority scope: rust-naked-functions\nSource text (verbatim excerpt):\nAdd support for naked functions.\nDecision role: POLICY\n\nArtifact ID: RFC-2972@open\nDecision ID: RFC-2972\nRepository: rust-lang/rfcs\nTimestamp: 2020-08-07T13:27:05Z\nSource URL: https://github.com/rust-lang/rfcs/pull/2972\nPinned revision: github-open-event-2020-08-07T13:27:05Z\nLifecycle status: OPEN\nAuthority scope: rust-naked-functions\nExplicitly replaces: RFC-1201\nSource text (verbatim excerpt):\nConstrained Naked Functions\nDecision role: POLICY\n\nArtifact ID: RFC-2972@current-authority\nDecision ID: RFC-2972\nRepository: rust-lang/rfcs\nTimestamp: 2026-08-22T00:00:00Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/2972-constrained-naked.md\nPinned revision: 354518a8c9025f40be6f730452c1bfe71a12dc22\nLifecycle status: MERGED\nAuthority scope: rust-naked-functions\nExplicitly replaces: RFC-1201\nSource text (verbatim excerpt):\nConstrained Naked Functions\nIn short this RFC was superseded by RFC 2972. For details see the [summary comment].\nDecision role: POLICY\n\nDeveloper question: Which RFC is authoritative now for rust naked functions?\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "4a8d4a5bf9d6a9f77cc6eb78771d974ac4a40fe9a28aae17b7b90b2c0703296d",
+    "rag_embedding": "15ea649a3c89fb3d51feedc397e6c8c82bd54cb1caf349c6127d57a70ccbe213",
+    "rag_full_context": "1d2cea2f517de1dd0d08a12d57f2518cb44acd9e7cbfd31cde0ccdcdfe2e663b"
+  },
+  "expected_answer_fields_present": false
+}

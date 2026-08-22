@@ -1,0 +1,131 @@
+{
+  "checkpoint_id": "rust-drop-check-c4",
+  "timeline_id": "rust-drop-check",
+  "question": "What organizational decision currently governs rust dropck parametricity as one undifferentiated policy? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "RFC-769@merged",
+      "decision_id": "RFC-769",
+      "sequence": 1,
+      "rendered_sha256": "f9d0a4a48041f19c1108cc2810250dcc064347e0db4ae25a811b880e5eedb368"
+    },
+    {
+      "artifact_id": "RFC-1238@open",
+      "decision_id": "RFC-1238",
+      "sequence": 2,
+      "rendered_sha256": "1434b8728025a0999762a4cd88aee8c0c62a8d10fb3bfe5fc40a36291fb36d21"
+    },
+    {
+      "artifact_id": "RFC-1238@current-authority",
+      "decision_id": "RFC-1238",
+      "sequence": 3,
+      "rendered_sha256": "13557e480f746efdd4d74454bbda96b11c5496cbe3cee29ed45d45ef1969743f"
+    },
+    {
+      "artifact_id": "RFC-769@partial-note",
+      "decision_id": "RFC-769",
+      "sequence": 4,
+      "rendered_sha256": "49051fb2d786139f153f3769219c2a0e3203172b552b9bd20f3ce8510d826f0c"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "RFC-769@merged",
+      "RFC-1238@open",
+      "RFC-1238@current-authority",
+      "RFC-769@partial-note"
+    ],
+    "rag_embedding": [
+      "RFC-769@merged",
+      "RFC-1238@open",
+      "RFC-1238@current-authority",
+      "RFC-769@partial-note"
+    ],
+    "rag_full_context": [
+      "RFC-769@merged",
+      "RFC-1238@open",
+      "RFC-1238@current-authority",
+      "RFC-769@partial-note"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 1,
+      "artifact_id": "RFC-1238@open",
+      "chunk_index": 0,
+      "similarity": 0.790619430616034
+    },
+    {
+      "ordinal": 2,
+      "artifact_id": "RFC-1238@current-authority",
+      "chunk_index": 0,
+      "similarity": 0.7832112655777125
+    },
+    {
+      "ordinal": 0,
+      "artifact_id": "RFC-769@merged",
+      "chunk_index": 0,
+      "similarity": 0.7125146606420313
+    },
+    {
+      "ordinal": 3,
+      "artifact_id": "RFC-769@partial-note",
+      "chunk_index": 0,
+      "similarity": 0.6800064435577182
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "RFC-1238@open",
+    "RFC-1238@current-authority",
+    "RFC-769@merged",
+    "RFC-769@partial-note"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "UNRESOLVED",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [],
+    "resolver_explanation": "rust-dropck-parametricity-broad: Visible authority exists, but none has the requested explicit scope; refusing a semantic guess.",
+    "derivations": [
+      {
+        "artifact_id": "RFC-769@merged",
+        "decision_id": "RFC-769",
+        "status": "IMPLEMENTED",
+        "edges": []
+      },
+      {
+        "artifact_id": "RFC-1238@open",
+        "decision_id": "RFC-1238",
+        "status": "PROPOSED",
+        "edges": []
+      },
+      {
+        "artifact_id": "RFC-1238@current-authority",
+        "decision_id": "RFC-1238",
+        "status": "IMPLEMENTED",
+        "edges": [
+          [
+            "RFC-769",
+            "SUPERSEDES"
+          ]
+        ]
+      },
+      {
+        "artifact_id": "RFC-769@partial-note",
+        "decision_id": null,
+        "action": "evidence_only",
+        "reason": "NOTE has no authority transition"
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: UNRESOLVED\nGoverning decision IDs: []\nResolver explanation: rust-dropck-parametricity-broad: Visible authority exists, but none has the requested explicit scope; refusing a semantic guess.\n\nEvidence:\n(none)\n\nDeveloper question: What organizational decision currently governs rust dropck parametricity as one undifferentiated policy? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact RFC-1238@open chunk 0]\nArtifact ID: RFC-1238@open\nDecision ID: RFC-1238\nRepository: rust-lang/rfcs\nTimestamp: 2015-08-05T18:30:09Z\nSource URL: https://github.com/rust-lang/rfcs/pull/1238\nPinned revision: github-open-event-2015-08-05T18:30:09Z\nLifecycle status: OPEN\nAuthority scope: rust-dropck-parametricity\nExplicitly replaces: RFC-769\nSource text (verbatim excerpt):\nNonparametric dropck\nDecision role: POLICY\n\n[Retrieved artifact RFC-1238@current-authority chunk 0]\nArtifact ID: RFC-1238@current-authority\nDecision ID: RFC-1238\nRepository: rust-lang/rfcs\nTimestamp: 2026-08-22T00:00:00Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1238-nonparametric-dropck.md\nPinned revision: 354518a8c9025f40be6f730452c1bfe71a12dc22\nLifecycle status: MERGED\nAuthority scope: rust-dropck-parametricity\nExplicitly replaces: RFC-769\nSource text (verbatim excerpt):\nNonparametric dropck\n2015.09.18 -- This RFC was partially superseded by [RFC 1238], which\nDecision role: POLICY\n\n[Retrieved artifact RFC-769@merged chunk 0]\nArtifact ID: RFC-769@merged\nDecision ID: RFC-769\nRepository: rust-lang/rfcs\nTimestamp: 2015-02-10T17:19:59Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/0769-sound-generic-drop.md\nPinned revision: github-merged-event-2015-02-10T17:19:59Z\nLifecycle status: MERGED\nAuthority scope: rust-generic-drop-safety\nSource text (verbatim excerpt):\n(It turned out to be Un-)sound Generic Drop\nDecision role: POLICY\n\n[Retrieved artifact RFC-769@partial-note chunk 0]\nArtifact ID: RFC-769@partial-note\nDecision ID: RFC-769\nRepository: rust-lang/rfcs\nTimestamp: 2026-08-22T00:00:01Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/0769-sound-generic-drop.md\nPinned revision: 354518a8c9025f40be6f730452c1bfe71a12dc22\nLifecycle status: NOTE\nAuthority scope: rust-dropck-parametricity-broad\nSource text (verbatim excerpt):\n2015.09.18 -- This RFC was partially superseded by [RFC 1238], which\nDecision role: MENTION\n\nDeveloper question: What organizational decision currently governs rust dropck parametricity as one undifferentiated policy? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: RFC-769@merged\nDecision ID: RFC-769\nRepository: rust-lang/rfcs\nTimestamp: 2015-02-10T17:19:59Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/0769-sound-generic-drop.md\nPinned revision: github-merged-event-2015-02-10T17:19:59Z\nLifecycle status: MERGED\nAuthority scope: rust-generic-drop-safety\nSource text (verbatim excerpt):\n(It turned out to be Un-)sound Generic Drop\nDecision role: POLICY\n\nArtifact ID: RFC-1238@open\nDecision ID: RFC-1238\nRepository: rust-lang/rfcs\nTimestamp: 2015-08-05T18:30:09Z\nSource URL: https://github.com/rust-lang/rfcs/pull/1238\nPinned revision: github-open-event-2015-08-05T18:30:09Z\nLifecycle status: OPEN\nAuthority scope: rust-dropck-parametricity\nExplicitly replaces: RFC-769\nSource text (verbatim excerpt):\nNonparametric dropck\nDecision role: POLICY\n\nArtifact ID: RFC-1238@current-authority\nDecision ID: RFC-1238\nRepository: rust-lang/rfcs\nTimestamp: 2026-08-22T00:00:00Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1238-nonparametric-dropck.md\nPinned revision: 354518a8c9025f40be6f730452c1bfe71a12dc22\nLifecycle status: MERGED\nAuthority scope: rust-dropck-parametricity\nExplicitly replaces: RFC-769\nSource text (verbatim excerpt):\nNonparametric dropck\n2015.09.18 -- This RFC was partially superseded by [RFC 1238], which\nDecision role: POLICY\n\nArtifact ID: RFC-769@partial-note\nDecision ID: RFC-769\nRepository: rust-lang/rfcs\nTimestamp: 2026-08-22T00:00:01Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/0769-sound-generic-drop.md\nPinned revision: 354518a8c9025f40be6f730452c1bfe71a12dc22\nLifecycle status: NOTE\nAuthority scope: rust-dropck-parametricity-broad\nSource text (verbatim excerpt):\n2015.09.18 -- This RFC was partially superseded by [RFC 1238], which\nDecision role: MENTION\n\nDeveloper question: What organizational decision currently governs rust dropck parametricity as one undifferentiated policy? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "7ad87bca44a46b1be28d8c168d650d0776bcac6c1828dc94fef769e649cd34e9",
+    "rag_embedding": "5d9e4a507e5ba5d195688672193acd4c35d956e6661d92445362468248097622",
+    "rag_full_context": "2a2f1331bb06786090c4ca309a052d3a2f1e7cf652ee04cb8175cbbd87f401f9"
+  },
+  "expected_answer_fields_present": false
+}

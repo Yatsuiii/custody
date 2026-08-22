@@ -1,0 +1,60 @@
+{
+  "checkpoint_id": "swift-property-wrappers-c1",
+  "timeline_id": "swift-property-wrappers",
+  "question": "What organizational decision currently governs Swift property behaviors or wrappers? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "SE-0030@withdrawn",
+      "decision_id": "SE-0030",
+      "sequence": 1,
+      "rendered_sha256": "864616071bd921b81ba84113b0eec56443560ed8792fc8bf84b0f8aafba3f01d"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "SE-0030@withdrawn"
+    ],
+    "rag_embedding": [
+      "SE-0030@withdrawn"
+    ],
+    "rag_full_context": [
+      "SE-0030@withdrawn"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 0,
+      "artifact_id": "SE-0030@withdrawn",
+      "chunk_index": 0,
+      "similarity": 0.7906725160459652
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "SE-0030@withdrawn"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [],
+    "resolver_explanation": "swift-property-wrappers: No visible accepted or implemented decision is eligible to govern.",
+    "derivations": [
+      {
+        "artifact_id": "SE-0030@withdrawn",
+        "decision_id": "SE-0030",
+        "status": "REVERTED",
+        "edges": []
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: NO_GOVERNING_DECISION\nGoverning decision IDs: []\nResolver explanation: swift-property-wrappers: No visible accepted or implemented decision is eligible to govern.\n\nEvidence:\n(none)\n\nDeveloper question: What organizational decision currently governs Swift property behaviors or wrappers? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact SE-0030@withdrawn chunk 0]\nArtifact ID: SE-0030@withdrawn\nDecision ID: SE-0030\nRepository: swiftlang/swift-evolution\nTimestamp: 2016-05-01T00:00:00Z\nSource URL: https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0030-property-behavior-decls.md\nPinned revision: 0105e139a22938561c700cfbb89ddc3ebe402f0c\nLifecycle status: WITHDRAWN\nAuthority scope: swift-property-wrappers\nSource text (verbatim excerpt):\n* Status: **Withdrawn**\n* Superseded by: [SE-0258](0258-property-wrappers.md)\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs Swift property behaviors or wrappers? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: SE-0030@withdrawn\nDecision ID: SE-0030\nRepository: swiftlang/swift-evolution\nTimestamp: 2016-05-01T00:00:00Z\nSource URL: https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0030-property-behavior-decls.md\nPinned revision: 0105e139a22938561c700cfbb89ddc3ebe402f0c\nLifecycle status: WITHDRAWN\nAuthority scope: swift-property-wrappers\nSource text (verbatim excerpt):\n* Status: **Withdrawn**\n* Superseded by: [SE-0258](0258-property-wrappers.md)\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs Swift property behaviors or wrappers? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "36bce0ff5c10ab067210ee5231689e2370e408f3a73b578b5ba905c1ad1423b5",
+    "rag_embedding": "0cadb3d75f8eca684b1254bc9b96c283b9776407dd81675c0123bc340afb9921",
+    "rag_full_context": "061e1e4da5581a0b69e4b90d1bdab89751ad70a5aa928eca9b973cf15c4af033"
+  },
+  "expected_answer_fields_present": false
+}

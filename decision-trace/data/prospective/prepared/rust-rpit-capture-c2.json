@@ -1,0 +1,86 @@
+{
+  "checkpoint_id": "rust-rpit-capture-c2",
+  "timeline_id": "rust-rpit-capture",
+  "question": "What organizational decision currently governs Rust impl Trait capture rules while expansion is proposed? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "RFC-1522@merged",
+      "decision_id": "RFC-1522",
+      "sequence": 1,
+      "rendered_sha256": "2e9b3019645df37915e8f602eb79a28088b1ddeb679b4cec9f998de78e6dd004"
+    },
+    {
+      "artifact_id": "RFC-1951@open",
+      "decision_id": "RFC-1951",
+      "sequence": 2,
+      "rendered_sha256": "719d612a9aae3a366d500e8cb08d0d8e15d56dbcf3ec015c0d4b2edeccc4d994"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "RFC-1522@merged",
+      "RFC-1951@open"
+    ],
+    "rag_embedding": [
+      "RFC-1522@merged",
+      "RFC-1951@open"
+    ],
+    "rag_full_context": [
+      "RFC-1522@merged",
+      "RFC-1951@open"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 1,
+      "artifact_id": "RFC-1951@open",
+      "chunk_index": 0,
+      "similarity": 0.8238601800502272
+    },
+    {
+      "ordinal": 0,
+      "artifact_id": "RFC-1522@merged",
+      "chunk_index": 0,
+      "similarity": 0.8088651589364435
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "RFC-1951@open",
+    "RFC-1522@merged"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-1522"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-1522@merged"
+    ],
+    "resolver_explanation": "rust-impl-trait-capture-rules: RFC-1522 is the sole eligible active decision in scope 'rust-impl-trait-capture-rules'.",
+    "derivations": [
+      {
+        "artifact_id": "RFC-1522@merged",
+        "decision_id": "RFC-1522",
+        "status": "IMPLEMENTED",
+        "edges": []
+      },
+      {
+        "artifact_id": "RFC-1951@open",
+        "decision_id": "RFC-1951",
+        "status": "PROPOSED",
+        "edges": []
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"RFC-1522\"]\nResolver explanation: rust-impl-trait-capture-rules: RFC-1522 is the sole eligible active decision in scope 'rust-impl-trait-capture-rules'.\n\nEvidence:\nArtifact ID: RFC-1522@merged\nDecision ID: RFC-1522\nRepository: rust-lang/rfcs\nTimestamp: 2016-06-27T22:28:41Z\nSource URL: https://github.com/rust-lang/rfcs/pull/1522\nPinned revision: b48ef3700842391b28fb96298d274edeb12edf6c\nLifecycle status: MERGED\nAuthority scope: rust-impl-trait-capture-rules\nSource text (verbatim excerpt):\nMinimal `impl Trait`\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs Rust impl Trait capture rules while expansion is proposed? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact RFC-1951@open chunk 0]\nArtifact ID: RFC-1951@open\nDecision ID: RFC-1951\nRepository: rust-lang/rfcs\nTimestamp: 2017-03-15T06:04:11Z\nSource URL: https://github.com/rust-lang/rfcs/pull/1951\nPinned revision: github-open-event-2017-03-15T06:04:11Z\nLifecycle status: OPEN\nAuthority scope: rust-impl-trait-capture-rules\nExplicitly replaces: RFC-1522\nSource text (verbatim excerpt):\nRFC: Finalize syntax and parameter scoping for `impl Trait`, while expanding it to arguments\nDecision role: POLICY\n\n[Retrieved artifact RFC-1522@merged chunk 0]\nArtifact ID: RFC-1522@merged\nDecision ID: RFC-1522\nRepository: rust-lang/rfcs\nTimestamp: 2016-06-27T22:28:41Z\nSource URL: https://github.com/rust-lang/rfcs/pull/1522\nPinned revision: b48ef3700842391b28fb96298d274edeb12edf6c\nLifecycle status: MERGED\nAuthority scope: rust-impl-trait-capture-rules\nSource text (verbatim excerpt):\nMinimal `impl Trait`\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs Rust impl Trait capture rules while expansion is proposed? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: RFC-1522@merged\nDecision ID: RFC-1522\nRepository: rust-lang/rfcs\nTimestamp: 2016-06-27T22:28:41Z\nSource URL: https://github.com/rust-lang/rfcs/pull/1522\nPinned revision: b48ef3700842391b28fb96298d274edeb12edf6c\nLifecycle status: MERGED\nAuthority scope: rust-impl-trait-capture-rules\nSource text (verbatim excerpt):\nMinimal `impl Trait`\nDecision role: POLICY\n\nArtifact ID: RFC-1951@open\nDecision ID: RFC-1951\nRepository: rust-lang/rfcs\nTimestamp: 2017-03-15T06:04:11Z\nSource URL: https://github.com/rust-lang/rfcs/pull/1951\nPinned revision: github-open-event-2017-03-15T06:04:11Z\nLifecycle status: OPEN\nAuthority scope: rust-impl-trait-capture-rules\nExplicitly replaces: RFC-1522\nSource text (verbatim excerpt):\nRFC: Finalize syntax and parameter scoping for `impl Trait`, while expanding it to arguments\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs Rust impl Trait capture rules while expansion is proposed? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "2dd99c8904b7216d52589cba1985f419cb3a01cb77afe66c36ab9a691967cabe",
+    "rag_embedding": "bdcdf70d1a61f40db744efa72a4edd864c19d18fdb6b7c04419fedc4e1a40d78",
+    "rag_full_context": "5dbcdbf2c63cbf1587cc65bb1f1841590d0b5777063bc850c5e165e7d5e7612b"
+  },
+  "expected_answer_fields_present": false
+}

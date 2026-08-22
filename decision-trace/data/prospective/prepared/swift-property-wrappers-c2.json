@@ -1,0 +1,91 @@
+{
+  "checkpoint_id": "swift-property-wrappers-c2",
+  "timeline_id": "swift-property-wrappers",
+  "question": "What organizational decision currently governs Swift property wrappers? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "SE-0030@withdrawn",
+      "decision_id": "SE-0030",
+      "sequence": 1,
+      "rendered_sha256": "864616071bd921b81ba84113b0eec56443560ed8792fc8bf84b0f8aafba3f01d"
+    },
+    {
+      "artifact_id": "SE-0258@accepted",
+      "decision_id": "SE-0258",
+      "sequence": 2,
+      "rendered_sha256": "07b746d0ed1a204fa834ce946cdd2c29e4d80efd72ac0d2351af4cc72ee013bc"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "SE-0030@withdrawn",
+      "SE-0258@accepted"
+    ],
+    "rag_embedding": [
+      "SE-0030@withdrawn",
+      "SE-0258@accepted"
+    ],
+    "rag_full_context": [
+      "SE-0030@withdrawn",
+      "SE-0258@accepted"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 1,
+      "artifact_id": "SE-0258@accepted",
+      "chunk_index": 0,
+      "similarity": 0.8327572191598528
+    },
+    {
+      "ordinal": 0,
+      "artifact_id": "SE-0030@withdrawn",
+      "chunk_index": 0,
+      "similarity": 0.7842178274833008
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "SE-0258@accepted",
+    "SE-0030@withdrawn"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "SE-0258"
+    ],
+    "evidence_artifact_ids": [
+      "SE-0258@accepted"
+    ],
+    "resolver_explanation": "swift-property-wrappers: SE-0258 is the sole eligible active decision in scope 'swift-property-wrappers'.",
+    "derivations": [
+      {
+        "artifact_id": "SE-0030@withdrawn",
+        "decision_id": "SE-0030",
+        "status": "REVERTED",
+        "edges": []
+      },
+      {
+        "artifact_id": "SE-0258@accepted",
+        "decision_id": "SE-0258",
+        "status": "ACCEPTED",
+        "edges": [
+          [
+            "SE-0030",
+            "SUPERSEDES"
+          ]
+        ]
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"SE-0258\"]\nResolver explanation: swift-property-wrappers: SE-0258 is the sole eligible active decision in scope 'swift-property-wrappers'.\n\nEvidence:\nArtifact ID: SE-0258@accepted\nDecision ID: SE-0258\nRepository: swiftlang/swift-evolution\nTimestamp: 2019-06-01T00:00:00Z\nSource URL: https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0258-property-wrappers.md\nPinned revision: 0105e139a22938561c700cfbb89ddc3ebe402f0c\nLifecycle status: ACCEPTED\nAuthority scope: swift-property-wrappers\nExplicitly replaces: SE-0030\nSource text (verbatim excerpt):\n* Status: **Implemented (Swift 5.1)**\n* Superseded by: [SE-0258](0258-property-wrappers.md)\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs Swift property wrappers? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact SE-0258@accepted chunk 0]\nArtifact ID: SE-0258@accepted\nDecision ID: SE-0258\nRepository: swiftlang/swift-evolution\nTimestamp: 2019-06-01T00:00:00Z\nSource URL: https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0258-property-wrappers.md\nPinned revision: 0105e139a22938561c700cfbb89ddc3ebe402f0c\nLifecycle status: ACCEPTED\nAuthority scope: swift-property-wrappers\nExplicitly replaces: SE-0030\nSource text (verbatim excerpt):\n* Status: **Implemented (Swift 5.1)**\n* Superseded by: [SE-0258](0258-property-wrappers.md)\nDecision role: POLICY\n\n[Retrieved artifact SE-0030@withdrawn chunk 0]\nArtifact ID: SE-0030@withdrawn\nDecision ID: SE-0030\nRepository: swiftlang/swift-evolution\nTimestamp: 2016-05-01T00:00:00Z\nSource URL: https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0030-property-behavior-decls.md\nPinned revision: 0105e139a22938561c700cfbb89ddc3ebe402f0c\nLifecycle status: WITHDRAWN\nAuthority scope: swift-property-wrappers\nSource text (verbatim excerpt):\n* Status: **Withdrawn**\n* Superseded by: [SE-0258](0258-property-wrappers.md)\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs Swift property wrappers? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: SE-0030@withdrawn\nDecision ID: SE-0030\nRepository: swiftlang/swift-evolution\nTimestamp: 2016-05-01T00:00:00Z\nSource URL: https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0030-property-behavior-decls.md\nPinned revision: 0105e139a22938561c700cfbb89ddc3ebe402f0c\nLifecycle status: WITHDRAWN\nAuthority scope: swift-property-wrappers\nSource text (verbatim excerpt):\n* Status: **Withdrawn**\n* Superseded by: [SE-0258](0258-property-wrappers.md)\nDecision role: POLICY\n\nArtifact ID: SE-0258@accepted\nDecision ID: SE-0258\nRepository: swiftlang/swift-evolution\nTimestamp: 2019-06-01T00:00:00Z\nSource URL: https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0258-property-wrappers.md\nPinned revision: 0105e139a22938561c700cfbb89ddc3ebe402f0c\nLifecycle status: ACCEPTED\nAuthority scope: swift-property-wrappers\nExplicitly replaces: SE-0030\nSource text (verbatim excerpt):\n* Status: **Implemented (Swift 5.1)**\n* Superseded by: [SE-0258](0258-property-wrappers.md)\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs Swift property wrappers? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "6664088d045c8752baa789008698691c0757dd99d2b71520d7da23f1dada4a6c",
+    "rag_embedding": "b61f0b2e94f5560cc8d821d1fad83e14769b16f1130f93238a9d4b39e2ed44e3",
+    "rag_full_context": "b6347c6648fd7e6a3cc8499baa92c6506c28d3141c22da275cb56d2529d4984a"
+  },
+  "expected_answer_fields_present": false
+}

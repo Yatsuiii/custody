@@ -1,0 +1,91 @@
+{
+  "checkpoint_id": "swift-plugin-api-c2",
+  "timeline_id": "swift-plugin-api",
+  "question": "What organizational decision currently governs the SwiftPM build-tool plugin entry point? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "SE-0303@accepted",
+      "decision_id": "SE-0303",
+      "sequence": 1,
+      "rendered_sha256": "62b9b63c0f54f01fe276c27bb348e2f60e267decc3193f65582c10f4ce190c2f"
+    },
+    {
+      "artifact_id": "SE-0325@accepted",
+      "decision_id": "SE-0325",
+      "sequence": 2,
+      "rendered_sha256": "0e57124b8808cfcd65baa7f8c1e5c823913a5d5c2ddee443b6a38916686a72ad"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "SE-0303@accepted",
+      "SE-0325@accepted"
+    ],
+    "rag_embedding": [
+      "SE-0303@accepted",
+      "SE-0325@accepted"
+    ],
+    "rag_full_context": [
+      "SE-0303@accepted",
+      "SE-0325@accepted"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 0,
+      "artifact_id": "SE-0303@accepted",
+      "chunk_index": 0,
+      "similarity": 0.8011267302686829
+    },
+    {
+      "ordinal": 1,
+      "artifact_id": "SE-0325@accepted",
+      "chunk_index": 0,
+      "similarity": 0.7939966196619206
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "SE-0303@accepted",
+    "SE-0325@accepted"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "SE-0325"
+    ],
+    "evidence_artifact_ids": [
+      "SE-0325@accepted"
+    ],
+    "resolver_explanation": "swiftpm-plugin-entry-point: SE-0325 is the sole eligible active decision in scope 'swiftpm-plugin-entry-point'.",
+    "derivations": [
+      {
+        "artifact_id": "SE-0303@accepted",
+        "decision_id": "SE-0303",
+        "status": "ACCEPTED",
+        "edges": []
+      },
+      {
+        "artifact_id": "SE-0325@accepted",
+        "decision_id": "SE-0325",
+        "status": "ACCEPTED",
+        "edges": [
+          [
+            "SE-0303",
+            "SUPERSEDES"
+          ]
+        ]
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"SE-0325\"]\nResolver explanation: swiftpm-plugin-entry-point: SE-0325 is the sole eligible active decision in scope 'swiftpm-plugin-entry-point'.\n\nEvidence:\nArtifact ID: SE-0325@accepted\nDecision ID: SE-0325\nRepository: swiftlang/swift-evolution\nTimestamp: 2022-01-01T00:00:00Z\nSource URL: https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0325-swiftpm-additional-plugin-apis.md\nPinned revision: 0105e139a22938561c700cfbb89ddc3ebe402f0c\nLifecycle status: ACCEPTED\nAuthority scope: swiftpm-plugin-entry-point\nExplicitly replaces: SE-0303\nSource text (verbatim excerpt):\n* Status: **Implemented (Swift 5.6)**\nThe `BuildToolPlugin` protocol entry point defined by SE-0303 is superseded by a new entry point that takes the new `PluginContext` type and a reference to the `Target` for which build commands should be generate. The previous API remains so that existing plugins continue to work.\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs the SwiftPM build-tool plugin entry point? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact SE-0303@accepted chunk 0]\nArtifact ID: SE-0303@accepted\nDecision ID: SE-0303\nRepository: swiftlang/swift-evolution\nTimestamp: 2021-02-01T00:00:00Z\nSource URL: https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0303-swiftpm-extensible-build-tools.md\nPinned revision: 0105e139a22938561c700cfbb89ddc3ebe402f0c\nLifecycle status: ACCEPTED\nAuthority scope: swiftpm-plugin-legacy-api, swiftpm-plugin-entry-point\nSource text (verbatim excerpt):\n* Status: **Implemented (5.6)**\nDecision role: POLICY\n\n[Retrieved artifact SE-0325@accepted chunk 0]\nArtifact ID: SE-0325@accepted\nDecision ID: SE-0325\nRepository: swiftlang/swift-evolution\nTimestamp: 2022-01-01T00:00:00Z\nSource URL: https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0325-swiftpm-additional-plugin-apis.md\nPinned revision: 0105e139a22938561c700cfbb89ddc3ebe402f0c\nLifecycle status: ACCEPTED\nAuthority scope: swiftpm-plugin-entry-point\nExplicitly replaces: SE-0303\nSource text (verbatim excerpt):\n* Status: **Implemented (Swift 5.6)**\nThe `BuildToolPlugin` protocol entry point defined by SE-0303 is superseded by a new entry point that takes the new `PluginContext` type and a reference to the `Target` for which build commands should be generate. The previous API remains so that existing plugins continue to work.\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs the SwiftPM build-tool plugin entry point? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: SE-0303@accepted\nDecision ID: SE-0303\nRepository: swiftlang/swift-evolution\nTimestamp: 2021-02-01T00:00:00Z\nSource URL: https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0303-swiftpm-extensible-build-tools.md\nPinned revision: 0105e139a22938561c700cfbb89ddc3ebe402f0c\nLifecycle status: ACCEPTED\nAuthority scope: swiftpm-plugin-legacy-api, swiftpm-plugin-entry-point\nSource text (verbatim excerpt):\n* Status: **Implemented (5.6)**\nDecision role: POLICY\n\nArtifact ID: SE-0325@accepted\nDecision ID: SE-0325\nRepository: swiftlang/swift-evolution\nTimestamp: 2022-01-01T00:00:00Z\nSource URL: https://github.com/swiftlang/swift-evolution/blob/0105e139a22938561c700cfbb89ddc3ebe402f0c/proposals/0325-swiftpm-additional-plugin-apis.md\nPinned revision: 0105e139a22938561c700cfbb89ddc3ebe402f0c\nLifecycle status: ACCEPTED\nAuthority scope: swiftpm-plugin-entry-point\nExplicitly replaces: SE-0303\nSource text (verbatim excerpt):\n* Status: **Implemented (Swift 5.6)**\nThe `BuildToolPlugin` protocol entry point defined by SE-0303 is superseded by a new entry point that takes the new `PluginContext` type and a reference to the `Target` for which build commands should be generate. The previous API remains so that existing plugins continue to work.\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs the SwiftPM build-tool plugin entry point? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "069362eb2bec1d72312777e25481f6ab73bfcf6b716f2c4d286a24e88d49408e",
+    "rag_embedding": "f1ff6f5655e32b86fa335c3c38433efaf33d9516a442756ae2e346a7f747006e",
+    "rag_full_context": "72436bf420239aba55806b7c8ba51e07d8494f4c0435d27a62bfbb8df13a0049"
+  },
+  "expected_answer_fields_present": false
+}

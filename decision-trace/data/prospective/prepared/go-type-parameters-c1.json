@@ -1,0 +1,60 @@
+{
+  "checkpoint_id": "go-type-parameters-c1",
+  "timeline_id": "go-type-parameters",
+  "question": "What organizational decision currently governs go type parameters before the replacement proposal is accepted? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "go-contracts@superseded",
+      "decision_id": "go-contracts",
+      "sequence": 1,
+      "rendered_sha256": "c844396da0ff4b7bdc742f33b5eab4e894fb7fb1bf5b6223f2eb40de1b22c673"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "go-contracts@superseded"
+    ],
+    "rag_embedding": [
+      "go-contracts@superseded"
+    ],
+    "rag_full_context": [
+      "go-contracts@superseded"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 0,
+      "artifact_id": "go-contracts@superseded",
+      "chunk_index": 0,
+      "similarity": 0.6989155366906818
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "go-contracts@superseded"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [],
+    "resolver_explanation": "go-type-parameters: No visible accepted or implemented decision is eligible to govern.",
+    "derivations": [
+      {
+        "artifact_id": "go-contracts@superseded",
+        "decision_id": "go-contracts",
+        "status": "REVERTED",
+        "edges": []
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: NO_GOVERNING_DECISION\nGoverning decision IDs: []\nResolver explanation: go-type-parameters: No visible accepted or implemented decision is eligible to govern.\n\nEvidence:\n(none)\n\nDeveloper question: What organizational decision currently governs go type parameters before the replacement proposal is accepted? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact go-contracts@superseded chunk 0]\nArtifact ID: go-contracts@superseded\nDecision ID: go-contracts\nRepository: golang/proposal\nTimestamp: 2021-01-12T00:00:00Z\nSource URL: https://github.com/golang/proposal/blob/0be13090fdb0cbae0d71641bb676d924bc1c94de/design/go2draft-contracts.md\nPinned revision: 0be13090fdb0cbae0d71641bb676d924bc1c94de\nLifecycle status: WITHDRAWN\nAuthority scope: go-type-parameters\nSource text (verbatim excerpt):\n## Superseded\nWe will not be pursuing the approach outlined in this design draft.\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs go type parameters before the replacement proposal is accepted? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: go-contracts@superseded\nDecision ID: go-contracts\nRepository: golang/proposal\nTimestamp: 2021-01-12T00:00:00Z\nSource URL: https://github.com/golang/proposal/blob/0be13090fdb0cbae0d71641bb676d924bc1c94de/design/go2draft-contracts.md\nPinned revision: 0be13090fdb0cbae0d71641bb676d924bc1c94de\nLifecycle status: WITHDRAWN\nAuthority scope: go-type-parameters\nSource text (verbatim excerpt):\n## Superseded\nWe will not be pursuing the approach outlined in this design draft.\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs go type parameters before the replacement proposal is accepted? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "8e933d8b1c5a8dae28bd0cd2fcdba305df940612e3736118d746c19c85758b72",
+    "rag_embedding": "9cff33699fccca068850d4e4b3353a0a7ce4f7cfd5090a2b9e252e3c09972746",
+    "rag_full_context": "497b9f3083c83e27c5a7d052edad1a5a24353c290c7b1688e6d5f70dbfb4c900"
+  },
+  "expected_answer_fields_present": false
+}

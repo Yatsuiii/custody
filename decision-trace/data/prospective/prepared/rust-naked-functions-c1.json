@@ -1,0 +1,64 @@
+{
+  "checkpoint_id": "rust-naked-functions-c1",
+  "timeline_id": "rust-naked-functions",
+  "question": "What organizational decision currently governs rust naked functions? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "RFC-1201@merged",
+      "decision_id": "RFC-1201",
+      "sequence": 1,
+      "rendered_sha256": "15206380ebe949e8fe7d4ca0a16e24e0bd3be4656d96458b5680f540a396e1c8"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "RFC-1201@merged"
+    ],
+    "rag_embedding": [
+      "RFC-1201@merged"
+    ],
+    "rag_full_context": [
+      "RFC-1201@merged"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 0,
+      "artifact_id": "RFC-1201@merged",
+      "chunk_index": 0,
+      "similarity": 0.826636740459661
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "RFC-1201@merged"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-1201"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-1201@merged"
+    ],
+    "resolver_explanation": "rust-naked-functions: RFC-1201 is the sole eligible active decision in scope 'rust-naked-functions'.",
+    "derivations": [
+      {
+        "artifact_id": "RFC-1201@merged",
+        "decision_id": "RFC-1201",
+        "status": "IMPLEMENTED",
+        "edges": []
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"RFC-1201\"]\nResolver explanation: rust-naked-functions: RFC-1201 is the sole eligible active decision in scope 'rust-naked-functions'.\n\nEvidence:\nArtifact ID: RFC-1201@merged\nDecision ID: RFC-1201\nRepository: rust-lang/rfcs\nTimestamp: 2016-03-21T19:39:06Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1201-naked-fns.md\nPinned revision: 4e61ad08a822e5cfc0850f8d583265bce2096491\nLifecycle status: MERGED\nAuthority scope: rust-naked-functions\nSource text (verbatim excerpt):\nAdd support for naked functions.\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs rust naked functions? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact RFC-1201@merged chunk 0]\nArtifact ID: RFC-1201@merged\nDecision ID: RFC-1201\nRepository: rust-lang/rfcs\nTimestamp: 2016-03-21T19:39:06Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1201-naked-fns.md\nPinned revision: 4e61ad08a822e5cfc0850f8d583265bce2096491\nLifecycle status: MERGED\nAuthority scope: rust-naked-functions\nSource text (verbatim excerpt):\nAdd support for naked functions.\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs rust naked functions? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: RFC-1201@merged\nDecision ID: RFC-1201\nRepository: rust-lang/rfcs\nTimestamp: 2016-03-21T19:39:06Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/1201-naked-fns.md\nPinned revision: 4e61ad08a822e5cfc0850f8d583265bce2096491\nLifecycle status: MERGED\nAuthority scope: rust-naked-functions\nSource text (verbatim excerpt):\nAdd support for naked functions.\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs rust naked functions? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "d26ef977882697c98b31ff303fcb161df2ffe7c6fa0bcb1c5e44d8d3d88ac1bf",
+    "rag_embedding": "472583fc68a9760c6dd3186b2d2920c3edff9b94bc41f86a7f359688fe1ee0a6",
+    "rag_full_context": "a435db34b2bd8054f9f61d5713657ef1c455a428a811525dc9de8f0fca708f4e"
+  },
+  "expected_answer_fields_present": false
+}

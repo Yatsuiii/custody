@@ -1,0 +1,113 @@
+{
+  "checkpoint_id": "python-exception-context-c3",
+  "timeline_id": "python-exception-context",
+  "question": "What organizational decision currently governs python exception context after the newer registry notice? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "PEP-409@accepted",
+      "decision_id": "PEP-409",
+      "sequence": 1,
+      "rendered_sha256": "bc70029f2e7aa9cc7a6ea5340fbc481c93f09ab9727bba2932f4024d1e6ca273"
+    },
+    {
+      "artifact_id": "PEP-415@accepted",
+      "decision_id": "PEP-415",
+      "sequence": 2,
+      "rendered_sha256": "70b46a44f01322d94d3048049c7eca3240753899556a08d731cb6a0abd4501f8"
+    },
+    {
+      "artifact_id": "PEP-409@current-note",
+      "decision_id": "PEP-409",
+      "sequence": 3,
+      "rendered_sha256": "ce0b5e4a0ff1e3fd0e30cbbd23c24d5292f3456ca5907cc9e3814cfc0dc47857"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "PEP-409@accepted",
+      "PEP-415@accepted",
+      "PEP-409@current-note"
+    ],
+    "rag_embedding": [
+      "PEP-409@accepted",
+      "PEP-415@accepted",
+      "PEP-409@current-note"
+    ],
+    "rag_full_context": [
+      "PEP-409@accepted",
+      "PEP-415@accepted",
+      "PEP-409@current-note"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 1,
+      "artifact_id": "PEP-415@accepted",
+      "chunk_index": 0,
+      "similarity": 0.751718413416339
+    },
+    {
+      "ordinal": 2,
+      "artifact_id": "PEP-409@current-note",
+      "chunk_index": 0,
+      "similarity": 0.7431997369268729
+    },
+    {
+      "ordinal": 0,
+      "artifact_id": "PEP-409@accepted",
+      "chunk_index": 0,
+      "similarity": 0.7419785500295911
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "PEP-415@accepted",
+    "PEP-409@current-note",
+    "PEP-409@accepted"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "PEP-415"
+    ],
+    "evidence_artifact_ids": [
+      "PEP-415@accepted"
+    ],
+    "resolver_explanation": "python-exception-context: PEP-415 is the sole eligible active decision in scope 'python-exception-context'.",
+    "derivations": [
+      {
+        "artifact_id": "PEP-409@accepted",
+        "decision_id": "PEP-409",
+        "status": "ACCEPTED",
+        "edges": []
+      },
+      {
+        "artifact_id": "PEP-415@accepted",
+        "decision_id": "PEP-415",
+        "status": "ACCEPTED",
+        "edges": [
+          [
+            "PEP-409",
+            "SUPERSEDES"
+          ]
+        ]
+      },
+      {
+        "artifact_id": "PEP-409@current-note",
+        "decision_id": null,
+        "action": "evidence_only",
+        "reason": "NOTE has no authority transition"
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"PEP-415\"]\nResolver explanation: python-exception-context: PEP-415 is the sole eligible active decision in scope 'python-exception-context'.\n\nEvidence:\nArtifact ID: PEP-415@accepted\nDecision ID: PEP-415\nRepository: python/peps\nTimestamp: 2012-02-26T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0415.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-exception-context\nExplicitly replaces: PEP-409\nSource text (verbatim excerpt):\nPEP: 415\nTitle: Implement context suppression with exception attributes\nStatus: Final\nReplaces: 409\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs python exception context after the newer registry notice? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact PEP-415@accepted chunk 0]\nArtifact ID: PEP-415@accepted\nDecision ID: PEP-415\nRepository: python/peps\nTimestamp: 2012-02-26T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0415.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-exception-context\nExplicitly replaces: PEP-409\nSource text (verbatim excerpt):\nPEP: 415\nTitle: Implement context suppression with exception attributes\nStatus: Final\nReplaces: 409\nDecision role: POLICY\n\n[Retrieved artifact PEP-409@current-note chunk 0]\nArtifact ID: PEP-409@current-note\nDecision ID: PEP-409\nRepository: python/peps\nTimestamp: 2026-08-22T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0409.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: NOTE\nAuthority scope: python-exception-context\nSource text (verbatim excerpt):\nSuperseded-By: 415\nDecision role: MENTION\n\n[Retrieved artifact PEP-409@accepted chunk 0]\nArtifact ID: PEP-409@accepted\nDecision ID: PEP-409\nRepository: python/peps\nTimestamp: 2012-01-26T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0409.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-exception-context\nSource text (verbatim excerpt):\nPEP: 409\nTitle: Suppressing exception context\nStatus: Final\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs python exception context after the newer registry notice? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: PEP-409@accepted\nDecision ID: PEP-409\nRepository: python/peps\nTimestamp: 2012-01-26T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0409.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-exception-context\nSource text (verbatim excerpt):\nPEP: 409\nTitle: Suppressing exception context\nStatus: Final\nDecision role: POLICY\n\nArtifact ID: PEP-415@accepted\nDecision ID: PEP-415\nRepository: python/peps\nTimestamp: 2012-02-26T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0415.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: FINAL\nAuthority scope: python-exception-context\nExplicitly replaces: PEP-409\nSource text (verbatim excerpt):\nPEP: 415\nTitle: Implement context suppression with exception attributes\nStatus: Final\nReplaces: 409\nDecision role: POLICY\n\nArtifact ID: PEP-409@current-note\nDecision ID: PEP-409\nRepository: python/peps\nTimestamp: 2026-08-22T00:00:00Z\nSource URL: https://github.com/python/peps/blob/b2120d116aa696f409b4d8333c4020ab8f93c9c7/peps/pep-0409.rst\nPinned revision: b2120d116aa696f409b4d8333c4020ab8f93c9c7\nLifecycle status: NOTE\nAuthority scope: python-exception-context\nSource text (verbatim excerpt):\nSuperseded-By: 415\nDecision role: MENTION\n\nDeveloper question: What organizational decision currently governs python exception context after the newer registry notice? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "49a0d1c5b06814a665094493d9cf3b6901c4a2c68a30afbe1abd9df18fb60fa5",
+    "rag_embedding": "cd3718d7d6f329c88c9a4547a9ef0ad3c445200e8a4f2f7740a040ee9adefe5f",
+    "rag_full_context": "5f08a16d4fef91591433ccbad854acce1b55fa5b8745d15023efbe7e41318cef"
+  },
+  "expected_answer_fields_present": false
+}

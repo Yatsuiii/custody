@@ -1,0 +1,67 @@
+{
+  "checkpoint_id": "opentofu-minimal-image-docs-c1",
+  "timeline_id": "opentofu-minimal-image-docs",
+  "question": "What organizational decision currently governs opentofu minimal image docs while the original change is proposed? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "opentofu/opentofu#2403@open",
+      "decision_id": "opentofu/opentofu#2403",
+      "sequence": 1,
+      "rendered_sha256": "936ee4d1de02b42893bfbae1337128888d342a31d3906c4cfc875a27da0448db"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "opentofu/opentofu#2403@open"
+    ],
+    "rag_embedding": [
+      "opentofu/opentofu#2403@open"
+    ],
+    "rag_full_context": [
+      "opentofu/opentofu#2403@open"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 0,
+      "artifact_id": "opentofu/opentofu#2403@open",
+      "chunk_index": 0,
+      "similarity": 0.7944864504191386
+    },
+    {
+      "ordinal": 1,
+      "artifact_id": "opentofu/opentofu#2403@open",
+      "chunk_index": 1,
+      "similarity": 0.661443353571921
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "opentofu/opentofu#2403@open",
+    "opentofu/opentofu#2403@open"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "NO_GOVERNING_DECISION",
+    "governing_decision_ids": [],
+    "evidence_artifact_ids": [],
+    "resolver_explanation": "opentofu-minimal-image-docs: No visible accepted or implemented decision is eligible to govern.",
+    "derivations": [
+      {
+        "artifact_id": "opentofu/opentofu#2403@open",
+        "decision_id": "opentofu/opentofu#2403",
+        "status": "PROPOSED",
+        "edges": []
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: NO_GOVERNING_DECISION\nGoverning decision IDs: []\nResolver explanation: opentofu-minimal-image-docs: No visible accepted or implemented decision is eligible to govern.\n\nEvidence:\n(none)\n\nDeveloper question: What organizational decision currently governs opentofu minimal image docs while the original change is proposed? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact opentofu/opentofu#2403@open chunk 0]\nArtifact ID: opentofu/opentofu#2403@open\nDecision ID: opentofu/opentofu#2403\nRepository: opentofu/opentofu\nTimestamp: 2025-01-21T12:53:14Z\nSource URL: https://github.com/opentofu/opentofu/pull/2403\nPinned revision: github-open-event-2025-01-21T12:53:14Z\nLifecycle status: OPEN\nAuthority scope: opentofu-minimal-image-docs\nSource text (verbatim excerpt):\nTemporary revert minimal image docs\n## Target Release\r\n\r\n1.9.0\r\n\r\n## Checklist\r\n\r\n<!-- Please check of ALL items in this list for all PRs: -->\r\n\r\n- [X] I have read the [contribution guide](https://github.com/opentofu/opentofu/blob/main/CONTRIBUTING.md).\r\n- [X] I have not used an AI coding assistant to create this PR.\r\n- [X] I have written all code in this PR myself OR I have marked all code I have not written myself (including modified code, e.g. copied from other places and then modified) with a comment indicating where it came from.\r\n- [X] I (and other contributors to this PR) have not looked at the Terraform source code while implementing this PR.\r\n\r\n### Go checklist\r\n\r\n<!-- If your PR contains Go code, please make sure you check off all items on this list: --> \r\n\r\n- [ ] I have run golangci-lint on my change and receive no errors relevant to my code.\r\n- [ ] I have run existing tests to ensure my code doesn't break anything.\r\n- [ ] I have added tests for all relevant use cases of my code, and those tests are passing.\r\n- [ ] I have only exported functions, variables and structs that should be used from other packages.\r\n- [ ] I have added meaningful comments to all exported functions, variables, and structs.\r\n\r\n### Website/doc\n\n[Retrieved artifact opentofu/opentofu#2403@open chunk 1]\nve only exported functions, variables and structs that should be used from other packages.\r\n- [ ] I have added meaningful comments to all exported functions, variables, and structs.\r\n\r\n### Website/documentation checklist\r\n\r\n<!-- If you have changed the website, please follow this checklist: -->\r\n\r\n- [ ] I have locally started the website as [described here](https://github.com/opentofu/opentofu/blob/main/website/README.md) and checked my changes.\r\n\nDecision role: IMPLEMENTATION\n\nDeveloper question: What organizational decision currently governs opentofu minimal image docs while the original change is proposed? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: opentofu/opentofu#2403@open\nDecision ID: opentofu/opentofu#2403\nRepository: opentofu/opentofu\nTimestamp: 2025-01-21T12:53:14Z\nSource URL: https://github.com/opentofu/opentofu/pull/2403\nPinned revision: github-open-event-2025-01-21T12:53:14Z\nLifecycle status: OPEN\nAuthority scope: opentofu-minimal-image-docs\nSource text (verbatim excerpt):\nTemporary revert minimal image docs\n## Target Release\r\n\r\n1.9.0\r\n\r\n## Checklist\r\n\r\n<!-- Please check of ALL items in this list for all PRs: -->\r\n\r\n- [X] I have read the [contribution guide](https://github.com/opentofu/opentofu/blob/main/CONTRIBUTING.md).\r\n- [X] I have not used an AI coding assistant to create this PR.\r\n- [X] I have written all code in this PR myself OR I have marked all code I have not written myself (including modified code, e.g. copied from other places and then modified) with a comment indicating where it came from.\r\n- [X] I (and other contributors to this PR) have not looked at the Terraform source code while implementing this PR.\r\n\r\n### Go checklist\r\n\r\n<!-- If your PR contains Go code, please make sure you check off all items on this list: --> \r\n\r\n- [ ] I have run golangci-lint on my change and receive no errors relevant to my code.\r\n- [ ] I have run existing tests to ensure my code doesn't break anything.\r\n- [ ] I have added tests for all relevant use cases of my code, and those tests are passing.\r\n- [ ] I have only exported functions, variables and structs that should be used from other packages.\r\n- [ ] I have added meaningful comments to all exported functions, variables, and structs.\r\n\r\n### Website/documentation checklist\r\n\r\n<!-- If you have changed the website, please follow this checklist: -->\r\n\r\n- [ ] I have locally started the website as [described here](https://github.com/opentofu/opentofu/blob/main/website/README.md) and checked my changes.\r\n\nDecision role: IMPLEMENTATION\n\nDeveloper question: What organizational decision currently governs opentofu minimal image docs while the original change is proposed? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "1cdea3432ee0fe72e81070ecd1996daa093ef7539696a8cdb87e0d54f441b00c",
+    "rag_embedding": "ce87a0b88a5fe94db5022785f9b68f5cbb5267a747223f96d60eb25cdfaafa3c",
+    "rag_full_context": "229ee659c7b7ead34dabff41ce16839751c284d70fec12188cf75c145bb4b721"
+  },
+  "expected_answer_fields_present": false
+}

@@ -1,0 +1,113 @@
+{
+  "checkpoint_id": "rust-tait-capture-c3",
+  "timeline_id": "rust-tait-capture",
+  "question": "What organizational decision currently governs Rust type-alias impl Trait capture behavior? Cite the source artifacts that establish current authority.",
+  "visible_history": [
+    {
+      "artifact_id": "RFC-2071@merged",
+      "decision_id": "RFC-2071",
+      "sequence": 1,
+      "rendered_sha256": "0630150ed050887db0959b1bd534e50ca13b36eb472a301711eabff50b125865"
+    },
+    {
+      "artifact_id": "RFC-2515@open",
+      "decision_id": "RFC-2515",
+      "sequence": 2,
+      "rendered_sha256": "e04fb45af5f2c5f654b8d01c5ed8704b2395a4b5fce1cadfb27b9ff2d416711c"
+    },
+    {
+      "artifact_id": "RFC-2515@merged",
+      "decision_id": "RFC-2515",
+      "sequence": 3,
+      "rendered_sha256": "df0059f8684e029e8a1fb8345162edffff643bff03969eeed9c368019bed12b5"
+    }
+  ],
+  "condition_source_artifact_ids": {
+    "decisiontrace": [
+      "RFC-2071@merged",
+      "RFC-2515@open",
+      "RFC-2515@merged"
+    ],
+    "rag_embedding": [
+      "RFC-2071@merged",
+      "RFC-2515@open",
+      "RFC-2515@merged"
+    ],
+    "rag_full_context": [
+      "RFC-2071@merged",
+      "RFC-2515@open",
+      "RFC-2515@merged"
+    ]
+  },
+  "retrieved": [
+    {
+      "ordinal": 1,
+      "artifact_id": "RFC-2515@open",
+      "chunk_index": 0,
+      "similarity": 0.8296817088570194
+    },
+    {
+      "ordinal": 2,
+      "artifact_id": "RFC-2515@merged",
+      "chunk_index": 0,
+      "similarity": 0.8227005741380118
+    },
+    {
+      "ordinal": 0,
+      "artifact_id": "RFC-2071@merged",
+      "chunk_index": 0,
+      "similarity": 0.7970779818224824
+    }
+  ],
+  "retrieved_artifact_ids": [
+    "RFC-2515@open",
+    "RFC-2515@merged",
+    "RFC-2071@merged"
+  ],
+  "deterministic_prediction": {
+    "authority_state": "GOVERNING",
+    "governing_decision_ids": [
+      "RFC-2515"
+    ],
+    "evidence_artifact_ids": [
+      "RFC-2515@merged"
+    ],
+    "resolver_explanation": "rust-type-alias-impl-trait-capture: RFC-2515 is the sole eligible active decision in scope 'rust-type-alias-impl-trait-capture'.",
+    "derivations": [
+      {
+        "artifact_id": "RFC-2071@merged",
+        "decision_id": "RFC-2071",
+        "status": "IMPLEMENTED",
+        "edges": []
+      },
+      {
+        "artifact_id": "RFC-2515@open",
+        "decision_id": "RFC-2515",
+        "status": "PROPOSED",
+        "edges": []
+      },
+      {
+        "artifact_id": "RFC-2515@merged",
+        "decision_id": "RFC-2515",
+        "status": "IMPLEMENTED",
+        "edges": [
+          [
+            "RFC-2071",
+            "SUPERSEDES"
+          ]
+        ]
+      }
+    ]
+  },
+  "prompts": {
+    "decisiontrace": "You are DecisionTrace's explanation layer. The byte-frozen deterministic authority resolver has already determined the structured result below. Do not change, omit, or second-guess its state or IDs. Explain it briefly from only the supplied evidence. Return only the explanation.\n\nAuthority state: GOVERNING\nGoverning decision IDs: [\"RFC-2515\"]\nResolver explanation: rust-type-alias-impl-trait-capture: RFC-2515 is the sole eligible active decision in scope 'rust-type-alias-impl-trait-capture'.\n\nEvidence:\nArtifact ID: RFC-2515@merged\nDecision ID: RFC-2515\nRepository: rust-lang/rfcs\nTimestamp: 2019-07-28T06:13:16Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/2515-type_alias_impl_trait.md\nPinned revision: f3a7bad25a6b40daf346a34d22b869358a2e305f\nLifecycle status: MERGED\nAuthority scope: rust-type-alias-impl-trait-capture\nExplicitly replaces: RFC-2071\nSource text (verbatim excerpt):\nPermit impl Trait in type aliases\nAllow type aliases and associated types to use `impl Trait`, replacing the prototype `existential type` as a way to declare type aliases and associated types for opaque, uniquely inferred types.\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs Rust type-alias impl Trait capture behavior? Cite the source artifacts that establish current authority.\n",
+    "rag_embedding": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: embedding top-8. Artifacts are ordered source records visible at this checkpoint.\n\n[Retrieved artifact RFC-2515@open chunk 0]\nArtifact ID: RFC-2515@open\nDecision ID: RFC-2515\nRepository: rust-lang/rfcs\nTimestamp: 2018-08-05T12:09:14Z\nSource URL: https://github.com/rust-lang/rfcs/pull/2515\nPinned revision: github-open-event-2018-08-05T12:09:14Z\nLifecycle status: OPEN\nAuthority scope: rust-type-alias-impl-trait-capture\nExplicitly replaces: RFC-2071\nSource text (verbatim excerpt):\nPermit impl Trait in type aliases\nDecision role: POLICY\n\n[Retrieved artifact RFC-2515@merged chunk 0]\nArtifact ID: RFC-2515@merged\nDecision ID: RFC-2515\nRepository: rust-lang/rfcs\nTimestamp: 2019-07-28T06:13:16Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/2515-type_alias_impl_trait.md\nPinned revision: f3a7bad25a6b40daf346a34d22b869358a2e305f\nLifecycle status: MERGED\nAuthority scope: rust-type-alias-impl-trait-capture\nExplicitly replaces: RFC-2071\nSource text (verbatim excerpt):\nPermit impl Trait in type aliases\nAllow type aliases and associated types to use `impl Trait`, replacing the prototype `existential type` as a way to declare type aliases and associated types for opaque, uniquely inferred types.\nDecision role: POLICY\n\n[Retrieved artifact RFC-2071@merged chunk 0]\nArtifact ID: RFC-2071@merged\nDecision ID: RFC-2071\nRepository: rust-lang/rfcs\nTimestamp: 2017-09-18T21:30:26Z\nSource URL: https://github.com/rust-lang/rfcs/pull/2071\nPinned revision: 1e82830bfcef1bc6f4603e1c99daa317eb6b555f\nLifecycle status: MERGED\nAuthority scope: rust-type-alias-impl-trait-capture\nSource text (verbatim excerpt):\nNamed existentials and impl Trait variable declarations\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs Rust type-alias impl Trait capture behavior? Cite the source artifacts that establish current authority.\n",
+    "rag_full_context": "You resolve CURRENT organizational decision authority from a visible engineering history.\nAuthority is not relevance or recency. A newer item may be only proposed, a mention may carry no transition, an implementation may not govern policy, and a rollback may govern code without restoring an older policy. Respect explicit scope, lifecycle status, decision role, and replaces/reverts/implements evidence. Multiple explicitly queried scopes may have parallel governing decisions. If visible evidence genuinely conflicts or is insufficient, answer UNRESOLVED; if no accepted or implemented decision governs, answer NO_GOVERNING_DECISION. Use only public decision and artifact IDs exactly as shown.\n\nReturn exactly one JSON object with these keys:\n{\"authority_state\":\"GOVERNING | MULTIPLE_GOVERNING | UNRESOLVED | NO_GOVERNING_DECISION\",\"governing_decision_ids\":[\"public decision id\"],\"evidence_artifact_ids\":[\"public artifact id\"],\"explanation\":\"brief source-grounded reason\"}\n\nContext mode: full visible context. Artifacts are ordered source records visible at this checkpoint.\n\nArtifact ID: RFC-2071@merged\nDecision ID: RFC-2071\nRepository: rust-lang/rfcs\nTimestamp: 2017-09-18T21:30:26Z\nSource URL: https://github.com/rust-lang/rfcs/pull/2071\nPinned revision: 1e82830bfcef1bc6f4603e1c99daa317eb6b555f\nLifecycle status: MERGED\nAuthority scope: rust-type-alias-impl-trait-capture\nSource text (verbatim excerpt):\nNamed existentials and impl Trait variable declarations\nDecision role: POLICY\n\nArtifact ID: RFC-2515@open\nDecision ID: RFC-2515\nRepository: rust-lang/rfcs\nTimestamp: 2018-08-05T12:09:14Z\nSource URL: https://github.com/rust-lang/rfcs/pull/2515\nPinned revision: github-open-event-2018-08-05T12:09:14Z\nLifecycle status: OPEN\nAuthority scope: rust-type-alias-impl-trait-capture\nExplicitly replaces: RFC-2071\nSource text (verbatim excerpt):\nPermit impl Trait in type aliases\nDecision role: POLICY\n\nArtifact ID: RFC-2515@merged\nDecision ID: RFC-2515\nRepository: rust-lang/rfcs\nTimestamp: 2019-07-28T06:13:16Z\nSource URL: https://github.com/rust-lang/rfcs/blob/354518a8c9025f40be6f730452c1bfe71a12dc22/text/2515-type_alias_impl_trait.md\nPinned revision: f3a7bad25a6b40daf346a34d22b869358a2e305f\nLifecycle status: MERGED\nAuthority scope: rust-type-alias-impl-trait-capture\nExplicitly replaces: RFC-2071\nSource text (verbatim excerpt):\nPermit impl Trait in type aliases\nAllow type aliases and associated types to use `impl Trait`, replacing the prototype `existential type` as a way to declare type aliases and associated types for opaque, uniquely inferred types.\nDecision role: POLICY\n\nDeveloper question: What organizational decision currently governs Rust type-alias impl Trait capture behavior? Cite the source artifacts that establish current authority.\n"
+  },
+  "prompt_sha256": {
+    "decisiontrace": "579886726a9137ac331a2bbc05f79f61ed19cb8daf04cf6fea3cd43102c6fb68",
+    "rag_embedding": "4829dc35bb8b968dbb505c0a6337214f74d20295f9d23037dc1644b286673bff",
+    "rag_full_context": "a1e7d9d08ed7383abc8f37c8f5cb05021c046fdb994a8f3b8bf6fcaac8a5c7ea"
+  },
+  "expected_answer_fields_present": false
+}
