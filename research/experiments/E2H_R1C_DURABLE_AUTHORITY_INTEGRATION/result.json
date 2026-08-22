@@ -1,0 +1,36 @@
+{
+  "canonical_result_digest": "d634f8966fecee5d79f313063f05b0e2402def3a876743d27d84d7b7bb8773ed",
+  "cleanup": {
+    "cleanup_complete": false,
+    "reason": "runner exception; preserve namespace for diagnosis"
+  },
+  "e2g_commit": "bd0fcd3af38b105f326dbe0e4f73149b6da67449",
+  "e2g_result_digest": "05707014de0ed008db4eadd4ab74f7aa21ae530ea4029e2218b448b5fa6e1bac",
+  "environment": {
+    "database": "(default)",
+    "database_class": "Firestore Native",
+    "namespace_prefix": "custody_research_e2h_r1c_20260822",
+    "project": "project-988bc9fe-092c-4b32-90c",
+    "region": "us-central1"
+  },
+  "error_message": "P command failed: ValueError: Transaction not in progress, cannot be used in API requests.",
+  "error_type": "RuntimeError",
+  "execution_status": "INVALID_RUNNER_EXCEPTION",
+  "experiment_id": "E2H_R1C_DURABLE_AUTHORITY_INTEGRATION",
+  "first_failed_gate": "EXECUTION_IMPLEMENTATION_ERROR",
+  "leakage_guard": {
+    "runtime_scan": [],
+    "scorer_read_counter_before_actions": 0
+  },
+  "operation_counts": {
+    "deletes": 0,
+    "model_calls": 0,
+    "reads": 0,
+    "writes": 0
+  },
+  "plan_immutable": true,
+  "plan_sha256": "b12888057a1fa3c9b86816d83ee84d68c47ed706feff106a78c96ab81f46e907",
+  "preregistration_commit": "b165ee139429c1b14f87798237137bf43ec8bf5d",
+  "reason": "RUNNER_EXCEPTION",
+  "verdict": "INTEGRATION-BLOCKED"
+}
