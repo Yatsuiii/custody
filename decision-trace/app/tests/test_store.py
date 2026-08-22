@@ -13,7 +13,15 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 import vertex  # noqa: E402
 from graph import DecisionGraph, resolve_active  # noqa: E402
 from loader import load_decisions  # noqa: E402
-from store import FirestoreDecisionStore, JSONFileDecisionStore, _firestore_doc_id  # noqa: E402
+from models import Decision, DecisionStatus, Evidence, RelationshipType  # noqa: E402
+from store import (  # noqa: E402
+    FirestoreDecisionStore,
+    JSONFileDecisionStore,
+    _decision_to_firestore_dict,
+    _dict_to_decision,
+    _firestore_dict_to_decision,
+    _firestore_doc_id,
+)
 
 APP_DIR = Path(__file__).resolve().parents[1]
 FALSIFIER_DATA = APP_DIR.parent / "data" / "decisions.jsonl"
@@ -99,6 +107,62 @@ def test_kep_decision_loads_with_evidence():
     assert decision.evidence[0].quote == record["rationale_quote"]
 
 
+def test_firestore_serialization_preserves_partial_acceptance():
+    """Non-network: Decision -> firestore dict -> firestore-shaped dict ->
+    Decision must preserve partial_acceptance and every other field, without
+    touching a real Firestore project. Proves the serialization path itself
+    is correct independent of network/auth/IAM."""
+    original = Decision(
+        id="A", subject="A", current_status=DecisionStatus.ACCEPTED,
+        evidence=[Evidence(type="pr", url="https://example.test/pr", quote="q")],
+        related_components=["scope"],
+        related_decisions=[("B", RelationshipType.SUPERSEDES)],
+        partial_acceptance=True,
+    )
+    firestore_dict = _decision_to_firestore_dict(original)
+    # Firestore rejects nested arrays; related_decisions must already be
+    # reshaped into a list of maps before this dict would ever reach a
+    # real document.
+    assert firestore_dict["related_decisions"] == [{"target_id": "B", "type": "SUPERSEDES"}]
+    assert firestore_dict["partial_acceptance"] is True
+
+    round_tripped = _firestore_dict_to_decision(firestore_dict)
+    assert round_tripped == original
+    assert round_tripped.partial_acceptance is True
+
+
+def test_firestore_serialization_default_partial_acceptance_is_false():
+    original = Decision(id="A", subject="A", current_status=DecisionStatus.ACCEPTED)
+    round_tripped = _firestore_dict_to_decision(_decision_to_firestore_dict(original))
+    assert round_tripped.partial_acceptance is False
+
+
+def test_pre_partial_acceptance_firestore_document_deserializes_safely():
+    """Simulates a real production Firestore document written before
+    `partial_acceptance` existed on the Decision model — no such key in
+    the stored document at all, not even a null. Backward compatibility
+    requirement (session brief Phase 8): must default safely, not KeyError."""
+    old_production_doc = {
+        "id": "old-prod-decision", "subject": "Old decision",
+        "current_status": "ACCEPTED", "context": None, "chosen_approach": None,
+        "rejected_alternatives": [], "rationale": None, "constraints": [],
+        "introduced_at": None, "superseded_at": None, "evidence": [],
+        "related_components": ["x"], "related_decisions": [],
+    }
+    decision = _firestore_dict_to_decision(old_production_doc)
+    assert decision.partial_acceptance is False
+    assert decision.id == "old-prod-decision"
+
+
+def test_pre_partial_acceptance_json_record_deserializes_safely():
+    old_json_record = {
+        "id": "old-json-decision", "subject": "Old decision",
+        "current_status": "ACCEPTED", "related_decisions": [],
+    }
+    decision = _dict_to_decision(old_json_record)
+    assert decision.partial_acceptance is False
+
+
 def test_firestore_store_round_trip_persists_and_reloads():
     """Real Firestore, no mocks. Writes to a throwaway collection under the
     project vertex.py already talks to, reads back via a fresh client
@@ -131,3 +195,32 @@ def test_firestore_store_round_trip_persists_and_reloads():
     finally:
         for d in decisions:
             store._collection.document(_firestore_doc_id(d.id)).delete()
+
+
+def test_firestore_store_round_trip_preserves_partial_acceptance():
+    """Real Firestore, disposable collection, cleaned up in `finally` —
+    same discipline as the test above. Isolated to one narrow claim:
+    partial_acceptance (this session's new field) survives a real
+    Decision -> Firestore -> Decision round trip, not just the in-memory
+    serialization helpers."""
+    decision = Decision(
+        id="partial-acceptance-roundtrip-probe",
+        subject="Partial acceptance round-trip probe",
+        current_status=DecisionStatus.ACCEPTED,
+        evidence=[Evidence(type="pr", url="https://example.test/pr", quote="probe quote")],
+        related_components=["probe-scope"],
+        related_decisions=[("some-other-id", RelationshipType.IMPLEMENTS)],
+        partial_acceptance=True,
+    )
+    collection = f"decisiontrace-test-{uuid.uuid4().hex[:12]}"
+    store = FirestoreDecisionStore(collection, project=vertex.PROJECT)
+    store.save(decision)
+
+    try:
+        reloaded_store = FirestoreDecisionStore(collection, project=vertex.PROJECT)
+        round_tripped = reloaded_store.get(decision.id)
+        assert round_tripped is not None
+        assert round_tripped.partial_acceptance is True
+        assert round_tripped == decision
+    finally:
+        store._collection.document(_firestore_doc_id(decision.id)).delete()

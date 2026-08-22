@@ -10,10 +10,12 @@ records with explicit lifecycle status — so asking "why is this built this
 way" gets you the *currently active* rationale, not a pile of retrieved
 documents you have to reconcile yourself.
 
-It exists because we measured, rather than assumed, whether this beats
-chat-with-your-repo RAG — and re-measured twice more after finding real
-methodology bugs in our own first attempt. See
-[Why not just RAG?](#why-not-just-rag) below.
+DecisionTrace separates evidence interpretation from organizational
+authority. Agents discover and interpret decision history, while
+deterministic lifecycle logic decides what governs and emits an auditable
+proof explaining why competing decisions do not. See
+[Why deterministic authority, not an LLM verdict?](#why-deterministic-authority-not-an-llm-verdict)
+below.
 
 ## The problem
 
@@ -33,48 +35,33 @@ status (`PROPOSED`, `ACCEPTED`, `IMPLEMENTED`, `REVERTED`, `SUPERSEDED`,
 deterministic graph traversal — not an LLM guess. The model's only job is
 to explain the resolved answer and ground every claim in a real citation.
 
-## Why not just RAG?
+## Why deterministic authority, not an LLM verdict?
 
-We didn't assume the structured approach was better — we ran a falsifier
-first and were prepared to kill the project if it lost. We also didn't
-stop at the first result: our initial run had a real confound (the
-structured condition's prompt and the judge's ground truth shared the
-same underlying text), and fixing that honestly took three rounds, each
-one a genuine bug found and fixed, not a retry until the number looked
-better. Full diagnosis of all three rounds: [`RESULTS.md`](./RESULTS.md).
+A generic RAG assistant retrieves documents and asks the language model to
+reconcile which one is still true. That question — *which decision
+currently governs, and why don't the alternatives* — is exactly the kind
+of question we don't think a model should answer by guessing. So it
+doesn't: DecisionTrace resolves it with a deterministic lifecycle
+resolver, and the model's job is narrowed to explaining an
+already-computed result, never producing one.
 
-**n = 37** real decisions (reverted PRs + Kubernetes KEP
-"Alternatives Considered" sections) across 4 repos (`kubernetes/kubernetes`,
-`kubernetes/enhancements`, `rust-lang/rust`, `elastic/elasticsearch`),
-graded on two axes: does the answer cite the correct evidence, and does it
-state the correct current rationale.
+That resolver returns more than an id. Every authority conclusion carries
+a machine-readable **proof**: the requested scope, the governing decision,
+every competing candidate that was considered, and — for each one that
+didn't govern — a specific, checkable reason (`PROPOSED_NOT_ACCEPTED`,
+`SUPERSEDED`, `IMPLEMENTATION_NOT_POLICY_AUTHORITY`, and others) plus the
+lifecycle edges that establish the winner. A skeptical reader can verify
+"decision A governs" against the proof directly, without trusting a
+model's prose.
 
-| Condition | Citation-correct | Rationale-match | Combined (both correct) | Hallucination rate |
-|---|---|---|---|---|
-| code-only (no retrieval) | 14% | 14% | 0% | 8% |
-| embedding RAG | 76% | 59% | **57%** | 3% |
-| DecisionTrace (structured) | 100% | 76% | **76%** | 0% |
-
-Structured clearly beats RAG (76% vs 57%) — but this is an honest
-**CAUTION**, not a clean win: our preregistered bar for declaring the
-structured approach decisively better required it to clear 85% combined,
-and it doesn't, at this sample size. The gap is concentrated entirely in
-one document type: on revert-PR pairs, structured already scores 94%
-(matching RAG); the drag is Kubernetes KEP "Alternatives Considered"
-sections specifically, where structured scores 58% combined (n=19) —
-long, template-structured documents where a single decision often names
-several distinct rejected alternatives, and correctly identifying *which
-one* a question is about is genuinely harder than citation-correctness
-alone suggests (structured's citation-correct rate is 100% throughout;
-every remaining miss is about stating the specific right reason, not
-finding the right decision).
-
-That's a real, explained mechanism, not an unexplained score gap — and
-it's also DecisionTrace's clearest next research direction, not a result
-we're hiding: retrieving individual alternative-points instead of whole
-decision cards is the current hypothesis for closing it. Full breakdown,
-per-decision results, and all three rounds of methodology fixes:
-[`RESULTS.md`](./RESULTS.md).
+This product doesn't lead with a benchmark score, and earlier ones we ran
+don't back a superiority claim strong enough to lead with — the full
+research history, run honestly and reported however it came out, is
+preserved in [`RESULTS.md`](./RESULTS.md) for anyone who wants it. What
+we're claiming here is architectural: an auditable proof of *why*
+something governs is a more serious answer than a plausible-sounding
+retrieval, whether or not either approach finds the right document more
+often on a given sample.
 
 ## What it does (5-minute tour)
 
@@ -103,13 +90,18 @@ don't know" is a valid, expected answer instead of something the model has
 to be tricked into.
 
 The answer path is collaborative and visible: an **Evidence Scout** retrieves
-candidate decision cards, a **Lifecycle Resolver** replays typed edges, a
-**Provenance Challenger** rejects evidence-less or ambiguous authority, and a
-**Gemini Reconciler** explains only the candidates that survived those checks.
-The UI exposes those handoffs in an “Agent collaboration trace” alongside the
-current-decision card. The workers exchange answer-scoped reports; canonical
-organizational state remains the structured decision store and deterministic
-resolver.
+candidate decision cards, a **Lifecycle Resolver** replays typed edges and
+computes a deterministic **AuthorityProof** — the governing decision, every
+candidate considered, and a specific, checkable reason for each one that
+didn't govern — a **Provenance Challenger** rejects evidence-less or
+ambiguous authority and flags an unresolved or absent proof, and a
+**Gemini Reconciler** explains only the candidates and proof that survived
+those checks. Gemini never decides authority; if its prose disagrees with
+the proof, the proof wins, enforced by the citation gate that rejects any
+claim naming a decision the proof didn't already name as governing. The UI
+shows "CURRENTLY GOVERNING" with a "why this governs" breakdown alongside
+the "Agent collaboration trace." Canonical organizational state remains the
+structured decision store and the deterministic resolver.
 
 ## Architecture
 

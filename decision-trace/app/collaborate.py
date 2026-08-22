@@ -29,6 +29,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import vertex  # noqa: E402
 
+from authority import AuthorityProof, resolve_authority_with_proof  # noqa: E402
+from models import Decision  # noqa: E402
 from retrieval import DecisionIndex, RetrievalCandidate  # noqa: E402
 
 
@@ -52,6 +54,13 @@ class Answer:
     claims: list[Claim]
     candidates_considered: list[str]  # decision ids retrieved for grounding
     worker_reports: list["WorkerReport"] = field(default_factory=list)
+    # Deterministic authority conclusion for the top-retrieved candidate's
+    # scope, when one could be computed — see `_resolve_authority_for_
+    # candidates`. None when retrieval found nothing scoped (e.g. a
+    # decision with no `related_components`). This is canonical: if
+    # Gemini's prose disagrees with it, the proof wins (enforced by the
+    # `authoritative_ids` gate in `answer()`, not by convention).
+    authority_proof: AuthorityProof | None = None
 
 
 @dataclass(frozen=True)
@@ -68,6 +77,88 @@ class WorkerReport:
     status: str
     summary: str
     decision_ids: tuple[str, ...] = ()
+
+
+_AUTHORITY_EXPLANATION_INSTRUCTIONS = """You are DecisionTrace's authority explanation layer.
+
+You are given an AuthorityProof below: a deterministic conclusion already
+computed by a separate resolver about which decision governs one exact
+scope, and why competing candidates did not. You do not decide authority
+and you must never contradict, soften, or second-guess the given state or
+governing decision — you only explain it in plain language, citing the
+witnesses you were given.
+
+Respond with ONLY a JSON array, no other text. Each element:
+{
+  "text": "one claim, in your own words",
+  "category": one of "verified_historical_fact" | "current_active_decision" | "inferred_advice" | "missing_or_uncertain",
+  "decision_id": "the decision id this claim cites, or null if it cites none"
+}
+
+Category meanings:
+- current_active_decision: the resolver's governing_decision_id and state,
+  reported as given fact — never your own guess about who governs.
+- verified_historical_fact: a specific transition witness or exclusion
+  reason from the proof (e.g. "B is PROPOSED, not ACCEPTED").
+- inferred_advice: your own reasoning that goes beyond the proof (e.g.
+  suggesting what to check next) — use sparingly and never to change the
+  authority conclusion.
+- missing_or_uncertain: use this for an UNRESOLVED or NO_GOVERNING_DECISION
+  state, explaining the ambiguity/absence from the proof's own witnesses —
+  never invent a winner the proof does not name.
+
+If the state is UNRESOLVED, your claims must not name a governing decision;
+report the conflict instead. If the state is NO_GOVERNING_DECISION, say so
+plainly rather than guessing from excluded candidates."""
+
+
+def _render_proof(proof: AuthorityProof) -> str:
+    lines = [
+        f"Requested scope: {proof.requested_scope!r}",
+        f"Authority state: {proof.authority_state}",
+        f"Governing decision: {proof.governing_decision_id!r}",
+    ]
+    if proof.governing_witnesses:
+        lines.append("Governing witnesses: " + "; ".join(proof.governing_witnesses))
+    if proof.excluded_candidates:
+        lines.append("Excluded candidates:")
+        for c in proof.excluded_candidates:
+            witness = f" (witnesses: {', '.join(c.witness_ids)})" if c.witness_ids else ""
+            lines.append(f"  - {c.decision_id}: {c.exclusion_reason}{witness}")
+    if proof.ambiguity_witnesses:
+        lines.append("Ambiguity: " + "; ".join(proof.ambiguity_witnesses))
+    lines.append(f"Resolver explanation: {proof.explanation}")
+    return "\n".join(lines)
+
+
+def explain_authority(proof: AuthorityProof) -> Answer:
+    """Gemini explains an already-resolved AuthorityProof in plain language.
+    It never receives raw decisions and never decides state — the resolver
+    runs first, unconditionally, and this function's prompt states the
+    conclusion as given fact. See AUTHORITY_SEMANTICS.md and
+    AUTHORITY_PROOF_ARCHITECTURE_REVIEW.md for why this ordering is load
+    -bearing: reversing it (Gemini guesses, code rationalizes) would let
+    generation decide organizational authority, which the product
+    explicitly forbids."""
+    reports = [WorkerReport(
+        worker="Authority Resolver", stage="resolve", status="complete",
+        summary=f"Deterministically resolved scope {proof.requested_scope!r} to {proof.authority_state}.",
+        decision_ids=tuple(c.decision_id for c in proof.considered_candidates),
+    )]
+    prompt = f"{_AUTHORITY_EXPLANATION_INSTRUCTIONS}\n\nAuthorityProof:\n\n{_render_proof(proof)}"
+    raw = vertex.generate(prompt)
+    allowed_ids = {c.decision_id for c in proof.considered_candidates}
+    authoritative_ids = {proof.governing_decision_id} if proof.governing_decision_id else set()
+    claims = _parse_claims(raw, allowed_ids=allowed_ids, authoritative_ids=authoritative_ids)
+    reports.append(WorkerReport(
+        worker="Gemini Reconciler", stage="reconcile", status="complete",
+        summary="Explained the resolver's conclusion; did not alter it.",
+        decision_ids=tuple(sorted(allowed_ids)),
+    ))
+    return Answer(
+        question=f"What governs {proof.requested_scope!r}?",
+        claims=claims, candidates_considered=sorted(allowed_ids), worker_reports=reports,
+    )
 
 
 _SYSTEM_INSTRUCTIONS = """You are DecisionTrace, an engineering-decision memory assistant.
@@ -209,6 +300,36 @@ def _challenge_candidates(
     return trusted, challenges
 
 
+def _resolve_authority_for_candidates(
+    candidates: list[RetrievalCandidate], all_decisions: list[Decision]
+) -> AuthorityProof | None:
+    """The Lifecycle Resolver's deterministic half: derive a requested
+    authority scope from what retrieval actually surfaced (the top-ranked
+    candidate's own scope — retrieval already ranked it most relevant to
+    the question) and resolve it. Returns None only when the top candidate
+    has no scope to resolve against; this never guesses a scope retrieval
+    didn't surface."""
+    if not candidates:
+        return None
+    scopes = candidates[0].decision.related_components
+    if not scopes:
+        return None
+    return resolve_authority_with_proof(all_decisions, scopes[0])
+
+
+def _challenge_proof(proof: AuthorityProof | None) -> list[str]:
+    """Provenance Challenger's proof-aware half: flag when the resolver
+    itself could not reach a governing conclusion, so that shows up next
+    to the evidence/lifecycle challenges instead of silently vanishing."""
+    if proof is None:
+        return []
+    if proof.authority_state == "UNRESOLVED":
+        return [f"authority for scope {proof.requested_scope!r} is UNRESOLVED: {proof.explanation}"]
+    if proof.authority_state == "NO_GOVERNING_DECISION":
+        return [f"no governing decision exists in scope {proof.requested_scope!r}"]
+    return []
+
+
 def answer(question: str, index: DecisionIndex, k: int = 5) -> Answer:
     candidates = index.search(question, k=k)
     reports = [WorkerReport(
@@ -235,6 +356,7 @@ def answer(question: str, index: DecisionIndex, k: int = 5) -> Answer:
             worker_reports=reports,
         )
 
+    authority_proof = _resolve_authority_for_candidates(candidates, index.decisions)
     reports.append(WorkerReport(
         worker="Lifecycle Resolver",
         stage="resolve",
@@ -243,10 +365,18 @@ def answer(question: str, index: DecisionIndex, k: int = 5) -> Answer:
             if any(c.resolution.ambiguous for c in candidates)
             else "complete"
         ),
-        summary="Resolved each candidate against typed lifecycle edges; ambiguity is retained.",
+        summary=(
+            "Resolved each candidate against typed lifecycle edges and computed a "
+            f"deterministic AuthorityProof: {authority_proof.authority_state} for "
+            f"scope {authority_proof.requested_scope!r}."
+            if authority_proof is not None
+            else "Resolved each candidate against typed lifecycle edges; no scoped "
+            "candidate was available to compute an AuthorityProof."
+        ),
         decision_ids=tuple(c.decision.id for c in candidates),
     ))
     trusted_candidates, challenges = _challenge_candidates(candidates)
+    challenges = challenges + _challenge_proof(authority_proof)
     reports.append(WorkerReport(
         worker="Provenance Challenger",
         stage="challenge",
@@ -274,17 +404,32 @@ def answer(question: str, index: DecisionIndex, k: int = 5) -> Answer:
             )],
             candidates_considered=[c.decision.id for c in candidates],
             worker_reports=reports,
+            authority_proof=authority_proof,
         )
 
     context = "\n\n".join(_render_candidate(c) for c in trusted_candidates)
+    if authority_proof is not None:
+        context += f"\n\n--- Deterministic AuthorityProof (already resolved; report as given fact) ---\n{_render_proof(authority_proof)}"
     prompt = f"{_SYSTEM_INSTRUCTIONS}\n\nRetrieved decisions:\n\n{context}\n\nQuestion: {question}"
     raw = vertex.generate(prompt)
     allowed_ids = {c.decision.id for c in trusted_candidates}
-    authoritative_ids = {
-        c.decision.id
-        for c in trusted_candidates
-        if c.is_current and not c.resolution.ambiguous
-    }
+    # The AuthorityProof is canonical once computed: it supersedes the
+    # per-candidate is_current heuristic for which id may be claimed
+    # current_active_decision, so Gemini's prose cannot disagree with the
+    # proof and still have that claim accepted — see _parse_claims's
+    # authoritative_ids gate.
+    if authority_proof is not None:
+        authoritative_ids = (
+            {authority_proof.governing_decision_id} & allowed_ids
+            if authority_proof.governing_decision_id
+            else set()
+        )
+    else:
+        authoritative_ids = {
+            c.decision.id
+            for c in trusted_candidates
+            if c.is_current and not c.resolution.ambiguous
+        }
     claims = _parse_claims(
         raw, allowed_ids=allowed_ids, authoritative_ids=authoritative_ids
     )
@@ -299,4 +444,5 @@ def answer(question: str, index: DecisionIndex, k: int = 5) -> Answer:
         question=question, claims=claims,
         candidates_considered=[c.decision.id for c in candidates],
         worker_reports=reports,
+        authority_proof=authority_proof,
     )

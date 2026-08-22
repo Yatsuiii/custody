@@ -39,6 +39,11 @@ class ActiveResolution:
     history: list[str]  # decision ids in the lineage, chronological order
     ambiguous: bool = False
     explanation: str = ""
+    # Every lifecycle edge replayed to reach `active_id`, chronological order,
+    # each as "{source_id} {relationship} {target_id}" — the structured form
+    # of `explanation`, kept so callers (authority.py's proof object) can cite
+    # individual transitions without reparsing a sentence.
+    lifecycle_events: tuple[str, ...] = ()
 
 
 class DecisionGraph:
@@ -121,6 +126,48 @@ class DecisionGraph:
         return [did for did in self.order if did in seen]
 
 
+class _AmbiguousLineage(Exception):
+    """Raised internally when a lifecycle edge deactivates something other
+    than the currently active node — e.g. two decisions both claiming to
+    supersede the same predecessor. Caught by `resolve_active` to build the
+    ambiguous `ActiveResolution`; never escapes this module."""
+
+    def __init__(self, target_id: str, events: list[str]):
+        self.target_id = target_id
+        self.events = events
+
+
+def _replay_lineage(
+    graph: DecisionGraph,
+    lineage: list[str],
+    deactivating_values: frozenset[str],
+    reactivating_values: frozenset[str],
+) -> tuple[str | None, list[str]]:
+    """Replay lifecycle edges across `lineage` in order. Returns the final
+    active id and every edge replayed, as "{source} {relationship} {target}"
+    strings. Raises `_AmbiguousLineage` if two later decisions claim the
+    same active predecessor."""
+    active: str | None = None
+    events: list[str] = []
+    for node_id in lineage:
+        node = graph.by_id[node_id]
+        for target_id, rel in node.related_decisions:
+            if target_id not in graph.by_id:
+                continue
+            if rel.value in deactivating_values:
+                events.append(f"{node_id} {rel.value} {target_id}")
+                if active is None or target_id == active:
+                    active = node_id
+                else:
+                    raise _AmbiguousLineage(target_id, events)
+            elif rel.value in reactivating_values:
+                events.append(f"{node_id} {rel.value} {target_id}")
+                active = target_id
+        if active is None:
+            active = node_id  # earliest node in the lineage establishes the baseline
+    return active, events
+
+
 def resolve_active(graph: DecisionGraph, decision_id: str) -> ActiveResolution:
     if decision_id not in graph.by_id:
         raise KeyError(f"unknown decision id: {decision_id}")
@@ -140,37 +187,22 @@ def resolve_active(graph: DecisionGraph, decision_id: str) -> ActiveResolution:
             ),
         )
 
-    active: str | None = None
-    lifecycle_events: list[str] = []
-
-    for node_id in lineage:
-        node = graph.by_id[node_id]
-        for target_id, rel in node.related_decisions:
-            if target_id not in graph.by_id:
-                continue
-            if rel.value in deactivating_values:
-                lifecycle_events.append(f"{node_id} {rel.value} {target_id}")
-                if active is None or target_id == active:
-                    active = node_id
-                else:
-                    # This node claims to deactivate something that isn't
-                    # currently active — e.g. two decisions both claiming
-                    # to supersede the same predecessor. Don't guess.
-                    return ActiveResolution(
-                        active_id=None,
-                        history=lineage,
-                        ambiguous=True,
-                        explanation=(
-                            "Lifecycle is ambiguous because multiple later decisions "
-                            f"claim the active predecessor {target_id}: "
-                            + "; ".join(lifecycle_events)
-                        ),
-                    )
-            elif rel.value in reactivating_values:
-                lifecycle_events.append(f"{node_id} {rel.value} {target_id}")
-                active = target_id
-        if active is None:
-            active = node_id  # earliest node in the lineage establishes the baseline
+    try:
+        active, lifecycle_events = _replay_lineage(
+            graph, lineage, deactivating_values, reactivating_values
+        )
+    except _AmbiguousLineage as exc:
+        return ActiveResolution(
+            active_id=None,
+            history=lineage,
+            ambiguous=True,
+            explanation=(
+                "Lifecycle is ambiguous because multiple later decisions "
+                f"claim the active predecessor {exc.target_id}: "
+                + "; ".join(exc.events)
+            ),
+            lifecycle_events=tuple(exc.events),
+        )
 
     if lifecycle_events:
         explanation = (
@@ -186,4 +218,5 @@ def resolve_active(graph: DecisionGraph, decision_id: str) -> ActiveResolution:
         history=lineage,
         ambiguous=False,
         explanation=explanation,
+        lifecycle_events=tuple(lifecycle_events),
     )

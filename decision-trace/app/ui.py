@@ -272,6 +272,66 @@ def render_decision_card(decision_id: str, store: DecisionStore) -> None:
         )
 
 
+def _candidate_summary_line(candidate) -> str:
+    mark = "✓" if candidate.active_resolution else "✗"
+    reason = f" — {candidate.exclusion_reason}" if candidate.exclusion_reason else ""
+    return (
+        f"{mark} `{html.escape(candidate.decision_id)}` "
+        f"({html.escape(candidate.lifecycle_status)}, {html.escape(candidate.role)}){reason}"
+    )
+
+
+def _render_full_authority_proof_detail(proof) -> None:
+    """The body of the "View full authority proof" expander: witness ids,
+    ambiguity, and lifecycle transitions — the detail beyond the concise
+    WHY THIS GOVERNS summary that's visible by default."""
+    for candidate in proof.considered_candidates:
+        witnesses = (
+            f" (witnesses: {', '.join(html.escape(w) for w in candidate.witness_ids)})"
+            if candidate.witness_ids else ""
+        )
+        st.markdown(_candidate_summary_line(candidate) + witnesses)
+    if proof.ambiguity_witnesses:
+        st.markdown("**Ambiguity:**")
+        for witness in proof.ambiguity_witnesses:
+            st.markdown(f"- {html.escape(witness)}")
+    if proof.transition_witnesses:
+        st.markdown("**Lifecycle transition witnesses:**")
+        for witness in proof.transition_witnesses:
+            st.markdown(f"- `{html.escape(witness)}`")
+
+
+def render_authority_proof(proof) -> None:
+    """Judge-facing authority-proof panel (AUTHORITY_UI_CONCEPT.md).
+    Renders directly from AuthorityProof's own fields — no new authority
+    logic here; if this can't answer "why not the alternative," that is a
+    proof-schema gap to fix in authority.py, not something to paper over
+    in the UI.
+
+    "WHY THIS GOVERNS" (the concise ✓/✗ candidate list) is visible by
+    default — a judge should see the differentiation without discovering
+    an expander. Only the raw witness/transition detail is tucked behind
+    "View full authority proof"."""
+    if proof is None:
+        return
+
+    if proof.authority_state == "GOVERNING":
+        st.markdown(f"**CURRENTLY GOVERNING:** `{html.escape(proof.governing_decision_id)}`")
+    elif proof.authority_state == "UNRESOLVED":
+        st.markdown("**UNRESOLVED**")
+    else:
+        st.markdown("**NO GOVERNING DECISION IN THIS SCOPE**")
+    st.caption(f"Requested scope: `{html.escape(proof.requested_scope)}`")
+
+    if proof.considered_candidates:
+        st.markdown("**WHY THIS GOVERNS**")
+        for candidate in proof.considered_candidates:
+            st.markdown(_candidate_summary_line(candidate))
+
+    with st.expander("View full authority proof", expanded=False):
+        _render_full_authority_proof_detail(proof)
+
+
 def render_candidate_form(decision_id: str, store: DecisionStore, index: DecisionIndex) -> None:
     with st.form(key=f"reconsider-{decision_id}"):
         st.markdown("**Record a reconsideration of this decision:**")
@@ -328,6 +388,12 @@ def main() -> None:
     inject_theme()
     st.title("DecisionTrace")
     st.caption("Persistent engineering-decision memory — ask why, get the current answer.")
+    st.markdown(
+        "Engineering decisions don't disappear when they're replaced. "
+        "DecisionTrace reconstructs which decision actually governs now — "
+        "across proposals, supersessions, reverts, and reconsiderations — "
+        "and shows the evidence that proves it."
+    )
 
     # load_store_and_index() is cheap on a warm container (cached by
     # st.cache_resource) but does a real Vertex embedding call for every
@@ -343,6 +409,8 @@ def main() -> None:
         st.session_state.chat_history = []
     if "current_decision_id" not in st.session_state:
         st.session_state.current_decision_id = None
+    if "current_authority_proof" not in st.session_state:
+        st.session_state.current_authority_proof = None
 
     conversation_col, card_col = st.columns([3, 2])
 
@@ -368,10 +436,14 @@ def main() -> None:
             })
 
             st.session_state.current_decision_id = grounded_decision_id(result.claims)
+            st.session_state.current_authority_proof = result.authority_proof
             st.rerun()
 
     with card_col:
         st.markdown("### Current decision")
+        if st.session_state.current_authority_proof is not None:
+            render_authority_proof(st.session_state.current_authority_proof)
+            st.divider()
         if st.session_state.current_decision_id:
             render_decision_card(st.session_state.current_decision_id, store)
             st.divider()

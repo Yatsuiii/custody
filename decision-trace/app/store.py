@@ -54,6 +54,7 @@ def _dict_to_decision(raw: dict) -> Decision:
         related_decisions=[
             (target_id, RelationshipType(rel)) for target_id, rel in raw.get("related_decisions", [])
         ],
+        partial_acceptance=raw.get("partial_acceptance", False),
     )
 
 

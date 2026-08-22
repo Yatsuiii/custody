@@ -170,6 +170,8 @@ def test_answer_emits_discover_resolve_challenge_reconcile_handoffs(monkeypatch)
     )
 
     class StubIndex:
+        decisions = [candidate.decision]
+
         def search(self, question, k=5):
             return [candidate]
 
