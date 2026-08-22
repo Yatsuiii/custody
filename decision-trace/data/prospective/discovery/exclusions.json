@@ -1,0 +1,22 @@
+[
+  {
+    "candidate": "OpenTofu context propagation #835",
+    "reason": "Promised revert-of-revert never occurred; later PR explicitly says so, making a restoration checkpoint indefensible."
+  },
+  {
+    "candidate": "Terraform IAM role chaining future reintroduction",
+    "reason": "Rollback promises a future return but no source-grounded accepted restoration was found."
+  },
+  {
+    "candidate": "Swift SE-0030 historical acceptance checkpoint",
+    "reason": "Primary status says Withdrawn and decision notes indicate rejection; no authoritative pre-withdrawal state was assumed."
+  },
+  {
+    "candidate": "Rust RFC 2203 broad replacement",
+    "reason": "Source says mostly superseded and preserves a simpler case; broad winner is adjudicated unresolved, not forced."
+  },
+  {
+    "candidate": "Rust RFC 769 broad replacement",
+    "reason": "Source says partially superseded; broad winner is adjudicated unresolved, not forced."
+  }
+]

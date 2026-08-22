@@ -1,0 +1,1 @@
+No DecisionTrace or RAG output existed during case selection.

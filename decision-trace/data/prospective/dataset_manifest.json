@@ -1,0 +1,40 @@
+{
+  "source_cache_sha256": "c12b48af30fd3cd4cd3bffab995d5745c66ef3bd48a0e36b39d4ea543e79824f",
+  "timelines_sha256": "e7d88612dcdfe9ef030f03b0dc46fc6134884546b530e737dcac7da4ffba4dac",
+  "checkpoints_sha256": "3f3e8115e72b1b4880d428ad40f691bc1aa047bacc70e4106a203acb847d49ff",
+  "ground_truth_sha256": "9163b54b93f0ceb919ef1bd2e45becb5452278cefb2f72af6c8593a5bcc7fb3d",
+  "stats": {
+    "timelines": 23,
+    "checkpoints": 101,
+    "fully_real": 19,
+    "hybrid": 4,
+    "fully_synthetic": 0,
+    "ecosystems": {
+      "Envoy": 1,
+      "Go": 3,
+      "Kubernetes": 2,
+      "LLVM": 1,
+      "OpenTofu": 1,
+      "Python": 5,
+      "Rust": 6,
+      "Swift": 3,
+      "Terraform": 1
+    },
+    "scenarios": {
+      "conflicting_or_ambiguous": 3,
+      "explicit_restoration": 4,
+      "implementation_vs_policy": 3,
+      "mention_without_transition": 5,
+      "multi_hop_supersession": 3,
+      "parallel_scopes": 4,
+      "partial_supersession": 3,
+      "proposal_accepted": 3,
+      "proposal_while_current": 16,
+      "revert_after_implementation": 7,
+      "revert_without_automatic_restoration": 5,
+      "revert_without_policy_restoration": 3,
+      "simple_supersession": 8,
+      "withdrawn_decision": 3
+    }
+  }
+}
