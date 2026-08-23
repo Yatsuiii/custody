@@ -180,6 +180,7 @@ class AuthorityGateway:
             )
         ).hexdigest()
 
+        persistence_denial: str | None = None
         try:
             linearized = self.store.linearize_action(
                 request_id=action_request.request_id,
@@ -193,7 +194,11 @@ class AuthorityGateway:
                     cited_record_ids=citations,
                 ),
             )
-        except (AuthorityConflict, AuthorityUnavailable) as error:
+        except AuthorityConflict:
+            persistence_denial = "ACTION_REQUEST_ID_CONFLICT"
+        except AuthorityUnavailable:
+            persistence_denial = "AUTHORITY_STATE_UNAVAILABLE"
+        if persistence_denial is not None:
             return AuthorityExecution(
                 decision=AuthorityDecision(
                     request_id=action_request.request_id,
@@ -202,11 +207,7 @@ class AuthorityGateway:
                     cited_record_ids=citations,
                     allowed=False,
                     effective_cap=Capability.NONE,
-                    reason=(
-                        "ACTION_REQUEST_ID_CONFLICT"
-                        if isinstance(error, AuthorityConflict)
-                        else "AUTHORITY_STATE_UNAVAILABLE"
-                    ),
+                    reason=persistence_denial,
                     evaluated_record_ids=(),
                     support_root_key_digests=(),
                     record_reasons=(),
