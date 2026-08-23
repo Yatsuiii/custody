@@ -20,6 +20,9 @@ from enum import Enum
 from types import MappingProxyType
 from typing import Iterable, Mapping, Protocol
 
+from cryptography.exceptions import InvalidSignature
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+
 
 class AuthorityDataError(ValueError):
     """A B7 value is malformed, ambiguous, or outside the frozen schema."""
@@ -73,6 +76,25 @@ class AdmissionState(str, Enum):
 class DependencyKind(str, Enum):
     SOURCE_AUTHORITY = "SOURCE_AUTHORITY"
     TRANSFORM_POLICY = "TRANSFORM_POLICY"
+
+
+class VerificationReason(str, Enum):
+    VERIFIED = "RECEIPT_VERIFIED"
+    MISSING_TRUST_ANCHOR = "MISSING_TRUST_ANCHOR"
+    MALFORMED_TRUST_ANCHOR = "MALFORMED_TRUST_ANCHOR"
+    SIGNATURE_INVALID = "RECEIPT_SIGNATURE_INVALID"
+    POLICY_KEY_MISMATCH = "RECEIPT_POLICY_KEY_MISMATCH"
+    SCOPE_MISMATCH = "RECEIPT_SCOPE_MISMATCH"
+    REVISION_MISMATCH = "RECEIPT_REVISION_MISMATCH"
+    UPSTREAM_RECORD_MISMATCH = "UPSTREAM_RECORD_MISMATCH"
+    OBJECT_COMMITMENT_MISMATCH = "UPSTREAM_OBJECT_COMMITMENT_MISMATCH"
+    ROOT_BINDING_MISMATCH = "UNRELATED_RECEIPT_REPLAY"
+    SOURCE_CLAIM_MALFORMED = "SOURCE_CLAIM_MALFORMED"
+    MISSING_CURRENT_POLICY = "MISSING_CURRENT_POLICY"
+    POLICY_ROLE_MISMATCH = "POLICY_ROLE_MISMATCH"
+    STALE_GENERATION = "STALE_AUTHORITY_GENERATION"
+    CAP_MISSING = "MISSING_SCOPE_CAPABILITY"
+    CAP_EXCEEDED = "GRANTED_CAP_EXCEEDS_POLICY"
 
 
 _SHA256_HEX = re.compile(r"[0-9a-f]{64}")
@@ -508,6 +530,12 @@ class AuthorityReceipt:
 
         return canonical_json_bytes(self.unsigned_dict())
 
+    @property
+    def binding_digest(self) -> str:
+        """Identity of one signed receipt, before its Custody root is assigned."""
+
+        return hashlib.sha256(self.canonical_bytes()).hexdigest()
+
     def as_dict(self) -> dict[str, object]:
         return {
             "receipt_version": self.receipt_version,
@@ -793,6 +821,185 @@ class SourceAuthorityEvent:
 
 
 @dataclass(frozen=True)
+class ReceiptVerification:
+    """Receipt verification result with no reusable authority token."""
+
+    verified: bool
+    reason: VerificationReason
+    issuer_id: str | None = None
+    receipt_id: str | None = None
+    policy_key_digest: str | None = None
+    granting_generation: int | None = None
+    current_generation: int | None = None
+    root_key_digest: str | None = None
+
+
+class AuthorityVerifier:
+    """Verify source-owned P2 evidence against current authoritative state.
+
+    ``required_policy_key`` is route/deployment configuration, not a value
+    selected from the untrusted event.  Keeping it mandatory prevents a valid
+    payroll receipt, for example, from self-declaring that an export route
+    should accept it.
+    """
+
+    _SOURCE_FIELDS = (
+        "record_id",
+        "department",
+        "source",
+        "operation",
+        "revision",
+        "action_scope",
+    )
+
+    def __init__(
+        self,
+        *,
+        trust_store: "AuthorityTrustStore",
+        state: "AuthorityStateReader",
+    ) -> None:
+        self._trust_store = trust_store
+        self._state = state
+
+    def verify(
+        self,
+        event: SourceAuthorityEvent,
+        *,
+        custody_root_record_id: str,
+        required_policy_key: PolicyKey,
+    ) -> ReceiptVerification:
+        if not isinstance(event, SourceAuthorityEvent):
+            raise AuthorityDataError("verifier requires a SourceAuthorityEvent")
+        _nonempty_string(
+            custody_root_record_id, field="verification.custody_root_record_id"
+        )
+        if not isinstance(required_policy_key, PolicyKey):
+            raise AuthorityDataError(
+                "verification.required_policy_key must be a PolicyKey"
+            )
+
+        receipt = event.receipt
+        if receipt.policy_key != required_policy_key:
+            return self._deny(VerificationReason.POLICY_KEY_MISMATCH, receipt)
+
+        source = self._source_binding(event)
+        if source is None:
+            return self._deny(VerificationReason.SOURCE_CLAIM_MALFORMED, receipt)
+        if receipt.upstream_record_id != source["record_id"]:
+            return self._deny(VerificationReason.UPSTREAM_RECORD_MISMATCH, receipt)
+        if receipt.upstream_object_commitment != event.source_object_commitment:
+            return self._deny(
+                VerificationReason.OBJECT_COMMITMENT_MISMATCH, receipt
+            )
+        if (
+            receipt.action_scope != required_policy_key.action_scope
+            or source["action_scope"] != required_policy_key.action_scope
+        ):
+            return self._deny(VerificationReason.SCOPE_MISMATCH, receipt)
+        if (
+            receipt.source_revision != required_policy_key.revision
+            or source["revision"] != required_policy_key.revision
+        ):
+            return self._deny(VerificationReason.REVISION_MISMATCH, receipt)
+        if (
+            source["department"] != required_policy_key.department
+            or source["source"] != required_policy_key.source
+            or source["operation"] != required_policy_key.operation
+        ):
+            return self._deny(VerificationReason.POLICY_KEY_MISMATCH, receipt)
+
+        public_key_bytes = self._trust_store.public_key_for(
+            issuer_id=receipt.issuer_id,
+            issuer_key_id=receipt.issuer_key_id,
+        )
+        if public_key_bytes is None:
+            return self._deny(VerificationReason.MISSING_TRUST_ANCHOR, receipt)
+        try:
+            public_key = Ed25519PublicKey.from_public_bytes(public_key_bytes)
+        except (TypeError, ValueError):
+            return self._deny(VerificationReason.MALFORMED_TRUST_ANCHOR, receipt)
+        try:
+            public_key.verify(
+                bytes.fromhex(receipt.issuer_signature), receipt.canonical_bytes()
+            )
+        except (InvalidSignature, TypeError, ValueError):
+            return self._deny(VerificationReason.SIGNATURE_INVALID, receipt)
+
+        bound_root_id = self._state.root_record_id_for_receipt(receipt)
+        if (
+            bound_root_id is not None
+            and bound_root_id != custody_root_record_id
+        ):
+            return self._deny(
+                VerificationReason.ROOT_BINDING_MISMATCH, receipt
+            )
+
+        current = self._state.policy(required_policy_key)
+        if current is None:
+            return self._deny(VerificationReason.MISSING_CURRENT_POLICY, receipt)
+        if current.operation_role is not OperationRole.ORIGIN:
+            return self._deny(
+                VerificationReason.POLICY_ROLE_MISMATCH, receipt, current=current
+            )
+        if current.generation != receipt.granting_generation:
+            return self._deny(
+                VerificationReason.STALE_GENERATION, receipt, current=current
+            )
+        current_cap = current.caps.get(required_policy_key.action_scope)
+        if current_cap is None:
+            return self._deny(
+                VerificationReason.CAP_MISSING, receipt, current=current
+            )
+        if receipt.granted_cap.rank > current_cap.rank:
+            return self._deny(
+                VerificationReason.CAP_EXCEEDED, receipt, current=current
+            )
+
+        root_key = ReceiptRootKey.from_receipt(
+            receipt, custody_root_record_id=custody_root_record_id
+        )
+        return ReceiptVerification(
+            verified=True,
+            reason=VerificationReason.VERIFIED,
+            issuer_id=receipt.issuer_id,
+            receipt_id=receipt.receipt_id,
+            policy_key_digest=receipt.policy_key.digest,
+            granting_generation=receipt.granting_generation,
+            current_generation=current.generation,
+            root_key_digest=root_key.digest,
+        )
+
+    @classmethod
+    def _source_binding(
+        cls, event: SourceAuthorityEvent
+    ) -> dict[str, str] | None:
+        result: dict[str, str] = {}
+        for field in cls._SOURCE_FIELDS:
+            value = event.source_object.get(field)
+            if not isinstance(value, str) or not value:
+                return None
+            result[field] = value
+        return result
+
+    @staticmethod
+    def _deny(
+        reason: VerificationReason,
+        receipt: AuthorityReceipt,
+        *,
+        current: PolicySnapshot | None = None,
+    ) -> ReceiptVerification:
+        return ReceiptVerification(
+            verified=False,
+            reason=reason,
+            issuer_id=receipt.issuer_id,
+            receipt_id=receipt.receipt_id,
+            policy_key_digest=receipt.policy_key.digest,
+            granting_generation=receipt.granting_generation,
+            current_generation=current.generation if current is not None else None,
+        )
+
+
+@dataclass(frozen=True)
 class AdmissionEnvelope:
     """Immutable B7 admission state; current authority is never cached here."""
 
@@ -1016,6 +1223,10 @@ class AuthorityStateReader(Protocol):
 
     def is_root_revoked(self, root_key_digest: str) -> bool: ...
 
+    def root_record_id_for_receipt(
+        self, receipt: AuthorityReceipt
+    ) -> str | None: ...
+
 
 __all__ = [
     "AdmissionEnvelope",
@@ -1025,6 +1236,7 @@ __all__ = [
     "AuthorityReceipt",
     "AuthorityStateReader",
     "AuthorityTrustStore",
+    "AuthorityVerifier",
     "Capability",
     "DependencyKind",
     "FORBIDDEN_RUNTIME_FIELDS",
@@ -1032,7 +1244,9 @@ __all__ = [
     "PolicyKey",
     "PolicySnapshot",
     "ReceiptRootKey",
+    "ReceiptVerification",
     "SourceAuthorityEvent",
     "TransformClass",
+    "VerificationReason",
     "canonical_json_bytes",
 ]

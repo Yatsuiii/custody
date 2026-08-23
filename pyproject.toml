@@ -3,9 +3,10 @@ name = "custody"
 version = "0.1.0"
 description = "Chain of custody for agent memory: origin, derivation, and retroactive revocation over ADK Memory Bank."
 requires-python = ">=3.12"
-# The core imports no SDK on purpose, so the full suite runs without this.
-# Install it and the ADK conformance tests stop skipping.
-dependencies = []
+# The core imports no agent/cloud SDK. Ed25519 is the production P2 receipt
+# primitive established by Gate 1B-R3, so it is a direct dependency rather
+# than an accidental transitive dependency of the Google stack.
+dependencies = ["cryptography>=44,<51"]
 
 [project.optional-dependencies]
 adk = ["google-adk>=2.6.3"]

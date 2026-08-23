@@ -10,6 +10,7 @@ import dataclasses
 import hashlib
 import json
 import unittest
+from pathlib import Path
 
 import custody.authority as authority
 from custody.authority import (
@@ -18,6 +19,7 @@ from custody.authority import (
     AuthorityDataError,
     AuthorityDependency,
     AuthorityReceipt,
+    AuthorityVerifier,
     Capability,
     DependencyKind,
     FORBIDDEN_RUNTIME_FIELDS,
@@ -27,9 +29,12 @@ from custody.authority import (
     ReceiptRootKey,
     SourceAuthorityEvent,
     TransformClass,
+    VerificationReason,
     canonical_json_bytes,
 )
 
+
+FIXTURES = Path(__file__).parent / "fixtures" / "b7"
 
 POLICY_KEY = PolicyKey(
     "finance", "vendor_lookup", "lookup", "R1", "export.send"
@@ -49,6 +54,7 @@ SOURCE_OBJECT_COMMITMENT = (
 ROOT_KEY_DIGEST = (
     "196faabe589dddfdb535e4c50c2ff674ea189bfb120ead72cd4657e79a0d6df5"
 )
+_DEFAULT_PUBLIC_KEY = object()
 PAYLOAD_DIGEST = (
     "08dc153fd61e0d59c844b8b48c54455e1a8b6076b71845a86f229ce5fe08d95c"
 )
@@ -95,6 +101,93 @@ def root_envelope_mapping() -> dict[str, object]:
         "admitted_at": "2026-08-24T12:00:00Z",
         "supersedes_record_id": None,
     }
+
+
+def signed_event() -> SourceAuthorityEvent:
+    return SourceAuthorityEvent.from_json(
+        (FIXTURES / "source_event.json").read_bytes()
+    )
+
+
+def signed_event_mapping() -> dict[str, object]:
+    return json.loads((FIXTURES / "source_event.json").read_text())
+
+
+def _nested_keys(value: object) -> set[str]:
+    if isinstance(value, dict):
+        return set(value).union(
+            *( _nested_keys(item) for item in value.values())
+        )
+    if isinstance(value, list):
+        return set().union(*(_nested_keys(item) for item in value))
+    return set()
+
+
+class _FixtureTrustStore:
+    def __init__(self, public_key: bytes | None = None) -> None:
+        self.public_key = public_key
+
+    def public_key_for(self, *, issuer_id: str, issuer_key_id: str) -> bytes | None:
+        if (
+            issuer_id == "vendor-source-authority"
+            and issuer_key_id == "issuer-ed25519-v1"
+        ):
+            return self.public_key
+        return None
+
+
+class _FixtureAuthorityState:
+    def __init__(self, snapshot: PolicySnapshot | None = None) -> None:
+        self.snapshot = snapshot
+        self.receipt_roots: dict[str, str] = {}
+
+    def policy(self, key: PolicyKey) -> PolicySnapshot | None:
+        if self.snapshot is not None and self.snapshot.policy_key == key:
+            return self.snapshot
+        return None
+
+    def envelope(self, record_id: str):
+        del record_id
+        return None
+
+    def dependencies(self, record_id: str):
+        del record_id
+        return ()
+
+    def is_root_revoked(self, root_key_digest: str) -> bool:
+        del root_key_digest
+        return False
+
+    def root_record_id_for_receipt(
+        self, receipt: AuthorityReceipt
+    ) -> str | None:
+        return self.receipt_roots.get(receipt.binding_digest)
+
+
+def fixture_policy(**changes: object) -> PolicySnapshot:
+    value = json.loads((FIXTURES / "policy_snapshot.json").read_text())
+    value.update(changes)
+    return PolicySnapshot.from_mapping(value)
+
+
+def fixture_verifier(
+    *,
+    state: _FixtureAuthorityState | None = None,
+    public_key: bytes | None | object = _DEFAULT_PUBLIC_KEY,
+) -> tuple[AuthorityVerifier, _FixtureAuthorityState]:
+    if public_key is _DEFAULT_PUBLIC_KEY:
+        public_key = bytes.fromhex(
+            (FIXTURES / "issuer_public_key.hex").read_text().strip()
+        )
+    assert public_key is None or isinstance(public_key, bytes)
+    state = state or _FixtureAuthorityState(fixture_policy())
+    return (
+        AuthorityVerifier(
+            trust_store=_FixtureTrustStore(public_key),
+            state=state,
+        ),
+        state,
+    )
 
 
 class ClosedValuesStayClosed(unittest.TestCase):
@@ -376,6 +469,186 @@ class SourceEventsExcludeScorerTruth(unittest.TestCase):
     def test_core_has_no_constructible_authority_producer(self) -> None:
         self.assertFalse(hasattr(authority, "AuthorityProducer"))
         self.assertNotIn("AuthorityProducer", authority.__all__)
+
+
+class StaticSourceReceiptsVerifyAgainstCurrentState(unittest.TestCase):
+    def test_fixture_is_pre_signed_label_free_and_byte_pinned(self) -> None:
+        payload = (FIXTURES / "source_event.json").read_bytes()
+        self.assertEqual(
+            hashlib.sha256(payload).hexdigest(),
+            "b85b0895ceea636c13e41e9f1bba436f42a3a8e32e77b2c97dfe4b96dc92c99c",
+        )
+        self.assertTrue(FORBIDDEN_RUNTIME_FIELDS.isdisjoint(_nested_keys(json.loads(payload))))
+
+    def test_valid_source_owned_receipt_verifies(self) -> None:
+        verifier, _ = fixture_verifier()
+
+        result = verifier.verify(
+            signed_event(),
+            custody_root_record_id="ROOT-01",
+            required_policy_key=POLICY_KEY,
+        )
+
+        self.assertTrue(result.verified)
+        self.assertIs(result.reason, VerificationReason.VERIFIED)
+        self.assertEqual(result.root_key_digest, ROOT_KEY_DIGEST)
+        self.assertEqual(result.current_generation, 7)
+
+    def test_forged_signature_is_rejected(self) -> None:
+        value = signed_event_mapping()
+        raw_receipt = value["receipt"]
+        raw_receipt["issuer_signature"] = "00" * 64
+        verifier, _ = fixture_verifier()
+
+        result = verifier.verify(
+            SourceAuthorityEvent.from_mapping(value),
+            custody_root_record_id="ROOT-01",
+            required_policy_key=POLICY_KEY,
+        )
+
+        self.assertFalse(result.verified)
+        self.assertIs(result.reason, VerificationReason.SIGNATURE_INVALID)
+
+    def test_wrong_object_and_record_bindings_are_rejected(self) -> None:
+        object_changed = signed_event_mapping()
+        object_changed["source_object"]["value"] = "ATTACKER-ACCOUNT"
+        record_changed = signed_event_mapping()
+        record_changed["source_object"]["record_id"] = "SRC-OTHER"
+        verifier, _ = fixture_verifier()
+
+        outcomes = (
+            (
+                SourceAuthorityEvent.from_mapping(object_changed),
+                VerificationReason.OBJECT_COMMITMENT_MISMATCH,
+            ),
+            (
+                SourceAuthorityEvent.from_mapping(record_changed),
+                VerificationReason.UPSTREAM_RECORD_MISMATCH,
+            ),
+        )
+        for event, reason in outcomes:
+            with self.subTest(reason=reason.value):
+                result = verifier.verify(
+                    event,
+                    custody_root_record_id="ROOT-01",
+                    required_policy_key=POLICY_KEY,
+                )
+                self.assertFalse(result.verified)
+                self.assertIs(result.reason, reason)
+
+    def test_wrong_policy_scope_and_revision_bindings_are_rejected(self) -> None:
+        wrong_policy = dataclasses.replace(POLICY_KEY, source="payroll_lookup")
+        wrong_scope = signed_event_mapping()
+        wrong_scope["receipt"]["action_scope"] = "payroll.read"
+        wrong_revision = signed_event_mapping()
+        wrong_revision["receipt"]["source_revision"] = "R2"
+        verifier, _ = fixture_verifier()
+
+        outcomes = (
+            (
+                signed_event(),
+                wrong_policy,
+                VerificationReason.POLICY_KEY_MISMATCH,
+            ),
+            (
+                SourceAuthorityEvent.from_mapping(wrong_scope),
+                POLICY_KEY,
+                VerificationReason.SCOPE_MISMATCH,
+            ),
+            (
+                SourceAuthorityEvent.from_mapping(wrong_revision),
+                POLICY_KEY,
+                VerificationReason.REVISION_MISMATCH,
+            ),
+        )
+        for event, policy, reason in outcomes:
+            with self.subTest(reason=reason.value):
+                result = verifier.verify(
+                    event,
+                    custody_root_record_id="ROOT-01",
+                    required_policy_key=policy,
+                )
+                self.assertFalse(result.verified)
+                self.assertIs(result.reason, reason)
+
+    def test_missing_or_malformed_trust_anchor_fails_closed(self) -> None:
+        for key, reason in (
+            (None, VerificationReason.MISSING_TRUST_ANCHOR),
+            (b"too-short", VerificationReason.MALFORMED_TRUST_ANCHOR),
+        ):
+            with self.subTest(reason=reason.value):
+                verifier, _ = fixture_verifier(public_key=key)
+                result = verifier.verify(
+                    signed_event(),
+                    custody_root_record_id="ROOT-01",
+                    required_policy_key=POLICY_KEY,
+                )
+                self.assertFalse(result.verified)
+                self.assertIs(result.reason, reason)
+
+    def test_missing_stale_relay_or_underpowered_policy_fails_closed(self) -> None:
+        states = (
+            (
+                _FixtureAuthorityState(None),
+                VerificationReason.MISSING_CURRENT_POLICY,
+            ),
+            (
+                _FixtureAuthorityState(fixture_policy(generation=8)),
+                VerificationReason.STALE_GENERATION,
+            ),
+            (
+                _FixtureAuthorityState(fixture_policy(operation_role="RELAY")),
+                VerificationReason.POLICY_ROLE_MISMATCH,
+            ),
+            (
+                _FixtureAuthorityState(fixture_policy(caps={"other.scope": "ACT"})),
+                VerificationReason.CAP_MISSING,
+            ),
+            (
+                _FixtureAuthorityState(
+                    fixture_policy(caps={"export.send": "INFORM"})
+                ),
+                VerificationReason.CAP_EXCEEDED,
+            ),
+        )
+        for state, reason in states:
+            with self.subTest(reason=reason.value):
+                verifier, _ = fixture_verifier(state=state)
+                result = verifier.verify(
+                    signed_event(),
+                    custody_root_record_id="ROOT-01",
+                    required_policy_key=POLICY_KEY,
+                )
+                self.assertFalse(result.verified)
+                self.assertIs(result.reason, reason)
+
+    def test_receipt_cannot_be_rebound_to_an_unrelated_custody_root(self) -> None:
+        state = _FixtureAuthorityState(fixture_policy())
+        state.receipt_roots[signed_event().receipt.binding_digest] = "ROOT-01"
+        verifier, _ = fixture_verifier(state=state)
+
+        replay = verifier.verify(
+            signed_event(),
+            custody_root_record_id="ROOT-02",
+            required_policy_key=POLICY_KEY,
+        )
+
+        self.assertFalse(replay.verified)
+        self.assertIs(replay.reason, VerificationReason.ROOT_BINDING_MISMATCH)
+
+    def test_source_claim_missing_a_binding_field_fails_closed(self) -> None:
+        value = signed_event_mapping()
+        value["source_object"].pop("operation")
+        verifier, _ = fixture_verifier()
+
+        result = verifier.verify(
+            SourceAuthorityEvent.from_mapping(value),
+            custody_root_record_id="ROOT-01",
+            required_policy_key=POLICY_KEY,
+        )
+
+        self.assertFalse(result.verified)
+        self.assertIs(result.reason, VerificationReason.SOURCE_CLAIM_MALFORMED)
 
 
 class DependenciesAndEnvelopesAreStrict(unittest.TestCase):

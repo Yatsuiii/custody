@@ -1,6 +1,10 @@
 # google-adk is the seam: BaseMemoryService is the port Custody governs.
 google-adk>=2.6.3,<3
 
+# B7 P2 source receipts. Directly pinned as a production primitive rather than
+# relying on whichever cloud SDK happens to install it transitively.
+cryptography>=44,<51
+
 # Memory Bank itself. This is the Vertex AI SDK, which is what GEAP is; there
 # is no separate GEAP package.
 google-cloud-aiplatform[agent-engines]==1.163.0
