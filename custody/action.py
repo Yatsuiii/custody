@@ -16,9 +16,21 @@ measured in data that has already left.
 
 from __future__ import annotations
 
+import hashlib
 from dataclasses import dataclass, field
 from enum import Enum
+from typing import Mapping, Protocol, Sequence
 
+from custody.authority import (
+    AuthorityConflict,
+    AuthorityDataError,
+    AuthorityDecision,
+    AuthorityEvaluator,
+    AuthorityStore,
+    Capability,
+    canonical_json_bytes,
+    runtime_json_object,
+)
 from custody.origin import CustodyRecord
 
 
@@ -93,3 +105,111 @@ class ExportGateway:
                 offending=offending,
             )
         return Decision(export=export, allowed=True)
+
+
+@dataclass(frozen=True)
+class AuthorityAction:
+    """One consequential request; citations are supplied separately."""
+
+    request_id: str
+    action_scope: str
+    payload: Mapping[str, object]
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.request_id, str) or not self.request_id:
+            raise AuthorityDataError("action.request_id must be a non-empty string")
+        if not isinstance(self.action_scope, str) or not self.action_scope:
+            raise AuthorityDataError("action.action_scope must be a non-empty string")
+        object.__setattr__(
+            self,
+            "payload",
+            runtime_json_object(self.payload, field="action.payload"),
+        )
+
+    def as_dict(self) -> dict[str, object]:
+        return {
+            "request_id": self.request_id,
+            "action_scope": self.action_scope,
+            "payload": self.payload,
+        }
+
+
+class AuthorityDispatcher(Protocol):
+    """The effectful endpoint kept behind the B7 current-state decision."""
+
+    def dispatch(self, action: AuthorityAction) -> object: ...
+
+
+@dataclass(frozen=True)
+class AuthorityExecution:
+    decision: AuthorityDecision
+    dispatched: bool
+    result: object | None = None
+
+
+@dataclass
+class AuthorityGateway:
+    """Linearize current B7 authority and own consequential dispatch."""
+
+    store: AuthorityStore
+
+    def execute(
+        self,
+        action_request: AuthorityAction,
+        cited_record_ids: Sequence[str],
+        dispatcher: AuthorityDispatcher,
+    ) -> AuthorityExecution:
+        if not isinstance(action_request, AuthorityAction):
+            raise AuthorityDataError("gateway requires an AuthorityAction")
+        if isinstance(cited_record_ids, (str, bytes)):
+            raise AuthorityDataError("cited_record_ids must be a sequence")
+        citations = tuple(cited_record_ids)
+        if any(not isinstance(item, str) or not item for item in citations):
+            raise AuthorityDataError("citations must be non-empty record IDs")
+        if len(citations) != len(set(citations)):
+            raise AuthorityDataError("citations must not contain duplicates")
+        if not hasattr(dispatcher, "dispatch"):
+            raise AuthorityDataError("gateway requires an action dispatcher")
+        request_digest = hashlib.sha256(
+            canonical_json_bytes(
+                {
+                    "action": action_request.as_dict(),
+                    "cited_record_ids": list(citations),
+                }
+            )
+        ).hexdigest()
+
+        try:
+            linearized = self.store.linearize_action(
+                request_id=action_request.request_id,
+                request_digest=request_digest,
+                decide=lambda state: AuthorityEvaluator(
+                    state=state, trust_store=self.store
+                ).evaluate_action(
+                    request_id=action_request.request_id,
+                    request_digest=request_digest,
+                    action_scope=action_request.action_scope,
+                    cited_record_ids=citations,
+                ),
+            )
+        except AuthorityConflict:
+            return AuthorityExecution(
+                decision=AuthorityDecision(
+                    request_id=action_request.request_id,
+                    request_digest=request_digest,
+                    action_scope=action_request.action_scope,
+                    cited_record_ids=citations,
+                    allowed=False,
+                    effective_cap=Capability.NONE,
+                    reason="ACTION_REQUEST_ID_CONFLICT",
+                    evaluated_record_ids=(),
+                    support_root_key_digests=(),
+                    record_reasons=(),
+                ),
+                dispatched=False,
+            )
+
+        if not linearized.decision.allowed or not linearized.created:
+            return AuthorityExecution(linearized.decision, False)
+        result = dispatcher.dispatch(action_request)
+        return AuthorityExecution(linearized.decision, True, result)

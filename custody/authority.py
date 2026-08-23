@@ -20,7 +20,7 @@ import threading
 from dataclasses import dataclass
 from enum import Enum
 from types import MappingProxyType
-from typing import Iterable, Mapping, Protocol, Sequence
+from typing import Callable, Iterable, Mapping, Protocol, Sequence
 
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
@@ -321,6 +321,16 @@ def _immutable_json_object(value: object, *, field: str) -> Mapping[str, object]
     assert isinstance(plain, Mapping)
     frozen = _freeze_json(plain)
     assert isinstance(frozen, Mapping)
+    return frozen
+
+
+def runtime_json_object(
+    value: object, *, field: str = "runtime_payload"
+) -> Mapping[str, object]:
+    """Freeze one label-free runtime object accepted by a B7 public API."""
+
+    frozen = _immutable_json_object(value, field=field)
+    _reject_forbidden_runtime_fields(frozen)
     return frozen
 
 
@@ -1286,6 +1296,111 @@ class AdmissionResult:
     envelope: AdmissionEnvelope | None = None
 
 
+@dataclass(frozen=True)
+class AuthorityEvaluation:
+    """Current capability of one durable record under all required support."""
+
+    record_id: str
+    valid: bool
+    effective_cap: Capability
+    reason: str
+    evaluated_record_ids: tuple[str, ...]
+    support_root_key_digests: tuple[str, ...]
+
+    def __post_init__(self) -> None:
+        _nonempty_string(self.record_id, field="evaluation.record_id")
+        if not isinstance(self.effective_cap, Capability):
+            raise AuthorityDataError("evaluation.effective_cap must be a Capability")
+        _nonempty_string(self.reason, field="evaluation.reason")
+        _validate_string_tuple(
+            self.evaluated_record_ids,
+            field="evaluation.evaluated_record_ids",
+        )
+        digests = _validate_string_tuple(
+            self.support_root_key_digests,
+            field="evaluation.support_root_key_digests",
+        )
+        for digest in digests:
+            _sha256_hex(digest, field="evaluation.support_root_key_digests")
+
+
+@dataclass(frozen=True)
+class AuthorityDecision:
+    """Immutable result stored at the action linearization point."""
+
+    request_id: str
+    request_digest: str
+    action_scope: str
+    cited_record_ids: tuple[str, ...]
+    allowed: bool
+    effective_cap: Capability
+    reason: str
+    evaluated_record_ids: tuple[str, ...]
+    support_root_key_digests: tuple[str, ...]
+    record_reasons: tuple[tuple[str, str], ...]
+
+    def __post_init__(self) -> None:
+        _nonempty_string(self.request_id, field="decision.request_id")
+        _sha256_hex(self.request_digest, field="decision.request_digest")
+        _nonempty_string(self.action_scope, field="decision.action_scope")
+        _validate_string_tuple(
+            self.cited_record_ids, field="decision.cited_record_ids"
+        )
+        if not isinstance(self.allowed, bool):
+            raise AuthorityDataError("decision.allowed must be a bool")
+        if not isinstance(self.effective_cap, Capability):
+            raise AuthorityDataError("decision.effective_cap must be a Capability")
+        if self.allowed != (self.effective_cap is Capability.ACT):
+            raise AuthorityDataError("decision ALLOW must correspond exactly to ACT")
+        _nonempty_string(self.reason, field="decision.reason")
+        _validate_string_tuple(
+            self.evaluated_record_ids,
+            field="decision.evaluated_record_ids",
+        )
+        digests = _validate_string_tuple(
+            self.support_root_key_digests,
+            field="decision.support_root_key_digests",
+        )
+        for digest in digests:
+            _sha256_hex(digest, field="decision.support_root_key_digests")
+        if not isinstance(self.record_reasons, tuple):
+            raise AuthorityDataError("decision.record_reasons must be a tuple")
+        seen: set[str] = set()
+        for item in self.record_reasons:
+            if not isinstance(item, tuple) or len(item) != 2:
+                raise AuthorityDataError(
+                    "decision.record_reasons entries must be pairs"
+                )
+            record_id = _nonempty_string(item[0], field="decision.record_reason.id")
+            _nonempty_string(item[1], field="decision.record_reason.reason")
+            if record_id in seen:
+                raise AuthorityDataError("decision.record_reasons must be unique")
+            seen.add(record_id)
+
+    def as_dict(self) -> dict[str, object]:
+        return {
+            "request_id": self.request_id,
+            "request_digest": self.request_digest,
+            "action_scope": self.action_scope,
+            "cited_record_ids": list(self.cited_record_ids),
+            "allowed": self.allowed,
+            "effective_cap": self.effective_cap.value,
+            "reason": self.reason,
+            "evaluated_record_ids": list(self.evaluated_record_ids),
+            "support_root_key_digests": list(self.support_root_key_digests),
+            "record_reasons": [list(item) for item in self.record_reasons],
+        }
+
+    def canonical_bytes(self) -> bytes:
+        return canonical_json_bytes(self.as_dict())
+
+
+@dataclass(frozen=True)
+class LinearizedAuthorityDecision:
+    decision: AuthorityDecision
+    created: bool
+
+
 class AuthorityStore(AuthorityStateReader, AuthorityTrustStore, Protocol):
     """Atomic write and authoritative-read port used by B7 core policy."""
 
@@ -1311,6 +1426,14 @@ class AuthorityStore(AuthorityStateReader, AuthorityTrustStore, Protocol):
 
     def records(self) -> tuple[AdmissionEnvelope, ...]: ...
 
+    def linearize_action(
+        self,
+        *,
+        request_id: str,
+        request_digest: str,
+        decide: Callable[[AuthorityStateReader], AuthorityDecision],
+    ) -> LinearizedAuthorityDecision: ...
+
 
 @dataclass
 class InMemoryAuthorityStore:
@@ -1329,6 +1452,7 @@ class InMemoryAuthorityStore:
         self._dependencies: dict[str, tuple[AuthorityDependency, ...]] = {}
         self._receipt_roots: dict[str, str] = {}
         self._revoked_roots: dict[str, str] = {}
+        self._action_decisions: dict[str, AuthorityDecision] = {}
 
     def put_issuer_key(
         self, *, issuer_id: str, issuer_key_id: str, public_key: bytes
@@ -1447,6 +1571,44 @@ class InMemoryAuthorityStore:
     def is_root_revoked(self, root_key_digest: str) -> bool:
         with self._lock:
             return root_key_digest in self._revoked_roots
+
+    def linearize_action(
+        self,
+        *,
+        request_id: str,
+        request_digest: str,
+        decide: Callable[[AuthorityStateReader], AuthorityDecision],
+    ) -> LinearizedAuthorityDecision:
+        request_id = _nonempty_string(request_id, field="request_id")
+        _sha256_hex(request_digest, field="request_digest")
+        if not callable(decide):
+            raise AuthorityDataError("action decision builder must be callable")
+        with self._lock:
+            existing = self._action_decisions.get(request_id)
+            if existing is not None:
+                if existing.request_digest != request_digest:
+                    raise AuthorityConflict(
+                        "action request ID already has different request bytes"
+                    )
+                return LinearizedAuthorityDecision(existing, False)
+            decision = decide(self)
+            if (
+                not isinstance(decision, AuthorityDecision)
+                or decision.request_id != request_id
+                or decision.request_digest != request_digest
+            ):
+                raise AuthorityDataError(
+                    "action decision does not match its linearization request"
+                )
+            self._action_decisions[request_id] = decision
+            return LinearizedAuthorityDecision(decision, True)
+
+    def action_decisions(self) -> tuple[AuthorityDecision, ...]:
+        with self._lock:
+            return tuple(
+                self._action_decisions[key]
+                for key in sorted(self._action_decisions)
+            )
 
 
 class _AdmissionRejected(RuntimeError):
@@ -1799,6 +1961,418 @@ class AdmissionGate:
         return AdmissionResult(False, reason, output.record_id)
 
 
+class AuthorityEvaluator:
+    """Recompute B7 authority from immutable history and current state."""
+
+    def __init__(self, state: AuthorityStateReader, trust_store: AuthorityTrustStore):
+        self._state = state
+        self._verifier = AuthorityVerifier(trust_store=trust_store, state=state)
+
+    def evaluate_action(
+        self,
+        *,
+        request_id: str,
+        request_digest: str,
+        action_scope: str,
+        cited_record_ids: tuple[str, ...],
+    ) -> AuthorityDecision:
+        request_id = _nonempty_string(request_id, field="request_id")
+        _sha256_hex(request_digest, field="request_digest")
+        action_scope = _nonempty_string(action_scope, field="action_scope")
+        citations = _validate_string_tuple(
+            cited_record_ids, field="cited_record_ids"
+        )
+        evaluations = tuple(
+            self._evaluate_record(record_id, action_scope, frozenset())
+            for record_id in citations
+        )
+        if not evaluations:
+            return AuthorityDecision(
+                request_id=request_id,
+                request_digest=request_digest,
+                action_scope=action_scope,
+                cited_record_ids=(),
+                allowed=False,
+                effective_cap=Capability.NONE,
+                reason="UNCITED_ACTION",
+                evaluated_record_ids=(),
+                support_root_key_digests=(),
+                record_reasons=(),
+            )
+
+        effective = Capability.meet(
+            evaluation.effective_cap for evaluation in evaluations
+        )
+        invalid = next(
+            (evaluation for evaluation in evaluations if not evaluation.valid),
+            None,
+        )
+        allowed = invalid is None and effective is Capability.ACT
+        reason = (
+            invalid.reason
+            if invalid is not None
+            else "CURRENT_AUTHORITY_RECEIPT"
+            if allowed
+            else "CAP_NOT_ACT"
+        )
+        return AuthorityDecision(
+            request_id=request_id,
+            request_digest=request_digest,
+            action_scope=action_scope,
+            cited_record_ids=citations,
+            allowed=allowed,
+            effective_cap=effective,
+            reason=reason,
+            evaluated_record_ids=tuple(
+                sorted(
+                    {
+                        record_id
+                        for evaluation in evaluations
+                        for record_id in evaluation.evaluated_record_ids
+                    }
+                )
+            ),
+            support_root_key_digests=tuple(
+                sorted(
+                    {
+                        digest
+                        for evaluation in evaluations
+                        for digest in evaluation.support_root_key_digests
+                    }
+                )
+            ),
+            record_reasons=tuple(
+                (evaluation.record_id, evaluation.reason)
+                for evaluation in evaluations
+            ),
+        )
+
+    def _evaluate_record(
+        self,
+        record_id: str,
+        action_scope: str,
+        visiting: frozenset[str],
+    ) -> AuthorityEvaluation:
+        if record_id in visiting:
+            return self._failure(record_id, "CYCLIC_SUPPORT")
+        visiting = visiting.union((record_id,))
+        envelope = self._state.envelope(record_id)
+        if envelope is None:
+            return self._failure(record_id, "MISSING_AUTHORITY_RECORD")
+        roots = envelope.support_root_key_digests
+        if envelope.admission_state is not AdmissionState.COMMITTED:
+            return self._failure(record_id, "INCOMPLETE_AUTHORITY_RECORD", roots=roots)
+        if envelope.own_policy_key.action_scope != action_scope:
+            return self._failure(record_id, "ACTION_SCOPE_MISMATCH", roots=roots)
+
+        current = self._state.policy(envelope.own_policy_key)
+        if current is None:
+            return self._failure(record_id, "MISSING_CURRENT_POLICY", roots=roots)
+        expected_role = (
+            OperationRole.ORIGIN
+            if envelope.transform_class is TransformClass.ROOT
+            else OperationRole.RELAY
+        )
+        if current.operation_role is not expected_role:
+            return self._failure(record_id, "POLICY_ROLE_MISMATCH", roots=roots)
+        if (
+            current.generation != envelope.own_granting_generation
+            or current.version != envelope.own_policy_version
+        ):
+            return self._failure(
+                record_id, "POLICY_GENERATION_MISMATCH", roots=roots
+            )
+        own_cap = current.caps.get(action_scope)
+        if own_cap is None:
+            return self._failure(record_id, "MISSING_SCOPE_CAPABILITY", roots=roots)
+
+        expected_transform_cap = (
+            Capability.meet((own_cap, Capability.INFORM))
+            if envelope.transform_class is TransformClass.FREEFORM
+            else own_cap
+        )
+        expected_bound_cap = (
+            envelope.authority_receipt.granted_cap
+            if envelope.transform_class is TransformClass.ROOT
+            and envelope.authority_receipt is not None
+            else own_cap
+        )
+        if (
+            envelope.bound_cap is not expected_bound_cap
+            or envelope.transform_cap is not expected_transform_cap
+        ):
+            return self._failure(record_id, "MALFORMED_CAP_BINDING", roots=roots)
+
+        parent_envelopes: list[AdmissionEnvelope] = []
+        parent_evaluations: list[AuthorityEvaluation] = []
+        for parent_id in envelope.direct_parent_ids:
+            parent = self._state.envelope(parent_id)
+            if parent is None:
+                return self._failure(
+                    record_id,
+                    "MISSING_REQUIRED_PARENT",
+                    evaluated=(record_id, parent_id),
+                    roots=roots,
+                )
+            parent_envelopes.append(parent)
+            parent_evaluations.append(
+                self._evaluate_record(parent_id, action_scope, visiting)
+            )
+        invalid_parent = next(
+            (evaluation for evaluation in parent_evaluations if not evaluation.valid),
+            None,
+        )
+        evaluated = tuple(
+            sorted(
+                {
+                    record_id,
+                    *(
+                        item
+                        for evaluation in parent_evaluations
+                        for item in evaluation.evaluated_record_ids
+                    ),
+                }
+            )
+        )
+        if invalid_parent is not None:
+            return self._failure(
+                record_id,
+                invalid_parent.reason,
+                evaluated=evaluated,
+                roots=roots,
+            )
+
+        structure_reason = self._validate_structure(
+            envelope, tuple(parent_envelopes)
+        )
+        if structure_reason is not None:
+            return self._failure(
+                record_id,
+                structure_reason,
+                evaluated=evaluated,
+                roots=roots,
+            )
+
+        dependency_caps: list[Capability] = []
+        for dependency in self._state.dependencies(record_id):
+            current_dependency = self._state.policy(dependency.policy_key)
+            if current_dependency is None:
+                return self._failure(
+                    record_id,
+                    "MISSING_CURRENT_POLICY",
+                    evaluated=evaluated,
+                    roots=roots,
+                )
+            if (
+                dependency.policy_key.action_scope != action_scope
+                or dependency.action_scope != action_scope
+            ):
+                return self._failure(
+                    record_id,
+                    "DEPENDENCY_SCOPE_MISMATCH",
+                    evaluated=evaluated,
+                    roots=roots,
+                )
+            if current_dependency.generation != dependency.granting_generation:
+                return self._failure(
+                    record_id,
+                    "STALE_AUTHORITY_DEPENDENCY",
+                    evaluated=evaluated,
+                    roots=roots,
+                )
+            dependency_cap = current_dependency.caps.get(action_scope)
+            if dependency_cap is None:
+                return self._failure(
+                    record_id,
+                    "MISSING_SCOPE_CAPABILITY",
+                    evaluated=evaluated,
+                    roots=roots,
+                )
+            dependency_caps.append(dependency_cap)
+            if dependency.kind is DependencyKind.SOURCE_AUTHORITY:
+                reason = self._validate_source_dependency(dependency)
+                if reason is not None:
+                    return self._failure(
+                        record_id,
+                        reason,
+                        evaluated=evaluated,
+                        roots=roots,
+                    )
+            elif current_dependency.operation_role is not OperationRole.RELAY:
+                return self._failure(
+                    record_id,
+                    "POLICY_ROLE_MISMATCH",
+                    evaluated=evaluated,
+                    roots=roots,
+                )
+
+        effective = Capability.meet(
+            (
+                envelope.bound_cap,
+                envelope.transform_cap,
+                own_cap,
+                *(evaluation.effective_cap for evaluation in parent_evaluations),
+                *dependency_caps,
+            )
+        )
+        return AuthorityEvaluation(
+            record_id=record_id,
+            valid=True,
+            effective_cap=effective,
+            reason=(
+                "CURRENT_AUTHORITY_RECEIPT"
+                if effective is Capability.ACT
+                else "CAP_NOT_ACT"
+            ),
+            evaluated_record_ids=evaluated,
+            support_root_key_digests=roots,
+        )
+
+    def _validate_structure(
+        self,
+        envelope: AdmissionEnvelope,
+        parents: tuple[AdmissionEnvelope, ...],
+    ) -> str | None:
+        dependencies = self._state.dependencies(envelope.record_id)
+        if any(item.record_id != envelope.record_id for item in dependencies):
+            return "MALFORMED_AUTHORITY_DEPENDENCIES"
+        markers = tuple(self._dependency_marker(item) for item in dependencies)
+        if len(markers) != len(set(markers)):
+            return "DUPLICATE_AUTHORITY_DEPENDENCY"
+
+        if envelope.transform_class is TransformClass.ROOT:
+            if len(dependencies) != 1:
+                return "MALFORMED_AUTHORITY_DEPENDENCIES"
+            dependency = dependencies[0]
+            if (
+                dependency.kind is not DependencyKind.SOURCE_AUTHORITY
+                or dependency.root_record_id != envelope.record_id
+                or dependency.root_key_digest
+                != envelope.support_root_key_digests[0]
+            ):
+                return "MALFORMED_AUTHORITY_DEPENDENCIES"
+            return None
+
+        expected_support: dict[str, str] = {}
+        expected_markers: set[bytes] = set()
+        for parent in parents:
+            for root_id, root_digest in zip(
+                parent.support_root_ids,
+                parent.support_root_key_digests,
+                strict=True,
+            ):
+                previous = expected_support.setdefault(root_id, root_digest)
+                if previous != root_digest:
+                    return "CONFLICTING_PARENT_ROOT_IDENTITY"
+            parent_dependencies = self._state.dependencies(parent.record_id)
+            if any(item.record_id != parent.record_id for item in parent_dependencies):
+                return "MALFORMED_PARENT_DEPENDENCY"
+            expected_markers.update(
+                self._dependency_marker(item) for item in parent_dependencies
+            )
+        ordered_support = tuple(sorted(expected_support.items()))
+        if (
+            envelope.support_root_ids
+            != tuple(root_id for root_id, _ in ordered_support)
+            or envelope.support_root_key_digests
+            != tuple(root_digest for _, root_digest in ordered_support)
+        ):
+            return "MALFORMED_SUPPORT_CLOSURE"
+        if envelope.transform_class in {
+            TransformClass.REGISTERED,
+            TransformClass.FREEFORM,
+        }:
+            expected_markers.add(
+                self._dependency_marker(
+                    AuthorityDependency(
+                        record_id=envelope.record_id,
+                        kind=DependencyKind.TRANSFORM_POLICY,
+                        policy_key=envelope.own_policy_key,
+                        granting_generation=envelope.own_granting_generation,
+                        root_record_id=envelope.record_id,
+                        root_key_digest=None,
+                        action_scope=envelope.own_policy_key.action_scope,
+                        receipt_id=None,
+                    )
+                )
+            )
+        if set(markers) != expected_markers:
+            return "MALFORMED_AUTHORITY_DEPENDENCIES"
+        if (
+            envelope.transform_class is TransformClass.IDENTITY
+            and envelope.payload_digest != parents[0].payload_digest
+        ):
+            return "IDENTITY_PAYLOAD_MISMATCH"
+        return None
+
+    def _validate_source_dependency(
+        self, dependency: AuthorityDependency
+    ) -> str | None:
+        root = self._state.envelope(dependency.root_record_id)
+        if (
+            root is None
+            or root.transform_class is not TransformClass.ROOT
+            or root.authority_receipt is None
+            or root.source_object_claim is None
+        ):
+            return "MISSING_AUTHORITY_ROOT"
+        receipt = root.authority_receipt
+        root_key = ReceiptRootKey.from_receipt(
+            receipt, custody_root_record_id=root.record_id
+        )
+        if (
+            dependency.root_key_digest != root_key.digest
+            or dependency.receipt_id != receipt.receipt_id
+            or dependency.policy_key != receipt.policy_key
+            or dependency.granting_generation != receipt.granting_generation
+        ):
+            return "RECEIPT_ROOT_BINDING_MISMATCH"
+        if self._state.root_record_id_for_receipt(receipt) != root.record_id:
+            return "MISSING_RECEIPT_ROOT_BINDING"
+        if self._state.is_root_revoked(root_key.digest):
+            return "REVOKED_AUTHORITY_ROOT"
+        event = SourceAuthorityEvent(root.source_object_claim, receipt)
+        if root.payload_digest != event.source_object_commitment:
+            return "OUTPUT_OBJECT_COMMITMENT_MISMATCH"
+        verification = self._verifier.verify(
+            event,
+            custody_root_record_id=root.record_id,
+            required_policy_key=dependency.policy_key,
+        )
+        return None if verification.verified else verification.reason.value
+
+    @staticmethod
+    def _dependency_marker(dependency: AuthorityDependency) -> bytes:
+        return canonical_json_bytes(
+            [
+                dependency.kind.value,
+                dependency.policy_key.as_list(),
+                dependency.granting_generation,
+                dependency.root_record_id,
+                dependency.root_key_digest,
+                dependency.action_scope,
+                dependency.receipt_id,
+            ]
+        )
+
+    @staticmethod
+    def _failure(
+        record_id: str,
+        reason: str,
+        *,
+        evaluated: tuple[str, ...] | None = None,
+        roots: tuple[str, ...] = (),
+    ) -> AuthorityEvaluation:
+        return AuthorityEvaluation(
+            record_id=record_id,
+            valid=False,
+            effective_cap=Capability.NONE,
+            reason=reason,
+            evaluated_record_ids=(record_id,) if evaluated is None else evaluated,
+            support_root_key_digests=roots,
+        )
+
+
 __all__ = [
     "AdmissionGate",
     "AdmissionEnvelope",
@@ -1806,7 +2380,10 @@ __all__ = [
     "AdmissionState",
     "AuthorityConflict",
     "AuthorityDataError",
+    "AuthorityDecision",
     "AuthorityDependency",
+    "AuthorityEvaluation",
+    "AuthorityEvaluator",
     "AuthorityOutput",
     "AuthorityReceipt",
     "AuthorityStateReader",
@@ -1818,6 +2395,7 @@ __all__ = [
     "FORBIDDEN_RUNTIME_FIELDS",
     "OperationRole",
     "InMemoryAuthorityStore",
+    "LinearizedAuthorityDecision",
     "PolicyKey",
     "PolicySnapshot",
     "ReceiptRootKey",
@@ -1827,4 +2405,5 @@ __all__ = [
     "TransformRef",
     "VerificationReason",
     "canonical_json_bytes",
+    "runtime_json_object",
 ]
