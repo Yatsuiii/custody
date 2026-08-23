@@ -147,7 +147,7 @@ class AuthorityExecution:
     result: object | None = None
 
 
-@dataclass
+@dataclass(frozen=True)
 class AuthorityGateway:
     """Linearize current B7 authority and own consequential dispatch."""
 

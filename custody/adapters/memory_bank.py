@@ -23,6 +23,9 @@ from custody.authority import (
     AuthorityConflict,
     AuthorityDataError,
     AuthorityStateReader,
+    ReceiptRootKey,
+    RevocationController,
+    RevocationResult,
 )
 from custody.graph import Revocation
 from custody.memory_bank import memory_id_for
@@ -259,3 +262,31 @@ class RevokingMemoryBankGraph:
                 if error.code != 404:
                     raise
         return revocation
+
+
+@dataclass
+class RevokingAuthorityMemoryBank:
+    """Apply logical B7 revocation before best-effort Memory Bank cleanup."""
+
+    controller: RevocationController
+    memories: AgentEngineMemoriesClient
+    engine_name: str
+
+    async def revoke_receipt_roots(
+        self,
+        *,
+        revocation_id: str,
+        root_keys: tuple[ReceiptRootKey, ...],
+    ) -> RevocationResult:
+        result = self.controller.revoke_receipt_roots(
+            revocation_id=revocation_id,
+            root_keys=root_keys,
+        )
+        for record_id in result.affected_record_ids:
+            name = f"{self.engine_name}/memories/{memory_id_for(record_id)}"
+            try:
+                await self.memories.delete(name=name)
+            except ClientError as error:
+                if error.code != 404:
+                    raise
+        return result

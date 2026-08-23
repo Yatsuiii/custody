@@ -23,7 +23,12 @@ from pathlib import Path
 
 from google.genai.errors import ClientError
 
-from custody.adapters.memory_bank import AgentEngineMemoryBank, RevokingMemoryBankGraph
+from custody.action import AuthorityAction, AuthorityGateway
+from custody.adapters.memory_bank import (
+    AgentEngineMemoryBank,
+    RevokingAuthorityMemoryBank,
+    RevokingMemoryBankGraph,
+)
 from custody.authority import (
     AdmissionGate,
     AuthorityConflict,
@@ -33,6 +38,8 @@ from custody.authority import (
     OperationRole,
     PolicyKey,
     PolicySnapshot,
+    ReceiptRootKey,
+    RevocationController,
     SourceAuthorityEvent,
 )
 from custody.graph import CustodyGraph
@@ -271,6 +278,33 @@ class RevokeFailsClosedOnAnUnreachableMemoryBank(unittest.IsolatedAsyncioTestCas
 
         with self.assertRaises(ClientError):
             await revoking.revoke(tool="crm_lookup", revocation_id="rev-1")
+
+    async def test_b7_logical_block_survives_cleanup_failure(self):
+        event, store = _authority_environment()
+        client = _RaisingMemoriesClient(ClientError(503, {"error": "unavailable"}))
+        revoking = RevokingAuthorityMemoryBank(
+            RevocationController(store), client, "engines/1"
+        )
+        root_key = ReceiptRootKey.from_receipt(
+            event.receipt, custody_root_record_id="ROOT-01"
+        )
+
+        with self.assertRaises(ClientError):
+            await revoking.revoke_receipt_roots(
+                revocation_id="root-rev-1", root_keys=(root_key,)
+            )
+
+        class Dispatcher:
+            def dispatch(self, action):
+                raise AssertionError(f"revoked action dispatched: {action}")
+
+        execution = AuthorityGateway(store).execute(
+            AuthorityAction("after-cleanup-failure", "export.send", {"value": 1}),
+            ("ROOT-01",),
+            Dispatcher(),
+        )
+        self.assertFalse(execution.decision.allowed)
+        self.assertEqual(execution.decision.reason, "REVOKED_AUTHORITY_ROOT")
 
 
 class B7MemoryIdentitySurvivesRetrieval(unittest.IsolatedAsyncioTestCase):

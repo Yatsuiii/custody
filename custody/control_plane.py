@@ -27,6 +27,12 @@ from datetime import UTC, datetime
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from typing import Any
 
+from custody.authority import (
+    AuthorityConflict,
+    AuthorityDataError,
+    ReceiptRootKey,
+    RevocationController,
+)
 from custody.catalog import Demotion, Grant, TrustCatalog, Vouch
 from custody.graph import CustodyGraph
 from custody.origin import CustodyRecord, Origin, Trust, digest, take_custody
@@ -95,6 +101,9 @@ class ControlPlane:
     #: Only `_default_plane` ever supplies a real one, so every existing test
     #: and local run is unaffected and needs no credentials.
     log_client: Any | None = None
+    #: Explicit B7 control surface. None keeps this legacy control plane from
+    #: pretending its tool-wide graph revocation is receipt-root selectivity.
+    b7_revocation: RevocationController | None = None
 
     def ingest(self, payload: dict) -> dict:
         """Take custody of one session's events and report what was withheld.
@@ -183,6 +192,27 @@ class ControlPlane:
             "tool": revocation.tool,
             "removed": list(revocation.removed),
             "records_remaining": len(self.graph),
+        }
+
+    def revoke_receipt_roots(self, payload: dict) -> dict:
+        """Append exact B7 RootKeys; never infer selectors from text or tools."""
+
+        if self.b7_revocation is None:
+            return {"applied": False, "reason": "B7_AUTHORITY_NOT_CONFIGURED"}
+        raw_keys = payload["root_keys"]
+        if not isinstance(raw_keys, list):
+            raise AuthorityDataError("root_keys must be an array")
+        result = self.b7_revocation.revoke_receipt_roots(
+            revocation_id=payload["revocation_id"],
+            root_keys=tuple(ReceiptRootKey.from_value(key) for key in raw_keys),
+        )
+        return {
+            "applied": True,
+            "revocation_id": result.revocation.revocation_id,
+            "root_key_digests": [
+                key.digest for key in result.revocation.root_keys
+            ],
+            "affected_record_ids": list(result.affected_record_ids),
         }
 
     def auditor(self, payload: dict) -> dict:
@@ -369,6 +399,7 @@ class _Handler(BaseHTTPRequestHandler):
             "/vouch": self.plane.vouch,
             "/demote": self.plane.demote,
             "/revoke": self.plane.revoke,
+            "/authority/revoke-roots": self.plane.revoke_receipt_roots,
             "/auditor": self.plane.auditor,
         }
         handler = routes.get(self.path)
@@ -379,6 +410,10 @@ class _Handler(BaseHTTPRequestHandler):
             self._json(200, handler(payload))
         except KeyError as missing:
             self._json(400, {"error": f"missing field: {missing}"})
+        except AuthorityDataError as error:
+            self._json(400, {"error": str(error)})
+        except AuthorityConflict as error:
+            self._json(409, {"error": str(error)})
 
     def _body(self) -> str:
         length = int(self.headers.get("Content-Length") or 0)

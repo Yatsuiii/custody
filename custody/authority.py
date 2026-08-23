@@ -17,7 +17,7 @@ import json
 import math
 import re
 import threading
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from enum import Enum
 from types import MappingProxyType
 from typing import Callable, Iterable, Mapping, Protocol, Sequence
@@ -153,6 +153,9 @@ _ADMISSION_ENVELOPE_FIELDS = frozenset(
         "admitted_at",
         "supersedes_record_id",
     }
+)
+_ROOT_REVOCATION_FIELDS = frozenset(
+    {"schema_version", "revocation_id", "root_keys", "revoked_at"}
 )
 
 
@@ -880,6 +883,45 @@ class AuthorityVerifier:
         custody_root_record_id: str,
         required_policy_key: PolicyKey,
     ) -> ReceiptVerification:
+        evidence = self.verify_evidence(
+            event,
+            custody_root_record_id=custody_root_record_id,
+            required_policy_key=required_policy_key,
+        )
+        if not evidence.verified:
+            return evidence
+        receipt = event.receipt
+        current = self._state.policy(required_policy_key)
+        if current is None:
+            return self._deny(VerificationReason.MISSING_CURRENT_POLICY, receipt)
+        if current.operation_role is not OperationRole.ORIGIN:
+            return self._deny(
+                VerificationReason.POLICY_ROLE_MISMATCH, receipt, current=current
+            )
+        if current.generation != receipt.granting_generation:
+            return self._deny(
+                VerificationReason.STALE_GENERATION, receipt, current=current
+            )
+        current_cap = current.caps.get(required_policy_key.action_scope)
+        if current_cap is None:
+            return self._deny(
+                VerificationReason.CAP_MISSING, receipt, current=current
+            )
+        if receipt.granted_cap.rank > current_cap.rank:
+            return self._deny(
+                VerificationReason.CAP_EXCEEDED, receipt, current=current
+            )
+        return replace(evidence, current_generation=current.generation)
+
+    def verify_evidence(
+        self,
+        event: SourceAuthorityEvent,
+        *,
+        custody_root_record_id: str,
+        required_policy_key: PolicyKey,
+    ) -> ReceiptVerification:
+        """Verify immutable source evidence without requiring current freshness."""
+
         if not isinstance(event, SourceAuthorityEvent):
             raise AuthorityDataError("verifier requires a SourceAuthorityEvent")
         _nonempty_string(
@@ -946,27 +988,6 @@ class AuthorityVerifier:
                 VerificationReason.ROOT_BINDING_MISMATCH, receipt
             )
 
-        current = self._state.policy(required_policy_key)
-        if current is None:
-            return self._deny(VerificationReason.MISSING_CURRENT_POLICY, receipt)
-        if current.operation_role is not OperationRole.ORIGIN:
-            return self._deny(
-                VerificationReason.POLICY_ROLE_MISMATCH, receipt, current=current
-            )
-        if current.generation != receipt.granting_generation:
-            return self._deny(
-                VerificationReason.STALE_GENERATION, receipt, current=current
-            )
-        current_cap = current.caps.get(required_policy_key.action_scope)
-        if current_cap is None:
-            return self._deny(
-                VerificationReason.CAP_MISSING, receipt, current=current
-            )
-        if receipt.granted_cap.rank > current_cap.rank:
-            return self._deny(
-                VerificationReason.CAP_EXCEEDED, receipt, current=current
-            )
-
         root_key = ReceiptRootKey.from_receipt(
             receipt, custody_root_record_id=custody_root_record_id
         )
@@ -977,7 +998,6 @@ class AuthorityVerifier:
             receipt_id=receipt.receipt_id,
             policy_key_digest=receipt.policy_key.digest,
             granting_generation=receipt.granting_generation,
-            current_generation=current.generation,
             root_key_digest=root_key.digest,
         )
 
@@ -1401,6 +1421,80 @@ class LinearizedAuthorityDecision:
     created: bool
 
 
+@dataclass(frozen=True)
+class RootRevocation:
+    """Append-only selection of exact authenticated receipt roots."""
+
+    schema_version: str
+    revocation_id: str
+    root_keys: tuple[ReceiptRootKey, ...]
+    revoked_at: str | None = None
+
+    def __post_init__(self) -> None:
+        if self.schema_version != "b7/root-revocation-v1":
+            raise AuthorityDataError("unsupported root revocation schema")
+        _nonempty_string(self.revocation_id, field="revocation.revocation_id")
+        if not isinstance(self.root_keys, tuple) or not self.root_keys:
+            raise AuthorityDataError("revocation.root_keys must be a non-empty tuple")
+        if any(not isinstance(key, ReceiptRootKey) for key in self.root_keys):
+            raise AuthorityDataError("revocation.root_keys must contain RootKeys")
+        ordered = tuple(sorted(self.root_keys, key=lambda key: key.digest))
+        if len({key.digest for key in ordered}) != len(ordered):
+            raise AuthorityDataError("revocation.root_keys must not contain duplicates")
+        object.__setattr__(self, "root_keys", ordered)
+        _optional_string(self.revoked_at, field="revocation.revoked_at")
+
+    @classmethod
+    def from_mapping(cls, value: Mapping[str, object]) -> "RootRevocation":
+        _exact_fields(value, _ROOT_REVOCATION_FIELDS, kind="RootRevocation")
+        raw_keys = value["root_keys"]
+        if not isinstance(raw_keys, list):
+            raise AuthorityDataError("revocation.root_keys must be an array")
+        return cls(
+            schema_version=_nonempty_string(
+                value["schema_version"], field="revocation.schema_version"
+            ),
+            revocation_id=_nonempty_string(
+                value["revocation_id"], field="revocation.revocation_id"
+            ),
+            root_keys=tuple(ReceiptRootKey.from_value(key) for key in raw_keys),
+            revoked_at=_optional_string(
+                value["revoked_at"], field="revocation.revoked_at"
+            ),
+        )
+
+    def as_dict(self) -> dict[str, object]:
+        return {
+            "schema_version": self.schema_version,
+            "revocation_id": self.revocation_id,
+            "root_keys": [key.as_list() for key in self.root_keys],
+            "revoked_at": self.revoked_at,
+        }
+
+    def selector_bytes(self) -> bytes:
+        return canonical_json_bytes(
+            {
+                "schema_version": self.schema_version,
+                "revocation_id": self.revocation_id,
+                "root_keys": [key.as_list() for key in self.root_keys],
+            }
+        )
+
+
+@dataclass(frozen=True)
+class RevocationResult:
+    revocation: RootRevocation
+    affected_record_ids: tuple[str, ...]
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.revocation, RootRevocation):
+            raise AuthorityDataError("revocation result requires a RootRevocation")
+        _validate_string_tuple(
+            self.affected_record_ids,
+            field="revocation_result.affected_record_ids",
+        )
+
+
 class AuthorityStore(AuthorityStateReader, AuthorityTrustStore, Protocol):
     """Atomic write and authoritative-read port used by B7 core policy."""
 
@@ -1434,6 +1528,14 @@ class AuthorityStore(AuthorityStateReader, AuthorityTrustStore, Protocol):
         decide: Callable[[AuthorityStateReader], AuthorityDecision],
     ) -> LinearizedAuthorityDecision: ...
 
+    def commit_root_revocation(
+        self, revocation: RootRevocation
+    ) -> RootRevocation: ...
+
+    def affected_record_ids(
+        self, root_key_digests: Iterable[str]
+    ) -> tuple[str, ...]: ...
+
 
 @dataclass
 class InMemoryAuthorityStore:
@@ -1452,6 +1554,7 @@ class InMemoryAuthorityStore:
         self._dependencies: dict[str, tuple[AuthorityDependency, ...]] = {}
         self._receipt_roots: dict[str, str] = {}
         self._revoked_roots: dict[str, str] = {}
+        self._root_revocations: dict[str, RootRevocation] = {}
         self._action_decisions: dict[str, AuthorityDecision] = {}
 
     def put_issuer_key(
@@ -1608,6 +1711,52 @@ class InMemoryAuthorityStore:
             return tuple(
                 self._action_decisions[key]
                 for key in sorted(self._action_decisions)
+            )
+
+    def commit_root_revocation(
+        self, revocation: RootRevocation
+    ) -> RootRevocation:
+        if not isinstance(revocation, RootRevocation):
+            raise AuthorityDataError("root revocation write requires RootRevocation")
+        with self._lock:
+            existing = self._root_revocations.get(revocation.revocation_id)
+            if existing is not None:
+                if existing.selector_bytes() != revocation.selector_bytes():
+                    raise AuthorityConflict(
+                        "revocation ID already has other receipt-root selectors"
+                    )
+                return existing
+            self._root_revocations[revocation.revocation_id] = revocation
+            for root_key in revocation.root_keys:
+                self._revoked_roots.setdefault(
+                    root_key.digest, revocation.revocation_id
+                )
+            return revocation
+
+    def affected_record_ids(
+        self, root_key_digests: Iterable[str]
+    ) -> tuple[str, ...]:
+        digests = frozenset(root_key_digests)
+        for digest in digests:
+            _sha256_hex(digest, field="root_key_digest")
+        with self._lock:
+            return tuple(
+                sorted(
+                    record_id
+                    for record_id, dependencies in self._dependencies.items()
+                    if any(
+                        dependency.kind is DependencyKind.SOURCE_AUTHORITY
+                        and dependency.root_key_digest in digests
+                        for dependency in dependencies
+                    )
+                )
+            )
+
+    def root_revocations(self) -> tuple[RootRevocation, ...]:
+        with self._lock:
+            return tuple(
+                self._root_revocations[key]
+                for key in sorted(self._root_revocations)
             )
 
 
@@ -1959,6 +2108,67 @@ class AdmissionGate:
     @staticmethod
     def _denied(output: AuthorityOutput, reason: str) -> AdmissionResult:
         return AdmissionResult(False, reason, output.record_id)
+
+
+class RevocationController:
+    """Append exact receipt-root revocations after authenticating each root."""
+
+    def __init__(self, store: AuthorityStore) -> None:
+        self._store = store
+        self._verifier = AuthorityVerifier(trust_store=store, state=store)
+
+    def revoke_receipt_roots(
+        self,
+        *,
+        revocation_id: str,
+        root_keys: Sequence[ReceiptRootKey],
+    ) -> RevocationResult:
+        if isinstance(root_keys, (str, bytes)):
+            raise AuthorityDataError("root_keys must be a sequence")
+        selectors = tuple(root_keys)
+        revocation = RootRevocation(
+            schema_version="b7/root-revocation-v1",
+            revocation_id=revocation_id,
+            root_keys=selectors,
+        )
+        for root_key in revocation.root_keys:
+            self._require_authenticated_root(root_key)
+        stored = self._store.commit_root_revocation(revocation)
+        affected = self._store.affected_record_ids(
+            root_key.digest for root_key in stored.root_keys
+        )
+        return RevocationResult(stored, affected)
+
+    def _require_authenticated_root(self, root_key: ReceiptRootKey) -> None:
+        root = self._store.envelope(root_key.custody_root_record_id)
+        if (
+            root is None
+            or root.admission_state is not AdmissionState.COMMITTED
+            or root.transform_class is not TransformClass.ROOT
+            or root.authority_receipt is None
+            or root.source_object_claim is None
+        ):
+            raise AuthorityDataError("revocation selector has no committed B7 root")
+        expected = ReceiptRootKey.from_receipt(
+            root.authority_receipt,
+            custody_root_record_id=root.record_id,
+        )
+        if expected != root_key:
+            raise AuthorityDataError(
+                "revocation selector does not match authenticated root identity"
+            )
+        if self._store.root_record_id_for_receipt(root.authority_receipt) != root.record_id:
+            raise AuthorityDataError("revocation selector receipt is not root-bound")
+        event = SourceAuthorityEvent(root.source_object_claim, root.authority_receipt)
+        evidence = self._verifier.verify_evidence(
+            event,
+            custody_root_record_id=root.record_id,
+            required_policy_key=root.authority_receipt.policy_key,
+        )
+        if not evidence.verified or root.payload_digest != event.source_object_commitment:
+            raise AuthorityDataError(
+                "revocation selector root no longer authenticates exactly"
+            )
 
 
 class AuthorityEvaluator:
@@ -2400,6 +2610,9 @@ __all__ = [
     "PolicySnapshot",
     "ReceiptRootKey",
     "ReceiptVerification",
+    "RevocationController",
+    "RevocationResult",
+    "RootRevocation",
     "SourceAuthorityEvent",
     "TransformClass",
     "TransformRef",
