@@ -9,7 +9,9 @@ to test replay ordering without a real Firestore instance.
 from __future__ import annotations
 
 import unittest
+from copy import deepcopy
 from datetime import UTC, datetime, timedelta
+from threading import RLock
 
 from google.api_core.exceptions import AlreadyExists, DeadlineExceeded, ServiceUnavailable
 
@@ -43,7 +45,7 @@ class _FakeSnapshot:
         self.exists = data is not None
 
     def to_dict(self) -> dict:
-        return dict(self._data or {})
+        return deepcopy(self._data or {})
 
 
 class _FakeDocument:
@@ -52,31 +54,80 @@ class _FakeDocument:
         self.id = doc_id
 
     def create(self, data: dict) -> None:
-        if self.id in self._collection.docs:
-            raise AlreadyExists(f"{self.id} already exists")
-        self._collection.docs[self.id] = (
-            dict(data),
-            self._collection.client.tick(),
-        )
+        with self._collection.client._lock:
+            if self.id in self._collection.docs:
+                raise AlreadyExists(f"{self.id} already exists")
+            self._collection.docs[self.id] = (
+                deepcopy(data),
+                self._collection.client.tick(),
+            )
 
     def set(self, data: dict, merge: bool = False) -> None:
         """Enough of real Firestore's ``set`` for ``FirestoreRevisionCatalog``:
         a plain overwrite, or a merge that recursively merges nested maps
         rather than replacing them, matching the real service's documented
         merge behavior for map fields."""
-        existing = self._collection.docs.get(self.id)
-        if not merge or existing is None:
-            self._collection.docs[self.id] = (dict(data), self._collection.client.tick())
-            return
-        merged = _deep_merge(dict(existing[0]), data)
-        self._collection.docs[self.id] = (merged, self._collection.client.tick())
+        with self._collection.client._lock:
+            existing = self._collection.docs.get(self.id)
+            if not merge or existing is None:
+                self._collection.docs[self.id] = (
+                    deepcopy(data),
+                    self._collection.client.tick(),
+                )
+                return
+            merged = _deep_merge(deepcopy(existing[0]), data)
+            self._collection.docs[self.id] = (
+                merged,
+                self._collection.client.tick(),
+            )
 
     def get(self) -> _FakeSnapshot:
-        entry = self._collection.docs.get(self.id)
-        if entry is None:
-            return _FakeSnapshot(None, None)
-        data, create_time = entry
-        return _FakeSnapshot(data, create_time)
+        with self._collection.client._lock:
+            entry = self._collection.docs.get(self.id)
+            if entry is None:
+                return _FakeSnapshot(None, None)
+            data, create_time = entry
+            return _FakeSnapshot(data, create_time)
+
+
+class _FakeTransaction:
+    """Atomic transaction surface used by ``FirestoreAuthorityStore`` tests.
+
+    Writes stay private until the callback returns.  This is deliberately
+    narrower than a Firestore emulator: it models the read-before-write,
+    create-only, and all-or-nothing properties the B7 adapter depends on.
+    """
+
+    def __init__(self, client: "FakeFirestoreClient") -> None:
+        self._client = client
+        self._writes: list[tuple[str, _FakeDocument, dict]] = []
+
+    def get(self, document: _FakeDocument) -> _FakeSnapshot:
+        return document.get()
+
+    def create(self, document: _FakeDocument, data: dict) -> None:
+        self._client._note_transaction_write()
+        self._writes.append(("create", document, deepcopy(data)))
+
+    def set(self, document: _FakeDocument, data: dict) -> None:
+        self._client._note_transaction_write()
+        self._writes.append(("set", document, deepcopy(data)))
+
+    def commit(self) -> None:
+        created: set[tuple[int, str]] = set()
+        for operation, document, _ in self._writes:
+            identity = (id(document._collection), document.id)
+            if operation == "create" and (
+                document.id in document._collection.docs or identity in created
+            ):
+                raise AlreadyExists(f"{document.id} already exists")
+            if operation == "create":
+                created.add(identity)
+        for _, document, data in self._writes:
+            document._collection.docs[document.id] = (
+                data,
+                self._client.tick(),
+            )
 
 
 class _FakeCollection:
@@ -110,6 +161,9 @@ class FakeFirestoreClient:
     def __init__(self) -> None:
         self._collections: dict[str, _FakeCollection] = {}
         self._clock = _EPOCH
+        self._lock = RLock()
+        self.fail_transaction_after_writes: int | None = None
+        self._transaction_write_count = 0
 
     def tick(self) -> datetime:
         self._clock += timedelta(milliseconds=1)
@@ -117,6 +171,22 @@ class FakeFirestoreClient:
 
     def collection(self, name: str) -> _FakeCollection:
         return self._collections.setdefault(name, _FakeCollection(self))
+
+    def run_transaction(self, callback):
+        with self._lock:
+            self._transaction_write_count = 0
+            transaction = _FakeTransaction(self)
+            result = callback(transaction)
+            transaction.commit()
+            return result
+
+    def _note_transaction_write(self) -> None:
+        self._transaction_write_count += 1
+        if (
+            self.fail_transaction_after_writes is not None
+            and self._transaction_write_count > self.fail_transaction_after_writes
+        ):
+            raise ServiceUnavailable("injected transaction failure")
 
 
 def _record(*, id: str, source_tool: str = "crm_lookup", derived_from=()) -> CustodyRecord:

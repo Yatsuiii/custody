@@ -27,6 +27,7 @@ from custody.authority import (
     AuthorityDecision,
     AuthorityEvaluator,
     AuthorityStore,
+    AuthorityUnavailable,
     Capability,
     canonical_json_bytes,
     runtime_json_object,
@@ -192,7 +193,7 @@ class AuthorityGateway:
                     cited_record_ids=citations,
                 ),
             )
-        except AuthorityConflict:
+        except (AuthorityConflict, AuthorityUnavailable) as error:
             return AuthorityExecution(
                 decision=AuthorityDecision(
                     request_id=action_request.request_id,
@@ -201,7 +202,11 @@ class AuthorityGateway:
                     cited_record_ids=citations,
                     allowed=False,
                     effective_cap=Capability.NONE,
-                    reason="ACTION_REQUEST_ID_CONFLICT",
+                    reason=(
+                        "ACTION_REQUEST_ID_CONFLICT"
+                        if isinstance(error, AuthorityConflict)
+                        else "AUTHORITY_STATE_UNAVAILABLE"
+                    ),
                     evaluated_record_ids=(),
                     support_root_key_digests=(),
                     record_reasons=(),

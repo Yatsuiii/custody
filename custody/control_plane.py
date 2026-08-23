@@ -441,17 +441,20 @@ def _default_plane() -> ControlPlane:
     from google.cloud import firestore, logging as cloud_logging
 
     from custody.firestore_store import (
+        FirestoreAuthorityStore,
         FirestoreAuditorLog,
         FirestoreCustodyGraph,
         FirestoreDemotionLog,
     )
 
     client = firestore.Client(project=project)
+    authority_store = FirestoreAuthorityStore(client)
     return ControlPlane(
         graph=FirestoreCustodyGraph(client),
         auditor_log=FirestoreAuditorLog(client),
         demotion_log=FirestoreDemotionLog(client),
         log_client=cloud_logging.Client(project=project),
+        b7_revocation=RevocationController(authority_store),
     )
 
 

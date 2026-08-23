@@ -157,6 +157,20 @@ _ADMISSION_ENVELOPE_FIELDS = frozenset(
 _ROOT_REVOCATION_FIELDS = frozenset(
     {"schema_version", "revocation_id", "root_keys", "revoked_at"}
 )
+_AUTHORITY_DECISION_FIELDS = frozenset(
+    {
+        "request_id",
+        "request_digest",
+        "action_scope",
+        "cited_record_ids",
+        "allowed",
+        "effective_cap",
+        "reason",
+        "evaluated_record_ids",
+        "support_root_key_digests",
+        "record_reasons",
+    }
+)
 
 
 def _plain_json(value: object, *, path: str = "$") -> object:
@@ -1264,6 +1278,10 @@ class AuthorityConflict(RuntimeError):
     """Immutable authority state already exists under a conflicting identity."""
 
 
+class AuthorityUnavailable(RuntimeError):
+    """Authoritative persistence could not complete a required current read."""
+
+
 @dataclass(frozen=True)
 class AuthorityOutput:
     """Content identity admitted by B7; payload text remains in Memory Bank."""
@@ -1410,6 +1428,58 @@ class AuthorityDecision:
             "support_root_key_digests": list(self.support_root_key_digests),
             "record_reasons": [list(item) for item in self.record_reasons],
         }
+
+    @classmethod
+    def from_mapping(cls, value: Mapping[str, object]) -> "AuthorityDecision":
+        _exact_fields(value, _AUTHORITY_DECISION_FIELDS, kind="AuthorityDecision")
+        raw_reasons = value["record_reasons"]
+        if not isinstance(raw_reasons, list):
+            raise AuthorityDataError("decision.record_reasons must be an array")
+        reasons: list[tuple[str, str]] = []
+        for item in raw_reasons:
+            if not isinstance(item, list) or len(item) != 2:
+                raise AuthorityDataError(
+                    "decision.record_reasons entries must be pairs"
+                )
+            reasons.append(
+                (
+                    _nonempty_string(item[0], field="decision.record_reason.id"),
+                    _nonempty_string(
+                        item[1], field="decision.record_reason.reason"
+                    ),
+                )
+            )
+        allowed = value["allowed"]
+        if not isinstance(allowed, bool):
+            raise AuthorityDataError("decision.allowed must be a bool")
+        return cls(
+            request_id=_nonempty_string(
+                value["request_id"], field="decision.request_id"
+            ),
+            request_digest=_sha256_hex(
+                value["request_digest"], field="decision.request_digest"
+            ),
+            action_scope=_nonempty_string(
+                value["action_scope"], field="decision.action_scope"
+            ),
+            cited_record_ids=_string_array(
+                value["cited_record_ids"], field="decision.cited_record_ids"
+            ),
+            allowed=allowed,
+            effective_cap=_enum_value(
+                Capability, value["effective_cap"], field="effective_cap"
+            ),  # type: ignore[arg-type]
+            reason=_nonempty_string(value["reason"], field="decision.reason"),
+            evaluated_record_ids=_string_array(
+                value["evaluated_record_ids"],
+                field="decision.evaluated_record_ids",
+            ),
+            support_root_key_digests=_string_array(
+                value["support_root_key_digests"],
+                field="decision.support_root_key_digests",
+            ),
+            record_reasons=tuple(reasons),
+        )
 
     def canonical_bytes(self) -> bytes:
         return canonical_json_bytes(self.as_dict())
@@ -2599,6 +2669,7 @@ __all__ = [
     "AuthorityStateReader",
     "AuthorityStore",
     "AuthorityTrustStore",
+    "AuthorityUnavailable",
     "AuthorityVerifier",
     "Capability",
     "DependencyKind",

@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import hashlib
 from dataclasses import dataclass
-from typing import Mapping, Protocol
+from typing import Iterable, Mapping, Protocol
 
 from google.genai.errors import ClientError
 
@@ -254,13 +254,9 @@ class RevokingMemoryBankGraph:
 
     async def revoke(self, *, tool: str, revocation_id: str) -> Revocation:
         revocation = self.graph.revoke(tool=tool, revocation_id=revocation_id)
-        for record_id in revocation.removed:
-            name = f"{self.engine_name}/memories/{memory_id_for(record_id)}"
-            try:
-                await self.memories.delete(name=name)
-            except ClientError as error:
-                if error.code != 404:
-                    raise
+        await _delete_record_memories(
+            self.memories, self.engine_name, revocation.removed
+        )
         return revocation
 
 
@@ -282,11 +278,21 @@ class RevokingAuthorityMemoryBank:
             revocation_id=revocation_id,
             root_keys=root_keys,
         )
-        for record_id in result.affected_record_ids:
-            name = f"{self.engine_name}/memories/{memory_id_for(record_id)}"
-            try:
-                await self.memories.delete(name=name)
-            except ClientError as error:
-                if error.code != 404:
-                    raise
+        await _delete_record_memories(
+            self.memories, self.engine_name, result.affected_record_ids
+        )
         return result
+
+
+async def _delete_record_memories(
+    memories: AgentEngineMemoriesClient,
+    engine_name: str,
+    record_ids: Iterable[str],
+) -> None:
+    for record_id in record_ids:
+        name = f"{engine_name}/memories/{memory_id_for(record_id)}"
+        try:
+            await memories.delete(name=name)
+        except ClientError as error:
+            if error.code != 404:
+                raise
