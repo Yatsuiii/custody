@@ -19,15 +19,30 @@ from __future__ import annotations
 
 import unittest
 from dataclasses import dataclass, field
+from pathlib import Path
 
 from google.genai.errors import ClientError
 
 from custody.adapters.memory_bank import AgentEngineMemoryBank, RevokingMemoryBankGraph
+from custody.authority import (
+    AdmissionGate,
+    AuthorityConflict,
+    AuthorityOutput,
+    Capability,
+    InMemoryAuthorityStore,
+    OperationRole,
+    PolicyKey,
+    PolicySnapshot,
+    SourceAuthorityEvent,
+)
 from custody.graph import CustodyGraph
 from custody.origin import Admitted, CustodyRecord, Origin, ToolTrust, Trust
 from custody.service import CustodyMemoryService, InMemoryQuarantine
 from tests.test_origin import tool as tool_event
 from tests.test_service import FakeSession
+
+
+B7_FIXTURES = Path(__file__).parent / "fixtures" / "b7"
 
 
 def _admitted(record_id: str = "inv-1:0:0") -> Admitted:
@@ -59,9 +74,120 @@ class _RaisingMemoriesClient:
     async def retrieve(self, *, name, scope, similarity_search_params):
         raise self.error
 
+    async def get(self, *, name):
+        raise self.error
+
     async def delete(self, *, name):
         self.calls.append(name)
         raise self.error
+
+
+@dataclass
+class _Memory:
+    name: str
+    fact: str
+    metadata: dict
+
+
+@dataclass
+class _Retrieved:
+    memory: _Memory | None
+
+
+class _Pager:
+    def __init__(self, values):
+        self._values = iter(values)
+
+    def __aiter__(self):
+        return self
+
+    async def __anext__(self):
+        try:
+            return next(self._values)
+        except StopIteration as error:
+            raise StopAsyncIteration from error
+
+
+@dataclass
+class _RecordingMemoriesClient:
+    memories: dict[str, _Memory] = field(default_factory=dict)
+
+    async def create(self, *, name, fact, scope, config):
+        del scope
+        memory_name = f"{name}/memories/{config['memory_id']}"
+        if memory_name in self.memories:
+            raise ClientError(409, {"error": "exists"})
+        self.memories[memory_name] = _Memory(
+            name=memory_name,
+            fact=fact,
+            metadata=config["metadata"],
+        )
+
+    async def get(self, *, name):
+        return self.memories[name]
+
+    async def retrieve(self, *, name, scope, similarity_search_params):
+        del name, scope, similarity_search_params
+        return _Pager(_Retrieved(memory) for memory in self.memories.values())
+
+    async def delete(self, *, name):
+        self.memories.pop(name, None)
+
+
+def _authority_environment():
+    event = SourceAuthorityEvent.from_json(
+        (B7_FIXTURES / "source_event.json").read_bytes()
+    )
+    source = event.receipt.policy_key
+    identity = PolicyKey("finance", "custody", "identity", "R1", "export.send")
+    registered = PolicyKey(
+        "finance", "custody", "vendor_projection", "R1", "export.send"
+    )
+    freeform = PolicyKey("finance", "model", "freeform", "R1", "export.send")
+    store = InMemoryAuthorityStore()
+    store.put_issuer_key(
+        issuer_id=event.receipt.issuer_id,
+        issuer_key_id=event.receipt.issuer_key_id,
+        public_key=bytes.fromhex(
+            (B7_FIXTURES / "issuer_public_key.hex").read_text().strip()
+        ),
+    )
+    for snapshot in (
+        PolicySnapshot(
+            source,
+            "v7",
+            7,
+            OperationRole.ORIGIN,
+            {"export.send": Capability.ACT},
+        ),
+        *(
+            PolicySnapshot(
+                key,
+                "v1",
+                1,
+                OperationRole.RELAY,
+                {"export.send": Capability.ACT},
+            )
+            for key in (identity, registered, freeform)
+        ),
+    ):
+        store.put_policy(snapshot)
+    gate = AdmissionGate(
+        store=store,
+        source_policy_keys=(source,),
+        identity_policy_key=identity,
+        registered_policy_keys=(registered,),
+        freeform_policy_key=freeform,
+    )
+    admitted = gate.admit_source(
+        event,
+        AuthorityOutput(
+            record_id="ROOT-01",
+            payload_digest=event.source_object_commitment,
+        ),
+    )
+    assert admitted.admitted
+    return event, store
 
 
 class WriteRecordFailsClosedOnAnUnreachableMemoryBank(unittest.IsolatedAsyncioTestCase):
@@ -145,6 +271,89 @@ class RevokeFailsClosedOnAnUnreachableMemoryBank(unittest.IsolatedAsyncioTestCas
 
         with self.assertRaises(ClientError):
             await revoking.revoke(tool="crm_lookup", revocation_id="rev-1")
+
+
+class B7MemoryIdentitySurvivesRetrieval(unittest.IsolatedAsyncioTestCase):
+    async def test_committed_record_round_trips_with_exact_id_and_payload(self):
+        event, store = _authority_environment()
+        client = _RecordingMemoriesClient()
+        bank = AgentEngineMemoryBank(
+            memories=client,
+            engine_name="engines/1",
+            authority_state=store,
+        )
+        text = event.canonical_source_bytes.decode("utf-8")
+
+        await bank.write_authority_record(
+            app_name="fleet",
+            user_id="platform-team",
+            record_id="ROOT-01",
+            text=text,
+        )
+        found = await bank.search_authority_memory(
+            app_name="fleet", user_id="platform-team", query="account"
+        )
+
+        self.assertEqual(len(found), 1)
+        self.assertEqual(found[0].record_id, "ROOT-01")
+        self.assertEqual(found[0].fact, text)
+        self.assertEqual(found[0].envelope_version, "b7/p2-v1")
+
+    async def test_missing_or_changed_identity_metadata_fails_closed(self):
+        event, store = _authority_environment()
+        client = _RecordingMemoriesClient()
+        bank = AgentEngineMemoryBank(client, "engines/1", store)
+        text = event.canonical_source_bytes.decode("utf-8")
+        await bank.write_authority_record(
+            app_name="fleet",
+            user_id="platform-team",
+            record_id="ROOT-01",
+            text=text,
+        )
+        memory = next(iter(client.memories.values()))
+        memory.metadata = {}
+
+        missing = await bank.search_authority_memory(
+            app_name="fleet", user_id="platform-team", query="account"
+        )
+        memory.metadata = {
+            "custody_record_id": {"string_value": "ROOT-OTHER"},
+            "custody_envelope_version": {"string_value": "b7/p2-v1"},
+        }
+        changed = await bank.search_authority_memory(
+            app_name="fleet", user_id="platform-team", query="account"
+        )
+
+        self.assertEqual(missing, ())
+        self.assertEqual(changed, ())
+
+    async def test_payload_change_and_conflicting_409_are_not_idempotent(self):
+        event, store = _authority_environment()
+        client = _RecordingMemoriesClient()
+        bank = AgentEngineMemoryBank(client, "engines/1", store)
+        text = event.canonical_source_bytes.decode("utf-8")
+        await bank.write_authority_record(
+            app_name="fleet",
+            user_id="platform-team",
+            record_id="ROOT-01",
+            text=text,
+        )
+        memory = next(iter(client.memories.values()))
+        memory.fact = "different"
+
+        self.assertEqual(
+            await bank.search_authority_memory(
+                app_name="fleet", user_id="platform-team", query="account"
+            ),
+            (),
+        )
+        with self.assertRaises(AuthorityConflict):
+            await bank.write_authority_record(
+                app_name="fleet",
+                user_id="platform-team",
+                record_id="ROOT-01",
+                text=text,
+            )
 
 
 if __name__ == "__main__":

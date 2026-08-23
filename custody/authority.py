@@ -1,12 +1,13 @@
-"""Stable B7 authority values, without an authority issuer.
+"""B7 authority values, source verification, and admission policy.
 
 This module owns the wire shapes that later B7 slices will verify, persist,
 and evaluate.  It deliberately cannot mint authority: source-side signing
 belongs to a service that owns the upstream object, while Custody receives
 only a :class:`SourceAuthorityEvent` and public verification state.
 
-P0 is representation only.  Importing this module does not make an existing
-``CustodyRecord`` authoritative and does not alter admission or action policy.
+The module cannot mint authority. Importing it does not make an existing
+``CustodyRecord`` authoritative: only the explicit B7 admission entry points
+can construct committed envelopes, and legacy records remain outside them.
 """
 
 from __future__ import annotations
@@ -15,10 +16,11 @@ import hashlib
 import json
 import math
 import re
+import threading
 from dataclasses import dataclass
 from enum import Enum
 from types import MappingProxyType
-from typing import Iterable, Mapping, Protocol
+from typing import Iterable, Mapping, Protocol, Sequence
 
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
@@ -1228,25 +1230,601 @@ class AuthorityStateReader(Protocol):
     ) -> str | None: ...
 
 
+class AuthorityConflict(RuntimeError):
+    """Immutable authority state already exists under a conflicting identity."""
+
+
+@dataclass(frozen=True)
+class AuthorityOutput:
+    """Content identity admitted by B7; payload text remains in Memory Bank."""
+
+    record_id: str
+    payload_digest: str
+    supersedes_record_id: str | None = None
+
+    def __post_init__(self) -> None:
+        _nonempty_string(self.record_id, field="authority_output.record_id")
+        _sha256_hex(self.payload_digest, field="authority_output.payload_digest")
+        _optional_string(
+            self.supersedes_record_id,
+            field="authority_output.supersedes_record_id",
+        )
+
+    @classmethod
+    def from_text(
+        cls,
+        *,
+        record_id: str,
+        text: str,
+        supersedes_record_id: str | None = None,
+    ) -> "AuthorityOutput":
+        if not isinstance(text, str):
+            raise AuthorityDataError("authority output text must be a string")
+        return cls(
+            record_id=record_id,
+            payload_digest=hashlib.sha256(text.encode("utf-8")).hexdigest(),
+            supersedes_record_id=supersedes_record_id,
+        )
+
+
+@dataclass(frozen=True)
+class TransformRef:
+    """Configured transform policy selected by the REGISTERED entry point."""
+
+    policy_key: PolicyKey
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.policy_key, PolicyKey):
+            raise AuthorityDataError("transform_ref.policy_key must be a PolicyKey")
+
+
+@dataclass(frozen=True)
+class AdmissionResult:
+    admitted: bool
+    reason: str
+    record_id: str
+    envelope: AdmissionEnvelope | None = None
+
+
+class AuthorityStore(AuthorityStateReader, AuthorityTrustStore, Protocol):
+    """Atomic write and authoritative-read port used by B7 core policy."""
+
+    def put_issuer_key(
+        self, *, issuer_id: str, issuer_key_id: str, public_key: bytes
+    ) -> None: ...
+
+    def put_policy(
+        self,
+        snapshot: PolicySnapshot,
+        *,
+        expected_generation: int | None = None,
+    ) -> None: ...
+
+    def commit_admission(
+        self,
+        envelope: AdmissionEnvelope,
+        dependencies: tuple[AuthorityDependency, ...],
+        *,
+        expected_policies: Mapping[PolicyKey, int],
+        receipt_binding_digest: str | None = None,
+    ) -> AdmissionEnvelope: ...
+
+    def records(self) -> tuple[AdmissionEnvelope, ...]: ...
+
+
+@dataclass
+class InMemoryAuthorityStore:
+    """Atomic reference store for local production paths and tests.
+
+    The lock is the linearization boundary. Durable implementations preserve
+    these create-or-identical and generation-check semantics with database
+    transactions rather than copying admission policy into the backend.
+    """
+
+    def __post_init__(self) -> None:
+        self._lock = threading.RLock()
+        self._issuer_keys: dict[tuple[str, str], bytes] = {}
+        self._policies: dict[PolicyKey, PolicySnapshot] = {}
+        self._envelopes: dict[str, AdmissionEnvelope] = {}
+        self._dependencies: dict[str, tuple[AuthorityDependency, ...]] = {}
+        self._receipt_roots: dict[str, str] = {}
+        self._revoked_roots: dict[str, str] = {}
+
+    def put_issuer_key(
+        self, *, issuer_id: str, issuer_key_id: str, public_key: bytes
+    ) -> None:
+        issuer_id = _nonempty_string(issuer_id, field="issuer_id")
+        issuer_key_id = _nonempty_string(issuer_key_id, field="issuer_key_id")
+        if not isinstance(public_key, bytes):
+            raise AuthorityDataError("issuer public key must be bytes")
+        key = (issuer_id, issuer_key_id)
+        with self._lock:
+            existing = self._issuer_keys.get(key)
+            if existing is not None and existing != public_key:
+                raise AuthorityConflict("issuer key identity already has other bytes")
+            self._issuer_keys[key] = public_key
+
+    def public_key_for(self, *, issuer_id: str, issuer_key_id: str) -> bytes | None:
+        with self._lock:
+            return self._issuer_keys.get((issuer_id, issuer_key_id))
+
+    def put_policy(
+        self,
+        snapshot: PolicySnapshot,
+        *,
+        expected_generation: int | None = None,
+    ) -> None:
+        if not isinstance(snapshot, PolicySnapshot):
+            raise AuthorityDataError("policy write requires a PolicySnapshot")
+        with self._lock:
+            current = self._policies.get(snapshot.policy_key)
+            if current == snapshot:
+                return
+            if current is None:
+                if expected_generation is not None:
+                    raise AuthorityConflict("policy does not have expected generation")
+            elif (
+                expected_generation is None
+                or current.generation != expected_generation
+                or snapshot.generation != expected_generation + 1
+            ):
+                raise AuthorityConflict("policy generation compare-and-set failed")
+            self._policies[snapshot.policy_key] = snapshot
+
+    def policy(self, key: PolicyKey) -> PolicySnapshot | None:
+        with self._lock:
+            return self._policies.get(key)
+
+    def commit_admission(
+        self,
+        envelope: AdmissionEnvelope,
+        dependencies: tuple[AuthorityDependency, ...],
+        *,
+        expected_policies: Mapping[PolicyKey, int],
+        receipt_binding_digest: str | None = None,
+    ) -> AdmissionEnvelope:
+        if not isinstance(envelope, AdmissionEnvelope):
+            raise AuthorityDataError("admission write requires an AdmissionEnvelope")
+        if not isinstance(dependencies, tuple) or any(
+            not isinstance(item, AuthorityDependency) for item in dependencies
+        ):
+            raise AuthorityDataError("admission dependencies must be an immutable tuple")
+        if any(item.record_id != envelope.record_id for item in dependencies):
+            raise AuthorityDataError("dependency belongs to a different record")
+        if receipt_binding_digest is not None:
+            _sha256_hex(receipt_binding_digest, field="receipt_binding_digest")
+
+        canonical_dependencies = tuple(
+            sorted(dependencies, key=lambda item: item.canonical_bytes())
+        )
+        with self._lock:
+            existing = self._envelopes.get(envelope.record_id)
+            if existing is not None:
+                if (
+                    existing != envelope
+                    or self._dependencies[envelope.record_id]
+                    != canonical_dependencies
+                ):
+                    raise AuthorityConflict("record ID already has other authority bytes")
+                return existing
+
+            for key, generation in expected_policies.items():
+                current = self._policies.get(key)
+                if current is None or current.generation != generation:
+                    raise AuthorityConflict("policy changed during admission")
+            for parent_id in envelope.direct_parent_ids:
+                parent = self._envelopes.get(parent_id)
+                if parent is None or parent.admission_state is not AdmissionState.COMMITTED:
+                    raise AuthorityConflict("required parent is missing or incomplete")
+            if receipt_binding_digest is not None:
+                bound_root = self._receipt_roots.get(receipt_binding_digest)
+                if bound_root is not None and bound_root != envelope.record_id:
+                    raise AuthorityConflict("receipt is already bound to another root")
+                self._receipt_roots[receipt_binding_digest] = envelope.record_id
+
+            self._envelopes[envelope.record_id] = envelope
+            self._dependencies[envelope.record_id] = canonical_dependencies
+            return envelope
+
+    def envelope(self, record_id: str) -> AdmissionEnvelope | None:
+        with self._lock:
+            return self._envelopes.get(record_id)
+
+    def dependencies(self, record_id: str) -> tuple[AuthorityDependency, ...]:
+        with self._lock:
+            return self._dependencies.get(record_id, ())
+
+    def records(self) -> tuple[AdmissionEnvelope, ...]:
+        with self._lock:
+            return tuple(self._envelopes[key] for key in sorted(self._envelopes))
+
+    def root_record_id_for_receipt(
+        self, receipt: AuthorityReceipt
+    ) -> str | None:
+        with self._lock:
+            return self._receipt_roots.get(receipt.binding_digest)
+
+    def is_root_revoked(self, root_key_digest: str) -> bool:
+        with self._lock:
+            return root_key_digest in self._revoked_roots
+
+
+class _AdmissionRejected(RuntimeError):
+    pass
+
+
+class AdmissionGate:
+    """The only production entry points that construct committed envelopes."""
+
+    def __init__(
+        self,
+        *,
+        store: AuthorityStore,
+        source_policy_keys: Iterable[PolicyKey],
+        identity_policy_key: PolicyKey,
+        registered_policy_keys: Iterable[PolicyKey],
+        freeform_policy_key: PolicyKey,
+    ) -> None:
+        self._store = store
+        self._source_policy_keys = frozenset(source_policy_keys)
+        if not self._source_policy_keys or any(
+            not isinstance(key, PolicyKey) for key in self._source_policy_keys
+        ):
+            raise AuthorityDataError("source_policy_keys must contain PolicyKeys")
+        if not isinstance(identity_policy_key, PolicyKey):
+            raise AuthorityDataError("identity_policy_key must be a PolicyKey")
+        self._registered_policy_keys = frozenset(registered_policy_keys)
+        if not self._registered_policy_keys or any(
+            not isinstance(key, PolicyKey) for key in self._registered_policy_keys
+        ):
+            raise AuthorityDataError("registered_policy_keys must contain PolicyKeys")
+        if not isinstance(freeform_policy_key, PolicyKey):
+            raise AuthorityDataError("freeform_policy_key must be a PolicyKey")
+        operation_keys = {
+            identity_policy_key,
+            freeform_policy_key,
+            *self._registered_policy_keys,
+        }
+        if len(operation_keys) != len(self._registered_policy_keys) + 2:
+            raise AuthorityDataError("B7 operation policy roles must be distinct")
+        if operation_keys.intersection(self._source_policy_keys):
+            raise AuthorityDataError("source and transform policies must be distinct")
+        self._identity_policy_key = identity_policy_key
+        self._freeform_policy_key = freeform_policy_key
+        self._verifier = AuthorityVerifier(trust_store=store, state=store)
+
+    def admit_source(
+        self, source_event: SourceAuthorityEvent, output: AuthorityOutput
+    ) -> AdmissionResult:
+        self._require_output(output)
+        if not isinstance(source_event, SourceAuthorityEvent):
+            raise AuthorityDataError("source admission requires a SourceAuthorityEvent")
+        if output.payload_digest != source_event.source_object_commitment:
+            return self._denied(output, "OUTPUT_OBJECT_COMMITMENT_MISMATCH")
+        policy_key = source_event.receipt.policy_key
+        if policy_key not in self._source_policy_keys:
+            return self._denied(output, "SOURCE_POLICY_NOT_CONFIGURED")
+        verification = self._verifier.verify(
+            source_event,
+            custody_root_record_id=output.record_id,
+            required_policy_key=policy_key,
+        )
+        if not verification.verified:
+            return self._denied(output, verification.reason.value)
+
+        snapshot = self._required_policy(policy_key, OperationRole.ORIGIN)
+        if isinstance(snapshot, str):
+            return self._denied(output, snapshot)
+        cap = snapshot.caps.get(policy_key.action_scope)
+        if cap is None:
+            return self._denied(output, "MISSING_SCOPE_CAPABILITY")
+        root_key = ReceiptRootKey.from_receipt(
+            source_event.receipt, custody_root_record_id=output.record_id
+        )
+        envelope = AdmissionEnvelope(
+            schema_version="b7/p2-v1",
+            record_id=output.record_id,
+            payload_digest=output.payload_digest,
+            admission_state=AdmissionState.COMMITTED,
+            transform_class=TransformClass.ROOT,
+            direct_parent_ids=(),
+            support_root_ids=(output.record_id,),
+            support_root_key_digests=(root_key.digest,),
+            own_policy_key=policy_key,
+            own_policy_version=snapshot.version,
+            own_granting_generation=snapshot.generation,
+            bound_cap=source_event.receipt.granted_cap,
+            transform_cap=cap,
+            authority_receipt=source_event.receipt,
+            source_object_claim=source_event.source_object,
+            admitted_at=None,
+            supersedes_record_id=output.supersedes_record_id,
+        )
+        dependency = AuthorityDependency(
+            record_id=output.record_id,
+            kind=DependencyKind.SOURCE_AUTHORITY,
+            policy_key=policy_key,
+            granting_generation=source_event.receipt.granting_generation,
+            root_record_id=output.record_id,
+            root_key_digest=root_key.digest,
+            action_scope=policy_key.action_scope,
+            receipt_id=source_event.receipt.receipt_id,
+        )
+        return self._commit(
+            output,
+            envelope,
+            (dependency,),
+            expected_policies={policy_key: snapshot.generation},
+            receipt_binding_digest=source_event.receipt.binding_digest,
+        )
+
+    def admit_identity(
+        self, parent_id: str, output: AuthorityOutput
+    ) -> AdmissionResult:
+        return self._admit_derived(
+            transform_class=TransformClass.IDENTITY,
+            parent_ids=(parent_id,),
+            output=output,
+            policy_key=self._identity_policy_key,
+            add_transform_dependency=False,
+        )
+
+    def admit_registered(
+        self,
+        transform_ref: TransformRef,
+        parent_ids: Sequence[str],
+        output: AuthorityOutput,
+    ) -> AdmissionResult:
+        self._require_output(output)
+        if not isinstance(transform_ref, TransformRef):
+            raise AuthorityDataError("registered admission requires a TransformRef")
+        if transform_ref.policy_key not in self._registered_policy_keys:
+            return self._denied(output, "REGISTERED_TRANSFORM_NOT_CONFIGURED")
+        return self._admit_derived(
+            transform_class=TransformClass.REGISTERED,
+            parent_ids=parent_ids,
+            output=output,
+            policy_key=transform_ref.policy_key,
+            add_transform_dependency=True,
+        )
+
+    def admit_freeform(
+        self, parent_ids: Sequence[str], output: AuthorityOutput
+    ) -> AdmissionResult:
+        return self._admit_derived(
+            transform_class=TransformClass.FREEFORM,
+            parent_ids=parent_ids,
+            output=output,
+            policy_key=self._freeform_policy_key,
+            add_transform_dependency=True,
+        )
+
+    def _admit_derived(
+        self,
+        *,
+        transform_class: TransformClass,
+        parent_ids: Sequence[str],
+        output: AuthorityOutput,
+        policy_key: PolicyKey,
+        add_transform_dependency: bool,
+    ) -> AdmissionResult:
+        self._require_output(output)
+        if isinstance(parent_ids, (str, bytes)):
+            raise AuthorityDataError("parent_ids must be a sequence of record IDs")
+        parents = tuple(
+            _nonempty_string(parent_id, field="parent_id") for parent_id in parent_ids
+        )
+        if len(parents) != len(set(parents)):
+            return self._denied(output, "DUPLICATE_REQUIRED_PARENT")
+        if output.record_id in parents:
+            return self._denied(output, "CYCLIC_PARENT")
+
+        snapshot = self._required_policy(policy_key, OperationRole.RELAY)
+        if isinstance(snapshot, str):
+            return self._denied(output, snapshot)
+        policy_cap = snapshot.caps.get(policy_key.action_scope)
+        if policy_cap is None:
+            return self._denied(output, "MISSING_SCOPE_CAPABILITY")
+        transform_cap = (
+            Capability.meet((policy_cap, Capability.INFORM))
+            if transform_class is TransformClass.FREEFORM
+            else policy_cap
+        )
+
+        try:
+            support_ids, support_digests, dependencies, parent_envelopes = self._parent_support(
+                output.record_id, parents
+            )
+        except _AdmissionRejected as error:
+            return self._denied(output, str(error))
+        if (
+            transform_class is TransformClass.IDENTITY
+            and output.payload_digest != parent_envelopes[0].payload_digest
+        ):
+            return self._denied(output, "IDENTITY_PAYLOAD_MISMATCH")
+        if add_transform_dependency:
+            dependencies = dependencies + (
+                AuthorityDependency(
+                    record_id=output.record_id,
+                    kind=DependencyKind.TRANSFORM_POLICY,
+                    policy_key=policy_key,
+                    granting_generation=snapshot.generation,
+                    root_record_id=output.record_id,
+                    root_key_digest=None,
+                    action_scope=policy_key.action_scope,
+                    receipt_id=None,
+                ),
+            )
+        dependencies = self._deduplicate_dependencies(dependencies)
+        envelope = AdmissionEnvelope(
+            schema_version="b7/p2-v1",
+            record_id=output.record_id,
+            payload_digest=output.payload_digest,
+            admission_state=AdmissionState.COMMITTED,
+            transform_class=transform_class,
+            direct_parent_ids=parents,
+            support_root_ids=support_ids,
+            support_root_key_digests=support_digests,
+            own_policy_key=policy_key,
+            own_policy_version=snapshot.version,
+            own_granting_generation=snapshot.generation,
+            bound_cap=policy_cap,
+            transform_cap=transform_cap,
+            authority_receipt=None,
+            source_object_claim=None,
+            admitted_at=None,
+            supersedes_record_id=output.supersedes_record_id,
+        )
+        return self._commit(
+            output,
+            envelope,
+            dependencies,
+            expected_policies={policy_key: snapshot.generation},
+        )
+
+    def _parent_support(
+        self, record_id: str, parent_ids: tuple[str, ...]
+    ) -> tuple[
+        tuple[str, ...],
+        tuple[str, ...],
+        tuple[AuthorityDependency, ...],
+        tuple[AdmissionEnvelope, ...],
+    ]:
+        support: dict[str, str] = {}
+        inherited: list[AuthorityDependency] = []
+        parent_envelopes: list[AdmissionEnvelope] = []
+        for parent_id in parent_ids:
+            parent = self._store.envelope(parent_id)
+            if parent is None:
+                raise _AdmissionRejected("MISSING_REQUIRED_PARENT")
+            if parent.admission_state is not AdmissionState.COMMITTED:
+                raise _AdmissionRejected("INCOMPLETE_REQUIRED_PARENT")
+            parent_envelopes.append(parent)
+            parent_dependencies = self._store.dependencies(parent_id)
+            if any(item.record_id != parent_id for item in parent_dependencies):
+                raise _AdmissionRejected("MALFORMED_PARENT_DEPENDENCY")
+            source_dependencies = {
+                (item.root_record_id, item.root_key_digest)
+                for item in parent_dependencies
+                if item.kind is DependencyKind.SOURCE_AUTHORITY
+            }
+            for root_id, root_digest in zip(
+                parent.support_root_ids,
+                parent.support_root_key_digests,
+                strict=True,
+            ):
+                if (root_id, root_digest) not in source_dependencies:
+                    raise _AdmissionRejected("MISSING_PARENT_AUTHORITY_SUPPORT")
+                previous = support.setdefault(root_id, root_digest)
+                if previous != root_digest:
+                    raise _AdmissionRejected("CONFLICTING_PARENT_ROOT_IDENTITY")
+            inherited.extend(
+                AuthorityDependency(
+                    record_id=record_id,
+                    kind=item.kind,
+                    policy_key=item.policy_key,
+                    granting_generation=item.granting_generation,
+                    root_record_id=item.root_record_id,
+                    root_key_digest=item.root_key_digest,
+                    action_scope=item.action_scope,
+                    receipt_id=item.receipt_id,
+                )
+                for item in parent_dependencies
+            )
+        ordered_support = tuple(sorted(support.items()))
+        return (
+            tuple(root_id for root_id, _ in ordered_support),
+            tuple(root_digest for _, root_digest in ordered_support),
+            tuple(inherited),
+            tuple(parent_envelopes),
+        )
+
+    @staticmethod
+    def _deduplicate_dependencies(
+        dependencies: tuple[AuthorityDependency, ...]
+    ) -> tuple[AuthorityDependency, ...]:
+        unique: dict[bytes, AuthorityDependency] = {}
+        for dependency in dependencies:
+            marker = canonical_json_bytes(
+                [
+                    dependency.kind.value,
+                    dependency.policy_key.as_list(),
+                    dependency.granting_generation,
+                    dependency.root_record_id,
+                    dependency.root_key_digest,
+                    dependency.action_scope,
+                    dependency.receipt_id,
+                ]
+            )
+            unique.setdefault(marker, dependency)
+        return tuple(unique[key] for key in sorted(unique))
+
+    def _required_policy(
+        self, key: PolicyKey, role: OperationRole
+    ) -> PolicySnapshot | str:
+        snapshot = self._store.policy(key)
+        if snapshot is None:
+            return "MISSING_CURRENT_POLICY"
+        if snapshot.operation_role is not role:
+            return "POLICY_ROLE_MISMATCH"
+        return snapshot
+
+    def _commit(
+        self,
+        output: AuthorityOutput,
+        envelope: AdmissionEnvelope,
+        dependencies: tuple[AuthorityDependency, ...],
+        *,
+        expected_policies: Mapping[PolicyKey, int],
+        receipt_binding_digest: str | None = None,
+    ) -> AdmissionResult:
+        try:
+            stored = self._store.commit_admission(
+                envelope,
+                dependencies,
+                expected_policies=expected_policies,
+                receipt_binding_digest=receipt_binding_digest,
+            )
+        except AuthorityConflict:
+            return self._denied(output, "ADMISSION_CONFLICT")
+        return AdmissionResult(True, "ADMITTED", output.record_id, stored)
+
+    @staticmethod
+    def _require_output(output: AuthorityOutput) -> None:
+        if not isinstance(output, AuthorityOutput):
+            raise AuthorityDataError("admission requires an AuthorityOutput")
+
+    @staticmethod
+    def _denied(output: AuthorityOutput, reason: str) -> AdmissionResult:
+        return AdmissionResult(False, reason, output.record_id)
+
+
 __all__ = [
+    "AdmissionGate",
     "AdmissionEnvelope",
+    "AdmissionResult",
     "AdmissionState",
+    "AuthorityConflict",
     "AuthorityDataError",
     "AuthorityDependency",
+    "AuthorityOutput",
     "AuthorityReceipt",
     "AuthorityStateReader",
+    "AuthorityStore",
     "AuthorityTrustStore",
     "AuthorityVerifier",
     "Capability",
     "DependencyKind",
     "FORBIDDEN_RUNTIME_FIELDS",
     "OperationRole",
+    "InMemoryAuthorityStore",
     "PolicyKey",
     "PolicySnapshot",
     "ReceiptRootKey",
     "ReceiptVerification",
     "SourceAuthorityEvent",
     "TransformClass",
+    "TransformRef",
     "VerificationReason",
     "canonical_json_bytes",
 ]

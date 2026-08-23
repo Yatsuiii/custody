@@ -21,6 +21,13 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Protocol, Sequence
 
+from custody.authority import (
+    AdmissionGate,
+    AdmissionResult,
+    AuthorityOutput,
+    SourceAuthorityEvent,
+    TransformRef,
+)
 from custody.catalog import TrustCatalog
 from custody.graph import CustodyGraph
 from custody.origin import Admitted, CustodyRecord, ToolTrust, Trust, take_custody
@@ -265,3 +272,107 @@ class CustodyMemoryService:
         withheld = sum(s.withheld for s in self.splits)
         total = sum(s.total for s in self.splits)
         return withheld, total
+
+
+class AuthorityRecordPublisher(Protocol):
+    """Downstream publication port for one already-committed B7 record."""
+
+    async def write_authority_record(
+        self,
+        *,
+        app_name: str,
+        user_id: str,
+        record_id: str,
+        text: str,
+    ) -> None: ...
+
+
+@dataclass
+class AuthorityMemoryService:
+    """Commit B7 authority before publishing an addressable memory.
+
+    This is intentionally separate from :class:`CustodyMemoryService`.
+    Legacy tool trust and exact-text resolution cannot enter this path or be
+    translated into ACT authority.
+    """
+
+    admission: AdmissionGate
+    downstream: AuthorityRecordPublisher
+
+    async def admit_source(
+        self,
+        *,
+        app_name: str,
+        user_id: str,
+        record_id: str,
+        source_event: SourceAuthorityEvent,
+    ) -> AdmissionResult:
+        text = source_event.canonical_source_bytes.decode("utf-8")
+        result = self.admission.admit_source(
+            source_event,
+            AuthorityOutput.from_text(record_id=record_id, text=text),
+        )
+        return await self._publish(result, app_name, user_id, text)
+
+    async def admit_identity(
+        self,
+        *,
+        app_name: str,
+        user_id: str,
+        record_id: str,
+        parent_id: str,
+        text: str,
+    ) -> AdmissionResult:
+        result = self.admission.admit_identity(
+            parent_id,
+            AuthorityOutput.from_text(record_id=record_id, text=text),
+        )
+        return await self._publish(result, app_name, user_id, text)
+
+    async def admit_registered(
+        self,
+        *,
+        app_name: str,
+        user_id: str,
+        record_id: str,
+        transform_ref: TransformRef,
+        parent_ids: Sequence[str],
+        text: str,
+    ) -> AdmissionResult:
+        result = self.admission.admit_registered(
+            transform_ref,
+            parent_ids,
+            AuthorityOutput.from_text(record_id=record_id, text=text),
+        )
+        return await self._publish(result, app_name, user_id, text)
+
+    async def admit_freeform(
+        self,
+        *,
+        app_name: str,
+        user_id: str,
+        record_id: str,
+        parent_ids: Sequence[str],
+        text: str,
+    ) -> AdmissionResult:
+        result = self.admission.admit_freeform(
+            parent_ids,
+            AuthorityOutput.from_text(record_id=record_id, text=text),
+        )
+        return await self._publish(result, app_name, user_id, text)
+
+    async def _publish(
+        self,
+        result: AdmissionResult,
+        app_name: str,
+        user_id: str,
+        text: str,
+    ) -> AdmissionResult:
+        if result.admitted:
+            await self.downstream.write_authority_record(
+                app_name=app_name,
+                user_id=user_id,
+                record_id=result.record_id,
+                text=text,
+            )
+        return result
