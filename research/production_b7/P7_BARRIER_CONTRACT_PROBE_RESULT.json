@@ -1,0 +1,113 @@
+{
+  "barrier_code_digests": {
+    "_Barrier": "868ef667a59967747b7313d86cfaea211bfdc03472711cdc4afc16455b36ca93",
+    "_Counters": "1b59c78f70f8ece6664c9c32bd71b53452c04c804563baa13bdd787a8abe817f",
+    "_P7Client": "0b1a3ecbf06a7af4d4597749ba44a55781c022c3a626414696b3e144c9917191",
+    "scripts/p7_run.py_whole_file": "7ed5b262a8e06578216814d464ebfef162b26468e3ae58c15293afe91a893ccb"
+  },
+  "classification": "P7_TRANSACTION_BARRIER_CONTRACT_PROBE",
+  "cleanup": {
+    "complete": true,
+    "deleted": 1,
+    "remaining": 0
+  },
+  "completed_at": "2026-08-24T18:32:11.852676+00:00",
+  "database": "(default)",
+  "harness_sha_tested": "085c4d5a9a89d0ae932f5a4814af5620f0223306",
+  "namespace_prefix": "custody_p7_barrier_contract_20260824_01",
+  "not_p7": true,
+  "not_security_evidence": true,
+  "o_barrier": {
+    "errors": [
+      "AttributeError(\"'generator' object has no attribute 'exists'\")"
+    ],
+    "events": [
+      {
+        "at": "2026-08-24T18:31:56.220452+00:00",
+        "monotonic": 19973.176317088,
+        "name": "seed_document_created",
+        "value": "before"
+      },
+      {
+        "at": "2026-08-24T18:31:56.220522+00:00",
+        "monotonic": 19973.176369577,
+        "name": "main_thread_launching_transaction"
+      },
+      {
+        "at": "2026-08-24T18:31:57.317235+00:00",
+        "attempt": 1,
+        "monotonic": 19974.273100683,
+        "name": "txn_invocation_started"
+      },
+      {
+        "at": "2026-08-24T18:31:57.317306+00:00",
+        "monotonic": 19974.27315777,
+        "name": "barrier_reached_observed_by_parent",
+        "reached": true
+      },
+      {
+        "at": "2026-08-24T18:32:00.396001+00:00",
+        "monotonic": 19977.351864075,
+        "name": "independent_client_committed_external_write",
+        "value": "external_write"
+      },
+      {
+        "at": "2026-08-24T18:32:00.396038+00:00",
+        "monotonic": 19977.351885004,
+        "name": "main_thread_released_barrier"
+      },
+      {
+        "at": "2026-08-24T18:32:00.767798+00:00",
+        "monotonic": 19977.723656578,
+        "name": "transaction_thread_finished",
+        "still_alive": false
+      },
+      {
+        "at": "2026-08-24T18:32:01.919097+00:00",
+        "monotonic": 19978.874958442,
+        "name": "final_state_read",
+        "value": "external_write"
+      }
+    ],
+    "final_document_value": "external_write",
+    "invocation_count": 1,
+    "no_deadlock": true,
+    "observed_values_by_attempt": [],
+    "reason": "transaction raised: ['AttributeError(\"\\'generator\\' object has no attribute \\'exists\\'\")']",
+    "saw_external_write_on_delayed_read": false,
+    "verdict": "FAIL"
+  },
+  "outcome": "P7-BARRIER-INFRASTRUCTURE-FAIL",
+  "p_barrier": {
+    "barrier_seen_at": "2026-08-24T18:32:05.134185+00:00",
+    "child_events": [
+      {
+        "at": "2026-08-24T18:32:03.244587+00:00",
+        "name": "child_process_started"
+      },
+      {
+        "at": "2026-08-24T18:32:05.133899+00:00",
+        "name": "child_txn_started"
+      },
+      {
+        "at": "2026-08-24T18:32:05.133976+00:00",
+        "name": "child_barrier_reached"
+      }
+    ],
+    "child_exitcode": -9,
+    "child_killed": true,
+    "kill_confirmed_dead_at": "2026-08-24T18:32:05.140119+00:00",
+    "kill_issued_at": "2026-08-24T18:32:05.134204+00:00",
+    "reason": "barrier reached before commit, child confirmed killed, and a fresh client found zero partial authoritative state",
+    "started_at": "2026-08-24T18:32:01.933317+00:00",
+    "target_exists_after_kill": false,
+    "unexpected_docs": [],
+    "verdict": "PASS"
+  },
+  "preflight": {
+    "probe_docs": 0
+  },
+  "probe_id": "p7-barrier-contract-20260824-01",
+  "project": "project-988bc9fe-092c-4b32-90c",
+  "started_at": "2026-08-24T18:31:52.563128+00:00"
+}
