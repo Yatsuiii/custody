@@ -1,62 +1,53 @@
-Objective: Build and freeze a fresh P7 harness revision that fixes the
-run02 lifecycle defect by arming Case O/P barriers only after fixture setup.
-This session builds the harness only; fresh probes must pass before any P7
-execution under the new identity.
+Objective: Run and freeze a fresh O/P transaction-barrier probe against the
+run03 harness, whose barriers are explicitly armed after fixture setup. This
+is infrastructure evidence only, not P7 or B7 efficacy evidence.
 
 Lane: optimization/research engineering — evidence-gated Firestore harness
 infrastructure.
 
-Branch: p7/b7-live-20260825-run03
-Parent: p7/b7-live-20260825-run02 @ 8ee72faeda2f83c4f925f405a8f4394d7c7661da
-        (corrected RPC read interception; run02 invalid attempt is preserved
-        separately at evidence commit bda1f8cd250feb5b8f2d351eab8c80adbeddd069)
+Branch: probe/p7-barrier-contract-20260825-04
+Parent: p7/b7-live-20260825-run03 @ d352c2edf0c0b08d6d3e9def6aaea106d6d0791e
+        (fresh lifecycle-corrected harness; MUST NOT be modified)
 
-Fresh P7 identity:
-- run_id: p7-b7-20260825-run03
-- namespace: custody_p7_b7_20260825_run03
-- artifacts: P7_RUN03_RAW_TRACE.json, P7_RUN03_RESULT.json,
-  P7_RUN03_CLEANUP.json
+Fresh probe identity:
+- probe_id: p7-barrier-contract-20260825-04
+- namespace: custody_p7_barrier_contract_20260825_04
+- result: research/production_b7/P7_BARRIER_CONTRACT_PROBE_04_RESULT.json
 
 Allowed files:
-- scripts/p7_run.py
-- research/production_b7/P7_HARNESS_DESIGN_NOTE.md
+- scripts/p7_barrier_contract_probe_04.py
+- research/production_b7/P7_BARRIER_CONTRACT_PROBE_04_RESULT.json
 - .claude/SESSION_CONTRACT.md
 
 Non-goals:
-- No edit to any file under custody/.
-- No edit to tests/test_b7_production_equivalence.py.
-- No reuse of run01 or run02 identities.
-- No P7 execution in this harness-build session.
-- No claim of infrastructure support until fresh O/P probes pass.
-
-Design decision: `_Barrier` starts disarmed and exposes one explicit `arm()`
-transition. Case O arms only after root/child fixture construction and its
-history read; Case P arms only after the child watcher is ready and immediately
-before the killed-writer setup. The RPC-boundary interception from run02 is
-unchanged; only lifecycle ownership is corrected so setup reads cannot consume
-or block the race barrier.
+- No edit to scripts/p7_run.py, custody/, or tests/.
+- No reuse of probe identities -01/-02/-03.
+- No use of P7 run03 identity or P7 output artifacts.
+- No execution until this probe code is committed, pushed, and local HEAD
+  equals the remote branch SHA.
 
 Acceptance gates:
-1. scripts/p7_run.py uses run03 identity and artifacts, and Case O/P call
-   `barrier.arm()` only after setup.
-2. The harness compiles, Ruff passes, and the local equivalence test passes;
-   custody/ and tests/ remain unchanged.
-3. The harness revision is committed and pushed; local HEAD equals the remote
-   branch SHA before any fresh probe runs.
-4. A separate fresh probe pair uses identity
-   p7-barrier-contract-20260825-04 and namespace
-   custody_p7_barrier_contract_20260825_04; both O and P must pass before any
-   run03 P7 execution.
-5. If probes pass, actual P7 run03 requires a separate explicit user
-   authorization because run02's authorization applied to the spent run02
-   identity.
+1. The probe imports _Barrier, _Counters, _P7FirestoreApi, and _P7Client
+   from the run03 harness SHA d352c2edf0c0b08d6d3e9def6aaea106d6d0791e;
+   it does not copy their source.
+2. O creates its document before `barrier.arm()`, then proves the armed
+   production-normalized `_FirestoreTransactionPort.get` reaches the RPC
+   barrier, observes an independent commit while paused, and resumes without
+   deadlock.
+3. P arms only after child setup, reaches Transaction.create, is SIGKILLed
+   before commit, and a fresh read finds no partial state.
+4. Exactly one result artifact records preflight, timestamped events, source
+   digests, both terminal verdicts, and cleanup; exit code is 0 only on dual
+   PASS.
+5. The result is committed and pushed separately, with local==remote SHA
+   verification. Only dual PASS permits requesting separate authorization for
+   actual P7 run03.
 
-Verification planned:
+Verification before execution:
 - `/run/media/Yatsuiii/Windows-SSD/custody/.venv/bin/python -m py_compile
-  scripts/p7_run.py`
-- `/home/Yatsuiii/.local/bin/ruff check scripts/p7_run.py`
-- `/run/media/Yatsuiii/Windows-SSD/custody/.venv/bin/python -m unittest
-  tests.test_b7_production_equivalence`
-- commit/push/local==remote checks before fresh probes.
+  scripts/p7_barrier_contract_probe_04.py`
+- `/home/Yatsuiii/.local/bin/ruff check scripts/p7_barrier_contract_probe_04.py`
+- `git diff --stat -- scripts/p7_run.py custody tests` is empty;
+- commit/push/local==remote checks for this probe branch.
 
 Status: active
