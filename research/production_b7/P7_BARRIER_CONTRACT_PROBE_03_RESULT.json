@@ -1,0 +1,129 @@
+{
+  "barrier_code_digests": {
+    "_Barrier": "ad901c36c204b44f44c9277653ed2c7fe424ac6af02719a407b146f8fb63939e",
+    "_Counters": "1b59c78f70f8ece6664c9c32bd71b53452c04c804563baa13bdd787a8abe817f",
+    "_P7Client": "50d59eea5cd7f26dd7cd037efbc70810c06e544529977263b63280ea04b660b0",
+    "_P7FirestoreApi": "dda540e91d5ddfec1f2b5b9e85c33e23c680011edd492a0fe1ba92aec3675393",
+    "scripts/p7_run.py_whole_file": "b48b89c9b52a12946daa722e1ceec7886364c32d53817934633e3e5e8810a8f4"
+  },
+  "classification": "P7_TRANSACTION_BARRIER_CONTRACT_PROBE",
+  "cleanup": {
+    "complete": true,
+    "deleted": 1,
+    "remaining": 0
+  },
+  "completed_at": "2026-08-24T19:07:27.736100+00:00",
+  "database": "(default)",
+  "harness_sha_tested": "8ee72faeda2f83c4f925f405a8f4394d7c7661da",
+  "namespace_prefix": "custody_p7_barrier_contract_20260825_03",
+  "not_p7": true,
+  "not_security_evidence": true,
+  "o_barrier": {
+    "barrier_reached": true,
+    "errors": [],
+    "events": [
+      {
+        "at": "2026-08-24T19:07:13.430360+00:00",
+        "monotonic": 22090.386220099,
+        "name": "T1_seed_document_created",
+        "value": "before"
+      },
+      {
+        "at": "2026-08-24T19:07:13.430422+00:00",
+        "monotonic": 22090.38626847,
+        "name": "T1_transaction_thread_launched"
+      },
+      {
+        "at": "2026-08-24T19:07:14.537221+00:00",
+        "attempt": 1,
+        "monotonic": 22091.493086138,
+        "name": "T2_transaction_invocation_started"
+      },
+      {
+        "at": "2026-08-24T19:07:14.537371+00:00",
+        "monotonic": 22091.493228616,
+        "name": "T4_barrier_reached_observed_by_parent",
+        "reached": true
+      },
+      {
+        "at": "2026-08-24T19:07:17.458630+00:00",
+        "monotonic": 22094.41448774,
+        "name": "T5_independent_client_committed_external_write",
+        "value": "external_write"
+      },
+      {
+        "at": "2026-08-24T19:07:17.458657+00:00",
+        "monotonic": 22094.414505193,
+        "name": "T6_parent_released_barrier"
+      },
+      {
+        "at": "2026-08-24T19:07:18.962492+00:00",
+        "attempt": 1,
+        "monotonic": 22095.918355167,
+        "name": "T3_production_normalized_read_completed",
+        "value": "external_write"
+      },
+      {
+        "at": "2026-08-24T19:07:18.962701+00:00",
+        "attempt": 1,
+        "monotonic": 22095.918550434,
+        "name": "T7_transaction_write_staged"
+      },
+      {
+        "at": "2026-08-24T19:07:19.512237+00:00",
+        "monotonic": 22096.468104248,
+        "name": "T8_transaction_thread_finished",
+        "still_alive": false
+      },
+      {
+        "at": "2026-08-24T19:07:20.775417+00:00",
+        "monotonic": 22097.73128116,
+        "name": "T9_fresh_call_reread_final_state",
+        "value": "txn_saw_external_write"
+      }
+    ],
+    "final_document_value": "txn_saw_external_write",
+    "invocation_count": 1,
+    "no_deadlock": true,
+    "observed_values_by_attempt": [
+      "external_write"
+    ],
+    "reason": "corrected production-normalized read reached the RPC barrier, resumed without deadlock, and observed the external commit",
+    "result": "external_write",
+    "saw_external_write_on_delayed_read": true,
+    "verdict": "PASS"
+  },
+  "outcome": "P7-BARRIER-INFRASTRUCTURE-SUPPORTED",
+  "p_barrier": {
+    "barrier_reached": true,
+    "barrier_seen_at": "2026-08-24T19:07:24.057390+00:00",
+    "child_events": [
+      {
+        "at": "2026-08-24T19:07:22.241674+00:00",
+        "name": "P_child_started"
+      },
+      {
+        "at": "2026-08-24T19:07:24.057063+00:00",
+        "name": "P_transaction_started"
+      },
+      {
+        "at": "2026-08-24T19:07:24.057147+00:00",
+        "name": "P_barrier_reached_in_child"
+      }
+    ],
+    "child_exitcode": -9,
+    "child_killed": true,
+    "kill_issued_at": "2026-08-24T19:07:24.057404+00:00",
+    "reason": "create barrier was reached before commit, child was killed, and a fresh read found no partial document",
+    "started_at": "2026-08-24T19:07:20.788164+00:00",
+    "target_exists_after_kill": false,
+    "unexpected_docs": [],
+    "verdict": "PASS"
+  },
+  "preflight": {
+    "probe_docs": 0
+  },
+  "probe_id": "p7-barrier-contract-20260825-03",
+  "project": "project-988bc9fe-092c-4b32-90c",
+  "started_at": "2026-08-24T19:07:10.006612+00:00"
+}
