@@ -13,6 +13,7 @@ from live.b7_production_equivalence import (
     EXPERIMENT_ID,
     MAIN_SOURCE,
     PRODUCTION_B7_SHA,
+    _RoleCommandError,
     _issue_event,
     _prefixed_collection,
 )
@@ -262,6 +263,23 @@ class SourceBoundaryTests(unittest.TestCase):
 
 
 class IndependentGateTests(unittest.TestCase):
+    def test_role_failure_preserves_wrapped_exception_chain(self) -> None:
+        response = {
+            "ok": False,
+            "role": "POLICY",
+            "error_type": "AuthorityUnavailable",
+            "error": "B7 Firestore transaction failed",
+            "error_chain": [
+                "AuthorityUnavailable:B7 Firestore transaction failed",
+                "InvalidArgument:transaction rejected",
+            ],
+        }
+
+        error = _RoleCommandError("POLICY", response)
+
+        self.assertEqual(error.response, response)
+        self.assertIn("ROLE_COMMAND_FAILED:POLICY", str(error))
+
     def test_passing_raw_trace_scores_live_equivalence(self) -> None:
         result = score_trace(
             _passing_raw(),

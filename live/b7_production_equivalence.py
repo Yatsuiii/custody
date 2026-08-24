@@ -66,8 +66,8 @@ PRODUCTION_B7_SHA = "cb9761dc63a78e29cd366fca7cbaba5f5399c6da"
 PROJECT_ID = "project-988bc9fe-092c-4b32-90c"
 DATABASE_ID = "(default)"
 REGION = "us-central1"
-RUN_ID = "p7-b7-20260824-ec32e4e31d21"
-COLLECTION_PREFIX = "custody_p7_b7_20260824_ec32e4e31d21"
+RUN_ID = "p7-b7-20260824-obs01"
+COLLECTION_PREFIX = "custody_p7_b7_20260824_obs01"
 SOURCE_PRODUCER = "TEST-OWNED"
 ACTION_SCOPE = "export.send"
 RECOVERY_BOUND_SECONDS = 90.0
@@ -79,9 +79,9 @@ COST_CEILING_USD = 0.01
 ESTIMATED_COST_USD = 0.00065
 
 ROOT = Path(__file__).resolve().parent.parent
-RAW_TRACE_PATH = ROOT / "proof-out" / "b7-production-live-equivalence.raw.json"
-RESULT_PATH = ROOT / "proof-out" / "b7-production-live-equivalence.json"
-CLEANUP_PATH = ROOT / "proof-out" / "b7-production-live-equivalence.cleanup.json"
+RAW_TRACE_PATH = ROOT / "proof-out" / "b7-production-live-equivalence-obs01.raw.json"
+RESULT_PATH = ROOT / "proof-out" / "b7-production-live-equivalence-obs01.json"
+CLEANUP_PATH = ROOT / "proof-out" / "b7-production-live-equivalence-obs01.cleanup.json"
 GATE_SCRIPT = ROOT / "scripts" / "b7_production_equivalence_gates.py"
 GATE_MODULE = ROOT / "live" / "b7_production_equivalence_gates.py"
 
@@ -750,6 +750,18 @@ def _role_main(role: str, *, commit_barrier: bool) -> int:
     return 0
 
 
+class _RoleCommandError(RuntimeError):
+    """Preserve one failed role response across the process boundary."""
+
+    def __init__(self, role: str, response: Mapping[str, object]) -> None:
+        self.role = role
+        self.response = dict(response)
+        super().__init__(
+            f"ROLE_COMMAND_FAILED:{role}:"
+            f"{response.get('error_type')}:{response.get('error')}"
+        )
+
+
 class _RoleProcess:
     """Line protocol for one independently started P7 role process."""
 
@@ -809,10 +821,7 @@ class _RoleProcess:
             assert isinstance(audits, list)
             audits.append(response.get("integrity", {}))
         if not response.get("ok") and not permit_error:
-            raise RuntimeError(
-                f"ROLE_COMMAND_FAILED:{self.role}:"
-                f"{response.get('error_type')}:{response.get('error')}"
-            )
+            raise _RoleCommandError(self.role, response)
         return response
 
     def request(
@@ -1613,6 +1622,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             "treatment_scorer_reads": 0,
             "production_hashes_after_treatment": _production_hashes(),
         }
+        if isinstance(error, _RoleCommandError):
+            failure["role_failure"] = error.response
         result = _freeze_score_cleanup(failure)
         print(json.dumps(result, sort_keys=True, indent=2), file=sys.stderr)
         return 2
