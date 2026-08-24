@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import subprocess
 import sys
 import tempfile
 import traceback
@@ -411,6 +412,19 @@ def run_probe(*, project: str, prefix: str, output: Path) -> dict[str, object]:
             lambda: store.affected_record_ids((root_key.digest,)),
         )
         operations[-1]["contains_root"] = root_id in affected
+
+        reload_result = _run_step(
+            operations,
+            "fresh_process_reconstruction",
+            "new process -> FirestoreAuthorityStore reads and reconstructs state",
+            lambda: _fresh_process_reconstruction(
+                project=project,
+                prefix=prefix,
+                root_id=root_id,
+                output=output,
+            ),
+        )
+        operations[-1]["checks"] = reload_result["checks"]
     except BaseException as error:
         failure = {
             "failed_operation": operations[-1]["name"] if operations else None,
@@ -471,13 +485,115 @@ def _probe_result(
     return result
 
 
+def _verify_in_fresh_process(
+    *, project: str, prefix: str, root_id: str, output: Path
+) -> dict[str, object]:
+    """Read the committed fixture through a separately started process."""
+
+    raw_client = firestore.Client(project=project, database=DEFAULT_DATABASE)
+    client = _NamespacedClient(raw_client, prefix)
+    store = FirestoreAuthorityStore(client)  # type: ignore[arg-type]
+    event = SourceAuthorityEvent.from_json(
+        (ROOT / "tests" / "fixtures" / "b7" / "source_event.json").read_bytes()
+    )
+    root_key = ReceiptRootKey.from_receipt(
+        event.receipt, custody_root_record_id=root_id
+    )
+    envelope = store.envelope(root_id)
+    dependencies = store.dependencies(root_id)
+    checks = {
+        "envelope_reconstructed": envelope is not None
+        and envelope.record_id == root_id,
+        "dependencies_reconstructed": bool(dependencies)
+        and all(item.record_id == root_id for item in dependencies),
+        "issuer_key_reconstructed": store.public_key_for(
+            issuer_id=event.receipt.issuer_id,
+            issuer_key_id=event.receipt.issuer_key_id,
+        )
+        is not None,
+        "policy_reconstructed": store.policy(event.receipt.policy_key) is not None,
+        "receipt_root_reconstructed": store.root_record_id_for_receipt(event.receipt)
+        == root_id,
+        "action_decision_reconstructed": bool(store.action_decisions()),
+        "root_revocation_reconstructed": bool(store.root_revocations()),
+        "root_marker_reconstructed": store.is_root_revoked(root_key.digest),
+        "reverse_dependency_query": root_id
+        in store.affected_record_ids((root_key.digest,)),
+    }
+    result = {
+        "status": "PASS" if all(checks.values()) else "FAIL",
+        "checks": checks,
+        "namespace_prefix": prefix,
+        "completed_at": datetime.now(UTC).isoformat(),
+    }
+    _write_json_atomic(output, result)
+    return result
+
+
+def _fresh_process_reconstruction(
+    *, project: str, prefix: str, root_id: str, output: Path
+) -> dict[str, object]:
+    child_output = output.with_name(f".{output.stem}.reload.json")
+    command = [
+        sys.executable,
+        str(Path(__file__).resolve()),
+        "--verify-only",
+        "--project",
+        project,
+        "--prefix",
+        prefix,
+        "--root-id",
+        root_id,
+        "--output",
+        str(child_output),
+    ]
+    try:
+        completed = subprocess.run(
+            command,
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            timeout=60,
+            check=False,
+        )
+    except BaseException as error:
+        raise RuntimeError("fresh reconstruction process could not start") from error
+    if not child_output.exists():
+        raise RuntimeError(
+            "fresh reconstruction process produced no result artifact; "
+            f"exit_code={completed.returncode}, stderr={completed.stderr!r}"
+        )
+    try:
+        result = json.loads(child_output.read_text(encoding="utf-8"))
+    except BaseException as error:
+        raise RuntimeError("fresh reconstruction result is not valid JSON") from error
+    if completed.returncode != 0 or result.get("status") != "PASS":
+        raise RuntimeError(
+            "fresh reconstruction failed: "
+            f"exit_code={completed.returncode}, result={result!r}, "
+            f"stderr={completed.stderr!r}"
+        )
+    return result
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--project", default=DEFAULT_PROJECT)
     parser.add_argument("--prefix", default=DEFAULT_PREFIX)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--verify-only", action="store_true")
+    parser.add_argument("--root-id", default="PROBE-ROOT")
     arguments = parser.parse_args()
     try:
+        if arguments.verify_only:
+            result = _verify_in_fresh_process(
+                project=arguments.project,
+                prefix=arguments.prefix,
+                root_id=arguments.root_id,
+                output=arguments.output,
+            )
+            print(json.dumps(result, indent=2, sort_keys=True))
+            return 0 if result["status"] == "PASS" else 2
         result = run_probe(
             project=arguments.project,
             prefix=arguments.prefix,

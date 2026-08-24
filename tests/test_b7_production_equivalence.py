@@ -53,9 +53,7 @@ from custody.store import SqliteAuthorityStore
 ROOT = Path(__file__).parent.parent
 FIXTURES = Path(__file__).parent / "fixtures" / "b7"
 IDENTITY = PolicyKey("finance", "custody", "identity", "R1", "export.send")
-REGISTERED = PolicyKey(
-    "finance", "custody", "vendor_projection", "R1", "export.send"
-)
+REGISTERED = PolicyKey("finance", "custody", "vendor_projection", "R1", "export.send")
 FREEFORM = PolicyKey("finance", "model", "freeform", "R1", "export.send")
 
 
@@ -105,8 +103,7 @@ def _events() -> tuple[SourceAuthorityEvent, ...]:
         "source_event_004.json",
     )
     return tuple(
-        SourceAuthorityEvent.from_json((FIXTURES / name).read_bytes())
-        for name in names
+        SourceAuthorityEvent.from_json((FIXTURES / name).read_bytes()) for name in names
     )
 
 
@@ -169,9 +166,7 @@ def _world(store: AuthorityStore | None = None) -> _World:
     )
 
 
-def _admit_source(
-    world: _World, event_index: int, record_id: str
-) -> AdmissionResult:
+def _admit_source(world: _World, event_index: int, record_id: str) -> AdmissionResult:
     event = world.events[event_index]
     return world.gate.admit_source(
         event,
@@ -201,9 +196,7 @@ def _execution_observation(execution: AuthorityExecution) -> dict[str, object]:
         "effective_cap": execution.decision.effective_cap.value,
         "dispatched": execution.dispatched,
         "evaluated_record_ids": list(execution.decision.evaluated_record_ids),
-        "support_root_key_digests": list(
-            execution.decision.support_root_key_digests
-        ),
+        "support_root_key_digests": list(execution.decision.support_root_key_digests),
     }
 
 
@@ -265,16 +258,12 @@ def _run_treatment() -> dict[str, object]:
         )
     )
     trace["A1"] = _execute(world_a, "A1", "A1-TOOL-ECHO")
-    trace["A2_root"] = _admission_observation(
-        _admit_source(world_a, 0, "A2-ROOT")
-    )
+    trace["A2_root"] = _admission_observation(_admit_source(world_a, 0, "A2-ROOT"))
     trace["A2_relay"] = _admission_observation(
         world_a.gate.admit_registered(
             TransformRef(REGISTERED),
             ("A2-ROOT",),
-            AuthorityOutput.from_text(
-                record_id="A2-RELAY", text="ACCOUNT-101"
-            ),
+            AuthorityOutput.from_text(record_id="A2-RELAY", text="ACCOUNT-101"),
         )
     )
     trace["A2"] = _execute(world_a, "A2", "A2-RELAY")
@@ -297,9 +286,7 @@ def _run_treatment() -> dict[str, object]:
     world_c = _world()
     changed_object = dict(world_c.events[0].source_object)
     changed_object["value"] = "OTHER-ACCOUNT"
-    wrong_object = dataclasses.replace(
-        world_c.events[0], source_object=changed_object
-    )
+    wrong_object = dataclasses.replace(world_c.events[0], source_object=changed_object)
     trace["C_admission"] = _admission_observation(
         world_c.gate.admit_source(
             wrong_object,
@@ -309,9 +296,7 @@ def _run_treatment() -> dict[str, object]:
     trace["C"] = _execute(world_c, "C", "C-ROOT")
 
     world_d = _world()
-    trace["D_root"] = _admission_observation(
-        _admit_source(world_d, 0, "D-ROOT")
-    )
+    trace["D_root"] = _admission_observation(_admit_source(world_d, 0, "D-ROOT"))
     trace["D"] = _execution_observation(
         world_d.gateway.execute(
             _action("action-D", action_scope="payroll.read"),
@@ -321,9 +306,7 @@ def _run_treatment() -> dict[str, object]:
     )
 
     world_e = _world()
-    trace["E_root"] = _admission_observation(
-        _admit_source(world_e, 0, "E-ROOT")
-    )
+    trace["E_root"] = _admission_observation(_admit_source(world_e, 0, "E-ROOT"))
     histories["E_before"] = _history(world_e.store)
     current = world_e.store.policy(world_e.events[0].receipt.policy_key)
     assert current is not None
@@ -335,18 +318,14 @@ def _run_treatment() -> dict[str, object]:
     histories["E_after"] = _history(world_e.store)
 
     world_f = _world()
-    trace["F_root"] = _admission_observation(
-        _admit_source(world_f, 0, "F-ROOT")
-    )
+    trace["F_root"] = _admission_observation(_admit_source(world_f, 0, "F-ROOT"))
     trace["F_replay"] = _admission_observation(
         _admit_source(world_f, 0, "F-UNRELATED-ROOT")
     )
     trace["F"] = _execute(world_f, "F", "F-UNRELATED-ROOT")
 
     world_ghij = _world()
-    trace["G_root"] = _admission_observation(
-        _admit_source(world_ghij, 0, "G-ROOT")
-    )
+    trace["G_root"] = _admission_observation(_admit_source(world_ghij, 0, "G-ROOT"))
     trace["G_admission"] = _admission_observation(
         world_ghij.gate.admit_identity(
             "G-ROOT",
@@ -360,9 +339,7 @@ def _run_treatment() -> dict[str, object]:
         world_ghij.gate.admit_registered(
             TransformRef(REGISTERED),
             ("G-IDENTITY",),
-            AuthorityOutput.from_text(
-                record_id="H-REGISTERED", text="ACCOUNT-101"
-            ),
+            AuthorityOutput.from_text(record_id="H-REGISTERED", text="ACCOUNT-101"),
         )
     )
     trace["H"] = _execute(world_ghij, "H", "H-REGISTERED")
@@ -389,9 +366,7 @@ def _run_treatment() -> dict[str, object]:
         graphs[record_id] = _graph_observation(world_ghij.store, record_id)
 
     world_kl = _world()
-    trace["K_root"] = _admission_observation(
-        _admit_source(world_kl, 0, "K-ROOT")
-    )
+    trace["K_root"] = _admission_observation(_admit_source(world_kl, 0, "K-ROOT"))
     for parent_id, record_id in (
         ("K-ROOT", "K-AGENT-A"),
         ("K-AGENT-A", "K-AGENT-B"),
@@ -399,9 +374,7 @@ def _run_treatment() -> dict[str, object]:
         trace[f"{record_id}_admission"] = _admission_observation(
             world_kl.gate.admit_identity(
                 parent_id,
-                AuthorityOutput(
-                    record_id, world_kl.events[0].source_object_commitment
-                ),
+                AuthorityOutput(record_id, world_kl.events[0].source_object_commitment),
             )
         )
     trace["K"] = _execute(world_kl, "K", "K-AGENT-B")
@@ -432,9 +405,7 @@ def _run_treatment() -> dict[str, object]:
             world_m.gate.admit_registered(
                 TransformRef(REGISTERED),
                 (root_id,),
-                AuthorityOutput.from_text(
-                    record_id=descendant_id, text=descendant_id
-                ),
+                AuthorityOutput.from_text(record_id=descendant_id, text=descendant_id),
             )
         )
     trace["M_mixed"] = _admission_observation(
@@ -466,9 +437,7 @@ def _run_treatment() -> dict[str, object]:
         ("M4_unrelated", "M-ROOT-03"),
     ):
         trace[case_id] = _execute(world_m, case_id, record_id)
-    trace["M4_root"] = _admission_observation(
-        _admit_source(world_m, 3, "M-ROOT-04")
-    )
+    trace["M4_root"] = _admission_observation(_admit_source(world_m, 3, "M-ROOT-04"))
     trace["M4_desc"] = _admission_observation(
         world_m.gate.admit_registered(
             TransformRef(REGISTERED),
@@ -576,8 +545,7 @@ def _run_local_restart(path: Path) -> dict[str, object]:
         "child_admission": _admission_observation(child),
         "records": [item.canonical_bytes().hex() for item in first.records()],
         "dependencies": [
-            item.canonical_bytes().hex()
-            for item in first.dependencies("N-CHILD")
+            item.canonical_bytes().hex() for item in first.dependencies("N-CHILD")
         ],
     }
     first.close()
@@ -621,12 +589,9 @@ def _run_local_killed_writer(path: Path) -> dict[str, object]:
     process.kill()
     process.join(timeout=5)
     recovered = SqliteAuthorityStore(path)
-    records_before_retry = [
-        item.record_id for item in recovered.records()
-    ]
+    records_before_retry = [item.record_id for item in recovered.records()]
     dependencies_before_retry = [
-        item.canonical_bytes().hex()
-        for item in recovered.dependencies("P-ROOT")
+        item.canonical_bytes().hex() for item in recovered.dependencies("P-ROOT")
     ]
     dispatcher = _Dispatcher()
     immediate = AuthorityGateway(recovered).execute(
@@ -694,9 +659,7 @@ def _run_local_race() -> dict[str, object]:
         "candidate_barrier_reached": reached,
         "thread_finished": not thread.is_alive(),
         "thread_errors": errors,
-        "execution": (
-            _execution_observation(executions[0]) if executions else None
-        ),
+        "execution": (_execution_observation(executions[0]) if executions else None),
         "affected_record_ids": list(revocation.affected_record_ids),
         "dispatches": list(world.dispatcher.calls),
         "history_before": before,
@@ -822,9 +785,7 @@ class _PostActionScorer:
                     f"{case_id}: reason={actual.get('reason')} wanted {reason}"
                 )
             if actual.get("dispatched") != allowed:
-                failures.append(
-                    f"{case_id}: dispatch did not match final allow"
-                )
+                failures.append(f"{case_id}: dispatch did not match final allow")
 
         admission_table = table["admissions"]
         assert isinstance(admission_table, Mapping)
@@ -834,10 +795,7 @@ class _PostActionScorer:
                 failures.append(f"{case_id}: missing admission observation")
                 continue
             admitted, reason = expectation
-            if (
-                actual.get("admitted") != admitted
-                or actual.get("reason") != reason
-            ):
+            if actual.get("admitted") != admitted or actual.get("reason") != reason:
                 failures.append(f"{case_id}: admission mismatch ({actual})")
 
         graph_table = table["graphs"]
@@ -862,17 +820,15 @@ class _PostActionScorer:
                 if isinstance(item, Mapping)
             ]
             expected_dependencies = expectation.get("dependencies")
-            if (
-                not isinstance(expected_dependencies, list)
-                or sorted(dependency_shape) != sorted(expected_dependencies)
-            ):
+            if not isinstance(expected_dependencies, list) or sorted(
+                dependency_shape
+            ) != sorted(expected_dependencies):
                 failures.append(f"{record_id}: dependency closure mismatch")
             support_digests = actual.get("support_root_key_digests")
             source_digests = [
                 item.get("root_key_digest")
                 for item in dependencies
-                if isinstance(item, Mapping)
-                and item.get("kind") == "SOURCE_AUTHORITY"
+                if isinstance(item, Mapping) and item.get("kind") == "SOURCE_AUTHORITY"
             ]
             if (
                 not isinstance(support_digests, list)
@@ -886,17 +842,17 @@ class _PostActionScorer:
         histories = first["histories"]
         assert isinstance(histories, Mapping)
         rewrite_count = sum(
-            histories.get(f"{prefix}_before")
-            != histories.get(f"{prefix}_after")
+            histories.get(f"{prefix}_before") != histories.get(f"{prefix}_after")
             for prefix in ("E", "L", "M")
         )
         if rewrite_count:
             failures.append(f"historical rewrites observed: {rewrite_count}")
 
         m_revocation = trace.get("M1_revocation")
-        if not isinstance(m_revocation, Mapping) or m_revocation.get(
-            "affected_record_ids"
-        ) != table["m_affected"]:
+        if (
+            not isinstance(m_revocation, Mapping)
+            or m_revocation.get("affected_record_ids") != table["m_affected"]
+        ):
             failures.append("M1 affected reverse closure mismatch")
 
         legacy = trace.get("legacy")
@@ -922,14 +878,13 @@ class _PostActionScorer:
                 failures.append(f"N worker failed: {restart_after['worker_error']}")
             if restart_before.get("records") != restart_after.get("records"):
                 failures.append("N record reconstruction mismatch")
-            if restart_before.get("dependencies") != restart_after.get(
-                "dependencies"
-            ):
+            if restart_before.get("dependencies") != restart_after.get("dependencies"):
                 failures.append("N dependency reconstruction mismatch")
             execution = restart_after.get("execution")
-            if not isinstance(execution, Mapping) or execution.get(
-                "allowed"
-            ) is not True:
+            if (
+                not isinstance(execution, Mapping)
+                or execution.get("allowed") is not True
+            ):
                 failures.append("N current action did not allow after restart")
 
         race_execution = race.get("execution")
@@ -965,7 +920,10 @@ class _PostActionScorer:
             "tool_echo_false_act": [int(bool(trace["A1"]["allowed"])), 1],
             "benign_relay_utility": [int(bool(trace["A2"]["allowed"])), 1],
             "forgery_binding_false_act": [
-                sum(bool(trace[case_id]["allowed"]) for case_id in ("B", "C", "D", "E", "F")),
+                sum(
+                    bool(trace[case_id]["allowed"])
+                    for case_id in ("B", "C", "D", "E", "F")
+                ),
                 5,
             ],
             "identity_utility": [int(bool(trace["G"]["allowed"])), 1],
@@ -1078,8 +1036,7 @@ def _static_audit() -> dict[str, object]:
         ),
     }
     digest_matches = {
-        name: hashlib.sha256((FIXTURES / name).read_bytes()).hexdigest()
-        == digest
+        name: hashlib.sha256((FIXTURES / name).read_bytes()).hexdigest() == digest
         for name, digest in fixture_digests.items()
     }
     fixture_keys: set[str] = set()
@@ -1117,17 +1074,13 @@ def _static_audit() -> dict[str, object]:
             FORBIDDEN_RUNTIME_FIELDS.intersection(fixture_keys)
         ),
         "private_key_files": sorted(
-            path.name
-            for path in FIXTURES.iterdir()
-            if "private" in path.name.lower()
+            path.name for path in FIXTURES.iterdir() if "private" in path.name.lower()
         ),
         "research_runner_imports": sorted(
             name for name in imported_modules if name.startswith("research")
         ),
         "test_side_authority_constructs": sorted(
-            {"AdmissionEnvelope", "AuthorityEvaluator"}.intersection(
-                constructed_names
-            )
+            {"AdmissionEnvelope", "AuthorityEvaluator"}.intersection(constructed_names)
         )
         + capability_meet_calls,
         "treatment_references_scorer": any(
@@ -1180,12 +1133,10 @@ def _proof_report(
         "status": score["status"],
         "production_commit": _current_commit(),
         "design_digests": {
-            str(path.relative_to(ROOT)): _sha256_file(path)
-            for path in design_paths
+            str(path.relative_to(ROOT)): _sha256_file(path) for path in design_paths
         },
         "production_module_digests": {
-            str(path.relative_to(ROOT)): _sha256_file(path)
-            for path in module_paths
+            str(path.relative_to(ROOT)): _sha256_file(path) for path in module_paths
         },
         "fixture_audit": static_audit,
         "metrics": score["metrics"],
@@ -1227,10 +1178,7 @@ def _write_proof(report: Mapping[str, object]) -> None:
     rows = [
         "| Metric | Result |",
         "|---|---:|",
-        *(
-            f"| `{name}` | {value[0]}/{value[1]} |"
-            for name, value in metrics.items()
-        ),
+        *(f"| `{name}` | {value[0]}/{value[1]} |" for name, value in metrics.items()),
     ]
     markdown_path.write_text(
         "# B7 production-equivalence local proof\n\n"
@@ -1253,9 +1201,7 @@ class B7ProductionEquivalence(unittest.TestCase):
         with TemporaryDirectory() as temp_dir:
             temporary = Path(temp_dir)
             restart = _run_local_restart(temporary / "restart.db")
-            killed_writer = _run_local_killed_writer(
-                temporary / "killed-writer.db"
-            )
+            killed_writer = _run_local_killed_writer(temporary / "killed-writer.db")
         scorer.complete_actions()
         score = scorer.score(
             first,
