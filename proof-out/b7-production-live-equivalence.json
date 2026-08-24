@@ -1,0 +1,42 @@
+{
+  "canonical_result_digest": "07d67f37e71d7f92e4c1e664e31926b0eb4e02d5b24208df127c73fff9f15b94",
+  "cleanup": {
+    "cleaned_at": "2026-08-24T06:30:01.577927+00:00",
+    "cleanup_complete": true,
+    "deleted_documents": {
+      "authority_action_decisions": 0,
+      "authority_dependencies": 24,
+      "authority_issuer_keys": 1,
+      "authority_policies": 5,
+      "authority_receipt_roots": 7,
+      "authority_revocations": 0,
+      "custody": 17,
+      "revoked_receipt_roots": 0
+    },
+    "final_collection_counts": {
+      "authority_action_decisions": 0,
+      "authority_dependencies": 0,
+      "authority_issuer_keys": 0,
+      "authority_policies": 0,
+      "authority_receipt_roots": 0,
+      "authority_revocations": 0,
+      "custody": 0,
+      "revoked_receipt_roots": 0
+    },
+    "namespace_prefix": "custody_p7_b7_20260824_ec32e4e31d21",
+    "run_id": "p7-b7-20260824-ec32e4e31d21"
+  },
+  "error": "ROLE_COMMAND_FAILED:POLICY:AuthorityUnavailable:B7 Firestore transaction failed",
+  "error_type": "RuntimeError",
+  "experiment_id": "P7_LIVE_PRODUCTION_B7_INTEGRATION_PROOF",
+  "metrics": {},
+  "production_b7_sha": "cb9761dc63a78e29cd366fca7cbaba5f5399c6da",
+  "raw_trace_digest": "c88de72aeb472441d4ce1dc25a00511658a280eeee2c1b99069d9168ff0e6d8f",
+  "run_id": "p7-b7-20260824-ec32e4e31d21",
+  "runner_commit": "db1cd4b52111ee3d9141166c5ebd44a01cdcca7b",
+  "validity": {
+    "reason": "INVALID_RUNNER_ATTEMPT",
+    "valid": false
+  },
+  "verdict": "P7-INVALID-RUNNER-ATTEMPT"
+}
