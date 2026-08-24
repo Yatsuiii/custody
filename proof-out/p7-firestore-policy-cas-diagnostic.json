@@ -1,0 +1,67 @@
+{
+  "cas": {
+    "ok": true,
+    "pid": 17632,
+    "policy": {
+      "generation": 2,
+      "policy_key_digest": "54fdb7f53d3dcd66a6488cc9834f99966ad207029caf3905cb627ee244ef5534",
+      "version": "p7d-v2"
+    },
+    "return_code": 0,
+    "role": "CAS",
+    "stderr": ""
+  },
+  "cleanup": {
+    "cleaned_at": "2026-08-24T13:34:39.890908+00:00",
+    "complete": true,
+    "deleted_documents": {
+      "authority_action_decisions": 0,
+      "authority_dependencies": 0,
+      "authority_issuer_keys": 0,
+      "authority_policies": 1,
+      "authority_receipt_roots": 0,
+      "authority_revocations": 0,
+      "custody": 0,
+      "revoked_receipt_roots": 0
+    },
+    "final_collection_counts": {
+      "authority_action_decisions": 0,
+      "authority_dependencies": 0,
+      "authority_issuer_keys": 0,
+      "authority_policies": 0,
+      "authority_receipt_roots": 0,
+      "authority_revocations": 0,
+      "custody": 0,
+      "revoked_receipt_roots": 0
+    }
+  },
+  "create": {
+    "ok": true,
+    "pid": 17537,
+    "policy": {
+      "generation": 1,
+      "policy_key_digest": "54fdb7f53d3dcd66a6488cc9834f99966ad207029caf3905cb627ee244ef5534",
+      "version": "p7d-v1"
+    },
+    "return_code": 0,
+    "role": "CREATE",
+    "stderr": ""
+  },
+  "diagnostic_id": "P7D_FIRESTORE_POLICY_CAS_20260824_01",
+  "production_b7_changed": false,
+  "raw_trace_digest": "61afb39753b3d6a6095c256434659079b73a962ee3c5646133a539a0aa7c5505",
+  "reread": {
+    "ok": true,
+    "pid": 17763,
+    "policy": {
+      "generation": 2,
+      "policy_key_digest": "54fdb7f53d3dcd66a6488cc9834f99966ad207029caf3905cb627ee244ef5534",
+      "version": "p7d-v2"
+    },
+    "return_code": 0,
+    "role": "READ",
+    "stderr": ""
+  },
+  "runtime_seconds": 31.011557064000044,
+  "verdict": "P7D-POLICY-CAS-SUPPORTED"
+}

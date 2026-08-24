@@ -1,0 +1,70 @@
+{
+  "cas": {
+    "ok": true,
+    "pid": 17632,
+    "policy": {
+      "generation": 2,
+      "policy_key_digest": "54fdb7f53d3dcd66a6488cc9834f99966ad207029caf3905cb627ee244ef5534",
+      "version": "p7d-v2"
+    },
+    "return_code": 0,
+    "role": "CAS",
+    "stderr": ""
+  },
+  "create": {
+    "ok": true,
+    "pid": 17537,
+    "policy": {
+      "generation": 1,
+      "policy_key_digest": "54fdb7f53d3dcd66a6488cc9834f99966ad207029caf3905cb627ee244ef5534",
+      "version": "p7d-v1"
+    },
+    "return_code": 0,
+    "role": "CREATE",
+    "stderr": ""
+  },
+  "diagnostic_id": "P7D_FIRESTORE_POLICY_CAS_20260824_01",
+  "model_api_calls": 0,
+  "preflight": {
+    "cost_ceiling_usd": 0.001,
+    "database": "(default)",
+    "estimated_cost_usd": 2e-05,
+    "head": "fe756489fa7495c7effa6c4ccef2412e3f2a24d9",
+    "initial_collection_counts": {
+      "authority_action_decisions": 0,
+      "authority_dependencies": 0,
+      "authority_issuer_keys": 0,
+      "authority_policies": 0,
+      "authority_receipt_roots": 0,
+      "authority_revocations": 0,
+      "custody": 0,
+      "revoked_receipt_roots": 0
+    },
+    "invalid_p7_evidence_sha": "1e19684a9ffac83f82ec47367067568ecabc9f21",
+    "maximum_runtime_seconds": 180.0,
+    "namespace": "custody_p7d_policy_cas_20260824_01",
+    "production_b7_sha": "cb9761dc63a78e29cd366fca7cbaba5f5399c6da",
+    "production_diff": [],
+    "project": "project-988bc9fe-092c-4b32-90c",
+    "region": "us-central1",
+    "tracked_dirty": [],
+    "upstream": "fe756489fa7495c7effa6c4ccef2412e3f2a24d9",
+    "valid": true
+  },
+  "production_security_decisions": 0,
+  "reread": {
+    "ok": true,
+    "pid": 17763,
+    "policy": {
+      "generation": 2,
+      "policy_key_digest": "54fdb7f53d3dcd66a6488cc9834f99966ad207029caf3905cb627ee244ef5534",
+      "version": "p7d-v2"
+    },
+    "return_code": 0,
+    "role": "READ",
+    "stderr": ""
+  },
+  "runtime_seconds_before_cleanup": 15.582804090000081,
+  "scorer_fields": 0,
+  "started_at": "2026-08-24T13:34:08.879425+00:00"
+}
