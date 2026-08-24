@@ -1,6 +1,7 @@
 # P7 real-Firestore harness design note
 
-Status: harness built and frozen; not yet executed against real Firestore.
+Status: corrected harness revision built; not yet executed against real
+Firestore.
 
 ## What this reuses vs. what is new
 
@@ -23,16 +24,27 @@ Status: harness built and frozen; not yet executed against real Firestore.
 
 Production code (`custody/firestore_store.py`) is not modified. The barrier
 needed for cases O and P is implemented entirely in the harness's own
-Firestore client wrapper (`_P7Client.transaction()`), which monkeypatches
-the bound `.get` / `.create` methods on the real `firestore.Transaction`
-object it hands back to `custody/firestore_store.py`'s `_run_transaction`.
-This works because `FirestoreAuthorityStore._run_transaction` calls
-`self._client.transaction()` -- and the harness controls what `self._client`
-is (a namespaced, instrumented client), exactly as the existing, previously
-verified `scripts/firestore_contract_probe.py::_NamespacedClient` does for
-namespacing alone.
+Firestore client wrapper. The read hook is
+`_P7FirestoreApi.batch_get_documents`, installed as the namespaced client's
+`_firestore_api` implementation; the write hooks monkeypatch `.create`,
+`.set`, and `.delete` on the real `firestore.Transaction` object it hands back
+to `custody/firestore_store.py`'s `_run_transaction`. This works because
+`FirestoreAuthorityStore._run_transaction` calls `self._client.transaction()`
+-- and the harness controls what `self._client` is (a namespaced,
+instrumented client), exactly as the existing, previously verified
+`scripts/firestore_contract_probe.py::_NamespacedClient` does for namespacing
+alone.
 
-- **Case O** arms a pause on the first `transaction.get()` matching the
+The installed `google-cloud-firestore` source was read directly before this
+revision: `DocumentReference.get(transaction=...)` and
+`Client.get_all(..., transaction=...)` call
+`client._firestore_api.batch_get_documents(request=...)`; `Transaction.get()`
+delegates to `Client.get_all` and is not the production read boundary. The
+wrapper therefore counts each request document and pauses only requests that
+carry a transaction ID. It delegates all other API methods unchanged.
+
+- **Case O** arms a pause on the first transaction `batch_get_documents`
+  request matching the
   `O-DESC` document during the action's evaluation transaction. The main
   thread waits for that pause, commits a real revocation, then releases the
   paused transaction. This forces the action's authoritative read to observe
@@ -51,18 +63,16 @@ namespacing alone.
 This barrier is deterministic and repeatable (unlike a pure network-timing
 race), but it is a **new mechanism**, not something proven elsewhere in this
 repository before this session. It has not yet been exercised against real
-Firestore; correctness of the monkeypatch (that `_run_transaction` truly
-routes through `self._client.transaction()` for a namespaced, non-fake
-client) was verified by reading `custody/firestore_store.py` directly, not
-by a dry run, because no offline fake Firestore double with matching
-transaction semantics exists in this repository to test against safely.
+Firestore; the RPC-boundary seam is supported by direct installed-SDK source
+inspection and a no-network fake-delegate test, while the real contract still
+requires the fresh O and P probes.
 
 ## Resource policy and identity
 
-- run_id: `p7-b7-20260824-run01`, namespace prefix
-  `custody_p7_b7_20260824_run01` -- does not reuse or derive from any prior
-  identity found in this repository (`p7-b7-20260824-ec32e4e31d21`, `-obs01`,
-  `-codec01`).
+- run_id: `p7-b7-20260825-run02`, namespace prefix
+  `custody_p7_b7_20260825_run02` -- a new identity for this corrected harness;
+  run01 is tied to the invalid read-barrier implementation and must not be
+  reused.
 - Ceiling: reads<=1500, writes<=200, deletes<=200, cost<=$0.01,
   runtime<=600s, recovery bound 90s (unchanged from the values stated for
   this project).

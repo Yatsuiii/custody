@@ -31,6 +31,7 @@ import sys
 import threading
 import time
 import traceback
+from collections.abc import Mapping as MappingABC
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -58,20 +59,19 @@ from custody.firestore_store import (  # noqa: E402
 import tests.test_b7_production_equivalence as p6  # noqa: E402
 
 # ---------------------------------------------------------------------------
-# Fresh identity. Excludes every prior identity found in the repository
-# (p7-b7-20260824-ec32e4e31d21, -obs01, -codec01) by construction: "run01"
-# does not derive from or reuse any of those suffixes.
+# Fresh identity. This revision must not reuse run01, whose behavior was tied
+# to the pre-fix read-barrier implementation.
 # ---------------------------------------------------------------------------
-RUN_ID = "p7-b7-20260824-run01"
-NAMESPACE_PREFIX = "custody_p7_b7_20260824_run01"
+RUN_ID = "p7-b7-20260825-run02"
+NAMESPACE_PREFIX = "custody_p7_b7_20260825_run02"
 DEFAULT_PROJECT = "project-988bc9fe-092c-4b32-90c"
 DEFAULT_DATABASE = "(default)"
 DEFAULT_REGION = "us-central1"
 
 PROOF_DIR = ROOT / "research" / "production_b7"
-RAW_TRACE_PATH = PROOF_DIR / "P7_RUN01_RAW_TRACE.json"
-RESULT_PATH = PROOF_DIR / "P7_RUN01_RESULT.json"
-CLEANUP_PATH = PROOF_DIR / "P7_RUN01_CLEANUP.json"
+RAW_TRACE_PATH = PROOF_DIR / "P7_RUN02_RAW_TRACE.json"
+RESULT_PATH = PROOF_DIR / "P7_RUN02_RESULT.json"
+CLEANUP_PATH = PROOF_DIR / "P7_RUN02_CLEANUP.json"
 
 COLLECTIONS = (
     CUSTODY_COLLECTION,
@@ -100,9 +100,9 @@ class _Barrier:
     """One-shot pause inside a real Firestore transaction.
 
     Mirrors tests/test_b7_production_equivalence.py::_BarrierStore, but the
-    hook point is the Transaction object itself (transaction.get / .create)
-    rather than an AuthorityStore subclass, because production code must not
-    be modified to add this hook.
+    hook points are the Firestore SDK RPC boundary for reads and the
+    Transaction object for writes, rather than an AuthorityStore subclass,
+    because production code must not be modified to add this hook.
     """
 
     def __init__(self, *, mode: str, match_record_id: str | None = None) -> None:
@@ -112,10 +112,10 @@ class _Barrier:
         self.reached = threading.Event()
         self.release = threading.Event()
 
-    def before_get(self, reference) -> None:
+    def before_get(self, document_id: str) -> None:
         if not self.armed or self.mode != "get":
             return
-        if self.match_record_id is not None and reference.id != self.match_record_id:
+        if self.match_record_id is not None and document_id != self.match_record_id:
             return
         self.armed = False
         self.reached.set()
@@ -141,6 +141,48 @@ class _Counters:
         return {"reads": self.reads, "writes": self.writes, "deletes": self.deletes}
 
 
+class _P7FirestoreApi:
+    """Instrument the SDK RPC boundary used by transaction-aware reads.
+
+    In the installed Firestore SDK, ``DocumentReference.get(transaction=...)``
+    and ``Client.get_all(..., transaction=...)`` call
+    ``client._firestore_api.batch_get_documents`` directly.  The public
+    ``Transaction.get`` method delegates to ``Client.get_all`` and is therefore
+    not a reliable interception point for the production-normalized read path.
+    """
+
+    def __init__(
+        self,
+        delegate,
+        counters: _Counters,
+        barrier: _Barrier | None,
+    ) -> None:
+        self._delegate = delegate
+        self._counters = counters
+        self._barrier = barrier
+
+    @staticmethod
+    def _request_value(request, name: str):
+        if isinstance(request, MappingABC):
+            return request.get(name)
+        return getattr(request, name, None)
+
+    def batch_get_documents(self, *args, **kwargs):
+        request = kwargs.get("request")
+        if request is None and args:
+            request = args[0]
+        documents = tuple(self._request_value(request, "documents") or ())
+        transaction_id = self._request_value(request, "transaction")
+        self._counters.reads += len(documents)
+        if self._barrier is not None and transaction_id:
+            for document in documents:
+                self._barrier.before_get(document.rsplit("/", 1)[-1])
+        return self._delegate.batch_get_documents(*args, **kwargs)
+
+    def __getattr__(self, name: str):
+        return getattr(self._delegate, name)
+
+
 class _P7Client:
     """Namespaced, instrumented, optionally-barriered Firestore client."""
 
@@ -155,22 +197,21 @@ class _P7Client:
         self._prefix = prefix
         self.counters = counters
         self.barrier = barrier
+        api = self._raw._firestore_api
+        if isinstance(api, _P7FirestoreApi):
+            api = api._delegate
+        self._raw._firestore_api_internal = _P7FirestoreApi(
+            api, self.counters, self.barrier
+        )
 
     def collection(self, name: str):
         return self._raw.collection(f"{self._prefix}__{name}")
 
     def transaction(self):
         transaction = self._raw.transaction()
-        original_get = transaction.get
         original_create = transaction.create
         original_set = transaction.set
         original_delete = transaction.delete
-
-        def counted_get(reference, *args, **kwargs):
-            self.counters.reads += 1
-            if self.barrier is not None:
-                self.barrier.before_get(reference)
-            return original_get(reference, *args, **kwargs)
 
         def counted_create(reference, data, *args, **kwargs):
             self.counters.writes += 1
@@ -186,7 +227,6 @@ class _P7Client:
             self.counters.deletes += 1
             return original_delete(*args, **kwargs)
 
-        transaction.get = counted_get
         transaction.create = counted_create
         transaction.set = counted_set
         transaction.delete = counted_delete

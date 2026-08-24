@@ -1,60 +1,66 @@
-Objective: Build and freeze a real-Firestore P7 harness (scripts/p7_run.py)
-that reuses the frozen local B7 case set (tests/test_b7_production_equivalence.py,
-cases A1/A2/B-M) unmodified via store injection, and adds real-Firestore /
-real-independent-process variants of cases N (restart), O (action/revocation
-race), and P (killed writer), per research/production_b7/EQUIVALENCE_TEST_PLAN.md.
-This session builds and freezes the harness only; live execution against real
-Firestore requires a separate explicit go from the user after the harness is
-committed and pushed.
+Objective: Build and freeze a corrected real-Firestore P7 harness revision whose
+Case O barrier intercepts the installed SDK's production-normalized read path.
+This session fixes the harness only. It does not execute P7 or the fresh probe
+pair; the probe pair is a separate artifact and must be frozen before execution.
 
-Branch: p7/b7-live-20260824-run01
-Parent: origin/stabilization/custody-final-16d3459 @ 16d34593dbc765e4ce3c34f03a0625783127f205
-        (independently verified production baseline; see reconciliation audit
-        earlier in this session)
+Lane: optimization/research engineering — evidence-gated Firestore harness
+infrastructure.
+
+Branch: p7/b7-live-20260825-run02
+Parent: p7/b7-live-20260824-run01 @ 085c4d5a9a89d0ae932f5a4814af5620f0223306
+        (frozen harness; MUST NOT be modified)
+
+New P7 identity reserved for a later, separately authorized run:
+- run_id: p7-b7-20260825-run02
+- namespace: custody_p7_b7_20260825_run02
 
 Allowed files:
 - scripts/p7_run.py
-- research/production_b7/P7_RUN01_RAW_TRACE.json
-- research/production_b7/P7_RUN01_RESULT.json
-- research/production_b7/P7_RUN01_CLEANUP.json
 - research/production_b7/P7_HARNESS_DESIGN_NOTE.md
 - .claude/SESSION_CONTRACT.md
 
 Non-goals:
-- No edit to any file under custody/ (production B7 implementation frozen at
-  16d3459; must remain byte-identical).
-- No edit to tests/test_b7_production_equivalence.py; its case construction
-  and scorer are reused by import/injection only.
-- No modification of the frozen case list, scorer thresholds, resource
-  ceilings (reads<=1500, writes<=200, deletes<=200, cost<=$0.01, runtime<=600s),
-  or the 90-second recovery bound.
-- No live execution against real Firestore until the harness is committed,
-  pushed, and remote-verified, and the user gives a separate explicit
-  execution go-ahead.
-- No commit/push unless explicitly authorized (already granted for this
-  build-and-freeze step per user instruction).
+- No edit to any file under custody/.
+- No edit to tests/test_b7_production_equivalence.py.
+- No edit to scripts/p7_run.py on p7/b7-live-20260824-run01.
+- No execution of scripts/p7_run.py and no P7 quota spend.
+- No reuse of P7 run01 or probe identities -01/-02.
+- No claim that the barrier is supported until fresh O and P probes both pass.
 
-Baseline: `.venv/bin/python -m unittest discover tests` = 484/484 on this
-worktree at 16d3459 (verified earlier this session). No production code is
-touched by this harness, so this baseline must remain unchanged.
+Design decision: the harness owns the SDK-version-specific interception at one
+deep boundary, _P7FirestoreApi.batch_get_documents. The installed SDK source
+shows that DocumentReference.get(transaction=...) and Client.get_all(...,
+transaction=...) call client._firestore_api.batch_get_documents directly;
+Transaction.get() delegates to Client.get_all and is not the production read
+boundary. The wrapper counts request documents, pauses only transaction reads,
+and delegates every other API method. Transaction.create/set/delete hooks remain
+for write counting and Case P's killed-writer barrier.
+
+Baseline: frozen harness parent 085c4d5; production code and equivalence tests
+must remain unchanged. The shared worktree's existing 100644->100755 mode-only
+changes are unrelated and are not normalized by this work.
 
 Acceptance gates:
-1. scripts/p7_run.py imports tests.test_b7_production_equivalence and injects
-   a Firestore-backed store via _world() monkeypatch, without duplicating or
-   altering any case construction logic (A1/A2/B-M reused verbatim).
-2. Cases N/O/P are implemented against real Firestore with real independent
-   OS processes (multiprocessing, spawn context), not threads/SQLite.
-3. Evidence freeze order is enforced: raw trace written+digested before the
-   scorer runs; result written+digested before cleanup; cleanup never
-   rewrites raw trace or result files.
-4. Resource counters (reads/writes/deletes) are tracked and compared against
-   the frozen ceiling; the script refuses to run if expected-output files
-   already exist or the namespace is not empty.
-5. The script requires an explicit `--i-understand-this-spends-real-firestore-quota`
-   flag and is not invoked in this session.
+1. Installed SDK source is read directly and the wrapper targets the exact
+   batch_get_documents call used by DocumentReference.get(transaction=...).
+2. scripts/p7_run.py compiles; the new API wrapper has no production/test
+   imports beyond the existing harness imports; custody/ and tests/ have no
+   content changes.
+3. The new harness revision is committed and pushed, and local HEAD equals the
+   remote branch SHA before any fresh probe executes.
+4. A separate fresh probe branch uses the new harness SHA and identity
+   p7-barrier-contract-20260825-03 / custody_p7_barrier_contract_20260825_03;
+   it runs O and P only after its own code is committed and remote-verified.
+5. Only if both fresh probes record PASS may the result be
+   P7-BARRIER-INFRASTRUCTURE-SUPPORTED and may a user separately authorize the
+   actual P7 run under p7-b7-20260825-run02.
 
-Verification: `python -m py_compile scripts/p7_run.py`; manual read-through
-against research/production_b7/EQUIVALENCE_TEST_PLAN.md's frozen case table
-and metrics; `git diff --stat custody/ tests/` empty.
+Verification planned:
+- direct read-through of installed google-cloud-firestore document.py and
+  transaction.py;
+- /run/media/Yatsuiii/Windows-SSD/custody/.venv/bin/python -m py_compile
+  scripts/p7_run.py;
+- source/diff inspection and no-drift checks for custody/ and tests/;
+- commit/push/local==remote checks before probe execution.
 
 Status: active
