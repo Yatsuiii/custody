@@ -25,14 +25,14 @@ if str(ROOT) not in sys.path:
 import scripts.p7_run as harness  # noqa: E402
 
 
-VALIDATION_ID = "p7-casep-lifecycle-validation-02"
-NAMESPACE_PREFIX = "custody_p7_casep_lifecycle_validation_02"
+VALIDATION_ID = "p7-casep-lifecycle-validation-03"
+NAMESPACE_PREFIX = "custody_p7_casep_lifecycle_validation_03"
 PROJECT = "project-988bc9fe-092c-4b32-90c"
 DATABASE = "(default)"
 PROOF_DIR = Path(__file__).resolve().parent.parent / "research" / "production_b7"
-RAW_TRACE_PATH = PROOF_DIR / "CASEP_LIFECYCLE_VALIDATION_02_RAW_TRACE.json"
-RESULT_PATH = PROOF_DIR / "CASEP_LIFECYCLE_VALIDATION_02_RESULT.json"
-CLEANUP_PATH = PROOF_DIR / "CASEP_LIFECYCLE_VALIDATION_02_CLEANUP.json"
+RAW_TRACE_PATH = PROOF_DIR / "CASEP_LIFECYCLE_VALIDATION_03_RAW_TRACE.json"
+RESULT_PATH = PROOF_DIR / "CASEP_LIFECYCLE_VALIDATION_03_RESULT.json"
+CLEANUP_PATH = PROOF_DIR / "CASEP_LIFECYCLE_VALIDATION_03_CLEANUP.json"
 
 
 def _sha256_json(value: object) -> str:
