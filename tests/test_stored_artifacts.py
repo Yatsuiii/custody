@@ -8,8 +8,8 @@ adds nothing new to judge with, it only re-runs those same judges here, in
 the test suite, against whatever the repo happens to have on disk right now.
 
 Artifacts are gitignored (`.gitignore:5`), so a fresh clone has none of
-them. Each artifact is skipped, not failed, when absent, to keep a fresh
-clone green; a captured artifact that regresses must fail loud.
+them. Absence is an explicit clean-clone state, not a skipped test; a captured
+artifact that regresses must fail loud.
 """
 
 from __future__ import annotations
@@ -83,7 +83,16 @@ class EveryStoredArtifactStillPassesItsOwnJudge(unittest.TestCase):
                     f"{filename} fails its own offline judge: {sorted(failing)}",
                 )
         if checked == 0:
-            self.skipTest("no proof-out/ artifacts present on this clone")
+            known_artifacts = {
+                path.name
+                for path in PROOF_OUT.glob("*.json")
+                if path.name in ARTIFACT_JUDGES
+            }
+            self.assertEqual(
+                known_artifacts,
+                set(),
+                "known proof artifacts were present but not checked",
+            )
 
 
 if __name__ == "__main__":

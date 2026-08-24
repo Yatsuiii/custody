@@ -1143,7 +1143,7 @@ def _sha256_file(path: Path) -> str:
 
 def _current_commit() -> str:
     result = subprocess.run(
-        ["git", "rev-parse", "HEAD"],
+        ["git", "-c", f"safe.directory={ROOT}", "rev-parse", "HEAD"],
         cwd=ROOT,
         check=True,
         capture_output=True,
