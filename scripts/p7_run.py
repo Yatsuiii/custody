@@ -62,16 +62,16 @@ import tests.test_b7_production_equivalence as p6  # noqa: E402
 # Fresh identity. This revision must not reuse run01, whose behavior was tied
 # to the pre-fix read-barrier implementation.
 # ---------------------------------------------------------------------------
-RUN_ID = "p7-b7-20260825-run02"
-NAMESPACE_PREFIX = "custody_p7_b7_20260825_run02"
+RUN_ID = "p7-b7-20260825-run03"
+NAMESPACE_PREFIX = "custody_p7_b7_20260825_run03"
 DEFAULT_PROJECT = "project-988bc9fe-092c-4b32-90c"
 DEFAULT_DATABASE = "(default)"
 DEFAULT_REGION = "us-central1"
 
 PROOF_DIR = ROOT / "research" / "production_b7"
-RAW_TRACE_PATH = PROOF_DIR / "P7_RUN02_RAW_TRACE.json"
-RESULT_PATH = PROOF_DIR / "P7_RUN02_RESULT.json"
-CLEANUP_PATH = PROOF_DIR / "P7_RUN02_CLEANUP.json"
+RAW_TRACE_PATH = PROOF_DIR / "P7_RUN03_RAW_TRACE.json"
+RESULT_PATH = PROOF_DIR / "P7_RUN03_RESULT.json"
+CLEANUP_PATH = PROOF_DIR / "P7_RUN03_CLEANUP.json"
 
 COLLECTIONS = (
     CUSTODY_COLLECTION,
@@ -108,9 +108,13 @@ class _Barrier:
     def __init__(self, *, mode: str, match_record_id: str | None = None) -> None:
         self.mode = mode  # "get" or "create"
         self.match_record_id = match_record_id
-        self.armed = True
+        self.armed = False
         self.reached = threading.Event()
         self.release = threading.Event()
+
+    def arm(self) -> None:
+        """Enable the one-shot pause after its caller has finished setup."""
+        self.armed = True
 
     def before_get(self, document_id: str) -> None:
         if not self.armed or self.mode != "get":
@@ -381,6 +385,7 @@ def _run_firestore_race(raw: firestore.Client, counters: _Counters) -> dict[str,
         AuthorityOutput.from_text(record_id="O-DESC", text="O-DESC"),
     )
     before = p6._history(store)
+    barrier.arm()
 
     executions: list[object] = []
     errors: list[str] = []
@@ -439,6 +444,7 @@ def _p_worker(project: str, database: str, prefix: str, ready) -> None:
 
     watcher = threading.Thread(target=watch, daemon=True)
     watcher.start()
+    barrier.arm()
     world = p6._world(store)
     p6._admit_source(world, 0, "P-ROOT")
 

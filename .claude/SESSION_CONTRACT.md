@@ -1,18 +1,21 @@
-Objective: Build and freeze a corrected real-Firestore P7 harness revision whose
-Case O barrier intercepts the installed SDK's production-normalized read path.
-This session fixes the harness only. It does not execute P7 or the fresh probe
-pair; the probe pair is a separate artifact and must be frozen before execution.
+Objective: Build and freeze a fresh P7 harness revision that fixes the
+run02 lifecycle defect by arming Case O/P barriers only after fixture setup.
+This session builds the harness only; fresh probes must pass before any P7
+execution under the new identity.
 
 Lane: optimization/research engineering — evidence-gated Firestore harness
 infrastructure.
 
-Branch: p7/b7-live-20260825-run02
-Parent: p7/b7-live-20260824-run01 @ 085c4d5a9a89d0ae932f5a4814af5620f0223306
-        (frozen harness; MUST NOT be modified)
+Branch: p7/b7-live-20260825-run03
+Parent: p7/b7-live-20260825-run02 @ 8ee72faeda2f83c4f925f405a8f4394d7c7661da
+        (corrected RPC read interception; run02 invalid attempt is preserved
+        separately at evidence commit bda1f8cd250feb5b8f2d351eab8c80adbeddd069)
 
-New P7 identity reserved for a later, separately authorized run:
-- run_id: p7-b7-20260825-run02
-- namespace: custody_p7_b7_20260825_run02
+Fresh P7 identity:
+- run_id: p7-b7-20260825-run03
+- namespace: custody_p7_b7_20260825_run03
+- artifacts: P7_RUN03_RAW_TRACE.json, P7_RUN03_RESULT.json,
+  P7_RUN03_CLEANUP.json
 
 Allowed files:
 - scripts/p7_run.py
@@ -22,45 +25,38 @@ Allowed files:
 Non-goals:
 - No edit to any file under custody/.
 - No edit to tests/test_b7_production_equivalence.py.
-- No edit to scripts/p7_run.py on p7/b7-live-20260824-run01.
-- No execution of scripts/p7_run.py and no P7 quota spend.
-- No reuse of P7 run01 or probe identities -01/-02.
-- No claim that the barrier is supported until fresh O and P probes both pass.
+- No reuse of run01 or run02 identities.
+- No P7 execution in this harness-build session.
+- No claim of infrastructure support until fresh O/P probes pass.
 
-Design decision: the harness owns the SDK-version-specific interception at one
-deep boundary, _P7FirestoreApi.batch_get_documents. The installed SDK source
-shows that DocumentReference.get(transaction=...) and Client.get_all(...,
-transaction=...) call client._firestore_api.batch_get_documents directly;
-Transaction.get() delegates to Client.get_all and is not the production read
-boundary. The wrapper counts request documents, pauses only transaction reads,
-and delegates every other API method. Transaction.create/set/delete hooks remain
-for write counting and Case P's killed-writer barrier.
-
-Baseline: frozen harness parent 085c4d5; production code and equivalence tests
-must remain unchanged. The shared worktree's existing 100644->100755 mode-only
-changes are unrelated and are not normalized by this work.
+Design decision: `_Barrier` starts disarmed and exposes one explicit `arm()`
+transition. Case O arms only after root/child fixture construction and its
+history read; Case P arms only after the child watcher is ready and immediately
+before the killed-writer setup. The RPC-boundary interception from run02 is
+unchanged; only lifecycle ownership is corrected so setup reads cannot consume
+or block the race barrier.
 
 Acceptance gates:
-1. Installed SDK source is read directly and the wrapper targets the exact
-   batch_get_documents call used by DocumentReference.get(transaction=...).
-2. scripts/p7_run.py compiles; the new API wrapper has no production/test
-   imports beyond the existing harness imports; custody/ and tests/ have no
-   content changes.
-3. The new harness revision is committed and pushed, and local HEAD equals the
-   remote branch SHA before any fresh probe executes.
-4. A separate fresh probe branch uses the new harness SHA and identity
-   p7-barrier-contract-20260825-03 / custody_p7_barrier_contract_20260825_03;
-   it runs O and P only after its own code is committed and remote-verified.
-5. Only if both fresh probes record PASS may the result be
-   P7-BARRIER-INFRASTRUCTURE-SUPPORTED and may a user separately authorize the
-   actual P7 run under p7-b7-20260825-run02.
+1. scripts/p7_run.py uses run03 identity and artifacts, and Case O/P call
+   `barrier.arm()` only after setup.
+2. The harness compiles, Ruff passes, and the local equivalence test passes;
+   custody/ and tests/ remain unchanged.
+3. The harness revision is committed and pushed; local HEAD equals the remote
+   branch SHA before any fresh probe runs.
+4. A separate fresh probe pair uses identity
+   p7-barrier-contract-20260825-04 and namespace
+   custody_p7_barrier_contract_20260825_04; both O and P must pass before any
+   run03 P7 execution.
+5. If probes pass, actual P7 run03 requires a separate explicit user
+   authorization because run02's authorization applied to the spent run02
+   identity.
 
 Verification planned:
-- direct read-through of installed google-cloud-firestore document.py and
-  transaction.py;
-- /run/media/Yatsuiii/Windows-SSD/custody/.venv/bin/python -m py_compile
-  scripts/p7_run.py;
-- source/diff inspection and no-drift checks for custody/ and tests/;
-- commit/push/local==remote checks before probe execution.
+- `/run/media/Yatsuiii/Windows-SSD/custody/.venv/bin/python -m py_compile
+  scripts/p7_run.py`
+- `/home/Yatsuiii/.local/bin/ruff check scripts/p7_run.py`
+- `/run/media/Yatsuiii/Windows-SSD/custody/.venv/bin/python -m unittest
+  tests.test_b7_production_equivalence`
+- commit/push/local==remote checks before fresh probes.
 
 Status: active

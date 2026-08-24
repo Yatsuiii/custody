@@ -41,7 +41,9 @@ revision: `DocumentReference.get(transaction=...)` and
 `client._firestore_api.batch_get_documents(request=...)`; `Transaction.get()`
 delegates to `Client.get_all` and is not the production read boundary. The
 wrapper therefore counts each request document and pauses only requests that
-carry a transaction ID. It delegates all other API methods unchanged.
+carry a transaction ID. It delegates all other API methods unchanged. The
+barrier starts disarmed; Case O and Case P explicitly arm it after their
+fixture/setup reads, so setup cannot consume or block the race barrier.
 
 - **Case O** arms a pause on the first transaction `batch_get_documents`
   request matching the
@@ -69,10 +71,9 @@ requires the fresh O and P probes.
 
 ## Resource policy and identity
 
-- run_id: `p7-b7-20260825-run02`, namespace prefix
-  `custody_p7_b7_20260825_run02` -- a new identity for this corrected harness;
-  run01 is tied to the invalid read-barrier implementation and must not be
-  reused.
+- run_id: `p7-b7-20260825-run03`, namespace prefix
+  `custody_p7_b7_20260825_run03` -- a new identity for this lifecycle-corrected
+  harness; run01 and run02 must not be reused.
 - Ceiling: reads<=1500, writes<=200, deletes<=200, cost<=$0.01,
   runtime<=600s, recovery bound 90s (unchanged from the values stated for
   this project).
