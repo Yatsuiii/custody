@@ -436,12 +436,14 @@ class _P7Client:
         counters: _Counters,
         barrier: _Barrier | None = None,
         telemetry: _TransactionTelemetry | None = None,
+        process_role: str = "unspecified",
     ) -> None:
         self._raw = raw
         self._prefix = prefix
         self.counters = counters
         self.barrier = barrier
         self.telemetry = telemetry
+        self.process_role = process_role
         api = self._raw._firestore_api
         if isinstance(api, _P7FirestoreApi):
             api = api._delegate
