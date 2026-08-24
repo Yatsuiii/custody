@@ -11,13 +11,18 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import sys
 import time
 from datetime import UTC, datetime
 from pathlib import Path
 
 from google.cloud import firestore
 
-import scripts.p7_run as harness
+ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+import scripts.p7_run as harness  # noqa: E402
 
 
 VALIDATION_ID = "p7-casep-lifecycle-validation-01"
