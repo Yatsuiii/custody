@@ -1,6 +1,8 @@
 # Clean-clone audit
 
-Status at baseline: pending.
+Status: PASS for repository startup and offline verification on
+2026-08-24, using clean clone /tmp/custody-clean-clone at commit
+9b962c34011a25631ef01481b820560c286deb5b.
 
 The clean-clone gate must use documented commands only and must verify:
 
@@ -15,5 +17,13 @@ equivalence report; it is being changed to pass an explicit safe-directory
 configuration to Git. This avoids changing the security mechanism and makes
 the evidence reporter work in isolated worktrees as well as normal clones.
 
-No clean-clone PASS is claimed until the commands and outputs are recorded.
+Recorded results:
 
+- package import resolved to `/tmp/custody-clean-clone/custody/__init__.py`;
+- the full local suite completed `484 tests, 0 failures, 0 errors`;
+- the Firestore probe supervisor printed its usage and resolved its own
+  repository root without a manually exported PYTHONPATH;
+- no stale proof artifact was required for startup.
+
+The real networked contract probe is a separate gate and remains unproven
+until its terminal artifact exists.

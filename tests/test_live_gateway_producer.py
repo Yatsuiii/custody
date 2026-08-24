@@ -32,9 +32,7 @@ PROOF_B = "b" * 32
 PROJECTION = "agentregistry-00000000-0000-0000-test"
 
 
-def _policy(
-    expression: str, *, title: str, etag: str = "etag-0"
-) -> dict[str, object]:
+def _policy(expression: str, *, title: str, etag: str = "etag-0") -> dict[str, object]:
     return {
         **_iap_policy(EXPECTED_PRINCIPAL, expression, title=title),
         "etag": etag,
@@ -76,9 +74,7 @@ class FakePolicyCloud:
         return ""
 
 
-def _boundary(
-    cloud: FakePolicyCloud, proof_id: str = PROOF_A
-) -> DedicatedIapPolicy:
+def _boundary(cloud: FakePolicyCloud, proof_id: str = PROOF_A) -> DedicatedIapPolicy:
     return DedicatedIapPolicy(
         cloud,  # type: ignore[arg-type]
         projection_id=PROJECTION,
@@ -107,12 +103,8 @@ class LiveGatewayProducerTests(unittest.TestCase):
         self.assertIn(PROOF_A, admission.title)
 
     def test_live_foreign_admission_is_not_overwritten(self) -> None:
-        foreign = TemporaryAdmission(
-            PROOF_B, datetime.now(UTC) + timedelta(minutes=5)
-        )
-        cloud = FakePolicyCloud(
-            _policy(foreign.expression, title=foreign.title)
-        )
+        foreign = TemporaryAdmission(PROOF_B, datetime.now(UTC) + timedelta(minutes=5))
+        cloud = FakePolicyCloud(_policy(foreign.expression, title=foreign.title))
 
         with self.assertRaises(ActiveAdmissionError):
             _boundary(cloud).prepare_safe_deny()
@@ -120,12 +112,8 @@ class LiveGatewayProducerTests(unittest.TestCase):
         self.assertEqual(cloud.writes, 0)
 
     def test_expired_admission_is_repaired_to_safe_deny(self) -> None:
-        expired = TemporaryAdmission(
-            PROOF_B, datetime.now(UTC) - timedelta(seconds=1)
-        )
-        cloud = FakePolicyCloud(
-            _policy(expired.expression, title=expired.title)
-        )
+        expired = TemporaryAdmission(PROOF_B, datetime.now(UTC) - timedelta(seconds=1))
+        cloud = FakePolicyCloud(_policy(expired.expression, title=expired.title))
 
         repaired = _boundary(cloud).prepare_safe_deny()
 
@@ -137,9 +125,7 @@ class LiveGatewayProducerTests(unittest.TestCase):
         self.assertEqual(cloud.writes, 1)
 
     def test_ambiguous_write_is_accepted_only_after_exact_readback(self) -> None:
-        cloud = FakePolicyCloud(
-            _policy(DENY_EXPRESSION, title=DENY_TITLE)
-        )
+        cloud = FakePolicyCloud(_policy(DENY_EXPRESSION, title=DENY_TITLE))
         cloud.ambiguous_writes = 1
         admission = TemporaryAdmission(
             PROOF_A, datetime.now(UTC) + timedelta(minutes=10)
@@ -160,17 +146,13 @@ class LiveGatewayProducerTests(unittest.TestCase):
     def test_cleanup_failure_leaves_only_a_bounded_server_expiring_lease(self) -> None:
         expires = datetime.now(UTC) + timedelta(minutes=10)
         admission = TemporaryAdmission(PROOF_A, expires)
-        cloud = FakePolicyCloud(
-            _policy(admission.expression, title=admission.title)
-        )
+        cloud = FakePolicyCloud(_policy(admission.expression, title=admission.title))
         cloud.fail_writes = 3
 
         with self.assertRaises(RuntimeError):
             _boundary(cloud).ensure_deny()
 
-        remaining = _temporary_admission(
-            cloud.state, principal=EXPECTED_PRINCIPAL
-        )
+        remaining = _temporary_admission(cloud.state, principal=EXPECTED_PRINCIPAL)
         self.assertIsNotNone(remaining)
         assert remaining is not None
         self.assertEqual(remaining.proof_id, PROOF_A)
@@ -178,9 +160,7 @@ class LiveGatewayProducerTests(unittest.TestCase):
         self.assertEqual(cloud.writes, 3)
 
     def test_two_producers_cannot_both_own_the_allow_state(self) -> None:
-        cloud = FakePolicyCloud(
-            _policy(DENY_EXPRESSION, title=DENY_TITLE)
-        )
+        cloud = FakePolicyCloud(_policy(DENY_EXPRESSION, title=DENY_TITLE))
         first = _boundary(cloud, PROOF_A)
         second = _boundary(cloud, PROOF_B)
         first_admission = TemporaryAdmission(
@@ -237,9 +217,7 @@ class LiveGatewayProducerTests(unittest.TestCase):
             _require_mutation_targets(
                 resources,
                 agent={},
-                endpoint=(
-                    "https://custody-export-mcp-anexdhueiq-uc.a.run.app/mcp"
-                ),
+                endpoint=("https://custody-export-mcp-anexdhueiq-uc.a.run.app/mcp"),
             )
 
 
@@ -254,9 +232,7 @@ def _cel_admits(expression: str, *, tool_name: str, now: datetime) -> bool:
     match = _TEMPORARY_ALLOW.fullmatch(expression)
     if match is None:
         raise ValueError("not the canonical temporary admission shape")
-    expires_at = datetime.fromisoformat(
-        match.group("expires").replace("Z", "+00:00")
-    )
+    expires_at = datetime.fromisoformat(match.group("expires").replace("Z", "+00:00"))
     return tool_name == "" or (now < expires_at and tool_name == "lookup_customer")
 
 
@@ -314,9 +290,12 @@ class TemporaryAdmissionCelSemanticsTests(unittest.TestCase):
         post-expiry initialize call could fail before ``tools/call`` and
         never produce the log the proof needs. The parser must reject it.
         """
-        expires = (datetime.now(UTC) + timedelta(minutes=10)).replace(
-            microsecond=0
-        ).isoformat().replace("+00:00", "Z")
+        expires = (
+            (datetime.now(UTC) + timedelta(minutes=10))
+            .replace(microsecond=0)
+            .isoformat()
+            .replace("+00:00", "Z")
+        )
         old_shape = (
             f"request.time < timestamp('{expires}') && "
             "api.getAttribute('iap.googleapis.com/mcp.toolName', '') "
@@ -325,9 +304,7 @@ class TemporaryAdmissionCelSemanticsTests(unittest.TestCase):
         policy = _policy(
             old_shape, title=f"Custody temporary lookup admission/{PROOF_A}"
         )
-        self.assertIsNone(
-            _temporary_admission(policy, principal=EXPECTED_PRINCIPAL)
-        )
+        self.assertIsNone(_temporary_admission(policy, principal=EXPECTED_PRINCIPAL))
 
 
 class BoundedWaitTests(unittest.TestCase):

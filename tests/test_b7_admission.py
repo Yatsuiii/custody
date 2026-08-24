@@ -23,18 +23,12 @@ from custody.authority import (
 
 
 FIXTURES = Path(__file__).parent / "fixtures" / "b7"
-SOURCE_POLICY = PolicyKey(
-    "finance", "vendor_lookup", "lookup", "R1", "export.send"
-)
-IDENTITY_POLICY = PolicyKey(
-    "finance", "custody", "identity", "R1", "export.send"
-)
+SOURCE_POLICY = PolicyKey("finance", "vendor_lookup", "lookup", "R1", "export.send")
+IDENTITY_POLICY = PolicyKey("finance", "custody", "identity", "R1", "export.send")
 REGISTERED_POLICY = PolicyKey(
     "finance", "custody", "vendor_projection", "R1", "export.send"
 )
-FREEFORM_POLICY = PolicyKey(
-    "finance", "model", "freeform", "R1", "export.send"
-)
+FREEFORM_POLICY = PolicyKey("finance", "model", "freeform", "R1", "export.send")
 UNCONFIGURED_POLICY = PolicyKey(
     "finance", "custody", "unreviewed_transform", "R1", "export.send"
 )
@@ -195,16 +189,12 @@ class DerivationPreservesAllRequiredSupport(B7AdmissionFixture):
         result = self.gate.admit_registered(
             TransformRef(REGISTERED_POLICY),
             ("ROOT-01", "IDENTITY-01"),
-            AuthorityOutput.from_text(
-                record_id="REGISTERED-01", text="ACCOUNT-101"
-            ),
+            AuthorityOutput.from_text(record_id="REGISTERED-01", text="ACCOUNT-101"),
         )
 
         self.assertTrue(result.admitted)
         assert result.envelope is not None
-        self.assertEqual(
-            result.envelope.direct_parent_ids, ("ROOT-01", "IDENTITY-01")
-        )
+        self.assertEqual(result.envelope.direct_parent_ids, ("ROOT-01", "IDENTITY-01"))
         self.assertEqual(result.envelope.support_root_ids, ("ROOT-01",))
         dependencies = self.store.dependencies("REGISTERED-01")
         self.assertEqual(
@@ -302,7 +292,9 @@ class DerivationPreservesAllRequiredSupport(B7AdmissionFixture):
             {"ROOT-01"},
         )
 
-    def test_generation_change_during_record_id_reuse_never_rewrites_history(self) -> None:
+    def test_generation_change_during_record_id_reuse_never_rewrites_history(
+        self,
+    ) -> None:
         first = self.gate.admit_registered(
             TransformRef(REGISTERED_POLICY),
             ("ROOT-01",),

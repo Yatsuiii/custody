@@ -44,7 +44,9 @@ class TheRegressionsThatActuallyShipped(unittest.TestCase):
 
         self.assertFalse(gates["/ serves the current incident.html"])
         self.assertTrue(gates["/incident.html serves the current incident.html"])
-        self.assertTrue(gates["/architecture.html serves the current architecture.html"])
+        self.assertTrue(
+            gates["/architecture.html serves the current architecture.html"]
+        )
 
     def test_a_page_corrupted_in_transit_fails_despite_returning_200(self):
         """The inline <script> mangled by a deploy tool blanked every widget.
@@ -77,10 +79,14 @@ class TheRegressionsThatActuallyShipped(unittest.TestCase):
 
     def test_a_stale_deploy_fails_even_with_no_corruption(self):
         """The ordinary case: someone ran make gui and forgot to redeploy."""
-        responses = healthy() | {"/architecture.html": Response(200, b"<html>old</html>")}
+        responses = healthy() | {
+            "/architecture.html": Response(200, b"<html>old</html>")
+        }
 
         self.assertFalse(
-            judge(responses, LOCAL)["/architecture.html serves the current architecture.html"]
+            judge(responses, LOCAL)[
+                "/architecture.html serves the current architecture.html"
+            ]
         )
 
 

@@ -115,9 +115,7 @@ class ControlPlane:
         events = [_event(e) for e in payload.get("events", [])]
         custody = take_custody(events, self.catalog.trust_for(department))
 
-        untrusted = [
-            a for a in custody.admitted if a.record.trust is Trust.UNTRUSTED
-        ]
+        untrusted = [a for a in custody.admitted if a.record.trust is Trust.UNTRUSTED]
         for admitted in untrusted:
             self.quarantine.hold(
                 Quarantined(
@@ -209,9 +207,7 @@ class ControlPlane:
         return {
             "applied": True,
             "revocation_id": result.revocation.revocation_id,
-            "root_key_digests": [
-                key.digest for key in result.revocation.root_keys
-            ],
+            "root_key_digests": [key.digest for key in result.revocation.root_keys],
             "affected_record_ids": list(result.affected_record_ids),
         }
 
@@ -246,8 +242,7 @@ class ControlPlane:
                 author="custody-auditor",
                 invocation_id="g5-seed",
                 content_sha256=digest(
-                    "Custody G5 elapsed-time seed record: synthetic, no "
-                    "customer data."
+                    "Custody G5 elapsed-time seed record: synthetic, no customer data."
                 ),
                 source_tool=G5_SEED_TOOL,
                 id=G5_SEED_RECORD_ID,
@@ -255,9 +250,7 @@ class ControlPlane:
             self.graph.add(seed)
             seeded_record_id = seed.id
         revoked = [
-            self.graph.revoke(
-                tool=demotion.tool, revocation_id=demotion.id()
-            ).id
+            self.graph.revoke(tool=demotion.tool, revocation_id=demotion.id()).id
             for demotion in self.demotion_log.all()
         ]
         elapsed_days_since_seed = None
@@ -273,9 +266,7 @@ class ControlPlane:
             "elapsed_days_since_seed": elapsed_days_since_seed,
         }
         if self.log_client is not None:
-            self.log_client.logger(AUDITOR_LOG_NAME).log_struct(
-                result, severity="INFO"
-            )
+            self.log_client.logger(AUDITOR_LOG_NAME).log_struct(result, severity="INFO")
         return result
 
     def record(self, record_id: str) -> dict | None:

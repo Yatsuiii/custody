@@ -106,7 +106,9 @@ def main() -> int:
         try:
             gates.update(judge_live(evidence))
         except Exception as error:  # noqa: BLE001 - report as a failed gate, not a crash
-            gates["vertex_ai_independently_reachable_under_project_credentials_now"] = False
+            gates["vertex_ai_independently_reachable_under_project_credentials_now"] = (
+                False
+            )
             print(f"[FAIL] independent live Gemini call failed: {error}")
 
     for name, passed in gates.items():

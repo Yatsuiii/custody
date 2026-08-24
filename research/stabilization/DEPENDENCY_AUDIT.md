@@ -22,3 +22,10 @@ tested through the real adapter path.
 No hardcoded private key or customer data was found in production B7 modules.
 Test project identifiers occur only in explicitly named live/probe fixtures and
 are not customer-production identifiers.
+
+The complete suite emits three third-party deprecation warnings from the
+installed integration stack: google-adk BaseAgentConfig, agentplatform's
+Pydantic model validator, and fastmcp's authlib.jose import. They do not arise
+from Custody code and are not suppressed. They remain documented dependency
+maintenance signals; upgrading them is a separate compatibility change and is
+not part of B7 stabilization.

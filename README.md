@@ -229,10 +229,9 @@ git clone https://github.com/Yatsuiii/custody.git && cd custody
 python3.12 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 
-make check     # ruff, then 377 tests. On a genuinely fresh clone with no
-               # live proofs run yet, expect "OK (skipped=1)" — one test
-               # honestly skips re-judging proof-out/ artifacts that don't
-               # exist yet, rather than faking a pass. 0 failures either way.
+make check     # ruff, then the 484-test offline suite. A fresh clone with no
+               # live proofs explicitly asserts that proof-out/ is empty; it
+               # does not silently skip the artifact-integrity test.
 make hardening-check  # check + deterministic pre-submission incident/demo loop
 make demo      # the poisoning scenario, with Custody and without
 make cost      # what a compromised tool destroys, with the graph and without

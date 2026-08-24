@@ -14,8 +14,7 @@ def valid_evidence() -> dict:
         "captured_at": datetime.now(UTC).isoformat(),
         "project": "proof-project",
         "claim_boundary": (
-            "It does not detect a behavior-only change under an identical "
-            "tools/list."
+            "It does not detect a behavior-only change under an identical tools/list."
         ),
         "nonce_ledger_backend": "firestore",
         "cloud_run": {

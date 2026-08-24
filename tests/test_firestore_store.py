@@ -13,7 +13,11 @@ from copy import deepcopy
 from datetime import UTC, datetime, timedelta
 from threading import RLock
 
-from google.api_core.exceptions import AlreadyExists, DeadlineExceeded, ServiceUnavailable
+from google.api_core.exceptions import (
+    AlreadyExists,
+    DeadlineExceeded,
+    ServiceUnavailable,
+)
 
 from custody.catalog import Demotion
 from custody.firestore_store import (
@@ -205,7 +209,9 @@ class FirestoreFakeSdkContractTests(unittest.TestCase):
         self.assertFalse(snapshot.exists)
 
 
-def _record(*, id: str, source_tool: str = "crm_lookup", derived_from=()) -> CustodyRecord:
+def _record(
+    *, id: str, source_tool: str = "crm_lookup", derived_from=()
+) -> CustodyRecord:
     return CustodyRecord(
         origin=Origin.TOOL,
         trust=Trust.TRUSTED,
@@ -227,7 +233,10 @@ class FirestoreCustodyGraphTests(unittest.TestCase):
 
         (stored,) = graph.records()
         self.assertIsNotNone(stored.admitted_at)
-        self.assertEqual(stored.admitted_at, client.collection("custody").document("r1").get().create_time.isoformat())
+        self.assertEqual(
+            stored.admitted_at,
+            client.collection("custody").document("r1").get().create_time.isoformat(),
+        )
 
     def test_duplicate_add_is_a_no_op_not_an_error(self) -> None:
         client = FakeFirestoreClient()
@@ -298,7 +307,9 @@ class FirestoreCustodyGraphTests(unittest.TestCase):
 
         self.assertIsNone(graph.record("does-not-exist"))
 
-    def test_replay_order_follows_server_creation_time_not_insertion_order(self) -> None:
+    def test_replay_order_follows_server_creation_time_not_insertion_order(
+        self,
+    ) -> None:
         client = FakeFirestoreClient()
         collection = client.collection("custody")
         # Insert out of causal order to prove replay sorts by create_time,
@@ -441,7 +452,9 @@ class FirestoreRevisionCatalogTests(unittest.TestCase):
         self.assertTrue(admission.allows("crm_lookup"))
         self.assertEqual(admission.denied, ())
 
-    def test_a_changed_live_surface_still_denies_through_the_durable_backend(self) -> None:
+    def test_a_changed_live_surface_still_denies_through_the_durable_backend(
+        self,
+    ) -> None:
         client = FakeFirestoreClient()
         FirestoreRevisionCatalog(client).approve(department="sales", surface=_surface())
 
@@ -505,9 +518,7 @@ class FirestoreRevisionCatalogTests(unittest.TestCase):
         log.record(_demotion(tool="crm_lookup"))
         log.record(_demotion(tool="other_tool"))
 
-        self.assertEqual(
-            {d.tool for d in log.all()}, {"crm_lookup", "other_tool"}
-        )
+        self.assertEqual({d.tool for d in log.all()}, {"crm_lookup", "other_tool"})
 
 
 class _OutageDocument:
@@ -558,7 +569,9 @@ class FirestoreRevisionCatalogFailsClosedOnAnUnreachableRegistry(unittest.TestCa
             catalog.admit(department="sales", surface=_surface())
 
     def test_a_service_unavailable_error_also_propagates(self) -> None:
-        client = _OutageFirestoreClient(ServiceUnavailable("agent registry unreachable"))
+        client = _OutageFirestoreClient(
+            ServiceUnavailable("agent registry unreachable")
+        )
         catalog = FirestoreRevisionCatalog(client)
 
         with self.assertRaises(ServiceUnavailable):

@@ -263,9 +263,7 @@ def take_custody(
                 continue
 
             if not invocation:
-                refused.append(
-                    Rejected(text, Refusal.NO_INVOCATION, event_index=index)
-                )
+                refused.append(Rejected(text, Refusal.NO_INVOCATION, event_index=index))
                 continue
             if not author:
                 refused.append(Rejected(text, Refusal.NO_AUTHOR, event_index=index))

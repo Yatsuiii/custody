@@ -14,3 +14,7 @@ registry = ["fastmcp==2.13.1"]
 
 [tool.ruff]
 line-length = 88
+# Frozen research source snapshots are evidence artifacts, not shipping or
+# active test code. Their historical diagnostics are recorded in the
+# stabilization ledger rather than rewritten by the active lint gate.
+extend-exclude = ["research/experiments", "research/external_eval"]

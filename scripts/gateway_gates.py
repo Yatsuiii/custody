@@ -112,10 +112,7 @@ def _aware_time(value: object) -> datetime:
 
 def _rfc3339_seconds(value: datetime) -> str:
     return (
-        value.astimezone(UTC)
-        .replace(microsecond=0)
-        .isoformat()
-        .replace("+00:00", "Z")
+        value.astimezone(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     )
 
 
@@ -127,8 +124,7 @@ def _resource_has_server_times(resource: dict[str, Any], captured: datetime) -> 
 
 def _trust_domain_is_bound(trust_domain: str, project_number: str) -> bool:
     return (
-        trust_domain
-        == f"agents.global.project-{project_number}.system.id.goog"
+        trust_domain == f"agents.global.project-{project_number}.system.id.goog"
         or re.fullmatch(r"agents\.global\.org-\d+\.system\.id\.goog", trust_domain)
         is not None
     )
@@ -172,8 +168,14 @@ def _initial_policy_is_safe_deny(
 
 
 def _cloud_run_is_bound(
-    resource: dict[str, Any], *, project: str, project_number: str,
-    region: str, endpoint: str, captured: datetime, expected_revision: str,
+    resource: dict[str, Any],
+    *,
+    project: str,
+    project_number: str,
+    region: str,
+    endpoint: str,
+    captured: datetime,
+    expected_revision: str,
 ) -> bool:
     """Bind the public MCP URL and ledger assumptions to one owned service.
 
@@ -227,10 +229,7 @@ def _cloud_run_is_bound(
         and created <= captured + timedelta(minutes=5)
         and isinstance(urls, list)
         and base_url in urls
-        and template_metadata["annotations"][
-            "autoscaling.knative.dev/maxScale"
-        ]
-        == "1"
+        and template_metadata["annotations"]["autoscaling.knative.dev/maxScale"] == "1"
         and isinstance(expected_revision, str)
         and bool(expected_revision)
         and revisions == [expected_revision]
@@ -283,8 +282,7 @@ def _iap_audit_transition_is_bound(
         and entry["resource"]["labels"].get("project_id") == project
         and started <= event_time <= applied <= captured
         and event_time <= received <= captured
-        and payload.get("@type")
-        == "type.googleapis.com/google.cloud.audit.AuditLog"
+        and payload.get("@type") == "type.googleapis.com/google.cloud.audit.AuditLog"
         and payload.get("serviceName") == "iap.googleapis.com"
         and payload.get("methodName") == _IAP_SET_POLICY_METHOD
         and payload.get("resourceName") == resource
@@ -310,8 +308,7 @@ def _iap_audit_transition_is_bound(
         and _canonical_etag(requested_policy.get("etag"))
         == _canonical_etag(before_etag)
         and requested_policy.get("bindings") == [binding]
-        and response.get("@type")
-        == "type.googleapis.com/google.iam.v1.Policy"
+        and response.get("@type") == "type.googleapis.com/google.iam.v1.Policy"
         and _canonical_etag(response.get("etag")) == _canonical_etag(after_etag)
         and response.get("bindings") == [binding]
         and payload.get("status") == {}
@@ -441,8 +438,7 @@ def _log_is_bound(
         and bool(entry.get("insertId"))
         and entry.get("logName")
         == (
-            f"projects/{project}/logs/"
-            "networkservices.googleapis.com%2Fgateway_requests"
+            f"projects/{project}/logs/networkservices.googleapis.com%2Fgateway_requests"
         )
         and resource["type"] == "networkservices.googleapis.com/Gateway"
         and labels.get("resource_container")
@@ -458,11 +454,8 @@ def _log_is_bound(
         and gateway_info["agentRegistryResource"] in projection_names
         and mcp["method"] == "tools/call"
         and mcp["parameter"] == tool_name
-        and mtls.get("clientCertSha256Fingerprint")
-        == client_cert_fingerprint
-        and _authz_is_bound(
-            payload, policy_name=policy_name, decision=decision
-        )
+        and mtls.get("clientCertSha256Fingerprint") == client_cert_fingerprint
+        and _authz_is_bound(payload, policy_name=policy_name, decision=decision)
     )
 
 
@@ -513,10 +506,7 @@ def _server_dispatch_is_bound(
     return (
         bool(entry.get("insertId"))
         and entry.get("logName")
-        == (
-            f"projects/{evidence['project']}/logs/"
-            "run.googleapis.com%2Fstdout"
-        )
+        == (f"projects/{evidence['project']}/logs/run.googleapis.com%2Fstdout")
         and entry.get("severity") == "INFO"
         and entry["resource"].get("type") == "cloud_run_revision"
         and labels.get("project_id") == evidence["project"]
@@ -558,8 +548,7 @@ def _server_dispatch_is_bound(
         == forwarding_count
         == _counter(allow_before, "forwarding_dispatch_count")
         and type(payload.get("forwarding_dispatch_count")) is int
-        and payload.get("server_dispatched_at")
-        == allow_after.get("last_dispatched_at")
+        and payload.get("server_dispatched_at") == allow_after.get("last_dispatched_at")
         and started <= dispatched <= captured
         and started <= logged <= received <= captured
         # server_dispatched_at and the log entry's own timestamp are two
@@ -733,8 +722,8 @@ def _judge(evidence: dict[str, Any], *, now: datetime) -> dict[str, bool]:
 
     allow_expires_raw = registry["iap_policy_allow_expires_at"]
     allow_expires = _aware_time(allow_expires_raw)
-    allow_expiry_is_canonical = (
-        str(allow_expires_raw) == _rfc3339_seconds(allow_expires)
+    allow_expiry_is_canonical = str(allow_expires_raw) == _rfc3339_seconds(
+        allow_expires
     )
     allow_expression = (
         "api.getAttribute('iap.googleapis.com/mcp.toolName', '') == '' || "
@@ -755,12 +744,8 @@ def _judge(evidence: dict[str, Any], *, now: datetime) -> dict[str, bool]:
         for policy in (initial_policy, allow_policy, deny_policy)
     ):
         raise TypeError("IAP policy snapshots must be objects")
-    allow_policy_applied = _aware_time(
-        registry["iap_policy_allow_applied_at"]
-    )
-    deny_policy_applied = _aware_time(
-        registry["iap_policy_deny_applied_at"]
-    )
+    allow_policy_applied = _aware_time(registry["iap_policy_allow_applied_at"])
+    deny_policy_applied = _aware_time(registry["iap_policy_deny_applied_at"])
     audit_logs = registry["iap_policy_audit_logs"]
     if not isinstance(audit_logs, dict):
         raise TypeError("IAP policy audit logs must be an object")
@@ -798,10 +783,8 @@ def _judge(evidence: dict[str, Any], *, now: datetime) -> dict[str, bool]:
     gateway_policy_bound = (
         gateway["name"] == gateway_name
         and gateway["protocols"] == ["MCP"]
-        and gateway["googleManaged"]["governedAccessPath"]
-        == "AGENT_TO_ANYWHERE"
-        and [item.rstrip("/") for item in gateway["registries"]]
-        == [registry_name]
+        and gateway["googleManaged"]["governedAccessPath"] == "AGENT_TO_ANYWHERE"
+        and [item.rstrip("/") for item in gateway["registries"]] == [registry_name]
         and _resource_has_server_times(gateway, captured)
         and bool(gateway.get("etag"))
         and bool(output_card.get("mtlsEndpoint"))
@@ -819,18 +802,14 @@ def _judge(evidence: dict[str, Any], *, now: datetime) -> dict[str, bool]:
         and authz_profile == "REQUEST_AUTHZ"
         and authz_policy["action"] == "CUSTOM"
         and authz_policy["customProvider"]["authzExtension"]["resources"]
-        and len(
-            authz_policy["customProvider"]["authzExtension"]["resources"]
-        )
-        == 1
+        and len(authz_policy["customProvider"]["authzExtension"]["resources"]) == 1
         and authz_policy["customProvider"]["authzExtension"]["resources"][0]
         in policy_extension_names
         and _resource_has_server_times(authz_policy, captured)
     )
 
     registry_resources_bound = (
-        service["name"]
-        == _name(project, region, "services", MCP_SERVICE_ID)
+        service["name"] == _name(project, region, "services", MCP_SERVICE_ID)
         and service_projection_match.group("owner") == project_number
         and projection_match.group("owner") in {project, project_number}
         and service_projection_match.group("id") == projection_match.group("id")
@@ -869,9 +848,7 @@ def _judge(evidence: dict[str, Any], *, now: datetime) -> dict[str, bool]:
     runtime_identity_bound = (
         engine["spec"]["identityType"] == "AGENT_IDENTITY"
         and not engine["spec"].get("serviceAccount")
-        and deployment["agentGatewayConfig"]["agentToAnywhereConfig"][
-            "agentGateway"
-        ]
+        and deployment["agentGatewayConfig"]["agentToAnywhereConfig"]["agentGateway"]
         == gateway_name
         and _resource_has_server_times(engine, captured)
         and registered_agent_match.group("id") == registered_agent["uid"]
@@ -986,8 +963,7 @@ def _judge(evidence: dict[str, Any], *, now: datetime) -> dict[str, bool]:
         == allow_after["instance_id"]
         and allow_count_after == allow_count_before + 1
         and allow_forward_after == allow_forward_before
-        and allow_after["last_dispatched_at"]
-        != allow_before.get("last_dispatched_at")
+        and allow_after["last_dispatched_at"] != allow_before.get("last_dispatched_at")
     )
     scope_is_narrow = _blocked_control_is_bound(
         scope,
@@ -1014,15 +990,12 @@ def _judge(evidence: dict[str, Any], *, now: datetime) -> dict[str, bool]:
         expiry["trace_id"],
         deny["trace_id"],
     ]
-    traces_are_bound = (
-        all(
-            isinstance(trace_id, str)
-            and _HEX_ID.fullmatch(trace_id) is not None
-            and trace_id != "0" * 32
-            for trace_id in trace_ids
-        )
-        and len(set(trace_ids)) == len(trace_ids)
-    )
+    traces_are_bound = all(
+        isinstance(trace_id, str)
+        and _HEX_ID.fullmatch(trace_id) is not None
+        and trace_id != "0" * 32
+        for trace_id in trace_ids
+    ) and len(set(trace_ids)) == len(trace_ids)
     allow_log = _single_tool_log(logs["allow"], tool_name=TOOL_NAME)
     scope_log = _single_tool_log(logs["scope"], tool_name=_DENY_CANARY)
     expiry_log = _single_tool_log(logs["expiry"], tool_name=TOOL_NAME)
@@ -1047,9 +1020,7 @@ def _judge(evidence: dict[str, Any], *, now: datetime) -> dict[str, bool]:
             isinstance(allow_fingerprint, str)
             and bool(allow_fingerprint)
             and all(
-                log["jsonPayload"]["mtls"].get(
-                    "clientCertSha256Fingerprint"
-                )
+                log["jsonPayload"]["mtls"].get("clientCertSha256Fingerprint")
                 == allow_fingerprint
                 for log in (scope_log, expiry_log, deny_log)
             )
@@ -1143,17 +1114,14 @@ def _judge(evidence: dict[str, Any], *, now: datetime) -> dict[str, bool]:
             and _server_dispatch_is_bound(
                 server_dispatch_log,
                 evidence=evidence,
-                cloud_run_revision=cloud_run["status"][
-                    "latestReadyRevisionName"
-                ],
+                cloud_run_revision=cloud_run["status"]["latestReadyRevisionName"],
                 allow_payload=allow_payload,
                 allow_before=allow_before,
                 allow_after=allow_after,
                 started=started,
                 captured=captured,
             )
-            and _aware_time(server_dispatch_log["receiveTimestamp"])
-            <= scope_log_time
+            and _aware_time(server_dispatch_log["receiveTimestamp"]) <= scope_log_time
         )
 
     return {
@@ -1174,9 +1142,7 @@ def _judge(evidence: dict[str, Any], *, now: datetime) -> dict[str, bool]:
     }
 
 
-def judge(
-    evidence: dict[str, Any], *, now: datetime | None = None
-) -> dict[str, bool]:
+def judge(evidence: dict[str, Any], *, now: datetime | None = None) -> dict[str, bool]:
     """Return clean failure evidence for every malformed or incomplete artifact."""
     try:
         if not isinstance(evidence, dict):

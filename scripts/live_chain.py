@@ -259,11 +259,15 @@ async def _sales_leg(
     await custody.add_session_to_memory(session)
     split = custody.splits()[splits_before]
     if len(split.trusted) != 2:
-        raise RuntimeError(f"sales: expected 2 trusted records, got {len(split.trusted)}")
+        raise RuntimeError(
+            f"sales: expected 2 trusted records, got {len(split.trusted)}"
+        )
     tool_record = split.trusted[0].record
     restatement_record = split.trusted[1].record
     if restatement_record.derived_from != (tool_record.id,):
-        raise RuntimeError("sales: restatement did not earn a derived_from edge into the tool root")
+        raise RuntimeError(
+            "sales: restatement did not earn a derived_from edge into the tool root"
+        )
 
     before = await _poll_search(
         custody,
@@ -323,7 +327,9 @@ async def _derived_leg(
         deadline=time.monotonic() + 90,
     )
     if not any(proof_id[:8] in f for f in conversational_facts):
-        raise RuntimeError(f"{department}: conversational write not retrievable within 90s")
+        raise RuntimeError(
+            f"{department}: conversational write not retrievable within 90s"
+        )
 
     reply_events = await _run_turn(
         custody,
@@ -332,7 +338,7 @@ async def _derived_leg(
         user_id=user_id,
         prompt=(
             f"During an audit, {department} just retrieved this note from "
-            f"memory: \"{cited_text}\" Reply confirming escalation to the "
+            f'memory: "{cited_text}" Reply confirming escalation to the '
             "next department, preserving the audit identifier exactly."
         ),
         persist=False,
@@ -462,7 +468,9 @@ async def _sibling_leg(
         deadline=time.monotonic() + 90,
     )
     if fact not in before:
-        raise RuntimeError(f"{SIBLING_DEPARTMENT}: tool fact not retrievable within 90s")
+        raise RuntimeError(
+            f"{SIBLING_DEPARTMENT}: tool fact not retrievable within 90s"
+        )
 
     return {
         "user_id": user_id,
@@ -586,7 +594,9 @@ async def _prove() -> dict[str, object]:
         await _confirm_chain_removed(custody, department=department, record=record)
 
     engineering_after = await custody.search_memory(
-        app_name=APP_NAME, user_id=engineering["user_id"], query="engineering pipeline note"
+        app_name=APP_NAME,
+        user_id=engineering["user_id"],
+        query="engineering pipeline note",
     )
     engineering["after_revoke_facts"] = engineering_after
     if engineering["tool_fact"] not in engineering_after:

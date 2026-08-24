@@ -196,9 +196,7 @@ class SharedGraphCanBeInjectedIntoTheAdkShell(unittest.IsolatedAsyncioTestCase):
             provenance_graph=graph,
             tools=ToolTrust(frozenset({"crm_lookup"})),
         )
-        support = CustodyMemoryBank(
-            downstream=downstream, provenance_graph=graph
-        )
+        support = CustodyMemoryBank(downstream=downstream, provenance_graph=graph)
 
         await sales.add_session_to_memory(
             session([tool("crm_lookup", {"result": "balance: 500"}, "sales-inv")])

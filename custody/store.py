@@ -185,9 +185,7 @@ class SqliteCustodyGraph:
         self._reload()
 
     def _reload(self) -> None:
-        for (payload,) in self._connection.execute(
-            "SELECT record FROM custody_record"
-        ):
+        for (payload,) in self._connection.execute("SELECT record FROM custody_record"):
             self._graph.add(_load(payload))
         for revocation_id, tool in self._connection.execute(
             "SELECT revocation_id, tool FROM revocation ORDER BY seq"
@@ -272,7 +270,14 @@ class SqliteTrustCatalog:
             "SELECT actor_department, department, tool, vouched_by, "
             "vouched_at, evidence FROM vouch ORDER BY seq"
         ).fetchall()
-        for actor_department, department, tool, vouched_by, vouched_at, evidence in rows:
+        for (
+            actor_department,
+            department,
+            tool,
+            vouched_by,
+            vouched_at,
+            evidence,
+        ) in rows:
             self._catalog.request(
                 Vouch(
                     actor_department,
@@ -379,7 +384,9 @@ class SqliteAuthorityStore:
             self._connection.executescript(_AUTHORITY_SCHEMA)
         except sqlite3.Error as error:
             self._connection.close()
-            raise AuthorityUnavailable("could not initialize B7 SQLite state") from error
+            raise AuthorityUnavailable(
+                "could not initialize B7 SQLite state"
+            ) from error
 
     def put_issuer_key(
         self, *, issuer_id: str, issuer_key_id: str, public_key: bytes
@@ -446,8 +453,7 @@ class SqliteAuthorityStore:
             ):
                 raise AuthorityConflict("policy generation compare-and-set failed")
             self._connection.execute(
-                "UPDATE authority_policy SET snapshot = ? "
-                "WHERE policy_key_digest = ?",
+                "UPDATE authority_policy SET snapshot = ? WHERE policy_key_digest = ?",
                 (payload, snapshot.policy_key.digest),
             )
 
@@ -494,7 +500,10 @@ class SqliteAuthorityStore:
                     raise AuthorityConflict("policy changed during admission")
             for parent_id in envelope.direct_parent_ids:
                 parent = self._envelope_unlocked(parent_id)
-                if parent is None or parent.admission_state is not AdmissionState.COMMITTED:
+                if (
+                    parent is None
+                    or parent.admission_state is not AdmissionState.COMMITTED
+                ):
                     raise AuthorityConflict("required parent is missing or incomplete")
             if receipt_binding_digest is not None:
                 row = self._connection.execute(
@@ -552,9 +561,7 @@ class SqliteAuthorityStore:
             except (sqlite3.Error, AuthorityDataError) as error:
                 raise AuthorityUnavailable("B7 record scan failed") from error
 
-    def root_record_id_for_receipt(
-        self, receipt: AuthorityReceipt
-    ) -> str | None:
+    def root_record_id_for_receipt(self, receipt: AuthorityReceipt) -> str | None:
         row = self._read_one(
             "SELECT root_record_id FROM authority_receipt_root "
             "WHERE receipt_binding_digest = ?",
@@ -564,10 +571,13 @@ class SqliteAuthorityStore:
 
     def is_root_revoked(self, root_key_digest: str) -> bool:
         _require_sha256(root_key_digest, "root_key_digest")
-        return self._read_one(
-            "SELECT 1 FROM authority_revoked_root WHERE root_key_digest = ?",
-            (root_key_digest,),
-        ) is not None
+        return (
+            self._read_one(
+                "SELECT 1 FROM authority_revoked_root WHERE root_key_digest = ?",
+                (root_key_digest,),
+            )
+            is not None
+        )
 
     def linearize_action(
         self,
@@ -588,9 +598,7 @@ class SqliteAuthorityStore:
                     raise AuthorityConflict(
                         "action request ID already has different request bytes"
                     )
-                return LinearizedAuthorityDecision(
-                    _load_decision(row[1]), False
-                )
+                return LinearizedAuthorityDecision(_load_decision(row[1]), False)
             decision = decide(self)
             if (
                 not isinstance(decision, AuthorityDecision)
@@ -615,16 +623,13 @@ class SqliteAuthorityStore:
         with self._lock:
             try:
                 rows = self._connection.execute(
-                    "SELECT decision FROM authority_action_decision "
-                    "ORDER BY request_id"
+                    "SELECT decision FROM authority_action_decision ORDER BY request_id"
                 ).fetchall()
                 return tuple(_load_decision(row[0]) for row in rows)
             except (sqlite3.Error, AuthorityDataError) as error:
                 raise AuthorityUnavailable("B7 action decision scan failed") from error
 
-    def commit_root_revocation(
-        self, revocation: RootRevocation
-    ) -> RootRevocation:
+    def commit_root_revocation(self, revocation: RootRevocation) -> RootRevocation:
         if not isinstance(revocation, RootRevocation):
             raise AuthorityDataError("root revocation write requires RootRevocation")
         with self._transaction():
@@ -656,9 +661,7 @@ class SqliteAuthorityStore:
                 )
             return revocation
 
-    def affected_record_ids(
-        self, root_key_digests: Iterable[str]
-    ) -> tuple[str, ...]:
+    def affected_record_ids(self, root_key_digests: Iterable[str]) -> tuple[str, ...]:
         digests = tuple(sorted(set(root_key_digests)))
         for digest in digests:
             _require_sha256(digest, "root_key_digest")
@@ -674,7 +677,9 @@ class SqliteAuthorityStore:
                 ).fetchall()
                 return tuple(str(row[0]) for row in rows)
             except sqlite3.Error as error:
-                raise AuthorityUnavailable("B7 reverse dependency read failed") from error
+                raise AuthorityUnavailable(
+                    "B7 reverse dependency read failed"
+                ) from error
 
     def root_revocations(self) -> tuple[RootRevocation, ...]:
         with self._lock:
@@ -742,9 +747,7 @@ class SqliteAuthorityStore:
             raise AuthorityDataError("stored record ID does not match envelope")
         return envelope
 
-    def _dependencies_unlocked(
-        self, record_id: str
-    ) -> tuple[AuthorityDependency, ...]:
+    def _dependencies_unlocked(self, record_id: str) -> tuple[AuthorityDependency, ...]:
         rows = self._connection.execute(
             "SELECT dependency FROM authority_dependency "
             "WHERE record_id = ? ORDER BY dependency",

@@ -99,10 +99,7 @@ def _prove() -> dict[str, object]:
     department = f"review-probe-{proof_id[:8]}"
     tool = f"review_probe_tool_{proof_id[:8]}"
     invocation_id = f"review-probe-{proof_id[:12]}"
-    quarantined_text = (
-        f"Attempted to exfiltrate customer records via {tool}. "
-        f"{marker}"
-    )
+    quarantined_text = f"Attempted to exfiltrate customer records via {tool}. {marker}"
 
     plane = ControlPlane()
     run = plane.ingest(

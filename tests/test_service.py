@@ -119,9 +119,7 @@ class UntrustedContentNeverReachesMemory(unittest.IsolatedAsyncioTestCase):
         held = quarantine.held(app_name="fleet", user_id="u-1")
         self.assertEqual(len(held), 2)
         self.assertEqual({h.record.source_tool for h in held}, {"fetch_page"})
-        self.assertEqual(
-            {h.record.origin for h in held}, {Origin.TOOL, Origin.DERIVED}
-        )
+        self.assertEqual({h.record.origin for h in held}, {Origin.TOOL, Origin.DERIVED})
 
     async def test_a_vouched_tool_reaches_memory_normally(self):
         downstream, quarantine = RecordingMemory(), InMemoryQuarantine()
@@ -207,9 +205,7 @@ class TheBoundaryIsStructuralNotAdvisory(unittest.IsolatedAsyncioTestCase):
             FakeContent(
                 [
                     FakePart(text="here is what I found"),
-                    FakePart(
-                        function_response=FakeResponse("fetch_page", POISON)
-                    ),
+                    FakePart(function_response=FakeResponse("fetch_page", POISON)),
                 ]
             ),
         )
@@ -242,9 +238,7 @@ class TheCostIsReportedNotHidden(unittest.IsolatedAsyncioTestCase):
     async def test_a_clean_session_costs_no_recall(self):
         downstream, quarantine = RecordingMemory(), InMemoryQuarantine()
         service = CustodyMemoryService(downstream, quarantine)
-        await service.add_session_to_memory(
-            FakeSession(events=[user("a"), model("b")])
-        )
+        await service.add_session_to_memory(FakeSession(events=[user("a"), model("b")]))
 
         self.assertEqual(service.recall_cost(), (0, 2))
 

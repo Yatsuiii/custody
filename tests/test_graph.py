@@ -157,7 +157,9 @@ class RevisionRevocationFailsLoudAcrossAnAlgorithmBoundary(unittest.TestCase):
             )
         self.assertEqual(len(graph), 1)
 
-    def test_a_genuinely_empty_revision_under_the_matching_algorithm_does_not_raise(self):
+    def test_a_genuinely_empty_revision_under_the_matching_algorithm_does_not_raise(
+        self,
+    ):
         graph = CustodyGraph()
         tool = "vendor-knowledge/fetch_page"
         graph.add(record("root", source_tool=tool, source_revision="sha256/2:abc"))
@@ -215,13 +217,21 @@ class RetrievalIsAttributedAsACitation(unittest.TestCase):
 
         # Day one, department A: a trusted lookup, written and added to the graph.
         written = take_custody(
-            [FakeEvent(
-                "assistant",
-                "inv-1",
-                FakeContent([FakePart(
-                    function_response=FakeResponse("crm_lookup", "balance: 500")
-                )]),
-            )],
+            [
+                FakeEvent(
+                    "assistant",
+                    "inv-1",
+                    FakeContent(
+                        [
+                            FakePart(
+                                function_response=FakeResponse(
+                                    "crm_lookup", "balance: 500"
+                                )
+                            )
+                        ]
+                    ),
+                )
+            ],
             trust,
         )
         (looked_up,) = written.admitted

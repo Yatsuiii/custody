@@ -157,16 +157,16 @@ async def run() -> int:
     revocation = service.graph.revoke(
         tool=COMPROMISED_TOOL, revocation_id="rev-2026-08-N"
     )
-    print(f"    revocation {revocation.id}: removed {len(revocation.removed)} record(s)")
+    print(
+        f"    revocation {revocation.id}: removed {len(revocation.removed)} record(s)"
+    )
     for record_id in revocation.removed:
         print(f"        {record_id}")
 
     show(service, "after revocation")
 
     before_replay = len(service.graph)
-    replay = service.graph.revoke(
-        tool=COMPROMISED_TOOL, revocation_id="rev-2026-08-N"
-    )
+    replay = service.graph.revoke(tool=COMPROMISED_TOOL, revocation_id="rev-2026-08-N")
     # Report what the replay *did*, not what the stored revocation says it did
     # once. Printing len(replay.removed) here reads as though four more records
     # were deleted, which is the opposite of the property being demonstrated,

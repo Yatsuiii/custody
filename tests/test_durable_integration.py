@@ -69,7 +69,9 @@ class G3AndG4SurviveARestart(unittest.IsolatedAsyncioTestCase):
             # G4 still holds: support never vouched for crm_lookup, so its own
             # call to it is quarantined even though sales already trusts it.
             support_direct = await support.add_session_to_memory(
-                _session("support-0", "support", [tool(COMPROMISED_TOOL, "500", inv="s0")])
+                _session(
+                    "support-0", "support", [tool(COMPROMISED_TOOL, "500", inv="s0")]
+                )
             )
             self.assertEqual(support_direct.withheld, 1)
 

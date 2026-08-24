@@ -55,6 +55,6 @@ normalize the installed SDK. A fake must not redefine Transaction.get as a
 snapshot-returning API. The repaired fake returns an iterator and the adapter
 test proves the port consumes the real shape without changing B7 data.
 
-Real-service contract status at this audit: NOT PROVEN. A hardened
-non-security probe is required; no P7 execution is authorized by this file.
-
+Real-service contract status: PROVEN by the hardened non-security stab01 probe
+(19/19 operations, including fresh-process reconstruction and cleanup). This
+does not authorize P7 or upgrade the source producer beyond TEST-OWNED.

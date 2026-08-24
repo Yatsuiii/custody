@@ -48,7 +48,13 @@ from custody.authority import (
 from custody.catalog import Demotion
 from custody.graph import CustodyGraph, Revocation
 from custody.origin import CustodyRecord, Origin, Trust
-from custody.revision import Admission, ApprovedTool, RevisionCatalog, RuntimeBinding, ToolSurface
+from custody.revision import (
+    Admission,
+    ApprovedTool,
+    RevisionCatalog,
+    RuntimeBinding,
+    ToolSurface,
+)
 
 CUSTODY_COLLECTION = "custody"
 REVOCATIONS_COLLECTION = "revocations"
@@ -192,9 +198,7 @@ class FirestoreCustodyGraph:
     def revocations(self) -> tuple[Revocation, ...]:
         return self._graph.revocations()
 
-    def record(
-        self, record_id: str
-    ) -> tuple[CustodyRecord, Revocation | None] | None:
+    def record(self, record_id: str) -> tuple[CustodyRecord, Revocation | None] | None:
         """One record's durable view, paired with its revocation if any.
 
         Unlike `resolve`, this is not content-addressed and does not require
@@ -304,7 +308,9 @@ class FirestoreAuthorityStore:
         try:
             return bytes.fromhex(data["public_key_hex"])
         except ValueError as error:
-            raise AuthorityUnavailable("stored issuer key bytes are malformed") from error
+            raise AuthorityUnavailable(
+                "stored issuer key bytes are malformed"
+            ) from error
 
     def put_policy(
         self,
@@ -438,9 +444,7 @@ class FirestoreAuthorityStore:
             for parent_id, parent_snapshot in parent_snapshots.items():
                 if not parent_snapshot.exists:
                     raise AuthorityConflict("required parent is missing")
-                parent, _, _ = _firestore_envelope_document(
-                    parent_snapshot.to_dict()
-                )
+                parent, _, _ = _firestore_envelope_document(parent_snapshot.to_dict())
                 if parent.admission_state is not AdmissionState.COMMITTED:
                     raise AuthorityConflict("required parent is incomplete")
             for reference, dependency in dependency_refs:
@@ -456,9 +460,7 @@ class FirestoreAuthorityStore:
             if stored_receipt is not None and stored_receipt.exists:
                 data = stored_receipt.to_dict()
                 if data.get("root_record_id") != envelope.record_id:
-                    raise AuthorityConflict(
-                        "receipt is already bound to another root"
-                    )
+                    raise AuthorityConflict("receipt is already bound to another root")
                 raise AuthorityConflict("receipt root exists without its envelope")
 
             transaction.create(record_ref, expected_document)
@@ -490,9 +492,7 @@ class FirestoreAuthorityStore:
                 return None
             envelope, _, _ = _firestore_envelope_document(snapshot.to_dict())
             if envelope.record_id != record_id:
-                raise AuthorityDataError(
-                    "stored record ID does not match envelope"
-                )
+                raise AuthorityDataError("stored record ID does not match envelope")
             return envelope
         except AuthorityDataError as error:
             raise AuthorityUnavailable("stored B7 envelope is malformed") from error
@@ -502,15 +502,11 @@ class FirestoreAuthorityStore:
             snapshot = self._get(self._record_ref(record_id))
             if not snapshot.exists:
                 return ()
-            envelope, dependencies, _ = _firestore_envelope_document(
-                snapshot.to_dict()
-            )
+            envelope, dependencies, _ = _firestore_envelope_document(snapshot.to_dict())
             if envelope.record_id != record_id or any(
                 dependency.record_id != record_id for dependency in dependencies
             ):
-                raise AuthorityDataError(
-                    "stored B7 dependency identity is malformed"
-                )
+                raise AuthorityDataError("stored B7 dependency identity is malformed")
             return dependencies
         except AuthorityDataError as error:
             raise AuthorityUnavailable(
@@ -528,9 +524,7 @@ class FirestoreAuthorityStore:
         except (GoogleAPICallError, AuthorityDataError, KeyError, TypeError) as error:
             raise AuthorityUnavailable("B7 Firestore record scan failed") from error
 
-    def root_record_id_for_receipt(
-        self, receipt: AuthorityReceipt
-    ) -> str | None:
+    def root_record_id_for_receipt(self, receipt: AuthorityReceipt) -> str | None:
         snapshot = self._get(self._receipt_roots.document(receipt.binding_digest))
         if not snapshot.exists:
             return None
@@ -609,20 +603,19 @@ class FirestoreAuthorityStore:
         try:
             return tuple(
                 sorted(
-                    (_firestore_decision(snapshot.to_dict()) for snapshot in self._decisions.stream()),
+                    (
+                        _firestore_decision(snapshot.to_dict())
+                        for snapshot in self._decisions.stream()
+                    ),
                     key=lambda decision: decision.request_id,
                 )
             )
         except (GoogleAPICallError, AuthorityDataError, KeyError, TypeError) as error:
             raise AuthorityUnavailable("B7 Firestore decision scan failed") from error
 
-    def commit_root_revocation(
-        self, revocation: RootRevocation
-    ) -> RootRevocation:
+    def commit_root_revocation(self, revocation: RootRevocation) -> RootRevocation:
         if not isinstance(revocation, RootRevocation):
-            raise AuthorityDataError(
-                "root revocation write requires RootRevocation"
-            )
+            raise AuthorityDataError("root revocation write requires RootRevocation")
         reference = self._revocations.document(
             _identity_digest([revocation.revocation_id])
         )
@@ -673,9 +666,7 @@ class FirestoreAuthorityStore:
 
         return self._run_transaction(write)
 
-    def affected_record_ids(
-        self, root_key_digests: Iterable[str]
-    ) -> tuple[str, ...]:
+    def affected_record_ids(self, root_key_digests: Iterable[str]) -> tuple[str, ...]:
         digests = frozenset(root_key_digests)
         for digest in digests:
             _firestore_sha256(digest, "root_key_digest")
@@ -722,9 +713,7 @@ class FirestoreAuthorityStore:
         transaction = getattr(self._local, "transaction", None)
         try:
             return (
-                reference.get()
-                if transaction is None
-                else transaction.get(reference)
+                reference.get() if transaction is None else transaction.get(reference)
             )
         except GoogleAPICallError as error:
             raise AuthorityUnavailable("B7 Firestore read failed") from error
@@ -760,7 +749,10 @@ class FirestoreAuthorityStore:
     ) -> None:
         for dependency in dependencies:
             snapshot = stored_dependencies[dependency.digest]
-            if not snapshot.exists or _firestore_dependency(snapshot.to_dict()) != dependency:
+            if (
+                not snapshot.exists
+                or _firestore_dependency(snapshot.to_dict()) != dependency
+            ):
                 raise AuthorityConflict(
                     "authority envelope is missing an exact dependency row"
                 )

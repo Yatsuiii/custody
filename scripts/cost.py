@@ -96,9 +96,7 @@ def build(seed: int = 7, reach: int = len(DEPARTMENTS)) -> Fleet:
                 Event(
                     "assistant",
                     invocation,
-                    Content(
-                        [Part(function_response=Response(tool, f"{tool} result"))]
-                    ),
+                    Content([Part(function_response=Response(tool, f"{tool} result"))]),
                 ),
                 Event(
                     "assistant",
@@ -119,9 +117,9 @@ def measure(reach: int) -> tuple[int, int, int, int]:
     fleet = build(reach=reach)
     total = fleet.total()
     descendants = len(set(fleet.graph.descendants(COMPROMISED)))
-    by_user = len([
-        rid for rid, dept in fleet.owner.items() if dept in fleet.users_touching
-    ])
+    by_user = len(
+        [rid for rid, dept in fleet.owner.items() if dept in fleet.users_touching]
+    )
     return total, by_user, descendants, len(fleet.users_touching)
 
 
@@ -138,8 +136,10 @@ def main() -> int:
         if department in fleet.users_touching
     }
 
-    print(f"\n  {len(DEPARTMENTS)} departments, {len(TOOLS)} tools, "
-          f"{SESSIONS_PER_DEPARTMENT} sessions each.")
+    print(
+        f"\n  {len(DEPARTMENTS)} departments, {len(TOOLS)} tools, "
+        f"{SESSIONS_PER_DEPARTMENT} sessions each."
+    )
     print(f"  {total} memory records. {COMPROMISED!r} is found compromised.\n")
 
     rows = [
@@ -151,25 +151,35 @@ def main() -> int:
     print("  " + "-" * 60)
     for label, destroyed in rows:
         survives = total - destroyed
-        print(f"  {label:<38} {destroyed:>9}   {survives:>8}"
-              f"  ({100 * survives / total:.0f}%)")
+        print(
+            f"  {label:<38} {destroyed:>9}   {survives:>8}"
+            f"  ({100 * survives / total:.0f}%)"
+        )
 
     saved = len(by_user) - len(descendants)
-    print(f"\n  Custody preserves {saved} records the blunt response destroys, "
-          f"{100 * saved / total:.0f}% of the fleet's memory.")
-    print(f"  {len(fleet.users_touching)} of {len(DEPARTMENTS)} departments "
-          f"touched the tool, so a per-user purge takes out "
-          f"{100 * len(by_user) / total:.0f}% to remove "
-          f"{100 * len(descendants) / total:.0f}%.")
+    print(
+        f"\n  Custody preserves {saved} records the blunt response destroys, "
+        f"{100 * saved / total:.0f}% of the fleet's memory."
+    )
+    print(
+        f"  {len(fleet.users_touching)} of {len(DEPARTMENTS)} departments "
+        f"touched the tool, so a per-user purge takes out "
+        f"{100 * len(by_user) / total:.0f}% to remove "
+        f"{100 * len(descendants) / total:.0f}%."
+    )
 
     print("\n  Sensitivity, because the row above is the flattering case.")
     print("  How many departments can reach the compromised tool changes it:\n")
-    print("  departments reached   purge-by-user destroys   Custody destroys   Custody saves")
+    print(
+        "  departments reached   purge-by-user destroys   Custody destroys   Custody saves"
+    )
     print("  " + "-" * 78)
     for reach in range(1, len(DEPARTMENTS) + 1):
         total_r, by_user_r, desc_r, touched = measure(reach)
-        print(f"  {touched:>19}   {100 * by_user_r / total_r:>21.0f}%"
-              f"   {100 * desc_r / total_r:>15.0f}%   {100 * (by_user_r - desc_r) / total_r:>12.0f}%")
+        print(
+            f"  {touched:>19}   {100 * by_user_r / total_r:>21.0f}%"
+            f"   {100 * desc_r / total_r:>15.0f}%   {100 * (by_user_r - desc_r) / total_r:>12.0f}%"
+        )
     print(
         "\n  Even at one department the blunt response destroys 20% of fleet\n"
         "  memory to remove a few percent. The advantage grows with how widely\n"

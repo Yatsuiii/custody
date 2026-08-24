@@ -53,10 +53,14 @@ class StaleRegistryMetadataIsReproducible(unittest.TestCase):
                 ]
             }
         }
-        self.assertEqual(surface(APPROVED).tools[0].revision, surface(reordered).tools[0].revision)
+        self.assertEqual(
+            surface(APPROVED).tools[0].revision, surface(reordered).tools[0].revision
+        )
 
     def test_changed_live_tools_list_has_a_different_revision_than_the_snapshot(self):
-        self.assertNotEqual(surface(APPROVED).tools[0].revision, surface(CHANGED).tools[0].revision)
+        self.assertNotEqual(
+            surface(APPROVED).tools[0].revision, surface(CHANGED).tools[0].revision
+        )
 
     def test_per_response_meta_does_not_change_a_revision(self):
         """R2 rides a fresh dispatch token in ``_meta`` on every read; a tool's
@@ -71,7 +75,9 @@ class StaleRegistryMetadataIsReproducible(unittest.TestCase):
                 ]
             }
         }
-        self.assertEqual(surface(APPROVED).tools[0].revision, surface(annotated).tools[0].revision)
+        self.assertEqual(
+            surface(APPROVED).tools[0].revision, surface(annotated).tools[0].revision
+        )
 
     def test_duplicate_runtime_names_are_refused_as_ambiguous(self):
         payload = {"result": {"tools": [APPROVED["result"]["tools"][0]] * 2}}
@@ -106,9 +112,7 @@ class AMalformedLiveSurfaceFailsClosed(unittest.TestCase):
             surface({"result": {"tools": ["fetch_page"]}})
 
     def test_a_tool_entry_missing_a_name_is_refused(self):
-        payload = {
-            "result": {"tools": [{"description": "no name field at all"}]}
-        }
+        payload = {"result": {"tools": [{"description": "no name field at all"}]}}
         with self.assertRaises(ToolSurfaceError):
             surface(payload)
 
@@ -163,7 +167,9 @@ class RevisionMismatchBlocksBindingBeforeInvocation(unittest.TestCase):
         self.catalog = RevisionCatalog()
         self.catalog.approve(department="sales", surface=surface(APPROVED))
 
-    def test_negative_control_admits_the_changed_tool_when_it_trusts_stale_registry_metadata(self):
+    def test_negative_control_admits_the_changed_tool_when_it_trusts_stale_registry_metadata(
+        self,
+    ):
         """The baseline never inspects the runtime surface, so it binds it."""
         stale_catalogue_tools = {tool.runtime_name for tool in surface(APPROVED).tools}
         self.assertIn("fetch_page", stale_catalogue_tools)
@@ -180,7 +186,9 @@ class RevisionMismatchBlocksBindingBeforeInvocation(unittest.TestCase):
         self.assertFalse(admission.allows("fetch_page"))
         self.assertEqual(admission.denied[0].reason, Denial.REVISION_MISMATCH)
 
-    def test_an_algorithm_boundary_denies_under_its_own_reason_not_revision_mismatch(self):
+    def test_an_algorithm_boundary_denies_under_its_own_reason_not_revision_mismatch(
+        self,
+    ):
         """A tooling change on Custody's own side must never read like a
         security event: an operator hunting REVISION_MISMATCH here would be
         chasing a compromise that never happened."""
@@ -250,14 +258,18 @@ class RevisionMismatchBlocksBindingBeforeInvocation(unittest.TestCase):
         event = FakeEvent(
             "assistant",
             "inv-1",
-            FakeContent([FakePart(function_response=FakeResponse("fetch_page", "safe"))]),
+            FakeContent(
+                [FakePart(function_response=FakeResponse("fetch_page", "safe"))]
+            ),
         )
 
         (admitted,) = take_custody([event], admission.trust()).admitted
 
         self.assertIs(admitted.record.trust, Trust.TRUSTED)
         self.assertEqual(admitted.record.source_tool, "vendor-knowledge/fetch_page")
-        self.assertEqual(admitted.record.source_revision, surface(APPROVED).tools[0].revision)
+        self.assertEqual(
+            admitted.record.source_revision, surface(APPROVED).tools[0].revision
+        )
 
 
 class DispatchIsBoundToTheSurfaceThatAuthorizedIt(unittest.TestCase):
@@ -312,16 +324,16 @@ class DispatchIsBoundToTheSurfaceThatAuthorizedIt(unittest.TestCase):
         token = first_process.mint(tool=self.tool)
         self.assertIsNone(first_process.verify(token, live_revision="rev-a"))
 
-        replayed_on_a_fresh_process = second_process.verify(token, live_revision="rev-a")
+        replayed_on_a_fresh_process = second_process.verify(
+            token, live_revision="rev-a"
+        )
 
         self.assertIsNone(replayed_on_a_fresh_process)
 
     def test_an_expired_token_is_refused_even_with_a_matching_digest(self):
         authority = AttestationAuthority(b"server-only-secret", _ttl_seconds=-1)
         token = authority.mint(tool=self.tool)
-        self.assertEqual(
-            authority.verify(token, live_revision="rev-a"), Denial.EXPIRED
-        )
+        self.assertEqual(authority.verify(token, live_revision="rev-a"), Denial.EXPIRED)
 
     def test_a_tampered_field_invalidates_the_signature(self):
         token = self.authority.mint(tool=self.tool)

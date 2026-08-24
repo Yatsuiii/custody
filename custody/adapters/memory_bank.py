@@ -37,7 +37,9 @@ class AgentEngineMemoriesClient(Protocol):
 
     async def create(self, *, name: str, fact: str, scope: dict, config: dict): ...
 
-    async def retrieve(self, *, name: str, scope: dict, similarity_search_params: dict): ...
+    async def retrieve(
+        self, *, name: str, scope: dict, similarity_search_params: dict
+    ): ...
 
     async def get(self, *, name: str): ...
 
@@ -123,9 +125,7 @@ class AgentEngineMemoryBank:
             "memory_id": memory_id,
             "metadata": {
                 "custody_record_id": {"string_value": record_id},
-                "custody_envelope_version": {
-                    "string_value": envelope.schema_version
-                },
+                "custody_envelope_version": {"string_value": envelope.schema_version},
             },
             "wait_for_completion": True,
         }

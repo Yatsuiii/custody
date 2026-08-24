@@ -1,0 +1,18 @@
+{
+  "baseline_commit": "d804d0a7b84f8aeb34d09a2fd0bbed93b1190313",
+  "current_commit_at_measurement": "9b962c34011a25631ef01481b820560c286deb5b",
+  "checks": {
+    "receipt_canonical_bytes": true,
+    "receipt_binding_digest": true,
+    "root_key_digest": true,
+    "root_revocation_selector_bytes": true,
+    "policy_key_identity": true,
+    "capability_values": true,
+    "capability_meet": true,
+    "transform_values": true,
+    "operation_role_values": true
+  },
+  "security_model_changed": false,
+  "method": "baseline authority.py loaded from git show and compared with current authority.py over frozen source fixture"
+}
+

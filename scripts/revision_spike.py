@@ -100,7 +100,8 @@ def main() -> int:
     results = {
         "G1_stale_registry_metadata": approved_revision != changed_revision,
         "G2_negative_control_binds_stale_snapshot": baseline_bound,
-        "G3_governed_path_blocks_before_dispatch": not dispatched and not governed.allows("fetch_page"),
+        "G3_governed_path_blocks_before_dispatch": not dispatched
+        and not governed.allows("fetch_page"),
         "G4_revision_descendants_only": set(revocation.removed)
         == {"old-root", "sales", "support", "finance"}
         and survivors == {"new-root", "unrelated"},

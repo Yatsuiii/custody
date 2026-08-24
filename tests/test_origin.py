@@ -327,9 +327,7 @@ class MultiParentSynthesisE0(unittest.TestCase):
 
         graph_b = CustodyGraph()
         graph_b.extend([root_a.record, root_b.record, synthesis.record])
-        removed_b = graph_b.revoke(
-            tool="payroll_lookup", revocation_id="rev-b"
-        ).removed
+        removed_b = graph_b.revoke(tool="payroll_lookup", revocation_id="rev-b").removed
         self.assertIn(synthesis.record.id, removed_b)
 
     def test_a_chained_restatement_is_still_two_hops_not_a_shortcut(self):

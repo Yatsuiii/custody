@@ -103,7 +103,9 @@ class ToolSurface:
     tools: tuple[ToolDefinition, ...]
 
     @classmethod
-    def from_tools_list(cls, *, server: str, payload: Mapping[str, object]) -> "ToolSurface":
+    def from_tools_list(
+        cls, *, server: str, payload: Mapping[str, object]
+    ) -> "ToolSurface":
         """Parse the MCP response shape, ignoring response ordering only.
 
         JSON object key order and the order of tools in a discovery response are
@@ -137,7 +139,9 @@ class ToolSurface:
             names.add(name)
             identity = {key: value for key, value in raw.items() if key != "_meta"}
             definitions.append(ToolDefinition(server, name, identity))
-        return cls(server, tuple(sorted(definitions, key=lambda tool: tool.runtime_name)))
+        return cls(
+            server, tuple(sorted(definitions, key=lambda tool: tool.runtime_name))
+        )
 
 
 @dataclass(frozen=True)
@@ -241,21 +245,23 @@ class RevisionCatalog:
             live = observed.get(tool_id)
             if live is None:
                 denied.append(
-                    AdmissionDenial(
-                        tool_id, approved.revision, None, Denial.MISSING
-                    )
+                    AdmissionDenial(tool_id, approved.revision, None, Denial.MISSING)
                 )
             elif algorithm_of(live.revision) != algorithm_of(approved.revision):
                 denied.append(
                     AdmissionDenial(
-                        tool_id, approved.revision, live.revision,
+                        tool_id,
+                        approved.revision,
+                        live.revision,
                         Denial.ALGORITHM_SUPERSEDED,
                     )
                 )
             elif live.revision != approved.revision:
                 denied.append(
                     AdmissionDenial(
-                        tool_id, approved.revision, live.revision,
+                        tool_id,
+                        approved.revision,
+                        live.revision,
                         Denial.REVISION_MISMATCH,
                     )
                 )
@@ -265,7 +271,9 @@ class RevisionCatalog:
             ):
                 denied.append(
                     AdmissionDenial(
-                        tool_id, approved.revision, live.revision,
+                        tool_id,
+                        approved.revision,
+                        live.revision,
                         Denial.RUNTIME_DRIFT,
                     )
                 )
@@ -313,9 +321,7 @@ def mac(
     what a minter signed. The secret itself is never carried in a
     ``SurfaceAttestation``; only this function's caller holds it.
     """
-    canonical = "|".join(
-        (tool_id, revision, nonce, repr(issued_at), repr(expires_at))
-    )
+    canonical = "|".join((tool_id, revision, nonce, repr(issued_at), repr(expires_at)))
     return hmac.new(secret, canonical.encode("utf-8"), hashlib.sha256).hexdigest()
 
 
@@ -406,9 +412,7 @@ class AttestationAuthority:
             signature=signature,
         )
 
-    def verify(
-        self, token: SurfaceAttestation, *, live_revision: str
-    ) -> Denial | None:
+    def verify(self, token: SurfaceAttestation, *, live_revision: str) -> Denial | None:
         """Fail closed: return the reason to deny dispatch, or ``None`` to allow.
 
         Order matters. A token that fails signature verification proves

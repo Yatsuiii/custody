@@ -1,0 +1,176 @@
+{
+  "cleanup": {
+    "complete": true,
+    "deleted_documents": {
+      "authority_action_decisions": 1,
+      "authority_dependencies": 1,
+      "authority_issuer_keys": 1,
+      "authority_policies": 1,
+      "authority_receipt_roots": 1,
+      "authority_revocations": 1,
+      "custody": 1,
+      "revoked_receipt_roots": 1
+    },
+    "final_collection_counts": {
+      "authority_action_decisions": 0,
+      "authority_dependencies": 0,
+      "authority_issuer_keys": 0,
+      "authority_policies": 0,
+      "authority_receipt_roots": 0,
+      "authority_revocations": 0,
+      "custody": 0,
+      "revoked_receipt_roots": 0
+    }
+  },
+  "completed_at": "2026-08-24T16:47:59.909923+00:00",
+  "database": "(default)",
+  "failure": null,
+  "initial_collection_counts": {
+    "authority_action_decisions": 0,
+    "authority_dependencies": 0,
+    "authority_issuer_keys": 0,
+    "authority_policies": 0,
+    "authority_receipt_roots": 0,
+    "authority_revocations": 0,
+    "custody": 0,
+    "revoked_receipt_roots": 0
+  },
+  "model_calls": 0,
+  "namespace_prefix": "custody_firestore_contract_20260824_stab01",
+  "operations": [
+    {
+      "name": "namespace_preflight_counts",
+      "ok": true,
+      "sdk_call": "CollectionReference.stream() -> snapshots"
+    },
+    {
+      "name": "missing_document_outside_transaction",
+      "observation": {
+        "create_time_present": false,
+        "exists": false,
+        "has_to_dict": true
+      },
+      "ok": true,
+      "sdk_call": "DocumentReference.get() -> DocumentSnapshot"
+    },
+    {
+      "name": "missing_document_inside_transaction",
+      "observation": {
+        "create_time_present": false,
+        "exists": false,
+        "has_to_dict": true
+      },
+      "ok": true,
+      "sdk_call": "DocumentReference.get(transaction=transaction) -> DocumentSnapshot"
+    },
+    {
+      "name": "issuer_key_transactional_create",
+      "ok": true,
+      "sdk_call": "Transaction.create(DocumentReference, dict) -> None"
+    },
+    {
+      "matches": true,
+      "name": "issuer_key_read_reconstruction",
+      "ok": true,
+      "sdk_call": "DocumentReference.get() -> DocumentSnapshot"
+    },
+    {
+      "name": "issuer_key_idempotent_existing_transaction_path",
+      "ok": true,
+      "sdk_call": "DocumentReference.get(transaction=transaction) then Transaction.create"
+    },
+    {
+      "name": "policy_transactional_create",
+      "ok": true,
+      "sdk_call": "Transaction.get(DocumentReference) translated via document.get(transaction=transaction), then Transaction.create"
+    },
+    {
+      "name": "policy_idempotent_existing_transaction_path",
+      "ok": true,
+      "sdk_call": "DocumentReference.get(transaction=transaction) then no-op"
+    },
+    {
+      "matches": true,
+      "name": "policy_read_reconstruction",
+      "ok": true,
+      "sdk_call": "DocumentReference.get() -> DocumentSnapshot"
+    },
+    {
+      "admitted": true,
+      "name": "admission_transactional_create",
+      "ok": true,
+      "sdk_call": "transactional B7 admission reads plus Transaction.create writes"
+    },
+    {
+      "admitted": true,
+      "name": "admission_idempotent_existing_transaction_path",
+      "ok": true,
+      "sdk_call": "transactional existing-record read and side-document verification"
+    },
+    {
+      "matches_record": true,
+      "name": "admission_read_reconstruction",
+      "ok": true,
+      "sdk_call": "DocumentReference.get() -> DocumentSnapshot"
+    },
+    {
+      "dependency_count": 1,
+      "name": "admission_dependency_read_reconstruction",
+      "ok": true,
+      "sdk_call": "DocumentReference.get() -> DocumentSnapshot"
+    },
+    {
+      "dispatched": true,
+      "name": "action_decision_transactional_create",
+      "ok": true,
+      "sdk_call": "transactional current-state reads plus Transaction.create"
+    },
+    {
+      "decision_count": 1,
+      "name": "action_decision_read_reconstruction",
+      "ok": true,
+      "sdk_call": "CollectionReference.stream() -> snapshots"
+    },
+    {
+      "affected_record_ids": [
+        "PROBE-ROOT"
+      ],
+      "name": "root_revocation_transactional_create",
+      "ok": true,
+      "sdk_call": "transactional root-event and marker reads plus Transaction.create"
+    },
+    {
+      "name": "root_revocation_read_reconstruction",
+      "ok": true,
+      "revocation_count": 1,
+      "sdk_call": "CollectionReference.stream() -> snapshots"
+    },
+    {
+      "contains_root": true,
+      "name": "affected_dependency_query",
+      "ok": true,
+      "sdk_call": "CollectionReference.stream() over authority_dependencies"
+    },
+    {
+      "checks": {
+        "action_decision_reconstructed": true,
+        "dependencies_reconstructed": true,
+        "envelope_reconstructed": true,
+        "issuer_key_reconstructed": true,
+        "policy_reconstructed": true,
+        "receipt_root_reconstructed": true,
+        "reverse_dependency_query": true,
+        "root_marker_reconstructed": true,
+        "root_revocation_reconstructed": true
+      },
+      "name": "fresh_process_reconstruction",
+      "ok": true,
+      "sdk_call": "new process -> FirestoreAuthorityStore reads and reconstructs state"
+    }
+  ],
+  "project": "project-988bc9fe-092c-4b32-90c",
+  "region": "us-central1",
+  "scorer_reads": 0,
+  "security_metrics": false,
+  "status": "PASS"
+}

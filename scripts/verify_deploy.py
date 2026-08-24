@@ -63,7 +63,9 @@ def fetch(url: str, *, timeout: float = 30.0) -> Response:
     A 404 is a fact this script needs, not a failure to get one, so only a
     transport-level problem raises.
     """
-    request = urllib.request.Request(url, headers={"User-Agent": "custody-verify-deploy"})
+    request = urllib.request.Request(
+        url, headers={"User-Agent": "custody-verify-deploy"}
+    )
     try:
         with urllib.request.urlopen(request, timeout=timeout) as response:
             return Response(response.status, response.read())

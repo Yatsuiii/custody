@@ -22,9 +22,7 @@ from custody.service import AuthorityMemoryService
 
 FIXTURES = Path(__file__).parent / "fixtures" / "b7"
 IDENTITY = PolicyKey("finance", "custody", "identity", "R1", "export.send")
-REGISTERED = PolicyKey(
-    "finance", "custody", "vendor_projection", "R1", "export.send"
-)
+REGISTERED = PolicyKey("finance", "custody", "vendor_projection", "R1", "export.send")
 FREEFORM = PolicyKey("finance", "model", "freeform", "R1", "export.send")
 
 
@@ -121,9 +119,7 @@ class B7ServiceUsesOnlyExplicitAdmissionPaths(unittest.IsolatedAsyncioTestCase):
         event, store, service, publisher = _environment()
         forged = dataclasses.replace(
             event,
-            receipt=dataclasses.replace(
-                event.receipt, issuer_signature="00" * 64
-            ),
+            receipt=dataclasses.replace(event.receipt, issuer_signature="00" * 64),
         )
 
         result = await service.admit_source(
@@ -138,7 +134,9 @@ class B7ServiceUsesOnlyExplicitAdmissionPaths(unittest.IsolatedAsyncioTestCase):
         self.assertIsNone(store.envelope("ROOT-FORGED"))
         self.assertEqual(publisher.writes, [])
 
-    async def test_registered_and_freeform_use_different_fixed_entry_points(self) -> None:
+    async def test_registered_and_freeform_use_different_fixed_entry_points(
+        self,
+    ) -> None:
         event, store, service, publisher = _environment()
         root = await service.admit_source(
             app_name="fleet",

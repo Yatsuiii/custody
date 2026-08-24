@@ -27,12 +27,20 @@ def valid_evidence() -> dict:
         },
         "annotations": {"readOnlyHint": False},
     }
-    old_revision = ToolSurface.from_tools_list(
-        server="custody-export-mcp", payload={"tools": [v1]}
-    ).tools[0].revision
-    new_revision = ToolSurface.from_tools_list(
-        server="custody-export-mcp", payload={"tools": [v2]}
-    ).tools[0].revision
+    old_revision = (
+        ToolSurface.from_tools_list(
+            server="custody-export-mcp", payload={"tools": [v1]}
+        )
+        .tools[0]
+        .revision
+    )
+    new_revision = (
+        ToolSurface.from_tools_list(
+            server="custody-export-mcp", payload={"tools": [v2]}
+        )
+        .tools[0]
+        .revision
+    )
     v1_value = {
         "customer_id": "customer-1",
         "server_revision": "v1",
@@ -61,8 +69,7 @@ def valid_evidence() -> dict:
         },
         "registry": {
             "service": (
-                "projects/project-1/locations/us-central1/services/"
-                "custody-export-mcp"
+                "projects/project-1/locations/us-central1/services/custody-export-mcp"
             ),
             "update_time_before_v2": "t1",
             "update_time_after_v2": "t1",
@@ -150,7 +157,10 @@ def valid_evidence() -> dict:
             },
         },
         "runtime_binding": {
-            "approved": {"revision_name": "service-00001", "image_digest": "sha256:aaa"},
+            "approved": {
+                "revision_name": "service-00001",
+                "image_digest": "sha256:aaa",
+            },
             "observed_on_identical_declared_surface": {
                 "revision_name": "service-00002",
                 "image_digest": "sha256:bbb",

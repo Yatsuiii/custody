@@ -32,9 +32,7 @@ from custody.control_plane import ControlPlane
 
 FIXTURES = Path(__file__).parent / "fixtures" / "b7"
 IDENTITY = PolicyKey("finance", "custody", "identity", "R1", "export.send")
-REGISTERED = PolicyKey(
-    "finance", "custody", "vendor_projection", "R1", "export.send"
-)
+REGISTERED = PolicyKey("finance", "custody", "vendor_projection", "R1", "export.send")
 FREEFORM = PolicyKey("finance", "model", "freeform", "R1", "export.send")
 
 
@@ -71,8 +69,7 @@ def _load_events() -> tuple[SourceAuthorityEvent, ...]:
         "source_event_004.json",
     )
     return tuple(
-        SourceAuthorityEvent.from_json((FIXTURES / name).read_bytes())
-        for name in names
+        SourceAuthorityEvent.from_json((FIXTURES / name).read_bytes()) for name in names
     )
 
 
@@ -148,9 +145,7 @@ def _world(store: InMemoryAuthorityStore | None = None):
 
 
 def _root_key(event: SourceAuthorityEvent, record_id: str) -> ReceiptRootKey:
-    return ReceiptRootKey.from_receipt(
-        event.receipt, custody_root_record_id=record_id
-    )
+    return ReceiptRootKey.from_receipt(event.receipt, custody_root_record_id=record_id)
 
 
 def _action(request_id: str) -> AuthorityAction:
@@ -244,7 +239,9 @@ class ReceiptRootRevocationIsSelective(unittest.TestCase):
             before,
         )
 
-    def test_exact_replay_is_idempotent_and_conflicting_event_id_is_rejected(self) -> None:
+    def test_exact_replay_is_idempotent_and_conflicting_event_id_is_rejected(
+        self,
+    ) -> None:
         events, store, _, _, controller = _world()
         key_1 = _root_key(events[0], "ROOT-01")
         key_2 = _root_key(events[1], "ROOT-02")
@@ -267,9 +264,7 @@ class ReceiptRootRevocationIsSelective(unittest.TestCase):
         events, store, _, _, controller = _world()
         key = _root_key(events[0], "ROOT-01")
         fabricated = dataclasses.replace(key, receipt_id="other-receipt")
-        non_root = dataclasses.replace(
-            key, custody_root_record_id="DESC-01"
-        )
+        non_root = dataclasses.replace(key, custody_root_record_id="DESC-01")
 
         for selector in (fabricated, non_root):
             with self.subTest(selector=selector):
@@ -337,9 +332,7 @@ class RevocationWinsBeforeTheFinalActionCheck(unittest.TestCase):
         self.assertFalse(thread.is_alive())
         self.assertEqual(len(executions), 1)
         self.assertFalse(executions[0].decision.allowed)
-        self.assertEqual(
-            executions[0].decision.reason, "REVOKED_AUTHORITY_ROOT"
-        )
+        self.assertEqual(executions[0].decision.reason, "REVOKED_AUTHORITY_ROOT")
         self.assertEqual(dispatcher.calls, [])
 
 

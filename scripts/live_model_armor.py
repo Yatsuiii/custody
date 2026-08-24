@@ -122,7 +122,10 @@ def _require_owned_template(template: dict[str, Any]) -> None:
         template.get("name") != EXPECTED_TEMPLATE_NAME
         or template.get("filterConfig") != EXPECTED_FILTER_CONFIG
         or template.get("labels") != EXPECTED_LABELS
-        or any(metadata.get(key) != value for key, value in EXPECTED_TEMPLATE_METADATA.items())
+        or any(
+            metadata.get(key) != value
+            for key, value in EXPECTED_TEMPLATE_METADATA.items()
+        )
     ):
         raise RuntimeError("owned Model Armor Template validation failed")
 

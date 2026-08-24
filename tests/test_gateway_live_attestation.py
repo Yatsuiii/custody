@@ -177,12 +177,17 @@ class LiveGatewayAttestationTests(unittest.TestCase):
         every source agrees with every other source.
         """
         evidence = trusted_evidence()
-        for env in evidence["cloud_run"]["spec"]["template"]["spec"][
-            "containers"
-        ][0]["env"]:
+        for env in evidence["cloud_run"]["spec"]["template"]["spec"]["containers"][0][
+            "env"
+        ]:
             if env["name"] == "CUSTODY_MCP_REVISION":
                 env["value"] = "v1"
-        for control in ("allow_control", "scope_control", "expiry_control", "deny_control"):
+        for control in (
+            "allow_control",
+            "scope_control",
+            "expiry_control",
+            "deny_control",
+        ):
             evidence[control]["evidence_before"]["revision"] = "v1"
             evidence[control]["evidence_after"]["revision"] = "v1"
         evidence["allow_control"]["result"]["data"]["server_revision"] = "v1"

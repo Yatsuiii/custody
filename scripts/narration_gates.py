@@ -46,9 +46,7 @@ def judge_offline(evidence: dict, *, now: datetime | None = None) -> dict[str, b
 
     verdict_fields = {f for f in Verdict.__dataclass_fields__}
 
-    audio_bytes = (
-        AUDIO_OUT.read_bytes() if AUDIO_OUT.exists() else b""
-    )
+    audio_bytes = AUDIO_OUT.read_bytes() if AUDIO_OUT.exists() else b""
     recomputed_sha256 = hashlib.sha256(audio_bytes).hexdigest() if audio_bytes else ""
 
     return {
@@ -74,7 +72,8 @@ def judge_offline(evidence: dict, *, now: datetime | None = None) -> dict[str, b
             bool(audio_bytes) and recomputed_sha256 == narration.get("audio_sha256")
         ),
         "audio_carries_a_recognizable_mp3_header": (
-            bool(audio_bytes) and audio_bytes[:3] in MP3_HEADERS
+            bool(audio_bytes)
+            and audio_bytes[:3] in MP3_HEADERS
             or audio_bytes[:2] in MP3_HEADERS
         ),
         "audio_byte_count_is_non_trivial": narration.get("audio_bytes", 0) > 1000,

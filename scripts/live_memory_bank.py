@@ -131,7 +131,9 @@ async def _prove_selective_deletion(
     revoked by tool; this record can, which is what proves selective
     deletion works through G1's actual wiring, not just D2's standalone one.
     """
-    tool_fact = f"Sales export audit control TOOL-{proof_id[:8]} requires dual sign-off."
+    tool_fact = (
+        f"Sales export audit control TOOL-{proof_id[:8]} requires dual sign-off."
+    )
     tool_invocation = f"g1-tool-{proof_id[:12]}"
     tool_event = AdkEvent(
         invocation_id=tool_invocation,
@@ -173,8 +175,7 @@ async def _prove_selective_deletion(
     )
     if tool_fact not in before_revoke:
         raise RuntimeError(
-            "the tool-origin write completed but was not retrievable within "
-            "90 seconds"
+            "the tool-origin write completed but was not retrievable within 90 seconds"
         )
 
     revoking_graph = RevokingMemoryBankGraph(
@@ -280,9 +281,7 @@ async def prove_adk_memory_bank(
         async for event in runner.run_async(
             user_id=user_id,
             session_id=session_id,
-            new_message=types.Content(
-                role="user", parts=[types.Part(text=prompt)]
-            ),
+            new_message=types.Content(role="user", parts=[types.Part(text=prompt)]),
         ):
             events.append(event)
     finally:

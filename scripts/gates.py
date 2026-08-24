@@ -60,7 +60,9 @@ class Verdict:
 
     def line(self) -> str:
         mark = {"PASS": "[PASS   ]", "FAIL": "[FAIL   ]", "BLOCKED": "[BLOCKED]"}
-        return f"  {mark[self.state]} {self.gate} {self.title}\n            {self.detail}"
+        return (
+            f"  {mark[self.state]} {self.gate} {self.title}\n            {self.detail}"
+        )
 
 
 # -- phase one: run the scenarios, write what happened -----------------------
@@ -108,7 +110,9 @@ async def evidence_for_g3() -> dict:
     await service.add_session_to_memory(support_session())
 
     before = len(service.graph)
-    departments_before = {r.invocation_id.split("-")[0] for r in service.graph.records()}
+    departments_before = {
+        r.invocation_id.split("-")[0] for r in service.graph.records()
+    }
     revocation = service.graph.revoke(tool=COMPROMISED_TOOL, revocation_id="rev-1")
     after = len(service.graph)
 
@@ -128,12 +132,8 @@ async def evidence_for_g3() -> dict:
 async def evidence_for_g4() -> dict:
     """Cross-department isolation, on both the write side and the read side."""
     catalog = TrustCatalog()
-    cross = catalog.request(
-        Vouch("sales", grant("support", "their_tool"))
-    )
-    own = catalog.request(
-        Vouch("sales", grant("sales", COMPROMISED_TOOL))
-    )
+    cross = catalog.request(Vouch("sales", grant("support", "their_tool")))
+    own = catalog.request(Vouch("sales", grant("sales", COMPROMISED_TOOL)))
     return {
         "cross_department_vouch_allowed": cross.allowed,
         "cross_department_reason": cross.reason(),
@@ -227,7 +227,11 @@ def _g1_memory_bank_errors(
         errors.append("Memory Bank scope is not unique to this proof")
     if memory.get("conversational_memory_write_count", 0) < 2:
         errors.append("Memory Bank did not receive both user and model events")
-    if split.get("total", 0) < 2 or split.get("withheld") != 0 or split.get("refused") != 0:
+    if (
+        split.get("total", 0) < 2
+        or split.get("withheld") != 0
+        or split.get("refused") != 0
+    ):
         errors.append("Custody did not admit the complete clean ADK session")
     if memory.get("retrieved_memory_count", 0) < 1:
         errors.append("Memory Bank returned no memory")
@@ -434,13 +438,9 @@ def still_outstanding(missing: list[str]) -> str:
 
 def judge_g5(e: dict) -> Verdict:
     groups = {
-        "discovery/lifecycle": _all_live_gates_pass(
-            e.get("registry"), judge_registry
-        ),
+        "discovery/lifecycle": _all_live_gates_pass(e.get("registry"), judge_registry),
         "execution/state": judge_g1(e.get("g1")).state == "PASS",
-        "security/governance": _all_live_gates_pass(
-            e.get("gateway"), judge_gateway
-        ),
+        "security/governance": _all_live_gates_pass(e.get("gateway"), judge_gateway),
         # Judged from O1's own artifact, never inferred from Gateway request
         # logs: the observability judge is what requires the real Agent
         # Observability integration and its custody trace fields, so reusing
@@ -448,9 +448,7 @@ def judge_g5(e: dict) -> Verdict:
         # hardcoded False while O1 was unbuilt; leaving it hardcoded after
         # O1 landed made G5 unpassable for a reason that had stopped being
         # true, which is the failure this file exists to prevent.
-        "telemetry": _all_live_gates_pass(
-            e.get("observability"), judge_observability
-        ),
+        "telemetry": _all_live_gates_pass(e.get("observability"), judge_observability),
     }
     passed = [name for name, complete in groups.items() if complete]
     missing = [name for name, complete in groups.items() if not complete]
@@ -478,9 +476,7 @@ async def main() -> int:
         (OUT / f"{name}.json").write_text(json.dumps(evidence, indent=2))
 
     # Read it back. The judgement must not see the objects that made it.
-    read = {
-        name: json.loads((OUT / f"{name}.json").read_text()) for name in produced
-    }
+    read = {name: json.loads((OUT / f"{name}.json").read_text()) for name in produced}
     g1_path = OUT / "g1.json"
     try:
         g1 = json.loads(g1_path.read_text()) if g1_path.exists() else None

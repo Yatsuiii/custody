@@ -33,9 +33,7 @@ class Verdict:
     drafted_at: str
 
 
-def draft_verdict(
-    item: Quarantined, *, explain: Explain, drafted_at: str
-) -> Verdict:
+def draft_verdict(item: Quarantined, *, explain: Explain, drafted_at: str) -> Verdict:
     """Ask `explain` what the quarantined item's text attempted.
 
     `item.text` is exactly what `take_custody` withheld, so the verdict is

@@ -153,7 +153,11 @@ def live_reread(evidence: dict) -> dict[str, bool]:
             reread = _gcloud_json(
                 "logging", "read", query, "--project", project, "--limit=1"
             )
-        except (subprocess.CalledProcessError, subprocess.TimeoutExpired, json.JSONDecodeError):
+        except (
+            subprocess.CalledProcessError,
+            subprocess.TimeoutExpired,
+            json.JSONDecodeError,
+        ):
             reread = []
         results[f"{label}_denial_log_rereads_live"] = (
             isinstance(reread, list)
@@ -179,7 +183,11 @@ def live_reread(evidence: dict) -> dict[str, bool]:
                 "--project",
                 project,
             )
-        except (subprocess.CalledProcessError, subprocess.TimeoutExpired, json.JSONDecodeError):
+        except (
+            subprocess.CalledProcessError,
+            subprocess.TimeoutExpired,
+            json.JSONDecodeError,
+        ):
             described = {}
         results[f"{label}_revision_exists_live"] = (
             described.get("metadata", {}).get("name") == revision_name

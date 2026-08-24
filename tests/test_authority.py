@@ -36,9 +36,7 @@ from custody.authority import (
 
 FIXTURES = Path(__file__).parent / "fixtures" / "b7"
 
-POLICY_KEY = PolicyKey(
-    "finance", "vendor_lookup", "lookup", "R1", "export.send"
-)
+POLICY_KEY = PolicyKey("finance", "vendor_lookup", "lookup", "R1", "export.send")
 SOURCE_OBJECT = {
     "record_id": "SRC-01",
     "department": "finance",
@@ -51,13 +49,9 @@ SOURCE_OBJECT = {
 SOURCE_OBJECT_COMMITMENT = (
     "5c42e62a02ef680d3720485d48bb85f988d13b29eac63db317e38c8161a45809"
 )
-ROOT_KEY_DIGEST = (
-    "196faabe589dddfdb535e4c50c2ff674ea189bfb120ead72cd4657e79a0d6df5"
-)
+ROOT_KEY_DIGEST = "196faabe589dddfdb535e4c50c2ff674ea189bfb120ead72cd4657e79a0d6df5"
 _DEFAULT_PUBLIC_KEY = object()
-PAYLOAD_DIGEST = (
-    "08dc153fd61e0d59c844b8b48c54455e1a8b6076b71845a86f229ce5fe08d95c"
-)
+PAYLOAD_DIGEST = "08dc153fd61e0d59c844b8b48c54455e1a8b6076b71845a86f229ce5fe08d95c"
 
 
 def receipt_mapping() -> dict[str, object]:
@@ -104,9 +98,7 @@ def root_envelope_mapping() -> dict[str, object]:
 
 
 def signed_event() -> SourceAuthorityEvent:
-    return SourceAuthorityEvent.from_json(
-        (FIXTURES / "source_event.json").read_bytes()
-    )
+    return SourceAuthorityEvent.from_json((FIXTURES / "source_event.json").read_bytes())
 
 
 def signed_event_mapping() -> dict[str, object]:
@@ -115,9 +107,7 @@ def signed_event_mapping() -> dict[str, object]:
 
 def _nested_keys(value: object) -> set[str]:
     if isinstance(value, dict):
-        return set(value).union(
-            *( _nested_keys(item) for item in value.values())
-        )
+        return set(value).union(*(_nested_keys(item) for item in value.values()))
     if isinstance(value, list):
         return set().union(*(_nested_keys(item) for item in value))
     return set()
@@ -158,9 +148,7 @@ class _FixtureAuthorityState:
         del root_key_digest
         return False
 
-    def root_record_id_for_receipt(
-        self, receipt: AuthorityReceipt
-    ) -> str | None:
+    def root_record_id_for_receipt(self, receipt: AuthorityReceipt) -> str | None:
         return self.receipt_roots.get(receipt.binding_digest)
 
 
@@ -336,7 +324,9 @@ class ReceiptSchemaIsFrozen(unittest.TestCase):
                 with self.assertRaises(AuthorityDataError):
                     AuthorityReceipt.from_mapping(malformed)
 
-    def test_unknown_versions_caps_and_malformed_scalar_types_are_rejected(self) -> None:
+    def test_unknown_versions_caps_and_malformed_scalar_types_are_rejected(
+        self,
+    ) -> None:
         mutations = (
             {"receipt_version": "2"},
             {"granted_cap": "ADMIN"},
@@ -353,18 +343,14 @@ class ReceiptSchemaIsFrozen(unittest.TestCase):
 
     def test_duplicate_json_keys_and_nonfinite_numbers_are_rejected(self) -> None:
         with self.assertRaises(AuthorityDataError):
-            AuthorityReceipt.from_json(
-                '{"receipt_version":"1","receipt_version":"1"}'
-            )
+            AuthorityReceipt.from_json('{"receipt_version":"1","receipt_version":"1"}')
         with self.assertRaises(AuthorityDataError):
             canonical_json_bytes({"generation": float("nan")})
 
 
 class ReceiptRootIdentityIsExact(unittest.TestCase):
     def test_root_key_is_the_exact_gate_1c_r3_tuple(self) -> None:
-        key = ReceiptRootKey.from_receipt(
-            receipt(), custody_root_record_id="ROOT-01"
-        )
+        key = ReceiptRootKey.from_receipt(receipt(), custody_root_record_id="ROOT-01")
         self.assertEqual(
             key.as_list(),
             [
@@ -381,9 +367,7 @@ class ReceiptRootIdentityIsExact(unittest.TestCase):
         self.assertEqual(ReceiptRootKey.from_value(key.as_list()), key)
 
     def test_every_identity_field_mutation_changes_the_root_key(self) -> None:
-        base = ReceiptRootKey.from_receipt(
-            receipt(), custody_root_record_id="ROOT-01"
-        )
+        base = ReceiptRootKey.from_receipt(receipt(), custody_root_record_id="ROOT-01")
         mutations = (
             dataclasses.replace(base, issuer_id="other-issuer"),
             dataclasses.replace(base, receipt_id="receipt-002"),
@@ -391,9 +375,7 @@ class ReceiptRootIdentityIsExact(unittest.TestCase):
             dataclasses.replace(base, upstream_object_commitment="1" * 64),
             dataclasses.replace(
                 base,
-                policy_key=dataclasses.replace(
-                    POLICY_KEY, action_scope="payroll.read"
-                ),
+                policy_key=dataclasses.replace(POLICY_KEY, action_scope="payroll.read"),
             ),
             dataclasses.replace(base, granting_generation=8),
             dataclasses.replace(base, custody_root_record_id="ROOT-02"),
@@ -478,7 +460,9 @@ class StaticSourceReceiptsVerifyAgainstCurrentState(unittest.TestCase):
             hashlib.sha256(payload).hexdigest(),
             "b85b0895ceea636c13e41e9f1bba436f42a3a8e32e77b2c97dfe4b96dc92c99c",
         )
-        self.assertTrue(FORBIDDEN_RUNTIME_FIELDS.isdisjoint(_nested_keys(json.loads(payload))))
+        self.assertTrue(
+            FORBIDDEN_RUNTIME_FIELDS.isdisjoint(_nested_keys(json.loads(payload)))
+        )
 
     def test_valid_source_owned_receipt_verifies(self) -> None:
         verifier, _ = fixture_verifier()
@@ -605,9 +589,7 @@ class StaticSourceReceiptsVerifyAgainstCurrentState(unittest.TestCase):
                 VerificationReason.CAP_MISSING,
             ),
             (
-                _FixtureAuthorityState(
-                    fixture_policy(caps={"export.send": "INFORM"})
-                ),
+                _FixtureAuthorityState(fixture_policy(caps={"export.send": "INFORM"})),
                 VerificationReason.CAP_EXCEEDED,
             ),
         )
@@ -667,9 +649,7 @@ class DependenciesAndEnvelopesAreStrict(unittest.TestCase):
         self.assertEqual(dependency.as_dict(), value)
         self.assertEqual(
             dependency,
-            AuthorityDependency.from_mapping(
-                json.loads(dependency.canonical_bytes())
-            ),
+            AuthorityDependency.from_mapping(json.loads(dependency.canonical_bytes())),
         )
 
     def test_transform_dependency_cannot_carry_receipt_root_identity(self) -> None:
@@ -698,7 +678,9 @@ class DependenciesAndEnvelopesAreStrict(unittest.TestCase):
             "e98894118202931fdff15c8eef85678864eea9a9aced07d8fa7179c4c5674444",
         )
 
-    def test_envelope_parser_rejects_unknown_missing_and_unknown_enum_fields(self) -> None:
+    def test_envelope_parser_rejects_unknown_missing_and_unknown_enum_fields(
+        self,
+    ) -> None:
         unknown = {**root_envelope_mapping(), "expected_action": "ALLOW"}
         missing = root_envelope_mapping()
         missing.pop("support_root_ids")
@@ -750,7 +732,9 @@ class DependenciesAndEnvelopesAreStrict(unittest.TestCase):
                 with self.assertRaises(AuthorityDataError):
                     AdmissionEnvelope.from_mapping({**derived, **mutation})
 
-    def test_registered_requires_a_parent_and_freeform_is_bounded_to_inform(self) -> None:
+    def test_registered_requires_a_parent_and_freeform_is_bounded_to_inform(
+        self,
+    ) -> None:
         base = {
             **root_envelope_mapping(),
             "record_id": "MEM-01",

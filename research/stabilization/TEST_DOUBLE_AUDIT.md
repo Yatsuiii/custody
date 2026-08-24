@@ -30,6 +30,6 @@ is intentional test-double scope, not proof of those properties. The hardened
 real-service contract probe is the separate evidence path. No known fake is
 allowed to define the SDK API.
 
-Result: the known P1 SDK-shape divergence is repaired locally; independent
-real-service confirmation remains open under TD-0001 and TD-0005.
-
+Result: the known P1 SDK-shape divergence is repaired locally and the real
+service independently confirmed the adapter contract in stab01. The fake
+remains an offline behavioral double, not a replacement for service evidence.

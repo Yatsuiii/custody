@@ -82,9 +82,7 @@ class RetrievalBridgesTwoDepartmentsOnTheSameGraph(unittest.IsolatedAsyncioTestC
         before = len(service.graph)
         self.assertEqual(before, 4)  # 2 records per department
 
-        revocation = service.graph.revoke(
-            tool=COMPROMISED_TOOL, revocation_id="rev-1"
-        )
+        revocation = service.graph.revoke(tool=COMPROMISED_TOOL, revocation_id="rev-1")
         self.assertEqual(len(revocation.removed), 4)
         self.assertEqual(len(service.graph), 0)
 

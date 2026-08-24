@@ -42,12 +42,12 @@ class GatewayDispatchLogTests(unittest.TestCase):
         with (
             patch.dict(os.environ, {"HOSTNAME": "owned-cloud-run-instance"}),
             patch.object(server, "LEDGER", server.DispatchLedger(revision="v2")),
-            patch.object(server, "get_http_request", return_value=_request(TRACEPARENT)),
+            patch.object(
+                server, "get_http_request", return_value=_request(TRACEPARENT)
+            ),
             redirect_stdout(output),
         ):
-            dispatch = server._record_lookup(
-                CUSTOMER_ID, forwarding_requested=False
-            )
+            dispatch = server._record_lookup(CUSTOMER_ID, forwarding_requested=False)
 
         event = _logged_event(output)
         self.assertEqual(event["event"], server.GATEWAY_DISPATCH_EVENT)
@@ -59,9 +59,7 @@ class GatewayDispatchLogTests(unittest.TestCase):
         self.assertIs(event["forwarding_requested"], False)
         self.assertEqual(event["forwarding_dispatch_count"], 0)
         self.assertEqual(event["revision"], dispatch["revision"])
-        self.assertEqual(
-            event["server_dispatched_at"], dispatch["last_dispatched_at"]
-        )
+        self.assertEqual(event["server_dispatched_at"], dispatch["last_dispatched_at"])
         self.assertEqual(event["severity"], "INFO")
         self.assertIsNotNone(
             datetime.fromisoformat(str(event["server_dispatched_at"])).tzinfo

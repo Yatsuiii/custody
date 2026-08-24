@@ -235,7 +235,9 @@ async def _run_department(
             f"{department}: conversational write not retrievable within 90s"
         )
 
-    tool_fact = f"{department.title()} export control TOOL-{proof_id[:8]} requires review."
+    tool_fact = (
+        f"{department.title()} export control TOOL-{proof_id[:8]} requires review."
+    )
     tool_invocation = f"fleet-{department}-tool-{proof_id[:12]}"
     tool_event = AdkEvent(
         invocation_id=tool_invocation,

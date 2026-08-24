@@ -22,9 +22,7 @@ def _sse_json(response: httpx.Response) -> dict[str, Any]:
         if line.startswith("data: ")
     ]
     if len(payloads) != 1:
-        raise ValueError(
-            f"expected one MCP SSE data event; received {len(payloads)}"
-        )
+        raise ValueError(f"expected one MCP SSE data event; received {len(payloads)}")
     payload = json.loads(payloads[0])
     if not isinstance(payload, dict):
         raise TypeError("MCP response payload must be an object")
@@ -77,9 +75,7 @@ class _McpWireClient:
                 },
             )
             if notification.status_code != 202:
-                raise RuntimeError(
-                    "MCP initialized notification did not return 202"
-                )
+                raise RuntimeError("MCP initialized notification did not return 202")
 
             listed = await self._post(
                 client,
@@ -126,9 +122,7 @@ class _McpWireClient:
     async def _post(
         self, client: httpx.AsyncClient, payload: dict[str, Any]
     ) -> httpx.Response:
-        response = await client.post(
-            self._url, headers=self._headers, json=payload
-        )
+        response = await client.post(self._url, headers=self._headers, json=payload)
         response.raise_for_status()
         return response
 

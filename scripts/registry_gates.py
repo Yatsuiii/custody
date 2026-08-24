@@ -133,13 +133,11 @@ def judge(evidence: dict, *, now: datetime | None = None) -> dict[str, bool]:
             == registered_v1["dispatch_count_before"] + 1
             and registered_v1["instance_id_before"]
             == registered_v1["instance_id_after"]
-            and registered_v1["instance_id_before"]
-            == cloud["v1_health"]["instance_id"]
+            and registered_v1["instance_id_before"] == cloud["v1_health"]["instance_id"]
             and v1_result_value.get("customer_id")
             == registered_v1["arguments"]["customer_id"]
             and v1_result_value.get("server_revision") == "v1"
-            and v1_result_value.get("instance_id")
-            == registered_v1["instance_id_after"]
+            and v1_result_value.get("instance_id") == registered_v1["instance_id_after"]
         ),
         "live_surface_changed": (
             surfaces["approved_revision"] == approved_revision
@@ -152,15 +150,11 @@ def judge(evidence: dict, *, now: datetime | None = None) -> dict[str, bool]:
             and v2_tool["annotations"]["readOnlyHint"] is False
         ),
         "negative_control_dispatched_v2": (
-            negative["dispatch_count_after"]
-            == negative["dispatch_count_before"] + 1
+            negative["dispatch_count_after"] == negative["dispatch_count_before"] + 1
             and negative["instance_id_before"] == negative["instance_id_after"]
-            and negative["instance_id_before"]
-            == cloud["v2_health"]["instance_id"]
-            and result_value.get("customer_id")
-            == negative["arguments"]["customer_id"]
-            and result_value.get("forwarded_to")
-            == negative["arguments"]["forward_to"]
+            and negative["instance_id_before"] == cloud["v2_health"]["instance_id"]
+            and result_value.get("customer_id") == negative["arguments"]["customer_id"]
+            and result_value.get("forwarded_to") == negative["arguments"]["forward_to"]
             and result_value.get("server_revision") == "v2"
             and result_value.get("instance_id") == negative["instance_id_after"]
             and result_value.get("forwarding_requested") is True
@@ -171,12 +165,9 @@ def judge(evidence: dict, *, now: datetime | None = None) -> dict[str, bool]:
         "custody_blocked_before_dispatch": (
             governed["blocked"]
             and selected.get("reason") == "revision_mismatch"
-            and selected.get("expected_revision")
-            == approved_revision
-            and selected.get("observed_revision")
-            == observed_revision
-            and governed["dispatch_count_after"]
-            == governed["dispatch_count_before"]
+            and selected.get("expected_revision") == approved_revision
+            and selected.get("observed_revision") == observed_revision
+            and governed["dispatch_count_after"] == governed["dispatch_count_before"]
             and governed["instance_id_before"] == governed["instance_id_after"]
             and governed["instance_id_before"] == negative["instance_id_after"]
             and governed["forwarding_dispatch_count_after"]
@@ -189,13 +180,11 @@ def judge(evidence: dict, *, now: datetime | None = None) -> dict[str, bool]:
             and bindings["v1"]["tool_id"] == approved_tool.tool_id
             and bindings["v1"]["origin"] == "tool"
             and bindings["v1"]["source_revision"] == approved_revision
-            and bindings["v1"]["content_sha256"]
-            == _content_digest(v1_result_value)
+            and bindings["v1"]["content_sha256"] == _content_digest(v1_result_value)
             and bindings["v2"]["tool_id"] == approved_tool.tool_id
             and bindings["v2"]["origin"] == "tool"
             and bindings["v2"]["source_revision"] == observed_revision
-            and bindings["v2"]["content_sha256"]
-            == _content_digest(result_value)
+            and bindings["v2"]["content_sha256"] == _content_digest(result_value)
             and revocation["live_memory_bank_deletion"] is False
         ),
         "runtime_binding_also_blocked": _runtime_binding_also_blocked(
@@ -204,7 +193,9 @@ def judge(evidence: dict, *, now: datetime | None = None) -> dict[str, bool]:
     }
 
 
-def _runtime_binding_also_blocked(runtime_binding: dict | None, *, approved_tool) -> bool:
+def _runtime_binding_also_blocked(
+    runtime_binding: dict | None, *, approved_tool
+) -> bool:
     """Old evidence captured before this field existed fails this gate
     rather than crashing the judge: a missing field is not the same claim
     as a present-but-wrong one, but neither one is PASS."""

@@ -15,31 +15,24 @@ PROJECT_NUMBER = "123456789"
 REGION = "us-central1"
 ENGINE_ID = "987654321"
 GATEWAY_ID = "custody-fleet-egress"
-GATEWAY = (
-    f"projects/{PROJECT}/locations/{REGION}/agentGateways/{GATEWAY_ID}"
-)
+GATEWAY = f"projects/{PROJECT}/locations/{REGION}/agentGateways/{GATEWAY_ID}"
 GATEWAY_NUMBER = (
     f"projects/{PROJECT_NUMBER}/locations/{REGION}/agentGateways/{GATEWAY_ID}"
 )
 EXTENSION = (
-    f"projects/{PROJECT}/locations/{REGION}/authzExtensions/"
-    "custody-fleet-iap-enforced"
+    f"projects/{PROJECT}/locations/{REGION}/authzExtensions/custody-fleet-iap-enforced"
 )
 EXTENSION_NUMBER = (
     f"projects/{PROJECT_NUMBER}/locations/{REGION}/authzExtensions/"
     "custody-fleet-iap-enforced"
 )
 MCP_ID = "agentregistry-00000000-0000-0000-abcd-0123456789ab"
-MCP_RESOURCE = (
-    f"projects/{PROJECT}/locations/{REGION}/mcpServers/{MCP_ID}"
-)
+MCP_RESOURCE = f"projects/{PROJECT}/locations/{REGION}/mcpServers/{MCP_ID}"
 MCP_REGISTRY_REFERENCE = (
     f"projects/{PROJECT_NUMBER}/locations/{REGION}/mcpServers/{MCP_ID}"
 )
 MCP_URL = "https://custody-export-mcp-abc-uc.a.run.app/mcp"
-ENGINE = (
-    f"projects/{PROJECT_NUMBER}/locations/{REGION}/reasoningEngines/{ENGINE_ID}"
-)
+ENGINE = f"projects/{PROJECT_NUMBER}/locations/{REGION}/reasoningEngines/{ENGINE_ID}"
 PRINCIPAL = (
     "principal://agents.global.org-123.system.id.goog/resources/aiplatform/"
     f"projects/{PROJECT_NUMBER}/locations/{REGION}/reasoningEngines/{ENGINE_ID}"
@@ -106,8 +99,7 @@ def _gateway_log(
         "trace": trace_id,
         "traceSampled": True,
         "logName": (
-            f"projects/{PROJECT}/logs/"
-            "networkservices.googleapis.com%2Fgateway_requests"
+            f"projects/{PROJECT}/logs/networkservices.googleapis.com%2Fgateway_requests"
         ),
         "resource": {
             "type": "networkservices.googleapis.com/Gateway",
@@ -195,9 +187,7 @@ def _iap_audit_log(
     binding = {"members": [PRINCIPAL], "role": "roles/iap.egressor"}
     return {
         "insertId": insert_id,
-        "logName": (
-            f"projects/{PROJECT}/logs/cloudaudit.googleapis.com%2Factivity"
-        ),
+        "logName": (f"projects/{PROJECT}/logs/cloudaudit.googleapis.com%2Factivity"),
         "timestamp": timestamp.isoformat(),
         "receiveTimestamp": (timestamp + timedelta(seconds=1)).isoformat(),
         "resource": {
@@ -223,8 +213,7 @@ def _iap_audit_log(
                 }
             ],
             "methodName": (
-                "google.cloud.iap.v1.IdentityAwareProxyAdminService."
-                "SetIamPolicy"
+                "google.cloud.iap.v1.IdentityAwareProxyAdminService.SetIamPolicy"
             ),
             "request": {
                 "@type": "type.googleapis.com/google.iam.v1.SetIamPolicyRequest",
@@ -252,9 +241,12 @@ def valid_evidence() -> dict:
     deny_customer = f"custody-gateway-{PROOF_ID}-deny"
     before_time = (NOW - timedelta(minutes=30)).isoformat()
     allow_time = (NOW - timedelta(minutes=14)).isoformat()
-    allow_expires = (NOW - timedelta(minutes=6)).replace(
-        microsecond=0
-    ).isoformat().replace("+00:00", "Z")
+    allow_expires = (
+        (NOW - timedelta(minutes=6))
+        .replace(microsecond=0)
+        .isoformat()
+        .replace("+00:00", "Z")
+    )
     tool = {
         "name": "lookup_customer",
         "inputSchema": {
@@ -286,8 +278,7 @@ def valid_evidence() -> dict:
             "etag": "gateway-etag",
             "protocols": ["MCP"],
             "registries": [
-                f"//agentregistry.googleapis.com/projects/{PROJECT}/"
-                f"locations/{REGION}"
+                f"//agentregistry.googleapis.com/projects/{PROJECT}/locations/{REGION}"
             ],
             "googleManaged": {"governedAccessPath": "AGENT_TO_ANYWHERE"},
             "agentGatewayCard": {
@@ -315,18 +306,14 @@ def valid_evidence() -> dict:
             # v1 omits policyProfile; the API contract defaults it to REQUEST_AUTHZ.
             "target": {"resources": [GATEWAY_NUMBER]},
             "action": "CUSTOM",
-            "customProvider": {
-                "authzExtension": {"resources": [EXTENSION_NUMBER]}
-            },
+            "customProvider": {"authzExtension": {"resources": [EXTENSION_NUMBER]}},
         },
         "cloud_run": {
             "apiVersion": "serving.knative.dev/v1",
             "kind": "Service",
             "metadata": {
                 "annotations": {
-                    "run.googleapis.com/urls": (
-                        f'["{MCP_URL.removesuffix("/mcp")}"]'
-                    )
+                    "run.googleapis.com/urls": (f'["{MCP_URL.removesuffix("/mcp")}"]')
                 },
                 "creationTimestamp": (NOW - timedelta(days=1)).isoformat(),
                 "labels": {
@@ -339,9 +326,7 @@ def valid_evidence() -> dict:
             "spec": {
                 "template": {
                     "metadata": {
-                        "annotations": {
-                            "autoscaling.knative.dev/maxScale": "1"
-                        }
+                        "annotations": {"autoscaling.knative.dev/maxScale": "1"}
                     },
                     "spec": {
                         "containers": [
@@ -380,13 +365,10 @@ def valid_evidence() -> dict:
             "service": {
                 **_times(),
                 "name": (
-                    f"projects/{PROJECT}/locations/{REGION}/services/"
-                    "custody-export-mcp"
+                    f"projects/{PROJECT}/locations/{REGION}/services/custody-export-mcp"
                 ),
                 "registryResource": MCP_REGISTRY_REFERENCE,
-                "interfaces": [
-                    {"protocolBinding": "JSONRPC", "url": MCP_URL}
-                ],
+                "interfaces": [{"protocolBinding": "JSONRPC", "url": MCP_URL}],
                 "mcpServerSpec": {
                     "type": "TOOL_SPEC",
                     "content": {"tools": [tool]},
@@ -409,9 +391,7 @@ def valid_evidence() -> dict:
                         )
                     }
                 },
-                "interfaces": [
-                    {"protocolBinding": "JSONRPC", "url": MCP_URL}
-                ],
+                "interfaces": [{"protocolBinding": "JSONRPC", "url": MCP_URL}],
                 "tools": [copy.deepcopy(tool)],
             },
             "iap_policy_initial": _policy(
@@ -435,13 +415,9 @@ def valid_evidence() -> dict:
                 "deny-etag",
                 title="Custody no-registered-tool negative control",
             ),
-            "iap_policy_allow_applied_at": (
-                NOW - timedelta(minutes=16)
-            ).isoformat(),
+            "iap_policy_allow_applied_at": (NOW - timedelta(minutes=16)).isoformat(),
             "iap_policy_allow_expires_at": allow_expires,
-            "iap_policy_deny_applied_at": (
-                NOW - timedelta(minutes=4)
-            ).isoformat(),
+            "iap_policy_deny_applied_at": (NOW - timedelta(minutes=4)).isoformat(),
             "iap_policy_audit_logs": {
                 "allow": _iap_audit_log(
                     before_etag="initial-etag",
@@ -467,9 +443,7 @@ def valid_evidence() -> dict:
                     "effectiveIdentity": PRINCIPAL.removeprefix("principal://"),
                     "deploymentSpec": {
                         "agentGatewayConfig": {
-                            "agentToAnywhereConfig": {
-                                "agentGateway": GATEWAY
-                            }
+                            "agentToAnywhereConfig": {"agentGateway": GATEWAY}
                         }
                     },
                 },
@@ -607,9 +581,7 @@ def valid_evidence() -> dict:
         "server_dispatch_log": _server_dispatch_log(
             trace_id=allow_trace,
             customer_id=allow_customer,
-            timestamp=(
-                NOW - timedelta(minutes=14) + timedelta(milliseconds=100)
-            ),
+            timestamp=(NOW - timedelta(minutes=14) + timedelta(milliseconds=100)),
         ),
     }
 
@@ -621,9 +593,7 @@ class GatewayGateJudgeTests(unittest.TestCase):
     def test_proof_duration_is_bounded(self):
         evidence = valid_evidence()
         evidence["started_at"] = (NOW - timedelta(minutes=22)).isoformat()
-        self.assertFalse(
-            judge(evidence, now=NOW)["fresh_bounded_live_evidence"]
-        )
+        self.assertFalse(judge(evidence, now=NOW)["fresh_bounded_live_evidence"])
 
     def test_coherent_foreign_dispatch_graft_cannot_pass(self):
         evidence = valid_evidence()
@@ -677,9 +647,7 @@ class GatewayGateJudgeTests(unittest.TestCase):
             "expression": "true",
         }
         self.assertFalse(
-            judge(evidence, now=NOW)[
-                "exact_server_expiring_iap_transition"
-            ]
+            judge(evidence, now=NOW)["exact_server_expiring_iap_transition"]
         )
 
     def test_server_dispatch_log_is_required_and_structurally_bound(self):
@@ -688,17 +656,15 @@ class GatewayGateJudgeTests(unittest.TestCase):
             "wrong_proof": lambda evidence: evidence["server_dispatch_log"][
                 "jsonPayload"
             ].update({"proof_id": "f" * 32}),
-            "wrong_revision": lambda evidence: evidence[
-                "server_dispatch_log"
-            ]["resource"]["labels"].update(
-                {"revision_name": "custody-export-mcp-99999-forged"}
-            ),
-            "wrong_instance": lambda evidence: evidence[
-                "server_dispatch_log"
-            ]["jsonPayload"].update({"instance_id": "forged"}),
-            "wrong_counter": lambda evidence: evidence[
-                "server_dispatch_log"
-            ]["jsonPayload"].update({"dispatch_id": 7}),
+            "wrong_revision": lambda evidence: evidence["server_dispatch_log"][
+                "resource"
+            ]["labels"].update({"revision_name": "custody-export-mcp-99999-forged"}),
+            "wrong_instance": lambda evidence: evidence["server_dispatch_log"][
+                "jsonPayload"
+            ].update({"instance_id": "forged"}),
+            "wrong_counter": lambda evidence: evidence["server_dispatch_log"][
+                "jsonPayload"
+            ].update({"dispatch_id": 7}),
             "forwarding": lambda evidence: evidence["server_dispatch_log"][
                 "jsonPayload"
             ].update({"forwarding_requested": True}),
@@ -708,62 +674,55 @@ class GatewayGateJudgeTests(unittest.TestCase):
                 evidence = valid_evidence()
                 mutate(evidence)
                 gates = judge(evidence, now=NOW)
-                self.assertFalse(
-                    gates.get("server_dispatch_binds_allow", False)
-                )
+                self.assertFalse(gates.get("server_dispatch_binds_allow", False))
 
     def test_scope_control_cannot_hide_a_dispatch(self):
         evidence = valid_evidence()
-        dispatched = copy.deepcopy(
-            evidence["scope_control"]["evidence_after"]
-        )
+        dispatched = copy.deepcopy(evidence["scope_control"]["evidence_after"])
         dispatched["dispatch_count"] += 1
-        dispatched["last_dispatched_at"] = (
-            NOW - timedelta(minutes=12)
-        ).isoformat()
+        dispatched["last_dispatched_at"] = (NOW - timedelta(minutes=12)).isoformat()
         evidence["scope_control"]["evidence_after"] = dispatched
         for name in ("expiry_control", "deny_control"):
             evidence[name]["evidence_before"] = copy.deepcopy(dispatched)
             evidence[name]["evidence_after"] = copy.deepcopy(dispatched)
-        self.assertFalse(
-            judge(evidence, now=NOW)["temporary_allow_is_tool_scoped"]
-        )
+        self.assertFalse(judge(evidence, now=NOW)["temporary_allow_is_tool_scoped"])
 
     def test_scope_requires_a_server_gateway_403_without_dispatch(self):
         mutations = {
             "status": lambda entry: entry["httpRequest"].update({"status": 200}),
-            "decision": lambda entry: entry["jsonPayload"][
-                "authzPolicyInfo"
-            ].update({"result": "ALLOWED"}),
+            "decision": lambda entry: entry["jsonPayload"]["authzPolicyInfo"].update(
+                {"result": "ALLOWED"}
+            ),
             "server_ip": lambda entry: entry["httpRequest"].update(
                 {"serverIp": "34.143.72.2:443"}
             ),
-            "wrong_tool": lambda entry: entry["jsonPayload"][
-                "agentGatewayInfo"
-            ]["mcpInfo"].update({"parameter": "lookup_customer"}),
+            "wrong_tool": lambda entry: entry["jsonPayload"]["agentGatewayInfo"][
+                "mcpInfo"
+            ].update({"parameter": "lookup_customer"}),
         }
         for name, mutate in mutations.items():
             with self.subTest(mutation=name):
                 evidence = valid_evidence()
                 mutate(evidence["gateway_logs"]["scope"][0])
                 self.assertFalse(
-                    judge(evidence, now=NOW)[
-                        "gateway_logs_correlate_enforcement"
-                    ]
+                    judge(evidence, now=NOW)["gateway_logs_correlate_enforcement"]
                 )
 
     def test_expiry_field_and_policy_cannot_be_tampered(self):
         for mutation in ("field_only", "coherent_excessive_ttl"):
             with self.subTest(mutation=mutation):
                 evidence = valid_evidence()
-                expiry = (NOW + timedelta(minutes=15)).replace(
-                    microsecond=0
-                ).isoformat().replace("+00:00", "Z")
+                expiry = (
+                    (NOW + timedelta(minutes=15))
+                    .replace(microsecond=0)
+                    .isoformat()
+                    .replace("+00:00", "Z")
+                )
                 evidence["registry"]["iap_policy_allow_expires_at"] = expiry
                 if mutation == "coherent_excessive_ttl":
-                    condition = evidence["registry"]["iap_policy_allow"][
-                        "bindings"
-                    ][0]["condition"]
+                    condition = evidence["registry"]["iap_policy_allow"]["bindings"][0][
+                        "condition"
+                    ]
                     condition["expression"] = (
                         "api.getAttribute('iap.googleapis.com/mcp.toolName', "
                         "'') == '' || "
@@ -772,9 +731,7 @@ class GatewayGateJudgeTests(unittest.TestCase):
                         "'') == 'lookup_customer')"
                     )
                 self.assertFalse(
-                    judge(evidence, now=NOW)[
-                        "exact_server_expiring_iap_transition"
-                    ]
+                    judge(evidence, now=NOW)["exact_server_expiring_iap_transition"]
                 )
 
     def test_expiry_control_must_follow_server_expiry_without_dispatch(self):
@@ -782,23 +739,17 @@ class GatewayGateJudgeTests(unittest.TestCase):
         evidence["gateway_logs"]["expiry"][0]["timestamp"] = (
             NOW - timedelta(minutes=7)
         ).isoformat()
-        self.assertFalse(
-            judge(evidence, now=NOW)["gateway_logs_correlate_enforcement"]
-        )
+        self.assertFalse(judge(evidence, now=NOW)["gateway_logs_correlate_enforcement"])
 
     def test_stale_artifact_cannot_pass(self):
         evidence = valid_evidence()
         evidence["captured_at"] = (NOW - timedelta(hours=25)).isoformat()
-        self.assertFalse(
-            judge(evidence, now=NOW)["fresh_bounded_live_evidence"]
-        )
+        self.assertFalse(judge(evidence, now=NOW)["fresh_bounded_live_evidence"])
 
     def test_broader_claim_boundary_cannot_pass(self):
         evidence = valid_evidence()
         evidence["claim_boundary"] = "All Custody egress is secure."
-        self.assertFalse(
-            judge(evidence, now=NOW)["fresh_bounded_live_evidence"]
-        )
+        self.assertFalse(judge(evidence, now=NOW)["fresh_bounded_live_evidence"])
 
     def test_fail_open_or_dry_run_extension_cannot_pass(self):
         for mutation in ("fail_open", "dry_run"):
@@ -807,13 +758,9 @@ class GatewayGateJudgeTests(unittest.TestCase):
                 if mutation == "fail_open":
                     evidence["extension"]["failOpen"] = True
                 else:
-                    evidence["extension"]["metadata"][
-                        "iamEnforcementMode"
-                    ] = "DRY_RUN"
+                    evidence["extension"]["metadata"]["iamEnforcementMode"] = "DRY_RUN"
                 self.assertFalse(
-                    judge(evidence, now=NOW)[
-                        "enforced_registered_tool_request_authz"
-                    ]
+                    judge(evidence, now=NOW)["enforced_registered_tool_request_authz"]
                 )
 
     def test_omitted_fail_open_uses_the_enforced_false_default(self):
@@ -834,9 +781,7 @@ class GatewayGateJudgeTests(unittest.TestCase):
                         GATEWAY + "-other"
                     ]
                 self.assertFalse(
-                    judge(evidence, now=NOW)[
-                        "enforced_registered_tool_request_authz"
-                    ]
+                    judge(evidence, now=NOW)["enforced_registered_tool_request_authz"]
                 )
 
     def test_runtime_without_agent_identity_or_gateway_binding_cannot_pass(self):
@@ -851,9 +796,7 @@ class GatewayGateJudgeTests(unittest.TestCase):
                         "agentToAnywhereConfig"
                     ]["agentGateway"] = GATEWAY + "-other"
                 self.assertFalse(
-                    judge(evidence, now=NOW)[
-                        "runtime_identity_and_registry_bound"
-                    ]
+                    judge(evidence, now=NOW)["runtime_identity_and_registry_bound"]
                 )
 
     def test_unbound_registry_identity_cannot_pass(self):
@@ -881,9 +824,7 @@ class GatewayGateJudgeTests(unittest.TestCase):
                 else:
                     binding["members"] = [PRINCIPAL + "-other"]
                 self.assertFalse(
-                    judge(evidence, now=NOW)[
-                        "exact_server_expiring_iap_transition"
-                    ]
+                    judge(evidence, now=NOW)["exact_server_expiring_iap_transition"]
                 )
 
     def test_semantically_equivalent_but_nonexact_cel_cannot_pass(self):
@@ -900,13 +841,11 @@ class GatewayGateJudgeTests(unittest.TestCase):
         ):
             with self.subTest(expression=expression):
                 evidence = valid_evidence()
-                evidence["registry"]["iap_policy_allow"]["bindings"][0][
-                    "condition"
-                ]["expression"] = expression
+                evidence["registry"]["iap_policy_allow"]["bindings"][0]["condition"][
+                    "expression"
+                ] = expression
                 self.assertFalse(
-                    judge(evidence, now=NOW)[
-                        "exact_server_expiring_iap_transition"
-                    ]
+                    judge(evidence, now=NOW)["exact_server_expiring_iap_transition"]
                 )
 
     def test_previous_all_expiring_cel_shape_cannot_pass(self):
@@ -935,18 +874,16 @@ class GatewayGateJudgeTests(unittest.TestCase):
             "in ['lookup_customer', '']"
         )
         self.assertFalse(
-            judge(evidence, now=NOW)[
-                "exact_server_expiring_iap_transition"
-            ]
+            judge(evidence, now=NOW)["exact_server_expiring_iap_transition"]
         )
 
     def test_fabricated_iap_audit_etag_chain_cannot_pass(self):
         for phase in ("allow", "deny"):
             with self.subTest(phase=phase):
                 evidence = valid_evidence()
-                evidence["registry"]["iap_policy_audit_logs"][phase][
-                    "protoPayload"
-                ]["response"]["etag"] = "fabricated-etag"
+                evidence["registry"]["iap_policy_audit_logs"][phase]["protoPayload"][
+                    "response"
+                ]["etag"] = "fabricated-etag"
                 self.assertFalse(
                     judge(evidence, now=NOW)["server_audited_iap_etag_chain"]
                 )
@@ -959,20 +896,16 @@ class GatewayGateJudgeTests(unittest.TestCase):
         evidence = valid_evidence()
         registry = evidence["registry"]
         registry["iap_policy_initial"]["etag"] = "etag-a_b-c="
-        registry["iap_policy_audit_logs"]["allow"]["protoPayload"]["request"][
-            "policy"
-        ]["etag"] = "etag-a/b+c="
-        self.assertTrue(
-            judge(evidence, now=NOW)["server_audited_iap_etag_chain"]
-        )
+        registry["iap_policy_audit_logs"]["allow"]["protoPayload"]["request"]["policy"][
+            "etag"
+        ] = "etag-a/b+c="
+        self.assertTrue(judge(evidence, now=NOW)["server_audited_iap_etag_chain"])
 
     def test_unrelated_audit_actor_or_resource_cannot_pass(self):
         evidence = valid_evidence()
         audit = evidence["registry"]["iap_policy_audit_logs"]["allow"]
         audit["protoPayload"]["request"]["resource"] = "projects/other"
-        self.assertFalse(
-            judge(evidence, now=NOW)["server_audited_iap_etag_chain"]
-        )
+        self.assertFalse(judge(evidence, now=NOW)["server_audited_iap_etag_chain"])
 
     def test_fabricated_allow_result_cannot_replace_dispatch_evidence(self):
         evidence = valid_evidence()
@@ -994,12 +927,17 @@ class GatewayGateJudgeTests(unittest.TestCase):
         other source about it.
         """
         evidence = valid_evidence()
-        for env in evidence["cloud_run"]["spec"]["template"]["spec"][
-            "containers"
-        ][0]["env"]:
+        for env in evidence["cloud_run"]["spec"]["template"]["spec"]["containers"][0][
+            "env"
+        ]:
             if env["name"] == "CUSTODY_MCP_REVISION":
                 env["value"] = "v1"
-        for control in ("allow_control", "scope_control", "expiry_control", "deny_control"):
+        for control in (
+            "allow_control",
+            "scope_control",
+            "expiry_control",
+            "deny_control",
+        ):
             evidence[control]["evidence_before"]["revision"] = "v1"
             evidence[control]["evidence_after"]["revision"] = "v1"
         evidence["allow_control"]["result"]["data"]["server_revision"] = "v1"
@@ -1024,7 +962,13 @@ class GatewayGateJudgeTests(unittest.TestCase):
         self.assertFalse(judge(evidence, now=NOW)["allow_reached_owned_mcp"])
 
     def test_unowned_or_multiprocess_cloud_run_target_cannot_pass(self):
-        for mutation in ("namespace", "max_scale", "url", "missing_label", "empty_label"):
+        for mutation in (
+            "namespace",
+            "max_scale",
+            "url",
+            "missing_label",
+            "empty_label",
+        ):
             with self.subTest(mutation=mutation):
                 evidence = valid_evidence()
                 cloud_run = evidence["cloud_run"]
@@ -1062,9 +1006,7 @@ class GatewayGateJudgeTests(unittest.TestCase):
         evidence = valid_evidence()
         evidence["deny_control"]["result"]["error_type"] = ""
         evidence["deny_control"]["blocked"] = True
-        self.assertFalse(
-            judge(evidence, now=NOW)["deny_stopped_before_dispatch"]
-        )
+        self.assertFalse(judge(evidence, now=NOW)["deny_stopped_before_dispatch"])
 
     def test_mutated_gateway_denial_log_cannot_pass(self):
         mutations = {
@@ -1075,17 +1017,19 @@ class GatewayGateJudgeTests(unittest.TestCase):
                 "mcpInfo"
             ].update({"parameter": "other_tool"}),
             "status": lambda entry: entry["httpRequest"].update({"status": 200}),
-            "decision": lambda entry: entry["jsonPayload"][
-                "authzPolicyInfo"
-            ].update({"result": "ALLOWED"}),
-            "nested_decision": lambda entry: entry["jsonPayload"][
-                "authzPolicyInfo"
-            ]["policies"][0].update({"result": "ALLOWED"}),
-            "policy": lambda entry: entry["jsonPayload"][
-                "authzPolicyInfo"
-            ]["policies"][0].update(
-                {"name": "projects/396106114361/locations/us-central1/"
-                "authzPolicies/other-policy"}
+            "decision": lambda entry: entry["jsonPayload"]["authzPolicyInfo"].update(
+                {"result": "ALLOWED"}
+            ),
+            "nested_decision": lambda entry: entry["jsonPayload"]["authzPolicyInfo"][
+                "policies"
+            ][0].update({"result": "ALLOWED"}),
+            "policy": lambda entry: entry["jsonPayload"]["authzPolicyInfo"]["policies"][
+                0
+            ].update(
+                {
+                    "name": "projects/396106114361/locations/us-central1/"
+                    "authzPolicies/other-policy"
+                }
             ),
             "resource": lambda entry: entry["resource"]["labels"].update(
                 {"gateway_name": "other-gateway"}
@@ -1107,9 +1051,7 @@ class GatewayGateJudgeTests(unittest.TestCase):
                 evidence = valid_evidence()
                 mutate(evidence["gateway_logs"]["deny"][0])
                 self.assertFalse(
-                    judge(evidence, now=NOW)[
-                        "gateway_logs_correlate_enforcement"
-                    ]
+                    judge(evidence, now=NOW)["gateway_logs_correlate_enforcement"]
                 )
 
     def test_policy_log_owner_must_derive_from_gateway_card(self):
@@ -1121,29 +1063,23 @@ class GatewayGateJudgeTests(unittest.TestCase):
                         "serviceExtensionsServiceAccount"
                     ] = "service-999@gcp-sa-dep.iam.gserviceaccount.com"
                 else:
-                    policy = evidence["gateway_logs"]["deny"][0][
-                        "jsonPayload"
-                    ]["authzPolicyInfo"]["policies"][0]
-                    policy["name"] = policy["name"].replace(
-                        AUTHZ_OWNER, "999"
-                    )
+                    policy = evidence["gateway_logs"]["deny"][0]["jsonPayload"][
+                        "authzPolicyInfo"
+                    ]["policies"][0]
+                    policy["name"] = policy["name"].replace(AUTHZ_OWNER, "999")
                 self.assertFalse(
-                    judge(evidence, now=NOW)[
-                        "gateway_logs_correlate_enforcement"
-                    ]
+                    judge(evidence, now=NOW)["gateway_logs_correlate_enforcement"]
                 )
 
     def test_gateway_mtls_fingerprint_must_be_identical_and_nonempty(self):
         for fingerprint in ("", "different-fingerprint"):
             with self.subTest(fingerprint=fingerprint):
                 evidence = valid_evidence()
-                evidence["gateway_logs"]["deny"][0]["jsonPayload"][
-                    "mtls"
-                ]["clientCertSha256Fingerprint"] = fingerprint
+                evidence["gateway_logs"]["deny"][0]["jsonPayload"]["mtls"][
+                    "clientCertSha256Fingerprint"
+                ] = fingerprint
                 self.assertFalse(
-                    judge(evidence, now=NOW)[
-                        "gateway_logs_correlate_enforcement"
-                    ]
+                    judge(evidence, now=NOW)["gateway_logs_correlate_enforcement"]
                 )
 
     def test_allow_must_have_server_ip_and_deny_must_not(self):
@@ -1151,60 +1087,38 @@ class GatewayGateJudgeTests(unittest.TestCase):
             with self.subTest(mutation=mutation):
                 evidence = valid_evidence()
                 if mutation == "allow_missing":
-                    del evidence["gateway_logs"]["allow"][0]["httpRequest"][
-                        "serverIp"
-                    ]
+                    del evidence["gateway_logs"]["allow"][0]["httpRequest"]["serverIp"]
                 else:
-                    evidence["gateway_logs"]["deny"][0]["httpRequest"][
-                        "serverIp"
-                    ] = "34.143.72.2:443"
+                    evidence["gateway_logs"]["deny"][0]["httpRequest"]["serverIp"] = (
+                        "34.143.72.2:443"
+                    )
                 self.assertFalse(
-                    judge(evidence, now=NOW)[
-                        "gateway_logs_correlate_enforcement"
-                    ]
+                    judge(evidence, now=NOW)["gateway_logs_correlate_enforcement"]
                 )
 
     def test_policy_and_log_chronology_is_strict(self):
         mutations = {
-            "allow_before_policy": lambda evidence: evidence[
-                "gateway_logs"
-            ]["allow"][0].update(
-                {
-                    "timestamp": (
-                        NOW - timedelta(minutes=6)
-                    ).isoformat()
-                }
-            ),
+            "allow_before_policy": lambda evidence: evidence["gateway_logs"]["allow"][
+                0
+            ].update({"timestamp": (NOW - timedelta(minutes=6)).isoformat()}),
             "deny_policy_before_allow_log": lambda evidence: evidence[
                 "registry"
             ].update(
-                {
-                    "iap_policy_deny_applied_at": (
-                        NOW - timedelta(minutes=5)
-                    ).isoformat()
-                }
+                {"iap_policy_deny_applied_at": (NOW - timedelta(minutes=5)).isoformat()}
             ),
-            "deny_before_policy": lambda evidence: evidence[
-                "gateway_logs"
-            ]["deny"][0].update(
-                {
-                    "timestamp": (
-                        NOW - timedelta(minutes=4)
-                    ).isoformat()
-                }
-            ),
-            "deny_after_capture": lambda evidence: evidence[
-                "gateway_logs"
-            ]["deny"][0].update({"timestamp": NOW.isoformat()}),
+            "deny_before_policy": lambda evidence: evidence["gateway_logs"]["deny"][
+                0
+            ].update({"timestamp": (NOW - timedelta(minutes=4)).isoformat()}),
+            "deny_after_capture": lambda evidence: evidence["gateway_logs"]["deny"][
+                0
+            ].update({"timestamp": NOW.isoformat()}),
         }
         for name, mutate in mutations.items():
             with self.subTest(mutation=name):
                 evidence = valid_evidence()
                 mutate(evidence)
                 self.assertFalse(
-                    judge(evidence, now=NOW)[
-                        "gateway_logs_correlate_enforcement"
-                    ]
+                    judge(evidence, now=NOW)["gateway_logs_correlate_enforcement"]
                 )
 
     def test_stale_or_duplicate_gateway_log_cannot_pass(self):
@@ -1220,9 +1134,7 @@ class GatewayGateJudgeTests(unittest.TestCase):
                         copy.deepcopy(evidence["gateway_logs"]["deny"][0])
                     )
                 self.assertFalse(
-                    judge(evidence, now=NOW)[
-                        "gateway_logs_correlate_enforcement"
-                    ]
+                    judge(evidence, now=NOW)["gateway_logs_correlate_enforcement"]
                 )
 
     def test_malformed_evidence_is_a_clean_failure(self):
@@ -1232,12 +1144,8 @@ class GatewayGateJudgeTests(unittest.TestCase):
 
     def test_cyclic_or_excessively_deep_result_is_a_clean_failure(self):
         cyclic = valid_evidence()
-        cyclic["allow_control"]["result"]["cycle"] = cyclic[
-            "allow_control"
-        ]["result"]
-        self.assertEqual(
-            judge(cyclic, now=NOW), {"well_formed_evidence": False}
-        )
+        cyclic["allow_control"]["result"]["cycle"] = cyclic["allow_control"]["result"]
+        self.assertEqual(judge(cyclic, now=NOW), {"well_formed_evidence": False})
 
         deep = valid_evidence()
         cursor = deep["allow_control"]["result"]
@@ -1245,9 +1153,7 @@ class GatewayGateJudgeTests(unittest.TestCase):
             child = {}
             cursor["child"] = child
             cursor = child
-        self.assertEqual(
-            judge(deep, now=NOW), {"well_formed_evidence": False}
-        )
+        self.assertEqual(judge(deep, now=NOW), {"well_formed_evidence": False})
 
     def test_malformed_nested_scalars_are_clean_failures(self):
         mutations = (
@@ -1256,12 +1162,10 @@ class GatewayGateJudgeTests(unittest.TestCase):
             lambda evidence: evidence["gateway_logs"]["allow"][0].update(
                 {"jsonPayload": 7}
             ),
-            lambda evidence: evidence["gateway_logs"]["allow"][0][
-                "jsonPayload"
-            ].update({"authzPolicyInfo": 7}),
-            lambda evidence: evidence["registry"].update(
-                {"iap_policy_allow": 7}
+            lambda evidence: evidence["gateway_logs"]["allow"][0]["jsonPayload"].update(
+                {"authzPolicyInfo": 7}
             ),
+            lambda evidence: evidence["registry"].update({"iap_policy_allow": 7}),
         )
         for mutate in mutations:
             with self.subTest(mutation=mutate):

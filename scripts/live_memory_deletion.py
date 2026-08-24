@@ -140,8 +140,12 @@ async def _prove() -> dict[str, Any]:
         app_name=app_name,
         user_id=user_id,
         events=[
-            _tool_event(sales_tool, sales_fact, invocation=f"inv-sales-{proof_id[:12]}"),
-            _tool_event(finance_tool, finance_fact, invocation=f"inv-finance-{proof_id[:12]}"),
+            _tool_event(
+                sales_tool, sales_fact, invocation=f"inv-sales-{proof_id[:12]}"
+            ),
+            _tool_event(
+                finance_tool, finance_fact, invocation=f"inv-finance-{proof_id[:12]}"
+            ),
         ],
     )
 

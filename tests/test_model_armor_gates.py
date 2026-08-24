@@ -20,9 +20,7 @@ from scripts.model_armor_gates import (
 
 NOW = datetime(2026, 8, 13, 11, tzinfo=UTC)
 PROOF_ID = "0123456789abcdef0123456789abcdef"
-TEMPLATE_NAME = (
-    f"projects/{PROJECT}/locations/{REGION}/templates/{TEMPLATE_ID}"
-)
+TEMPLATE_NAME = f"projects/{PROJECT}/locations/{REGION}/templates/{TEMPLATE_ID}"
 
 
 def _log(
@@ -210,9 +208,7 @@ class ModelArmorGateJudgeTests(unittest.TestCase):
                     )
                 else:
                     evidence["malicious_control"]["prompt"] = "a harmless prompt"
-                self.assertFalse(
-                    judge(evidence, now=NOW)["malicious_prompt_blocked"]
-                )
+                self.assertFalse(judge(evidence, now=NOW)["malicious_prompt_blocked"])
 
     def test_falsely_matched_clean_control_cannot_pass(self):
         evidence = valid_evidence()
@@ -262,9 +258,7 @@ class ModelArmorGateJudgeTests(unittest.TestCase):
                     labels["location"] = "us-east1"
                 else:
                     labels["resource_container"] = "projects/999999999"
-                self.assertFalse(
-                    judge(evidence, now=NOW)["logs_correlate_enforcement"]
-                )
+                self.assertFalse(judge(evidence, now=NOW)["logs_correlate_enforcement"])
 
     def test_log_outside_the_proof_window_cannot_pass(self):
         evidence = valid_evidence()

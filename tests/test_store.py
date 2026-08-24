@@ -171,10 +171,16 @@ class ItSatisfiesTheQuarantineStorePortInPractice(unittest.IsolatedAsyncioTestCa
                     "assistant",
                     "inv-1",
                     FakeContent(
-                        [FakePart(function_response=FakeResponse("fetch_page", "hostile"))]
+                        [
+                            FakePart(
+                                function_response=FakeResponse("fetch_page", "hostile")
+                            )
+                        ]
                     ),
                 ),
-                FakeEvent("assistant", "inv-1", FakeContent([FakePart(text="summary")])),
+                FakeEvent(
+                    "assistant", "inv-1", FakeContent([FakePart(text="summary")])
+                ),
             ]
         )
 
@@ -190,9 +196,7 @@ class ItSatisfiesTheQuarantineStorePortInPractice(unittest.IsolatedAsyncioTestCa
             reopened.close()
 
         self.assertEqual(len(held), 2)
-        self.assertEqual(
-            {h.record.origin for h in held}, {Origin.TOOL, Origin.DERIVED}
-        )
+        self.assertEqual({h.record.origin for h in held}, {Origin.TOOL, Origin.DERIVED})
 
 
 if __name__ == "__main__":

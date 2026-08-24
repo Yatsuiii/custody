@@ -62,9 +62,7 @@ CLEAN_PROMPT_TEMPLATE = (
     "What is the current status of invoice INV-2026-0413 for customer Acme "
     "Corp? [custody-proof:{proof_id}:clean]"
 )
-_LOG_NAME = (
-    f"projects/{PROJECT}/logs/modelarmor.googleapis.com%2Fsanitize_operations"
-)
+_LOG_NAME = f"projects/{PROJECT}/logs/modelarmor.googleapis.com%2Fsanitize_operations"
 _RESOURCE_CONTAINER = f"projects/{PROJECT_NUMBER}"
 
 _HEX_ID = re.compile(r"[0-9a-f]{32}")
@@ -133,7 +131,8 @@ def _log_is_bound(
         bool(entry.get("insertId"))
         and entry.get("logName") == _LOG_NAME
         and entry.get("severity") == "INFO"
-        and entry["resource"].get("type") == "modelarmor.googleapis.com/SanitizeOperation"
+        and entry["resource"].get("type")
+        == "modelarmor.googleapis.com/SanitizeOperation"
         and labels.get("location") == REGION
         and labels.get("template_id") == TEMPLATE_ID
         and labels.get("resource_container") == _RESOURCE_CONTAINER
@@ -183,42 +182,49 @@ def _judge(evidence: dict[str, Any], *, now: datetime) -> dict[str, bool]:
         template.get("name") == EXPECTED_TEMPLATE_NAME
         and template.get("filterConfig") == EXPECTED_FILTER_CONFIG
         and template.get("labels") == EXPECTED_LABELS
-        and all(metadata.get(key) == value for key, value in EXPECTED_TEMPLATE_METADATA.items())
+        and all(
+            metadata.get(key) == value
+            for key, value in EXPECTED_TEMPLATE_METADATA.items()
+        )
     )
 
     malicious_prompt = MALICIOUS_PROMPT_TEMPLATE.format(proof_id=proof_id)
     clean_prompt = CLEAN_PROMPT_TEMPLATE.format(proof_id=proof_id)
 
-    malicious_blocked = (
-        malicious.get("prompt") == malicious_prompt
-        and _control_result_is_blocked(malicious["result"])
-    )
-    clean_allowed = (
-        clean.get("prompt") == clean_prompt
-        and _control_result_is_clean(clean["result"])
+    malicious_blocked = malicious.get(
+        "prompt"
+    ) == malicious_prompt and _control_result_is_blocked(malicious["result"])
+    clean_allowed = clean.get("prompt") == clean_prompt and _control_result_is_clean(
+        clean["result"]
     )
 
     distinct_and_bound = (
         malicious_prompt != clean_prompt
         and malicious["log"].get("insertId") != clean["log"].get("insertId")
-        and malicious["prompt"] in malicious["log"]["jsonPayload"]["sanitizationInput"]["text"]
+        and malicious["prompt"]
+        in malicious["log"]["jsonPayload"]["sanitizationInput"]["text"]
         and clean["prompt"] in clean["log"]["jsonPayload"]["sanitizationInput"]["text"]
     )
 
-    logs_correlate = malicious_blocked and clean_allowed and distinct_and_bound and (
-        _log_is_bound(
-            malicious["log"],
-            prompt=malicious_prompt,
-            expected_verdict="MODEL_ARMOR_SANITIZATION_VERDICT_BLOCK",
-            started=started,
-            captured=captured,
-        )
-        and _log_is_bound(
-            clean["log"],
-            prompt=clean_prompt,
-            expected_verdict="MODEL_ARMOR_SANITIZATION_VERDICT_ALLOW",
-            started=started,
-            captured=captured,
+    logs_correlate = (
+        malicious_blocked
+        and clean_allowed
+        and distinct_and_bound
+        and (
+            _log_is_bound(
+                malicious["log"],
+                prompt=malicious_prompt,
+                expected_verdict="MODEL_ARMOR_SANITIZATION_VERDICT_BLOCK",
+                started=started,
+                captured=captured,
+            )
+            and _log_is_bound(
+                clean["log"],
+                prompt=clean_prompt,
+                expected_verdict="MODEL_ARMOR_SANITIZATION_VERDICT_ALLOW",
+                started=started,
+                captured=captured,
+            )
         )
     )
 
@@ -232,9 +238,7 @@ def _judge(evidence: dict[str, Any], *, now: datetime) -> dict[str, bool]:
     }
 
 
-def judge(
-    evidence: dict[str, Any], *, now: datetime | None = None
-) -> dict[str, bool]:
+def judge(evidence: dict[str, Any], *, now: datetime | None = None) -> dict[str, bool]:
     """Return clean failure evidence for every malformed or incomplete artifact."""
     try:
         if not isinstance(evidence, dict):

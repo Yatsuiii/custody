@@ -62,9 +62,7 @@ def _clean_result() -> dict[str, object]:
 
 class LiveModelArmorProducerTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.sleep = patch(
-            "scripts.live_model_armor.time.sleep", return_value=None
-        )
+        self.sleep = patch("scripts.live_model_armor.time.sleep", return_value=None)
         self.sleep.start()
         self.addCleanup(self.sleep.stop)
 

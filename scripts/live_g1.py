@@ -57,9 +57,7 @@ def _cloud_run_proof(
         "--format=json",
     ]
     described = json.loads(
-        subprocess.run(
-            command, check=True, capture_output=True, text=True
-        ).stdout
+        subprocess.run(command, check=True, capture_output=True, text=True).stdout
     )
     status = described["status"]
     url = status["url"]
@@ -143,9 +141,7 @@ async def _prove() -> dict[str, object]:
         proof_id=proof_id,
     )
     print("[2/3] Calling Gemini 3.5 through Vertex AI...", flush=True)
-    gemini = await asyncio.to_thread(
-        _gemini_proof, project=project, proof_id=proof_id
-    )
+    gemini = await asyncio.to_thread(_gemini_proof, project=project, proof_id=proof_id)
     print("[3/3] Running ADK -> Custody -> Memory Bank...", flush=True)
     adk_memory_bank = await prove_adk_memory_bank(
         project=project,

@@ -95,9 +95,7 @@ class ExportGateway:
         if not export.cited:
             return Decision(export=export, allowed=False, denial=Denial.UNCITED)
 
-        offending = tuple(
-            c for c in export.cited if not c.instruction_eligible()
-        )
+        offending = tuple(c for c in export.cited if not c.instruction_eligible())
         if offending:
             return Decision(
                 export=export,

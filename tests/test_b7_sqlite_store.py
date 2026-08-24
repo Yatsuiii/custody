@@ -29,9 +29,7 @@ from custody.store import SqliteAuthorityStore
 
 FIXTURES = Path(__file__).parent / "fixtures" / "b7"
 IDENTITY = PolicyKey("finance", "custody", "identity", "R1", "export.send")
-REGISTERED = PolicyKey(
-    "finance", "custody", "vendor_projection", "R1", "export.send"
-)
+REGISTERED = PolicyKey("finance", "custody", "vendor_projection", "R1", "export.send")
 FREEFORM = PolicyKey("finance", "model", "freeform", "R1", "export.send")
 
 
@@ -45,9 +43,7 @@ class _Dispatcher:
 
 
 def _event() -> SourceAuthorityEvent:
-    return SourceAuthorityEvent.from_json(
-        (FIXTURES / "source_event.json").read_bytes()
-    )
+    return SourceAuthorityEvent.from_json((FIXTURES / "source_event.json").read_bytes())
 
 
 def _configure(store: SqliteAuthorityStore) -> SourceAuthorityEvent:
@@ -149,17 +145,13 @@ class DurableAuthorityReconstructsInFreshProcesses(unittest.TestCase):
             )
 
             self.assertEqual(reopened.records(), expected_envelopes)
-            self.assertEqual(
-                reopened.dependencies("CHILD-01"), expected_dependencies
-            )
+            self.assertEqual(reopened.dependencies("CHILD-01"), expected_dependencies)
             self.assertEqual(
                 reopened.public_key_for(
                     issuer_id=event.receipt.issuer_id,
                     issuer_key_id=event.receipt.issuer_key_id,
                 ),
-                bytes.fromhex(
-                    (FIXTURES / "issuer_public_key.hex").read_text().strip()
-                ),
+                bytes.fromhex((FIXTURES / "issuer_public_key.hex").read_text().strip()),
             )
             self.assertTrue(execution.decision.allowed)
             self.assertEqual(dispatcher.calls, ["after-restart"])
@@ -283,14 +275,14 @@ class DurableWritesAreImmutableAndAtomic(unittest.TestCase):
             def update(index: int) -> None:
                 barrier.wait()
                 try:
-                    stores[index].put_policy(
-                        snapshots[index], expected_generation=7
-                    )
+                    stores[index].put_policy(snapshots[index], expected_generation=7)
                     outcomes.append("committed")
                 except AuthorityConflict:
                     outcomes.append("conflict")
 
-            threads = [threading.Thread(target=update, args=(index,)) for index in range(2)]
+            threads = [
+                threading.Thread(target=update, args=(index,)) for index in range(2)
+            ]
             for thread in threads:
                 thread.start()
             for thread in threads:

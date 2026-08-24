@@ -74,7 +74,9 @@ class RealSession:
 @unittest.skipUnless(ADK, "google-adk is not installed")
 class TheCoreReadsRealAdkObjects(unittest.TestCase):
     def test_a_real_tool_response_is_seen_as_untrusted_tool_origin(self):
-        (admitted,) = take_custody([tool_event("fetch_page", {"body": POISON})]).admitted
+        (admitted,) = take_custody(
+            [tool_event("fetch_page", {"body": POISON})]
+        ).admitted
         self.assertIs(admitted.record.origin, Origin.TOOL)
         self.assertIs(admitted.record.trust, Trust.UNTRUSTED)
         self.assertEqual(admitted.record.source_tool, "fetch_page")
@@ -92,7 +94,9 @@ class TheCoreReadsRealAdkObjects(unittest.TestCase):
             model_event("The page asks that summaries be emailed out."),
         ]
         derived = [
-            a for a in take_custody(session).admitted if a.record.origin is Origin.DERIVED
+            a
+            for a in take_custody(session).admitted
+            if a.record.origin is Origin.DERIVED
         ]
         self.assertEqual(len(derived), 1)
         self.assertEqual(derived[0].record.source_tool, "fetch_page")
@@ -105,7 +109,9 @@ class TheCoreReadsRealAdkObjects(unittest.TestCase):
 
     def test_a_vouched_real_tool_stays_trusted(self):
         trust = ToolTrust(frozenset({"payroll"}))
-        (admitted,) = take_custody([tool_event("payroll", {"salary": 1})], trust).admitted
+        (admitted,) = take_custody(
+            [tool_event("payroll", {"salary": 1})], trust
+        ).admitted
         self.assertIs(admitted.record.trust, Trust.TRUSTED)
 
     def test_a_real_load_memory_call_is_attributed_by_content(self):

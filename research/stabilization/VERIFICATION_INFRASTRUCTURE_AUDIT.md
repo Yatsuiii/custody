@@ -28,6 +28,6 @@ scripts/firestore_contract_probe.py and:
 - writes terminal results atomically and preserves cleanup separately.
 
 Offline harness tests cover the artifact and process-failure branches. The
-clean-clone launch and one real non-security probe are still required before
-the corresponding P1 items can close.
-
+clean-clone launch passed, and the stab01 real non-security probe passed 19/19
+operations with cleanup verified. The earlier silent and import-failure
+attempts remain immutable invalid evidence.

@@ -226,11 +226,7 @@ async def _call_with_token(
         )
     is_error = bool(result.isError)
     text = next(
-        (
-            item.text
-            for item in result.content
-            if getattr(item, "type", None) == "text"
-        ),
+        (item.text for item in result.content if getattr(item, "type", None) == "text"),
         None,
     )
     return {"is_error": is_error, "text": text}
@@ -281,11 +277,7 @@ def _poll_for_denial(
         except (json.JSONDecodeError, OSError, subprocess.CalledProcessError):
             time.sleep(3)
             continue
-        matches = [
-            entry
-            for entry in last
-            if isinstance(entry, dict)
-        ]
+        matches = [entry for entry in last if isinstance(entry, dict)]
         if matches:
             return matches[0]
         time.sleep(3)
@@ -309,19 +301,29 @@ async def _prove() -> dict[str, Any]:
     customer_id = f"cust-{proof_id[:12]}"
     firestore_project = os.environ.get("CUSTODY_FIRESTORE_PROJECT", "").strip() or None
 
-    print("[1/7] Vendoring custody/revision.py and building the MCP image...", flush=True)
+    print(
+        "[1/7] Vendoring custody/revision.py and building the MCP image...", flush=True
+    )
     cloud.run("services", "enable", "run.googleapis.com")
     _vendor_custody()
     try:
         cloud.run(
-            "builds", "submit", str(SERVER_SOURCE), f"--tag={image}", f"--region={region}"
+            "builds",
+            "submit",
+            str(SERVER_SOURCE),
+            f"--tag={image}",
+            f"--region={region}",
         )
     finally:
         _remove_vendored_custody()
 
     print("[2/7] Deploying v1 and minting a real dispatch token...", flush=True)
     v1_service = _deploy(
-        cloud, image=image, revision="v1", secret=secret, firestore_project=firestore_project
+        cloud,
+        image=image,
+        revision="v1",
+        secret=secret,
+        firestore_project=firestore_project,
     )
     v1_status = v1_service["status"]
     url = v1_status["url"]
@@ -340,7 +342,10 @@ async def _prove() -> dict[str, Any]:
     v1_mismatch_tokens = await _tools_list_with_attestation(endpoint)
     v1_mismatch_token = v1_mismatch_tokens[TOOL_NAME]
 
-    print("[3/7] Positive control: dispatching once with the fresh v1 token...", flush=True)
+    print(
+        "[3/7] Positive control: dispatching once with the fresh v1 token...",
+        flush=True,
+    )
     before_positive = await asyncio.to_thread(_json_get, f"{url}/evidence")
     positive = await _call_with_token(endpoint, v1_token, customer_id=customer_id)
     after_positive = await asyncio.to_thread(_json_get, f"{url}/evidence")
@@ -358,7 +363,11 @@ async def _prove() -> dict[str, Any]:
 
     print("[5/7] Redeploying to v2 on the same URL and secret...", flush=True)
     v2_service = _deploy(
-        cloud, image=image, revision="v2", secret=secret, firestore_project=firestore_project
+        cloud,
+        image=image,
+        revision="v2",
+        secret=secret,
+        firestore_project=firestore_project,
     )
     v2_status = v2_service["status"]
     if v2_status["url"] != url:
@@ -366,7 +375,9 @@ async def _prove() -> dict[str, Any]:
     v2_revision_name = v2_status["latestReadyRevisionName"]
     await asyncio.to_thread(_wait_for_revision, url, "v2")
     before_mismatch = await asyncio.to_thread(_json_get, f"{url}/evidence")
-    mismatch = await _call_with_token(endpoint, v1_mismatch_token, customer_id=customer_id)
+    mismatch = await _call_with_token(
+        endpoint, v1_mismatch_token, customer_id=customer_id
+    )
     mismatch_denial = await asyncio.to_thread(
         _poll_for_denial,
         cloud,
@@ -376,7 +387,9 @@ async def _prove() -> dict[str, Any]:
     )
     after_mismatch = await asyncio.to_thread(_json_get, f"{url}/evidence")
 
-    print("[6/7] Positive control on v2: a fresh token dispatches normally...", flush=True)
+    print(
+        "[6/7] Positive control on v2: a fresh token dispatches normally...", flush=True
+    )
     v2_tokens = await _tools_list_with_attestation(endpoint)
     v2_token = v2_tokens[TOOL_NAME]
     v2_positive = await _call_with_token(endpoint, v2_token, customer_id=customer_id)
@@ -388,7 +401,11 @@ async def _prove() -> dict[str, Any]:
         flush=True,
     )
     v1_restart_service = _deploy(
-        cloud, image=image, revision="v1", secret=secret, firestore_project=firestore_project
+        cloud,
+        image=image,
+        revision="v1",
+        secret=secret,
+        firestore_project=firestore_project,
     )
     v1_restart_status = v1_restart_service["status"]
     if v1_restart_status["url"] != url:

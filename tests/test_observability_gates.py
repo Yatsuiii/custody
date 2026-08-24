@@ -114,9 +114,7 @@ class ObservabilityGateJudgeTests(unittest.TestCase):
     def test_malformed_digest_cannot_pass(self):
         evidence = valid_evidence()
         evidence["custody_digest"] = "not-a-real-digest"
-        self.assertFalse(
-            judge(evidence, now=NOW)["trace_and_span_ids_are_well_formed"]
-        )
+        self.assertFalse(judge(evidence, now=NOW)["trace_and_span_ids_are_well_formed"])
 
     def test_g1_run_that_withheld_or_refused_cannot_pass(self):
         for field in ("withheld", "refused"):
@@ -127,7 +125,9 @@ class ObservabilityGateJudgeTests(unittest.TestCase):
                     judge(evidence, now=NOW)["g1_admission_reached_memory_bank"]
                 )
 
-    def test_multiple_write_record_writes_pass_like_a_single_ingest_events_write_once_did(self):
+    def test_multiple_write_record_writes_pass_like_a_single_ingest_events_write_once_did(
+        self,
+    ):
         """G1 migrated onto `write_record` (`HANDOFF.md`, "G1 migration"),
         which writes one raw memory per admitted record instead of one
         session-level memory. `memory_write_count` is no longer pinned to 1;
@@ -136,7 +136,9 @@ class ObservabilityGateJudgeTests(unittest.TestCase):
         evidence = valid_evidence()
         evidence["g1_admission"]["memory_write_count"] = 3
         evidence["g1_admission"]["written_memory_ids"] = [
-            "cr-a1b2c3d4", "cr-e5f60718", "cr-29384756",
+            "cr-a1b2c3d4",
+            "cr-e5f60718",
+            "cr-29384756",
         ]
         self.assertTrue(judge(evidence, now=NOW)["g1_admission_reached_memory_bank"])
 
@@ -155,9 +157,7 @@ class ObservabilityGateJudgeTests(unittest.TestCase):
     def test_g1_run_not_bound_to_this_proof_id_cannot_pass(self):
         evidence = valid_evidence()
         evidence["g1_admission"]["agent_text"] = "Recorded, audit identifier f00d."
-        self.assertFalse(
-            judge(evidence, now=NOW)["g1_admission_reached_memory_bank"]
-        )
+        self.assertFalse(judge(evidence, now=NOW)["g1_admission_reached_memory_bank"])
 
     def test_digest_not_among_admitted_records_cannot_pass(self):
         evidence = valid_evidence()
@@ -175,7 +175,10 @@ class ObservabilityGateJudgeTests(unittest.TestCase):
         )
 
     def test_log_entry_with_wrong_trace_or_span_cannot_pass(self):
-        for field, value in (("trace", f"projects/{PROJECT}/traces/{'f' * 32}"), ("spanId", "f" * 16)):
+        for field, value in (
+            ("trace", f"projects/{PROJECT}/traces/{'f' * 32}"),
+            ("spanId", "f" * 16),
+        ):
             with self.subTest(field=field):
                 evidence = valid_evidence()
                 evidence["log_entry"][field] = value

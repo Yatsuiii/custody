@@ -137,9 +137,7 @@ class ADepartmentCannotDemoteAnothers(unittest.TestCase):
                 demoted_at="2026-08-14T00:00:00Z",
             )
         )
-        self.assertIs(
-            catalog.trust_for("support").of("helpdesk_tool"), Trust.TRUSTED
-        )
+        self.assertIs(catalog.trust_for("support").of("helpdesk_tool"), Trust.TRUSTED)
 
 
 class ADemotionsIdIsDeterministic(unittest.TestCase):

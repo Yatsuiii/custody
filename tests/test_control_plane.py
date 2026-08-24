@@ -76,9 +76,7 @@ class IngestAppliesTheSameRulesAsTheCore(unittest.TestCase):
     def test_a_vouched_tool_reaches_the_graph(self):
         plane = ControlPlane()
         plane.vouch(vouch("sales", "crm_lookup"))
-        run = plane.ingest(
-            session("sales", [tool_turn("crm_lookup", "Acme owes 500")])
-        )
+        run = plane.ingest(session("sales", [tool_turn("crm_lookup", "Acme owes 500")]))
         self.assertEqual(run["quarantined"], 0)
         self.assertEqual(len(plane.graph), 1)
 

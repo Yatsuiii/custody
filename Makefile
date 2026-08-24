@@ -6,6 +6,8 @@
 PYTHON ?= $(shell \
 	if [ -x .venv/bin/python ]; then \
 		printf '%s' .venv/bin/python; \
+	elif [ -n "$${VIRTUAL_ENV:-}" ] && [ -x "$${VIRTUAL_ENV}/bin/python" ]; then \
+		printf '%s' "$${VIRTUAL_ENV}/bin/python"; \
 	elif [ -x "$$(pyenv root 2>/dev/null)/versions/3.12.13/bin/python" ]; then \
 		printf '%s' "$$(pyenv root)/versions/3.12.13/bin/python"; \
 	elif command -v python3.12 >/dev/null 2>&1; then \

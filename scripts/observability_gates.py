@@ -155,17 +155,14 @@ def _judge(evidence: dict[str, Any], *, now: datetime) -> dict[str, bool]:
 
     digest_is_admitted = digest in digests if isinstance(digests, list) else False
 
-    log_bound = (
-        ids_well_formed
-        and _log_entry_is_bound(
-            evidence["log_entry"],
-            proof_id=proof_id,
-            trace_id=trace_id,
-            span_id=span_id,
-            digest=digest,
-            started=started,
-            captured=captured,
-        )
+    log_bound = ids_well_formed and _log_entry_is_bound(
+        evidence["log_entry"],
+        proof_id=proof_id,
+        trace_id=trace_id,
+        span_id=span_id,
+        digest=digest,
+        started=started,
+        captured=captured,
     )
 
     return {
@@ -177,9 +174,7 @@ def _judge(evidence: dict[str, Any], *, now: datetime) -> dict[str, bool]:
     }
 
 
-def judge(
-    evidence: dict[str, Any], *, now: datetime | None = None
-) -> dict[str, bool]:
+def judge(evidence: dict[str, Any], *, now: datetime | None = None) -> dict[str, bool]:
     """Return clean failure evidence for every malformed or incomplete artifact."""
     try:
         if not isinstance(evidence, dict):
@@ -215,12 +210,8 @@ def attest_live(
     reader = cloud or GcloudReadClient()
     try:
         insert_id = evidence["log_entry"]["insertId"]
-        query = " AND ".join(
-            (f'logName="{_LOG_LOGNAME}"', f'insertId="{insert_id}"')
-        )
-        entries = reader.json(
-            "logging", "read", query, "--freshness=24h", "--limit=2"
-        )
+        query = " AND ".join((f'logName="{_LOG_LOGNAME}"', f'insertId="{insert_id}"'))
+        entries = reader.json("logging", "read", query, "--freshness=24h", "--limit=2")
     except (
         OSError,
         subprocess.CalledProcessError,

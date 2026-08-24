@@ -59,10 +59,7 @@ class VouchDecision:
 
     def reason(self) -> str:
         if self.allowed:
-            return (
-                f"{self.vouch.actor_department} vouched for "
-                f"{self.vouch.grant.tool}"
-            )
+            return f"{self.vouch.actor_department} vouched for {self.vouch.grant.tool}"
         return (
             f"{self.vouch.actor_department} cannot vouch for "
             f"{self.vouch.grant.department}'s tools"

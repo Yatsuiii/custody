@@ -24,9 +24,7 @@ from custody.authority import (
 
 FIXTURES = Path(__file__).parent / "fixtures" / "b7"
 IDENTITY = PolicyKey("finance", "custody", "identity", "R1", "export.send")
-REGISTERED = PolicyKey(
-    "finance", "custody", "vendor_projection", "R1", "export.send"
-)
+REGISTERED = PolicyKey("finance", "custody", "vendor_projection", "R1", "export.send")
 FREEFORM = PolicyKey("finance", "model", "freeform", "R1", "export.send")
 
 
@@ -103,9 +101,7 @@ class GatewayOwnsTheConsequentialEndpoint(unittest.TestCase):
         dispatcher = _Dispatcher()
 
         uncited = gateway.execute(_action("uncited"), (), dispatcher)
-        missing = gateway.execute(
-            _action("missing"), ("MISSING",), dispatcher
-        )
+        missing = gateway.execute(_action("missing"), ("MISSING",), dispatcher)
 
         self.assertFalse(uncited.decision.allowed)
         self.assertEqual(uncited.decision.reason, "UNCITED_ACTION")
@@ -119,17 +115,13 @@ class GatewayOwnsTheConsequentialEndpoint(unittest.TestCase):
         registered = gate.admit_registered(
             TransformRef(REGISTERED),
             ("ROOT-01",),
-            AuthorityOutput.from_text(
-                record_id="REGISTERED-01", text="ACCOUNT-101"
-            ),
+            AuthorityOutput.from_text(record_id="REGISTERED-01", text="ACCOUNT-101"),
         )
         self.assertTrue(registered.admitted)
         dispatcher = _Dispatcher()
 
         root = gateway.execute(_action("root"), ("ROOT-01",), dispatcher)
-        relay = gateway.execute(
-            _action("relay"), ("REGISTERED-01",), dispatcher
-        )
+        relay = gateway.execute(_action("relay"), ("REGISTERED-01",), dispatcher)
 
         self.assertTrue(root.decision.allowed)
         self.assertTrue(root.dispatched)
@@ -139,7 +131,9 @@ class GatewayOwnsTheConsequentialEndpoint(unittest.TestCase):
             relay.decision.evaluated_record_ids,
             ("REGISTERED-01", "ROOT-01"),
         )
-        self.assertEqual([call.request_id for call in dispatcher.calls], ["root", "relay"])
+        self.assertEqual(
+            [call.request_id for call in dispatcher.calls], ["root", "relay"]
+        )
 
     def test_freeform_tool_echo_is_inform_only(self) -> None:
         _, _, gate, gateway = _world()
@@ -159,7 +153,9 @@ class GatewayOwnsTheConsequentialEndpoint(unittest.TestCase):
         self.assertEqual(result.decision.reason, "CAP_NOT_ACT")
         self.assertEqual(dispatcher.calls, [])
 
-    def test_identity_and_cross_agent_forwarding_preserve_bounded_authority(self) -> None:
+    def test_identity_and_cross_agent_forwarding_preserve_bounded_authority(
+        self,
+    ) -> None:
         event, _, gate, gateway = _world()
         _admit_root(event, gate)
         for parent_id, record_id in (

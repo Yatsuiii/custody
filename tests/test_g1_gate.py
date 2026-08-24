@@ -138,8 +138,7 @@ class G5NamesTheGroupsItCannotDemonstrate(unittest.TestCase):
         This shipped: the line read "missing  and a Cloud Scheduler record"
         the moment the last group started passing.
         """
-        self.assertEqual(still_outstanding([]),
-                         "missing only a Cloud Scheduler record")
+        self.assertEqual(still_outstanding([]), "missing only a Cloud Scheduler record")
 
     def test_an_outstanding_group_is_still_named(self):
         self.assertIn("missing telemetry and", still_outstanding(["telemetry"]))

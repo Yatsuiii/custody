@@ -147,9 +147,7 @@ def _wait_for_revision(url: str, revision: str) -> dict[str, Any]:
         except (OSError, ValueError, urllib.error.HTTPError) as error:
             last_error = error
         time.sleep(2)
-    raise RuntimeError(
-        f"Cloud Run did not serve MCP revision {revision}: {last_error}"
-    )
+    raise RuntimeError(f"Cloud Run did not serve MCP revision {revision}: {last_error}")
 
 
 async def _tools_list(url: str) -> dict[str, Any]:
@@ -508,9 +506,7 @@ async def _prove() -> dict[str, Any]:
         proof_id=proof_id,
     )
     registry_resource = registry_before["registryResource"]
-    projection = await asyncio.to_thread(
-        _wait_for_projection, cloud, registry_resource
-    )
+    projection = await asyncio.to_thread(_wait_for_projection, cloud, registry_resource)
     approved_payload = _registry_content(registry_before)
     approved = ToolSurface.from_tools_list(server=SERVICE, payload=approved_payload)
     catalog.approve(department=DEPARTMENT, surface=approved, runtime_binding=v1_binding)
@@ -577,7 +573,9 @@ async def _prove() -> dict[str, Any]:
     )
     after_control = await asyncio.to_thread(_json_get, f"{url}/evidence")
 
-    print("[7/8] Applying deterministic Custody admission before dispatch...", flush=True)
+    print(
+        "[7/8] Applying deterministic Custody admission before dispatch...", flush=True
+    )
     governed = catalog.admit(
         department=DEPARTMENT, surface=live_v2, observed_runtime=v2_binding
     )
@@ -606,11 +604,7 @@ async def _prove() -> dict[str, Any]:
         live_v2_value=negative["value"],
     )
     denial = next(
-        (
-            item
-            for item in governed.denied
-            if item.tool_id == approved_tool.tool_id
-        ),
+        (item for item in governed.denied if item.tool_id == approved_tool.tool_id),
         None,
     )
 

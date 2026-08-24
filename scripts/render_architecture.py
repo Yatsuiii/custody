@@ -94,6 +94,7 @@ def evidence_state(judge, data: dict, now: datetime) -> str:
         return "stale"
     return "failing"
 
+
 GATE_LINE = re.compile(r"^\s*\[(?P<state>PASS|FAIL|BLOCKED)\s*\]\s*(?P<title>.+)$")
 
 
@@ -114,35 +115,94 @@ class LiveProof:
 
 
 LIVE_PROOFS = [
-    LiveProof("R1", "Revision-aware admission", "Discovery & lifecycle",
-              "scripts/live_registry_attack.py", "live-registry-attack.json"),
-    LiveProof("R2", "Dispatch bound to the tools/list that authorized it", "Discovery & lifecycle",
-              "scripts/live_revision_binding.py", "live-revision-binding.json"),
-    LiveProof("S1", "Agent Gateway allow/deny enforcement", "Security & governance",
-              "scripts/live_gateway.py", "live-gateway.json"),
-    LiveProof("M1", "Model Armor content screening", "Security & governance",
-              "scripts/live_model_armor.py", "live-model-armor.json"),
-    LiveProof("O1", "Agent Observability, trace carries the custody digest", "Telemetry",
-              "scripts/live_observability.py", "live-observability.json"),
-    LiveProof("D1/D2", "Selective deletion from live Memory Bank", "Execution & state",
-              "scripts/live_memory_deletion.py", "live-memory-deletion.json"),
-    LiveProof("Auditor", "Demote now, revoke later, on the Scheduler's own clock", "Fleet & agents",
-              "scripts/live_auditor.py", "live-auditor.json"),
-    LiveProof("Reviewer", "Gemini drafts a verdict on a quarantined item", "Fleet & agents",
-              "scripts/live_review.py", "live-review.json"),
-    LiveProof("Fleet N=25", "A tool shared across departments, revoked once, pulled from both", "Fleet & agents",
-              "scripts/live_fleet.py", "live-fleet.json"),
-    LiveProof("F1", "A genuine live derived_from chain, sales -> support -> finance", "Fleet & agents",
-              "scripts/live_chain.py", "live-chain.json"),
+    LiveProof(
+        "R1",
+        "Revision-aware admission",
+        "Discovery & lifecycle",
+        "scripts/live_registry_attack.py",
+        "live-registry-attack.json",
+    ),
+    LiveProof(
+        "R2",
+        "Dispatch bound to the tools/list that authorized it",
+        "Discovery & lifecycle",
+        "scripts/live_revision_binding.py",
+        "live-revision-binding.json",
+    ),
+    LiveProof(
+        "S1",
+        "Agent Gateway allow/deny enforcement",
+        "Security & governance",
+        "scripts/live_gateway.py",
+        "live-gateway.json",
+    ),
+    LiveProof(
+        "M1",
+        "Model Armor content screening",
+        "Security & governance",
+        "scripts/live_model_armor.py",
+        "live-model-armor.json",
+    ),
+    LiveProof(
+        "O1",
+        "Agent Observability, trace carries the custody digest",
+        "Telemetry",
+        "scripts/live_observability.py",
+        "live-observability.json",
+    ),
+    LiveProof(
+        "D1/D2",
+        "Selective deletion from live Memory Bank",
+        "Execution & state",
+        "scripts/live_memory_deletion.py",
+        "live-memory-deletion.json",
+    ),
+    LiveProof(
+        "Auditor",
+        "Demote now, revoke later, on the Scheduler's own clock",
+        "Fleet & agents",
+        "scripts/live_auditor.py",
+        "live-auditor.json",
+    ),
+    LiveProof(
+        "Reviewer",
+        "Gemini drafts a verdict on a quarantined item",
+        "Fleet & agents",
+        "scripts/live_review.py",
+        "live-review.json",
+    ),
+    LiveProof(
+        "Fleet N=25",
+        "A tool shared across departments, revoked once, pulled from both",
+        "Fleet & agents",
+        "scripts/live_fleet.py",
+        "live-fleet.json",
+    ),
+    LiveProof(
+        "F1",
+        "A genuine live derived_from chain, sales -> support -> finance",
+        "Fleet & agents",
+        "scripts/live_chain.py",
+        "live-chain.json",
+    ),
 ]
 
-CATEGORY_ORDER = ["Discovery & lifecycle", "Execution & state", "Security & governance", "Telemetry", "Fleet & agents"]
+CATEGORY_ORDER = [
+    "Discovery & lifecycle",
+    "Execution & state",
+    "Security & governance",
+    "Telemetry",
+    "Fleet & agents",
+]
 
 
 def run_gates() -> list[GateResult]:
     proc = subprocess.run(
         [sys.executable, str(REPO_ROOT / "scripts" / "gates.py")],
-        capture_output=True, text=True, cwd=REPO_ROOT, timeout=30,
+        capture_output=True,
+        text=True,
+        cwd=REPO_ROOT,
+        timeout=30,
     )
     lines = proc.stdout.splitlines()
     results: list[GateResult] = []
@@ -151,7 +211,11 @@ def run_gates() -> list[GateResult]:
         if not m:
             continue
         detail = lines[i + 1].strip() if i + 1 < len(lines) else ""
-        results.append(GateResult(state=m.group("state"), title=m.group("title").strip(), detail=detail))
+        results.append(
+            GateResult(
+                state=m.group("state"), title=m.group("title").strip(), detail=detail
+            )
+        )
     return results
 
 
@@ -181,6 +245,7 @@ def _short(s: str | None, n: int = 12) -> str:
 # A missing expected field degrades to `None` (rendered as "widget
 # unavailable") rather than a fabricated placeholder.
 
+
 def widget_r1(data: dict) -> dict | None:
     governed = data.get("governed", {})
     denial = governed.get("selected_denial", {})
@@ -188,15 +253,29 @@ def widget_r1(data: dict) -> dict | None:
         return None
     return {
         "type": "pair",
-        "a": {"label": "Registry-approved digest", "value": _short(denial.get("expected_revision"), 18), "state": "safe"},
-        "b": {"label": "observed live tools/list digest", "value": _short(denial.get("observed_revision"), 18), "state": "danger"},
-        "note": "blocked before dispatch: " + str(denial.get("reason")) +
-                " — dispatch counter held at " + str(governed.get("dispatch_count_after")),
+        "a": {
+            "label": "Registry-approved digest",
+            "value": _short(denial.get("expected_revision"), 18),
+            "state": "safe",
+        },
+        "b": {
+            "label": "observed live tools/list digest",
+            "value": _short(denial.get("observed_revision"), 18),
+            "state": "danger",
+        },
+        "note": "blocked before dispatch: "
+        + str(denial.get("reason"))
+        + " — dispatch counter held at "
+        + str(governed.get("dispatch_count_after")),
     }
 
 
 def widget_r2(data: dict) -> dict | None:
-    dm = data.get("digest_mismatch_control", {}).get("denial_log", {}).get("jsonPayload", {})
+    dm = (
+        data.get("digest_mismatch_control", {})
+        .get("denial_log", {})
+        .get("jsonPayload", {})
+    )
     rp = data.get("replay_control", {}).get("denial_log", {}).get("jsonPayload", {})
     pc = data.get("positive_control", {})
     if not (dm and rp and pc):
@@ -204,12 +283,26 @@ def widget_r2(data: dict) -> dict | None:
     return {
         "type": "timeline",
         "steps": [
-            {"label": "accepted dispatch", "state": "safe",
-             "detail": "valid v1 token, dispatch_count " + str(pc.get("dispatch_count_before")) + " → " + str(pc.get("dispatch_count_after"))},
-            {"label": "denied: digest_mismatch", "state": "danger",
-             "detail": "the v1 token presented after the server redeployed to v2; dispatch_count held at " + str(dm.get("dispatch_count"))},
-            {"label": "denied: replayed", "state": "danger",
-             "detail": "the same valid token presented a second time; dispatch_count held at " + str(rp.get("dispatch_count"))},
+            {
+                "label": "accepted dispatch",
+                "state": "safe",
+                "detail": "valid v1 token, dispatch_count "
+                + str(pc.get("dispatch_count_before"))
+                + " → "
+                + str(pc.get("dispatch_count_after")),
+            },
+            {
+                "label": "denied: digest_mismatch",
+                "state": "danger",
+                "detail": "the v1 token presented after the server redeployed to v2; dispatch_count held at "
+                + str(dm.get("dispatch_count")),
+            },
+            {
+                "label": "denied: replayed",
+                "state": "danger",
+                "detail": "the same valid token presented a second time; dispatch_count held at "
+                + str(rp.get("dispatch_count")),
+            },
         ],
     }
 
@@ -221,8 +314,16 @@ def widget_s1(data: dict) -> dict | None:
         return None
     return {
         "type": "pair",
-        "a": {"label": "allow-list includes lookup_customer", "value": "200 OK · trace " + _short(allow.get("trace_id"), 14), "state": "safe"},
-        "b": {"label": "allow-list excludes lookup_customer", "value": "403 Forbidden · trace " + _short(deny.get("trace_id"), 14), "state": "danger"},
+        "a": {
+            "label": "allow-list includes lookup_customer",
+            "value": "200 OK · trace " + _short(allow.get("trace_id"), 14),
+            "state": "safe",
+        },
+        "b": {
+            "label": "allow-list excludes lookup_customer",
+            "value": "403 Forbidden · trace " + _short(deny.get("trace_id"), 14),
+            "state": "danger",
+        },
     }
 
 
@@ -233,10 +334,18 @@ def widget_m1(data: dict) -> dict | None:
         return None
     return {
         "type": "pair_text",
-        "a": {"label": "jailbreak / PI prompt — " + str(mal.get("result", {}).get("filterMatchState")),
-              "value": mal.get("prompt"), "state": "danger"},
-        "b": {"label": "clean prompt — " + str(clean.get("result", {}).get("filterMatchState")),
-              "value": clean.get("prompt"), "state": "safe"},
+        "a": {
+            "label": "jailbreak / PI prompt — "
+            + str(mal.get("result", {}).get("filterMatchState")),
+            "value": mal.get("prompt"),
+            "state": "danger",
+        },
+        "b": {
+            "label": "clean prompt — "
+            + str(clean.get("result", {}).get("filterMatchState")),
+            "value": clean.get("prompt"),
+            "state": "safe",
+        },
     }
 
 
@@ -248,7 +357,10 @@ def widget_o1(data: dict) -> dict | None:
         "chips": [
             {"label": "trace_id", "value": _short(data.get("trace_id"), 20)},
             {"label": "span_id", "value": data.get("span_id")},
-            {"label": "custody_digest", "value": _short(data.get("custody_digest"), 20)},
+            {
+                "label": "custody_digest",
+                "value": _short(data.get("custody_digest"), 20),
+            },
         ],
     }
 
@@ -258,8 +370,13 @@ def widget_d1d2(data: dict) -> dict | None:
     after = data.get("after_facts")
     if before is None or after is None:
         return None
-    return {"type": "diff_list", "label_before": "before revoke", "label_after": "after revoke",
-            "before": before, "after": after}
+    return {
+        "type": "diff_list",
+        "label_before": "before revoke",
+        "label_after": "after revoke",
+        "before": before,
+        "after": after,
+    }
 
 
 def widget_auditor(data: dict) -> dict | None:
@@ -271,10 +388,23 @@ def widget_auditor(data: dict) -> dict | None:
     return {
         "type": "timeline",
         "steps": [
-            {"label": "before demotion", "state": "safe", "detail": "trusted, revocation_id: " + str(before.get("revocation_id"))},
-            {"label": "demoted, before the auditor's next sweep", "state": "warn",
-             "detail": "still unrevoked (revocation_id: " + str(mid.get("revocation_id")) + ") — demotion and revocation are genuinely decoupled"},
-            {"label": "after the auditor's sweep", "state": "danger", "detail": "revoked at " + str(after.get("revoked_at"))},
+            {
+                "label": "before demotion",
+                "state": "safe",
+                "detail": "trusted, revocation_id: " + str(before.get("revocation_id")),
+            },
+            {
+                "label": "demoted, before the auditor's next sweep",
+                "state": "warn",
+                "detail": "still unrevoked (revocation_id: "
+                + str(mid.get("revocation_id"))
+                + ") — demotion and revocation are genuinely decoupled",
+            },
+            {
+                "label": "after the auditor's sweep",
+                "state": "danger",
+                "detail": "revoked at " + str(after.get("revoked_at")),
+            },
         ],
     }
 
@@ -286,7 +416,11 @@ def widget_review(data: dict) -> dict | None:
         return None
     return {
         "type": "pair_text",
-        "a": {"label": "quarantined — withheld from memory", "value": q, "state": "danger"},
+        "a": {
+            "label": "quarantined — withheld from memory",
+            "value": q,
+            "state": "danger",
+        },
         "b": {"label": "Gemini's drafted verdict", "value": v, "state": "safe"},
     }
 
@@ -298,8 +432,16 @@ def widget_fleet(data: dict) -> dict | None:
         return None
     return {
         "type": "groups",
-        "a": {"label": "revoked (used the shared tool)", "state": "danger", "items": list(shared)},
-        "b": {"label": "untouched (used a different tool)", "state": "safe", "items": list(untouched.keys())},
+        "a": {
+            "label": "revoked (used the shared tool)",
+            "state": "danger",
+            "items": list(shared),
+        },
+        "b": {
+            "label": "untouched (used a different tool)",
+            "state": "safe",
+            "items": list(untouched.keys()),
+        },
     }
 
 
@@ -313,20 +455,35 @@ def widget_chain(data: dict) -> dict | None:
         for dept in ("sales", "support", "finance")
         if dept in departments
     ]
-    untouched = [
-        f"{dept}: own conversational memory" for dept in departments
-    ] + [f"{sibling.get('user_id', 'sibling')}: independent tool-origin memory"]
+    untouched = [f"{dept}: own conversational memory" for dept in departments] + [
+        f"{sibling.get('user_id', 'sibling')}: independent tool-origin memory"
+    ]
     return {
         "type": "groups",
-        "a": {"label": "revoked (the derived_from chain)", "state": "danger", "items": removed},
-        "b": {"label": "untouched (unrelated to the chain tool)", "state": "safe", "items": untouched},
+        "a": {
+            "label": "revoked (the derived_from chain)",
+            "state": "danger",
+            "items": removed,
+        },
+        "b": {
+            "label": "untouched (unrelated to the chain tool)",
+            "state": "safe",
+            "items": untouched,
+        },
     }
 
 
 WIDGET_FN = {
-    "R1": widget_r1, "R2": widget_r2, "S1": widget_s1, "M1": widget_m1, "O1": widget_o1,
-    "D1/D2": widget_d1d2, "Auditor": widget_auditor, "Reviewer": widget_review,
-    "Fleet N=25": widget_fleet, "F1": widget_chain,
+    "R1": widget_r1,
+    "R2": widget_r2,
+    "S1": widget_s1,
+    "M1": widget_m1,
+    "O1": widget_o1,
+    "D1/D2": widget_d1d2,
+    "Auditor": widget_auditor,
+    "Reviewer": widget_review,
+    "Fleet N=25": widget_fleet,
+    "F1": widget_chain,
 }
 
 
@@ -335,33 +492,58 @@ def load_live_evidence(now: datetime) -> list[dict]:
     for proof in LIVE_PROOFS:
         path = PROOF_OUT / proof.filename
         if not path.exists():
-            rows.append({
-                "id": proof.id, "title": proof.title, "category": proof.category,
-                "script": proof.script, "status": "missing", "has_evidence": False,
-                "proof_id": None,
-                "captured_at": None, "age": None, "claim_boundary": None, "widget": None,
-            })
+            rows.append(
+                {
+                    "id": proof.id,
+                    "title": proof.title,
+                    "category": proof.category,
+                    "script": proof.script,
+                    "status": "missing",
+                    "has_evidence": False,
+                    "proof_id": None,
+                    "captured_at": None,
+                    "age": None,
+                    "claim_boundary": None,
+                    "widget": None,
+                }
+            )
             continue
         try:
             data = json.loads(path.read_text())
         except json.JSONDecodeError:
-            rows.append({
-                "id": proof.id, "title": proof.title, "category": proof.category,
-                "script": proof.script, "status": "malformed", "has_evidence": False,
-                "proof_id": None,
-                "captured_at": None, "age": None, "claim_boundary": None, "widget": None,
-            })
+            rows.append(
+                {
+                    "id": proof.id,
+                    "title": proof.title,
+                    "category": proof.category,
+                    "script": proof.script,
+                    "status": "malformed",
+                    "has_evidence": False,
+                    "proof_id": None,
+                    "captured_at": None,
+                    "age": None,
+                    "claim_boundary": None,
+                    "widget": None,
+                }
+            )
             continue
-        rows.append({
-            "id": proof.id, "title": proof.title, "category": proof.category,
-            "script": proof.script,
-            "status": evidence_state(JUDGE_FN[proof.id], data, now),
-            "has_evidence": True,
-            "proof_id": data.get("proof_id"), "captured_at": data.get("captured_at"),
-            "age": age_string(data["captured_at"], now) if data.get("captured_at") else None,
-            "claim_boundary": data.get("claim_boundary"),
-            "widget": WIDGET_FN[proof.id](data),
-        })
+        rows.append(
+            {
+                "id": proof.id,
+                "title": proof.title,
+                "category": proof.category,
+                "script": proof.script,
+                "status": evidence_state(JUDGE_FN[proof.id], data, now),
+                "has_evidence": True,
+                "proof_id": data.get("proof_id"),
+                "captured_at": data.get("captured_at"),
+                "age": age_string(data["captured_at"], now)
+                if data.get("captured_at")
+                else None,
+                "claim_boundary": data.get("claim_boundary"),
+                "widget": WIDGET_FN[proof.id](data),
+            }
+        )
     return rows
 
 
@@ -609,7 +791,9 @@ def main() -> int:
 
     html = TEMPLATE.replace(
         "__GATE_DATA__",
-        json.dumps([{"state": g.state, "title": g.title, "detail": g.detail} for g in gates]),
+        json.dumps(
+            [{"state": g.state, "title": g.title, "detail": g.detail} for g in gates]
+        ),
     )
     html = html.replace("__PROOF_DATA__", json.dumps(proofs))
 

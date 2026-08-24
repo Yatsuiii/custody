@@ -62,7 +62,9 @@ def _service_url(*, project: str, region: str, service: str) -> str:
     return described["status"]["url"]
 
 
-def _json_request(url: str, payload: dict | None = None, *, method: str | None = None) -> dict:
+def _json_request(
+    url: str, payload: dict | None = None, *, method: str | None = None
+) -> dict:
     body = json.dumps(payload).encode() if payload is not None else None
     request = urllib.request.Request(
         url,
@@ -127,7 +129,9 @@ def _prove() -> dict[str, object]:
 
     before_demotion = _json_request(f"{url}/custody/{record_id}")
     if before_demotion is None or before_demotion.get("revocation_id") is not None:
-        raise RuntimeError(f"record not in expected pre-demotion state: {before_demotion}")
+        raise RuntimeError(
+            f"record not in expected pre-demotion state: {before_demotion}"
+        )
 
     demoted_at = datetime.now(UTC).isoformat()
     demote = _json_request(

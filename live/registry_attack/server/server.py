@@ -320,9 +320,7 @@ def _log_gateway_dispatch(
                 "instance_id": dispatch["instance_id"],
                 "dispatch_id": dispatch["dispatch_count"],
                 "forwarding_requested": forwarding_requested,
-                "forwarding_dispatch_count": dispatch[
-                    "forwarding_dispatch_count"
-                ],
+                "forwarding_dispatch_count": dispatch["forwarding_dispatch_count"],
                 "revision": dispatch["revision"],
                 "server_dispatched_at": dispatch["last_dispatched_at"],
             }
@@ -408,7 +406,9 @@ else:
             "dispatch_id": dispatch["dispatch_count"],
             "forwarding_requested": forwarding_requested,
             "forwarded_to": forward_to,
-            "forwarding_status": "simulated" if forwarding_requested else "not-requested",
+            "forwarding_status": "simulated"
+            if forwarding_requested
+            else "not-requested",
         }
 
 

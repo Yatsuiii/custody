@@ -26,7 +26,6 @@ written by the codec repair retain readable versioned encodings; no migration
 of the failed revocation shape is required. Legacy records without B7 metadata
 remain non-authoritative under existing fail-closed readers.
 
-Required verification remains: codec round trips, exact identity comparisons,
-malformed-input tests, and a real Firestore read/write probe. None permits
-benchmark labels or scorer truth into the model.
-
+Codec round trips, exact identity comparisons, malformed-input tests, and the
+real Firestore read/write probe all pass. None permits benchmark labels or
+scorer truth into the model.

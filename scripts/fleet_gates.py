@@ -96,9 +96,7 @@ async def judge_live(evidence: dict) -> dict[str, bool]:
         record_id = departments[department]["tool_record_id"]
         name = f"{engine_name}/memories/{memory_id_for(record_id)}"
         exists = await _memory_exists(client, name)
-        results[f"live_reread_confirms_{department}_shared_memory_is_gone"] = (
-            not exists
-        )
+        results[f"live_reread_confirms_{department}_shared_memory_is_gone"] = not exists
     for department in untouched:
         record_id = departments[department]["tool_record_id"]
         name = f"{engine_name}/memories/{memory_id_for(record_id)}"

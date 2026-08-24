@@ -58,9 +58,7 @@ from tests.test_firestore_store import FakeFirestoreClient, _record
 
 FIXTURES = Path(__file__).parent / "fixtures" / "b7"
 IDENTITY = PolicyKey("finance", "custody", "identity", "R1", "export.send")
-REGISTERED = PolicyKey(
-    "finance", "custody", "vendor_projection", "R1", "export.send"
-)
+REGISTERED = PolicyKey("finance", "custody", "vendor_projection", "R1", "export.send")
 FREEFORM = PolicyKey("finance", "model", "freeform", "R1", "export.send")
 B7_COLLECTIONS = (
     CUSTODY_COLLECTION,
@@ -84,9 +82,7 @@ class _Dispatcher:
 
 
 def _event() -> SourceAuthorityEvent:
-    return SourceAuthorityEvent.from_json(
-        (FIXTURES / "source_event.json").read_bytes()
-    )
+    return SourceAuthorityEvent.from_json((FIXTURES / "source_event.json").read_bytes())
 
 
 def _configure(store: FirestoreAuthorityStore) -> SourceAuthorityEvent:
@@ -155,9 +151,7 @@ class FirestoreAuthorityDurabilityTests(unittest.TestCase):
         child = _gate(first).admit_registered(
             TransformRef(REGISTERED),
             ("ROOT-01",),
-            AuthorityOutput.from_text(
-                record_id="CHILD-01", text="ACCOUNT-101"
-            ),
+            AuthorityOutput.from_text(record_id="CHILD-01", text="ACCOUNT-101"),
         )
         self.assertTrue(child.admitted)
         expected_records = first.records()
@@ -170,9 +164,7 @@ class FirestoreAuthorityDurabilityTests(unittest.TestCase):
         )
 
         self.assertEqual(restarted.records(), expected_records)
-        self.assertEqual(
-            restarted.dependencies("CHILD-01"), expected_dependencies
-        )
+        self.assertEqual(restarted.dependencies("CHILD-01"), expected_dependencies)
         self.assertTrue(execution.decision.allowed)
         self.assertEqual(dispatcher.calls, ["after-restart"])
 
@@ -418,7 +410,9 @@ class FirestoreAuthorityCodecTests(unittest.TestCase):
 
 
 class LegacyAndB7FirestoreDocumentsStaySeparate(unittest.TestCase):
-    def test_legacy_reload_ignores_b7_records_and_preserves_legacy_records(self) -> None:
+    def test_legacy_reload_ignores_b7_records_and_preserves_legacy_records(
+        self,
+    ) -> None:
         client = FakeFirestoreClient()
         legacy = FirestoreCustodyGraph(client)
         legacy.add(_record(id="LEGACY-01"))

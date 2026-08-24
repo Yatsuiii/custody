@@ -111,10 +111,14 @@ async def main() -> int:
 
     print("\n  -- sales vouches for its own tool --")
     catalog.request(Vouch("sales", grant("sales", SHARED_TOOL)))
-    print(f"    sales trusts {SHARED_TOOL}: "
-          f"{SHARED_TOOL in catalog.trust_for('sales').trusted}")
-    print(f"    support trusts {SHARED_TOOL}: "
-          f"{SHARED_TOOL in catalog.trust_for('support').trusted}")
+    print(
+        f"    sales trusts {SHARED_TOOL}: "
+        f"{SHARED_TOOL in catalog.trust_for('sales').trusted}"
+    )
+    print(
+        f"    support trusts {SHARED_TOOL}: "
+        f"{SHARED_TOOL in catalog.trust_for('support').trusted}"
+    )
 
     sales = CustodyMemoryService(
         PlainMemory(), InMemoryQuarantine(), catalog=catalog, department="sales"
@@ -129,10 +133,13 @@ async def main() -> int:
     support_split = await support.add_session_to_memory(
         lookup_session("support", "support-inv-1")
     )
-    print(f"\n    sales session withheld:   {sales_split.withheld} "
-          f"(vouched, should be 0)")
-    print(f"    support session withheld: {support_split.withheld} "
-          f"(never vouched, should be 1)")
+    print(
+        f"\n    sales session withheld:   {sales_split.withheld} (vouched, should be 0)"
+    )
+    print(
+        f"    support session withheld: {support_split.withheld} "
+        f"(never vouched, should be 1)"
+    )
     enforcement_ok = sales_split.withheld == 0 and support_split.withheld == 1
 
     print("\n  -- quarantine, read side --")

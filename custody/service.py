@@ -145,9 +145,7 @@ def split_session(
     custody = take_custody(events, tools, resolver=graph)
 
     untrusted_at = {
-        a.event_index
-        for a in custody.admitted
-        if a.record.trust is Trust.UNTRUSTED
+        a.event_index for a in custody.admitted if a.record.trust is Trust.UNTRUSTED
     }
     unattributable_at = {r.event_index for r in custody.refused}
 

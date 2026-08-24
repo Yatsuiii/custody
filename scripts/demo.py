@@ -141,9 +141,11 @@ async def without_custody() -> bool:
     memory = PlainMemory()
     await memory.add_session_to_memory(week_one())
 
-    retrieved = texts(await memory.search_memory(
-        app_name="fleet", user_id="platform-team", query="customer record summaries"
-    ))
+    retrieved = texts(
+        await memory.search_memory(
+            app_name="fleet", user_id="platform-team", query="customer record summaries"
+        )
+    )
     carrying = instruction_carrying(retrieved)
     print(f"    week 1  memories written                {len(retrieved)}")
     print(f"    week 3  retrieved into instruction context {len(retrieved)}")
@@ -167,8 +169,7 @@ async def without_custody() -> bool:
             ),
         )
     )
-    print(f"    export to {ATTACKER}: "
-          f"{'ALLOWED' if decision.allowed else 'REFUSED'}")
+    print(f"    export to {ATTACKER}: {'ALLOWED' if decision.allowed else 'REFUSED'}")
     print(f"            {decision.reason()}")
     return decision.allowed
 
@@ -179,17 +180,23 @@ async def with_custody() -> bool:
     service = CustodyMemoryService(downstream, quarantine, ToolTrust())
 
     split = await service.add_session_to_memory(week_one())
-    retrieved = texts(await service.search_memory(
-        app_name="fleet", user_id="platform-team", query="customer record summaries"
-    ))
+    retrieved = texts(
+        await service.search_memory(
+            app_name="fleet", user_id="platform-team", query="customer record summaries"
+        )
+    )
     carrying = instruction_carrying(retrieved)
     held = quarantine.held(app_name="fleet", user_id="platform-team")
 
-    print(f"    week 1  events seen {split.total}, "
-          f"admitted {len(split.admitted_events)}, withheld {split.withheld}")
+    print(
+        f"    week 1  events seen {split.total}, "
+        f"admitted {len(split.admitted_events)}, withheld {split.withheld}"
+    )
     for item in held:
-        print(f"            quarantined: {item.record.origin.value:<8} "
-              f"from {item.record.source_tool}")
+        print(
+            f"            quarantined: {item.record.origin.value:<8} "
+            f"from {item.record.source_tool}"
+        )
     print(f"    week 3  retrieved into instruction context {len(retrieved)}")
     print(f"            of those, carrying the injected instruction: {len(carrying)}")
 
@@ -201,8 +208,7 @@ async def with_custody() -> bool:
             cited=tuple(item.record for item in held),
         )
     )
-    print(f"    export to {ATTACKER}: "
-          f"{'ALLOWED' if decision.allowed else 'REFUSED'}")
+    print(f"    export to {ATTACKER}: {'ALLOWED' if decision.allowed else 'REFUSED'}")
     print(f"            {decision.reason()}")
 
     withheld, total = service.recall_cost()

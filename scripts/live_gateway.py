@@ -65,9 +65,7 @@ EXPECTED_PRINCIPAL = (
     f"aiplatform/projects/{PROJECT_NUMBER}/locations/{REGION}/"
     f"reasoningEngines/{ENGINE_ID}"
 )
-EXPECTED_MCP_ENDPOINT = (
-    "https://custody-export-mcp-anexdhueiq-uc.a.run.app/mcp"
-)
+EXPECTED_MCP_ENDPOINT = "https://custody-export-mcp-anexdhueiq-uc.a.run.app/mcp"
 
 CLAIM_BOUNDARY = (
     "Proves IAP REQUEST_AUTHZ enforcement for one owned Agent Runtime identity "
@@ -77,8 +75,7 @@ CLAIM_BOUNDARY = (
 )
 
 DENY_EXPRESSION = (
-    "api.getAttribute('iap.googleapis.com/mcp.toolName', '') "
-    f"in ['{DENY_CANARY}', '']"
+    f"api.getAttribute('iap.googleapis.com/mcp.toolName', '') in ['{DENY_CANARY}', '']"
 )
 DENY_TITLE = "Custody no-registered-tool negative control"
 ALLOW_TITLE_PREFIX = "Custody temporary lookup admission/"
@@ -110,10 +107,7 @@ def _rfc3339_seconds(value: datetime) -> str:
     if value.tzinfo is None:
         raise ValueError("policy expiry must include a timezone")
     return (
-        value.astimezone(UTC)
-        .replace(microsecond=0)
-        .isoformat()
-        .replace("+00:00", "Z")
+        value.astimezone(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     )
 
 
@@ -254,9 +248,7 @@ def _temporary_admission(
     match = _TEMPORARY_ALLOW.fullmatch(expression)
     if match is None:
         return None
-    expires_at = datetime.fromisoformat(
-        match.group("expires").replace("Z", "+00:00")
-    )
+    expires_at = datetime.fromisoformat(match.group("expires").replace("Z", "+00:00"))
     admission = TemporaryAdmission(proof_id, expires_at)
     return admission if admission.expression == expression else None
 
@@ -278,9 +270,10 @@ class DedicatedIapPolicy:
     proof_id: str
 
     def __post_init__(self) -> None:
-        if not self.projection_id or re.fullmatch(
-            r"[A-Za-z0-9-]+", self.projection_id
-        ) is None:
+        if (
+            not self.projection_id
+            or re.fullmatch(r"[A-Za-z0-9-]+", self.projection_id) is None
+        ):
             raise ValueError("IAP projection ID is malformed")
         if self.principal != EXPECTED_PRINCIPAL:
             raise ValueError("IAP mutation principal is not the owned Runtime")
@@ -335,9 +328,7 @@ class DedicatedIapPolicy:
             raise ValueError("cannot apply another proof's temporary admission")
 
         def source_is_safe(policy: dict[str, Any]) -> bool:
-            return self._is_exact(
-                policy, expression=DENY_EXPRESSION, title=DENY_TITLE
-            )
+            return self._is_exact(policy, expression=DENY_EXPRESSION, title=DENY_TITLE)
 
         return self._apply_reconciled(
             expression=admission.expression,
@@ -352,9 +343,7 @@ class DedicatedIapPolicy:
         def source_is_safe(policy: dict[str, Any]) -> bool:
             if policy.get("bindings") == []:
                 return True
-            if self._is_exact(
-                policy, expression=DENY_EXPRESSION, title=DENY_TITLE
-            ):
+            if self._is_exact(policy, expression=DENY_EXPRESSION, title=DENY_TITLE):
                 return True
             admission = _temporary_admission(policy, principal=self.principal)
             return admission is not None and (
@@ -461,11 +450,10 @@ class DedicatedIapPolicy:
             return
         if len(bindings) != 1 or not isinstance(bindings[0], dict):
             raise RuntimeError("dedicated proof IAP policy has unrelated bindings")
-        owned = self._is_exact(
-            policy, expression=DENY_EXPRESSION, title=DENY_TITLE
-        ) or _temporary_admission(
-            policy, principal=self.principal
-        ) is not None
+        owned = (
+            self._is_exact(policy, expression=DENY_EXPRESSION, title=DENY_TITLE)
+            or _temporary_admission(policy, principal=self.principal) is not None
+        )
         if not owned:
             raise RuntimeError("dedicated proof IAP policy has an unrelated binding")
 
@@ -589,14 +577,10 @@ def _runtime_agent(cloud: Cloud) -> dict[str, Any]:
             agent
             for agent in agents
             if str(
-                agent.get("attributes", {})
-                .get(RUNTIME_REFERENCE, {})
-                .get("uri", "")
+                agent.get("attributes", {}).get(RUNTIME_REFERENCE, {}).get("uri", "")
             )
             == EXPECTED_RUNTIME_REFERENCE
-            and agent.get("attributes", {})
-            .get(RUNTIME_IDENTITY, {})
-            .get("principal")
+            and agent.get("attributes", {}).get(RUNTIME_IDENTITY, {}).get("principal")
             == EXPECTED_PRINCIPAL
         ]
         if matches:
@@ -625,18 +609,14 @@ def _require_mutation_targets(
     expected_authz = (
         f"projects/{PROJECT}/locations/{REGION}/authzPolicies/{AUTHZ_POLICY_ID}"
     )
-    expected_service = (
-        f"projects/{PROJECT}/locations/{REGION}/services/{SERVICE_ID}"
-    )
+    expected_service = f"projects/{PROJECT}/locations/{REGION}/services/{SERVICE_ID}"
     expected_projection_names = {
         f"projects/{owner}/locations/{REGION}/mcpServers/{projection_id}"
         for owner in (PROJECT, PROJECT_NUMBER)
     }
     target_names = set(authz.get("target", {}).get("resources", []))
     extension_names = set(
-        authz.get("customProvider", {})
-        .get("authzExtension", {})
-        .get("resources", [])
+        authz.get("customProvider", {}).get("authzExtension", {}).get("resources", [])
     )
     valid_gateway_targets = {
         expected_gateway,
@@ -646,9 +626,7 @@ def _require_mutation_targets(
         expected_extension,
         f"projects/{PROJECT_NUMBER}/locations/{REGION}/authzExtensions/{EXTENSION_ID}",
     }
-    runtime_uri = (
-        agent.get("attributes", {}).get(RUNTIME_REFERENCE, {}).get("uri")
-    )
+    runtime_uri = agent.get("attributes", {}).get(RUNTIME_REFERENCE, {}).get("uri")
     runtime_principal = (
         agent.get("attributes", {}).get(RUNTIME_IDENTITY, {}).get("principal")
     )
@@ -675,18 +653,16 @@ def _require_mutation_targets(
         and _mcp_endpoint(service) == endpoint
         and _mcp_endpoint(projection) == endpoint
         and cloud_run.get("metadata", {}).get("name") == SERVICE_ID
-        and str(cloud_run.get("metadata", {}).get("namespace"))
-        == PROJECT_NUMBER
-        and cloud_run.get("metadata", {}).get("labels", {}).get(
-            "cloud.googleapis.com/location"
-        )
+        and str(cloud_run.get("metadata", {}).get("namespace")) == PROJECT_NUMBER
+        and cloud_run.get("metadata", {})
+        .get("labels", {})
+        .get("cloud.googleapis.com/location")
         == REGION
         and cloud_run.get("status", {}).get("url") == base_url
         and cloud_run.get("status", {}).get("latestReadyRevisionName")
         == cloud_run.get("status", {}).get("latestCreatedRevisionName")
         and any(
-            condition.get("type") == "Ready"
-            and condition.get("status") == "True"
+            condition.get("type") == "Ready" and condition.get("status") == "True"
             for condition in conditions
             if isinstance(condition, dict)
         )
@@ -866,8 +842,7 @@ def _agent_engine() -> RuntimeHandle:
     )
     engine = client.agent_engines.get(
         name=(
-            f"projects/{PROJECT_NUMBER}/locations/{REGION}/reasoningEngines/"
-            f"{ENGINE_ID}"
+            f"projects/{PROJECT_NUMBER}/locations/{REGION}/reasoningEngines/{ENGINE_ID}"
         )
     )
     # Version 1.163 exposes the operation schema but can fail to bind it while
@@ -912,8 +887,7 @@ def _gateway_logs(
     cloud: Cloud, trace_id: str, *, tool_name: str = TOOL_NAME
 ) -> list[dict[str, Any]]:
     query = (
-        'resource.type="networkservices.googleapis.com/Gateway" '
-        f'AND trace="{trace_id}"'
+        f'resource.type="networkservices.googleapis.com/Gateway" AND trace="{trace_id}"'
     )
     last: list[dict[str, Any]] = []
     for _ in range(GATEWAY_LOG_POLL_ATTEMPTS):
@@ -953,8 +927,7 @@ def _gateway_logs(
         time.sleep(GATEWAY_LOG_POLL_INTERVAL_SECONDS)
     bound = GATEWAY_LOG_POLL_ATTEMPTS * GATEWAY_LOG_POLL_INTERVAL_SECONDS
     raise RuntimeError(
-        f"no trace-bound Gateway tools/call log for {trace_id} within "
-        f"{bound}s: {last}"
+        f"no trace-bound Gateway tools/call log for {trace_id} within {bound}s: {last}"
     )
 
 
@@ -994,10 +967,7 @@ def _server_dispatch_log(
         if isinstance(last, list) and len(last) == 1:
             return last[0]
         time.sleep(5)
-    raise RuntimeError(
-        "no unique server-authored dispatch log for this proof: "
-        f"{last}"
-    )
+    raise RuntimeError(f"no unique server-authored dispatch log for this proof: {last}")
 
 
 def _iap_audit_logs(
@@ -1020,9 +990,7 @@ def _iap_audit_logs(
         f'AND protoPayload.resourceName="{resource}"'
     )
 
-    def matches(
-        entry: dict[str, Any], *, before: str, after: str
-    ) -> bool:
+    def matches(entry: dict[str, Any], *, before: str, after: str) -> bool:
         payload = entry.get("protoPayload", {})
         request = payload.get("request", {})
         requested = request.get("policy", {})
@@ -1039,22 +1007,17 @@ def _iap_audit_logs(
             == f"projects/{PROJECT}/logs/cloudaudit.googleapis.com%2Factivity"
             and bool(entry.get("insertId"))
             and entry.get("resource", {}).get("type") == "audited_resource"
-            and entry.get("resource", {}).get("labels", {}).get("project_id")
-            == PROJECT
+            and entry.get("resource", {}).get("labels", {}).get("project_id") == PROJECT
             and payload.get("serviceName") == "iap.googleapis.com"
             and payload.get("methodName")
-            == (
-                "google.cloud.iap.v1.IdentityAwareProxyAdminService."
-                "SetIamPolicy"
-            )
+            == ("google.cloud.iap.v1.IdentityAwareProxyAdminService.SetIamPolicy")
             and payload.get("resourceName") == resource
             and isinstance(principal_email, str)
             and bool(principal_email)
             and auth.get("principalSubject") == f"user:{principal_email}"
             and len(authorization) == 1
             and authorization[0].get("granted") is True
-            and authorization[0].get("permission")
-            == "iap.webServices.setIamPolicy"
+            and authorization[0].get("permission") == "iap.webServices.setIamPolicy"
             and payload.get("status") == {}
             and request.get("resource") == resource
             and _canonical_etag(requested.get("etag")) == _canonical_etag(before)
@@ -1125,8 +1088,7 @@ async def _prove(proof_id: str) -> dict[str, Any]:
         _require_mutation_targets(resources, agent=agent, endpoint=endpoint)
         runtime = _agent_engine()
         expected_engine_name = (
-            f"projects/{PROJECT_NUMBER}/locations/{REGION}/reasoningEngines/"
-            f"{ENGINE_ID}"
+            f"projects/{PROJECT_NUMBER}/locations/{REGION}/reasoningEngines/{ENGINE_ID}"
         )
         if runtime.resource.get("name") != expected_engine_name:
             raise RuntimeError("Agent Platform returned an unowned Runtime")
@@ -1190,9 +1152,7 @@ async def _prove(proof_id: str) -> dict[str, Any]:
         )
         scope_after = _json_get(endpoint.removesuffix("/mcp") + "/evidence")
         _require_scope_control(scope_before, scope_result, scope_after)
-        scope_logs = _gateway_logs(
-            cloud, scope_trace, tool_name=DENY_CANARY
-        )
+        scope_logs = _gateway_logs(cloud, scope_trace, tool_name=DENY_CANARY)
         phase = "allow_expiry_control"
         _wait_for_server_expiry(admission.expires_at)
         expiry_trace = uuid.uuid4().hex
@@ -1280,9 +1240,7 @@ async def _prove(proof_id: str) -> dict[str, Any]:
             "iap_policy_initial": initial_policy,
             "iap_policy_allow": allow_application.applied,
             "iap_policy_allow_applied_at": allow_application.applied_at,
-            "iap_policy_allow_expires_at": _rfc3339_seconds(
-                admission.expires_at
-            ),
+            "iap_policy_allow_expires_at": _rfc3339_seconds(admission.expires_at),
             "iap_policy_deny": deny_application.applied,
             "iap_policy_deny_applied_at": deny_application.applied_at,
             "iap_policy_audit_logs": iap_audit_logs,

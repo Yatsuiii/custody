@@ -373,9 +373,7 @@ class PolicyKey:
     def from_value(cls, value: object) -> "PolicyKey":
         if not isinstance(value, list) or len(value) != 5:
             raise AuthorityDataError("policy_key must be a five-string JSON array")
-        fields = tuple(
-            _nonempty_string(item, field="policy_key") for item in value
-        )
+        fields = tuple(_nonempty_string(item, field="policy_key") for item in value)
         return cls(*fields)
 
     def as_list(self) -> list[str]:
@@ -424,7 +422,9 @@ class PolicySnapshot:
                     "policy_snapshot.caps values must be Capability values"
                 )
             normalized[scope] = capability
-        object.__setattr__(self, "caps", MappingProxyType(dict(sorted(normalized.items()))))
+        object.__setattr__(
+            self, "caps", MappingProxyType(dict(sorted(normalized.items())))
+        )
 
     @classmethod
     def from_mapping(cls, value: Mapping[str, object]) -> "PolicySnapshot":
@@ -435,9 +435,7 @@ class PolicySnapshot:
         caps: dict[str, Capability] = {}
         for scope, capability in raw_caps.items():
             scope = _nonempty_string(scope, field="policy_snapshot.caps scope")
-            caps[scope] = _enum_value(
-                Capability, capability, field="capability"
-            )  # type: ignore[assignment]
+            caps[scope] = _enum_value(Capability, capability, field="capability")  # type: ignore[assignment]
         return cls(
             policy_key=PolicyKey.from_value(value["policy_key"]),
             version=_nonempty_string(value["version"], field="policy_snapshot.version"),
@@ -515,7 +513,9 @@ class AuthorityReceipt:
             receipt_version=_nonempty_string(
                 value["receipt_version"], field="receipt.receipt_version"
             ),
-            receipt_id=_nonempty_string(value["receipt_id"], field="receipt.receipt_id"),
+            receipt_id=_nonempty_string(
+                value["receipt_id"], field="receipt.receipt_id"
+            ),
             issuer_id=_nonempty_string(value["issuer_id"], field="receipt.issuer_id"),
             issuer_key_id=_nonempty_string(
                 value["issuer_key_id"], field="receipt.issuer_key_id"
@@ -709,9 +709,7 @@ class AuthorityDependency:
             record_id=_nonempty_string(
                 value["record_id"], field="dependency.record_id"
             ),
-            kind=_enum_value(
-                DependencyKind, value["kind"], field="dependency_kind"
-            ),  # type: ignore[arg-type]
+            kind=_enum_value(DependencyKind, value["kind"], field="dependency_kind"),  # type: ignore[arg-type]
             policy_key=PolicyKey.from_value(value["policy_key"]),
             granting_generation=_nonnegative_integer(
                 value["granting_generation"], field="dependency.granting_generation"
@@ -818,7 +816,9 @@ class SourceAuthorityEvent:
 
     @classmethod
     def from_mapping(cls, value: Mapping[str, object]) -> "SourceAuthorityEvent":
-        _exact_fields(value, _SOURCE_AUTHORITY_EVENT_FIELDS, kind="SourceAuthorityEvent")
+        _exact_fields(
+            value, _SOURCE_AUTHORITY_EVENT_FIELDS, kind="SourceAuthorityEvent"
+        )
         raw_receipt = value["receipt"]
         if not isinstance(raw_receipt, Mapping):
             raise AuthorityDataError("source_event.receipt must be an object")
@@ -918,13 +918,9 @@ class AuthorityVerifier:
             )
         current_cap = current.caps.get(required_policy_key.action_scope)
         if current_cap is None:
-            return self._deny(
-                VerificationReason.CAP_MISSING, receipt, current=current
-            )
+            return self._deny(VerificationReason.CAP_MISSING, receipt, current=current)
         if receipt.granted_cap.rank > current_cap.rank:
-            return self._deny(
-                VerificationReason.CAP_EXCEEDED, receipt, current=current
-            )
+            return self._deny(VerificationReason.CAP_EXCEEDED, receipt, current=current)
         return replace(evidence, current_generation=current.generation)
 
     def verify_evidence(
@@ -956,9 +952,7 @@ class AuthorityVerifier:
         if receipt.upstream_record_id != source["record_id"]:
             return self._deny(VerificationReason.UPSTREAM_RECORD_MISMATCH, receipt)
         if receipt.upstream_object_commitment != event.source_object_commitment:
-            return self._deny(
-                VerificationReason.OBJECT_COMMITMENT_MISMATCH, receipt
-            )
+            return self._deny(VerificationReason.OBJECT_COMMITMENT_MISMATCH, receipt)
         if (
             receipt.action_scope != required_policy_key.action_scope
             or source["action_scope"] != required_policy_key.action_scope
@@ -994,13 +988,8 @@ class AuthorityVerifier:
             return self._deny(VerificationReason.SIGNATURE_INVALID, receipt)
 
         bound_root_id = self._state.root_record_id_for_receipt(receipt)
-        if (
-            bound_root_id is not None
-            and bound_root_id != custody_root_record_id
-        ):
-            return self._deny(
-                VerificationReason.ROOT_BINDING_MISMATCH, receipt
-            )
+        if bound_root_id is not None and bound_root_id != custody_root_record_id:
+            return self._deny(VerificationReason.ROOT_BINDING_MISMATCH, receipt)
 
         root_key = ReceiptRootKey.from_receipt(
             receipt, custody_root_record_id=custody_root_record_id
@@ -1016,9 +1005,7 @@ class AuthorityVerifier:
         )
 
     @classmethod
-    def _source_binding(
-        cls, event: SourceAuthorityEvent
-    ) -> dict[str, str] | None:
+    def _source_binding(cls, event: SourceAuthorityEvent) -> dict[str, str] | None:
         result: dict[str, str] = {}
         for field in cls._SOURCE_FIELDS:
             value = event.source_object.get(field)
@@ -1073,9 +1060,13 @@ class AdmissionEnvelope:
         _nonempty_string(self.record_id, field="envelope.record_id")
         _sha256_hex(self.payload_digest, field="envelope.payload_digest")
         if not isinstance(self.admission_state, AdmissionState):
-            raise AuthorityDataError("envelope.admission_state must be an AdmissionState")
+            raise AuthorityDataError(
+                "envelope.admission_state must be an AdmissionState"
+            )
         if not isinstance(self.transform_class, TransformClass):
-            raise AuthorityDataError("envelope.transform_class must be a TransformClass")
+            raise AuthorityDataError(
+                "envelope.transform_class must be a TransformClass"
+            )
         direct_parents = _validate_string_tuple(
             self.direct_parent_ids, field="envelope.direct_parent_ids"
         )
@@ -1100,9 +1091,7 @@ class AdmissionEnvelope:
             )
         if not isinstance(self.own_policy_key, PolicyKey):
             raise AuthorityDataError("envelope.own_policy_key must be a PolicyKey")
-        _nonempty_string(
-            self.own_policy_version, field="envelope.own_policy_version"
-        )
+        _nonempty_string(self.own_policy_version, field="envelope.own_policy_version")
         _nonnegative_integer(
             self.own_granting_generation,
             field="envelope.own_granting_generation",
@@ -1126,7 +1115,9 @@ class AdmissionEnvelope:
 
         if self.transform_class is TransformClass.ROOT:
             if self.authority_receipt is None or claim is None:
-                raise AuthorityDataError("ROOT envelope requires receipt and source claim")
+                raise AuthorityDataError(
+                    "ROOT envelope requires receipt and source claim"
+                )
             if direct_parents:
                 raise AuthorityDataError("ROOT envelope cannot have direct parents")
             expected_root = ReceiptRootKey.from_receipt(
@@ -1158,10 +1149,14 @@ class AdmissionEnvelope:
         _exact_fields(value, _ADMISSION_ENVELOPE_FIELDS, kind="AdmissionEnvelope")
         raw_receipt = value["authority_receipt"]
         if raw_receipt is not None and not isinstance(raw_receipt, Mapping):
-            raise AuthorityDataError("envelope.authority_receipt must be an object or null")
+            raise AuthorityDataError(
+                "envelope.authority_receipt must be an object or null"
+            )
         raw_claim = value["source_object_claim"]
         if raw_claim is not None and not isinstance(raw_claim, Mapping):
-            raise AuthorityDataError("envelope.source_object_claim must be an object or null")
+            raise AuthorityDataError(
+                "envelope.source_object_claim must be an object or null"
+            )
         return cls(
             schema_version=_nonempty_string(
                 value["schema_version"], field="envelope.schema_version"
@@ -1194,9 +1189,7 @@ class AdmissionEnvelope:
                 value["own_granting_generation"],
                 field="envelope.own_granting_generation",
             ),
-            bound_cap=_enum_value(
-                Capability, value["bound_cap"], field="bound_cap"
-            ),  # type: ignore[arg-type]
+            bound_cap=_enum_value(Capability, value["bound_cap"], field="bound_cap"),  # type: ignore[arg-type]
             transform_cap=_enum_value(
                 Capability, value["transform_cap"], field="transform_cap"
             ),  # type: ignore[arg-type]
@@ -1269,9 +1262,7 @@ class AuthorityStateReader(Protocol):
 
     def is_root_revoked(self, root_key_digest: str) -> bool: ...
 
-    def root_record_id_for_receipt(
-        self, receipt: AuthorityReceipt
-    ) -> str | None: ...
+    def root_record_id_for_receipt(self, receipt: AuthorityReceipt) -> str | None: ...
 
 
 class AuthorityConflict(RuntimeError):
@@ -1381,9 +1372,7 @@ class AuthorityDecision:
         _nonempty_string(self.request_id, field="decision.request_id")
         _sha256_hex(self.request_digest, field="decision.request_digest")
         _nonempty_string(self.action_scope, field="decision.action_scope")
-        _validate_string_tuple(
-            self.cited_record_ids, field="decision.cited_record_ids"
-        )
+        _validate_string_tuple(self.cited_record_ids, field="decision.cited_record_ids")
         if not isinstance(self.allowed, bool):
             raise AuthorityDataError("decision.allowed must be a bool")
         if not isinstance(self.effective_cap, Capability):
@@ -1444,9 +1433,7 @@ class AuthorityDecision:
             reasons.append(
                 (
                     _nonempty_string(item[0], field="decision.record_reason.id"),
-                    _nonempty_string(
-                        item[1], field="decision.record_reason.reason"
-                    ),
+                    _nonempty_string(item[1], field="decision.record_reason.reason"),
                 )
             )
         allowed = value["allowed"]
@@ -1598,9 +1585,7 @@ class AuthorityStore(AuthorityStateReader, AuthorityTrustStore, Protocol):
         decide: Callable[[AuthorityStateReader], AuthorityDecision],
     ) -> LinearizedAuthorityDecision: ...
 
-    def commit_root_revocation(
-        self, revocation: RootRevocation
-    ) -> RootRevocation: ...
+    def commit_root_revocation(self, revocation: RootRevocation) -> RootRevocation: ...
 
     def affected_record_ids(
         self, root_key_digests: Iterable[str]
@@ -1685,7 +1670,9 @@ class InMemoryAuthorityStore:
         if not isinstance(dependencies, tuple) or any(
             not isinstance(item, AuthorityDependency) for item in dependencies
         ):
-            raise AuthorityDataError("admission dependencies must be an immutable tuple")
+            raise AuthorityDataError(
+                "admission dependencies must be an immutable tuple"
+            )
         if any(item.record_id != envelope.record_id for item in dependencies):
             raise AuthorityDataError("dependency belongs to a different record")
         if receipt_binding_digest is not None:
@@ -1699,10 +1686,11 @@ class InMemoryAuthorityStore:
             if existing is not None:
                 if (
                     existing != envelope
-                    or self._dependencies[envelope.record_id]
-                    != canonical_dependencies
+                    or self._dependencies[envelope.record_id] != canonical_dependencies
                 ):
-                    raise AuthorityConflict("record ID already has other authority bytes")
+                    raise AuthorityConflict(
+                        "record ID already has other authority bytes"
+                    )
                 return existing
 
             for key, generation in expected_policies.items():
@@ -1711,7 +1699,10 @@ class InMemoryAuthorityStore:
                     raise AuthorityConflict("policy changed during admission")
             for parent_id in envelope.direct_parent_ids:
                 parent = self._envelopes.get(parent_id)
-                if parent is None or parent.admission_state is not AdmissionState.COMMITTED:
+                if (
+                    parent is None
+                    or parent.admission_state is not AdmissionState.COMMITTED
+                ):
                     raise AuthorityConflict("required parent is missing or incomplete")
             if receipt_binding_digest is not None:
                 bound_root = self._receipt_roots.get(receipt_binding_digest)
@@ -1735,9 +1726,7 @@ class InMemoryAuthorityStore:
         with self._lock:
             return tuple(self._envelopes[key] for key in sorted(self._envelopes))
 
-    def root_record_id_for_receipt(
-        self, receipt: AuthorityReceipt
-    ) -> str | None:
+    def root_record_id_for_receipt(self, receipt: AuthorityReceipt) -> str | None:
         with self._lock:
             return self._receipt_roots.get(receipt.binding_digest)
 
@@ -1779,13 +1768,10 @@ class InMemoryAuthorityStore:
     def action_decisions(self) -> tuple[AuthorityDecision, ...]:
         with self._lock:
             return tuple(
-                self._action_decisions[key]
-                for key in sorted(self._action_decisions)
+                self._action_decisions[key] for key in sorted(self._action_decisions)
             )
 
-    def commit_root_revocation(
-        self, revocation: RootRevocation
-    ) -> RootRevocation:
+    def commit_root_revocation(self, revocation: RootRevocation) -> RootRevocation:
         if not isinstance(revocation, RootRevocation):
             raise AuthorityDataError("root revocation write requires RootRevocation")
         with self._lock:
@@ -1803,9 +1789,7 @@ class InMemoryAuthorityStore:
                 )
             return revocation
 
-    def affected_record_ids(
-        self, root_key_digests: Iterable[str]
-    ) -> tuple[str, ...]:
+    def affected_record_ids(self, root_key_digests: Iterable[str]) -> tuple[str, ...]:
         digests = frozenset(root_key_digests)
         for digest in digests:
             _sha256_hex(digest, field="root_key_digest")
@@ -1825,8 +1809,7 @@ class InMemoryAuthorityStore:
     def root_revocations(self) -> tuple[RootRevocation, ...]:
         with self._lock:
             return tuple(
-                self._root_revocations[key]
-                for key in sorted(self._root_revocations)
+                self._root_revocations[key] for key in sorted(self._root_revocations)
             )
 
 
@@ -2013,8 +1996,8 @@ class AdmissionGate:
         )
 
         try:
-            support_ids, support_digests, dependencies, parent_envelopes = self._parent_support(
-                output.record_id, parents
+            support_ids, support_digests, dependencies, parent_envelopes = (
+                self._parent_support(output.record_id, parents)
             )
         except _AdmissionRejected as error:
             return self._denied(output, str(error))
@@ -2122,7 +2105,7 @@ class AdmissionGate:
 
     @staticmethod
     def _deduplicate_dependencies(
-        dependencies: tuple[AuthorityDependency, ...]
+        dependencies: tuple[AuthorityDependency, ...],
     ) -> tuple[AuthorityDependency, ...]:
         unique: dict[bytes, AuthorityDependency] = {}
         for dependency in dependencies:
@@ -2227,7 +2210,10 @@ class RevocationController:
             raise AuthorityDataError(
                 "revocation selector does not match authenticated root identity"
             )
-        if self._store.root_record_id_for_receipt(root.authority_receipt) != root.record_id:
+        if (
+            self._store.root_record_id_for_receipt(root.authority_receipt)
+            != root.record_id
+        ):
             raise AuthorityDataError("revocation selector receipt is not root-bound")
         event = SourceAuthorityEvent(root.source_object_claim, root.authority_receipt)
         evidence = self._verifier.verify_evidence(
@@ -2235,7 +2221,10 @@ class RevocationController:
             custody_root_record_id=root.record_id,
             required_policy_key=root.authority_receipt.policy_key,
         )
-        if not evidence.verified or root.payload_digest != event.source_object_commitment:
+        if (
+            not evidence.verified
+            or root.payload_digest != event.source_object_commitment
+        ):
             raise AuthorityDataError(
                 "revocation selector root no longer authenticates exactly"
             )
@@ -2259,9 +2248,7 @@ class AuthorityEvaluator:
         request_id = _nonempty_string(request_id, field="request_id")
         _sha256_hex(request_digest, field="request_digest")
         action_scope = _nonempty_string(action_scope, field="action_scope")
-        citations = _validate_string_tuple(
-            cited_record_ids, field="cited_record_ids"
-        )
+        citations = _validate_string_tuple(cited_record_ids, field="cited_record_ids")
         evaluations = tuple(
             self._evaluate_record(record_id, action_scope, frozenset())
             for record_id in citations
@@ -2322,8 +2309,7 @@ class AuthorityEvaluator:
                 )
             ),
             record_reasons=tuple(
-                (evaluation.record_id, evaluation.reason)
-                for evaluation in evaluations
+                (evaluation.record_id, evaluation.reason) for evaluation in evaluations
             ),
         )
 
@@ -2359,9 +2345,7 @@ class AuthorityEvaluator:
             current.generation != envelope.own_granting_generation
             or current.version != envelope.own_policy_version
         ):
-            return self._failure(
-                record_id, "POLICY_GENERATION_MISMATCH", roots=roots
-            )
+            return self._failure(record_id, "POLICY_GENERATION_MISMATCH", roots=roots)
         own_cap = current.caps.get(action_scope)
         if own_cap is None:
             return self._failure(record_id, "MISSING_SCOPE_CAPABILITY", roots=roots)
@@ -2422,9 +2406,7 @@ class AuthorityEvaluator:
                 roots=roots,
             )
 
-        structure_reason = self._validate_structure(
-            envelope, tuple(parent_envelopes)
-        )
+        structure_reason = self._validate_structure(envelope, tuple(parent_envelopes))
         if structure_reason is not None:
             return self._failure(
                 record_id,
@@ -2527,8 +2509,7 @@ class AuthorityEvaluator:
             if (
                 dependency.kind is not DependencyKind.SOURCE_AUTHORITY
                 or dependency.root_record_id != envelope.record_id
-                or dependency.root_key_digest
-                != envelope.support_root_key_digests[0]
+                or dependency.root_key_digest != envelope.support_root_key_digests[0]
             ):
                 return "MALFORMED_AUTHORITY_DEPENDENCIES"
             return None
@@ -2551,11 +2532,10 @@ class AuthorityEvaluator:
                 self._dependency_marker(item) for item in parent_dependencies
             )
         ordered_support = tuple(sorted(expected_support.items()))
-        if (
-            envelope.support_root_ids
-            != tuple(root_id for root_id, _ in ordered_support)
-            or envelope.support_root_key_digests
-            != tuple(root_digest for _, root_digest in ordered_support)
+        if envelope.support_root_ids != tuple(
+            root_id for root_id, _ in ordered_support
+        ) or envelope.support_root_key_digests != tuple(
+            root_digest for _, root_digest in ordered_support
         ):
             return "MALFORMED_SUPPORT_CLOSURE"
         if envelope.transform_class in {
