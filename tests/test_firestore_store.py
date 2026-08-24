@@ -81,7 +81,7 @@ class _FakeDocument:
                 self._collection.client.tick(),
             )
 
-    def get(self) -> _FakeSnapshot:
+    def get(self, *, transaction=None) -> _FakeSnapshot:
         with self._collection.client._lock:
             entry = self._collection.docs.get(self.id)
             if entry is None:
@@ -102,8 +102,11 @@ class _FakeTransaction:
         self._client = client
         self._writes: list[tuple[str, _FakeDocument, dict]] = []
 
-    def get(self, document: _FakeDocument) -> _FakeSnapshot:
-        return document.get()
+    def get(self, document: _FakeDocument):
+        # Match google-cloud-firestore: Transaction.get(DocumentReference)
+        # returns an iterator, not a DocumentSnapshot. The production port
+        # must therefore use document.get(transaction=transaction).
+        return iter((document.get(transaction=self),))
 
     def create(self, document: _FakeDocument, data: dict) -> None:
         self._client._note_transaction_write()
@@ -187,6 +190,19 @@ class FakeFirestoreClient:
             and self._transaction_write_count > self.fail_transaction_after_writes
         ):
             raise ServiceUnavailable("injected transaction failure")
+
+
+class FirestoreFakeSdkContractTests(unittest.TestCase):
+    def test_transaction_get_returns_an_iterator_like_the_installed_sdk(self) -> None:
+        client = FakeFirestoreClient()
+        document = client.collection("contract").document("missing")
+        transaction = _FakeTransaction(client)
+
+        result = transaction.get(document)
+
+        self.assertNotIsInstance(result, _FakeSnapshot)
+        snapshot = next(result)
+        self.assertFalse(snapshot.exists)
 
 
 def _record(*, id: str, source_tool: str = "crm_lookup", derived_from=()) -> CustodyRecord:

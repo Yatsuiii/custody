@@ -228,7 +228,10 @@ class _FirestoreTransactionPort:
         self._transaction = transaction
 
     def get(self, document):
-        return self._transaction.get(document)
+        # The public Transaction.get contract is an iterator, including when
+        # given one DocumentReference. The Custody port needs one snapshot, so
+        # use the DocumentReference transaction-aware read API instead.
+        return document.get(transaction=self._transaction)
 
     def create(self, document, data: dict) -> None:
         _require_firestore_safe_document(data)
