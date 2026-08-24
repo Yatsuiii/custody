@@ -1,97 +1,60 @@
-Objective: E0/E1/E2/E2A/E2B/E2C complete and frozen (commit 040c28c on
-research/e2c-exact-vs-transformed-retrieval). This phase is mechanism
-DESIGN ONLY: derive the minimum architecture that could satisfy the nine
-security invariants forced by the measured failures (I1-I9), compare at
-least three candidate architectures, define an authority algebra, a
-transformation model, a tool-relay model, a dynamic-trust/interval-
-revocation model, repair semantics, an explicit trusted-computing-base
-boundary, and a preregistered falsifier — as design documents only. No
-production code. No implementation. Render exactly one MECHANISM DECISION
-(DESIGN-READY / DESIGN-CAUTION / DESIGN-PIVOT / DESIGN-KILL).
+Objective: Build and freeze a real-Firestore P7 harness (scripts/p7_run.py)
+that reuses the frozen local B7 case set (tests/test_b7_production_equivalence.py,
+cases A1/A2/B-M) unmodified via store injection, and adds real-Firestore /
+real-independent-process variants of cases N (restart), O (action/revocation
+race), and P (killed writer), per research/production_b7/EQUIVALENCE_TEST_PLAN.md.
+This session builds and freezes the harness only; live execution against real
+Firestore requires a separate explicit go from the user after the harness is
+committed and pushed.
 
-Branch: research/design-mechanism-v0
-Parent: research/e2c-exact-vs-transformed-retrieval @ 040c28c36d10a6c89144a19e01b0eae77a88ec64
-        (frozen E0-E2C commit chain), which sits on
-        research/memory-poisoning-thesis, which sits on
-        hardening/fleet-track-pre-submission
-        (the hackathon/shipping branch — MUST NOT be modified by this work).
+Branch: p7/b7-live-20260824-run01
+Parent: origin/stabilization/custody-final-16d3459 @ 16d34593dbc765e4ce3c34f03a0625783127f205
+        (independently verified production baseline; see reconciliation audit
+        earlier in this session)
 
 Allowed files:
-- research/design/REQUIREMENTS_FROM_FAILURES.md
-- research/design/MECHANISM_CANDIDATES.md
-- research/design/TMA_NM_RELATIONSHIP.md
-- research/design/AUTHORITY_MODEL.md
-- research/design/TRANSFORMATION_MODEL.md
-- research/design/TOOL_RELAY_MODEL.md
-- research/design/DYNAMIC_TRUST_MODEL.md
-- research/design/REPAIR_SEMANTICS.md
-- research/design/TRUSTED_COMPUTING_BASE.md
-- research/design/DESIGN_FALSIFIER.md
-- research/design/MECHANISM_DECISION.md
-- research/RESEARCH_QUESTION.md (append/refine only)
-- research/THREAT_MODEL.md (append/refine only)
-- research/HYPOTHESES.md (append/refine only)
-- research/EXPERIMENT_REGISTRY.md (add next-falsifier row only)
-- research/RESEARCH_VERDICT.md (append design-phase outcome only)
+- scripts/p7_run.py
+- research/production_b7/P7_RUN01_RAW_TRACE.json
+- research/production_b7/P7_RUN01_RESULT.json
+- research/production_b7/P7_RUN01_CLEANUP.json
+- research/production_b7/P7_HARNESS_DESIGN_NOTE.md
 - .claude/SESSION_CONTRACT.md
 
 Non-goals:
-- No edit to any file under custody/, tests/, live/, scripts/, web/ — this
-  phase produces no code, only design documents.
-- No claim of novelty and no claim of "solves memory poisoning" anywhere
-  in these documents — every claim must be phrased as a hypothesis to
-  test, not a conclusion, per the user's explicit instruction.
-- Do not adopt TMA-NM's mechanism, or any other candidate, without first
-  showing the measured failures force it and a simpler alternative was
-  considered and rejected with reasons.
-- Do not implement the chosen falsifier — design and preregister its
-  gates only.
-- No commit/push unless explicitly authorized.
+- No edit to any file under custody/ (production B7 implementation frozen at
+  16d3459; must remain byte-identical).
+- No edit to tests/test_b7_production_equivalence.py; its case construction
+  and scorer are reused by import/injection only.
+- No modification of the frozen case list, scorer thresholds, resource
+  ceilings (reads<=1500, writes<=200, deletes<=200, cost<=$0.01, runtime<=600s),
+  or the 90-second recovery bound.
+- No live execution against real Firestore until the harness is committed,
+  pushed, and remote-verified, and the user gives a separate explicit
+  execution go-ahead.
+- No commit/push unless explicitly authorized (already granted for this
+  build-and-freeze step per user instruction).
 
-Baseline: E0-E2C frozen through commit 040c28c. `python -m unittest
-discover tests` = 381/381, must remain unchanged since no code is touched
-in this phase — verified once at the end as a no-drift check.
+Baseline: `.venv/bin/python -m unittest discover tests` = 484/484 on this
+worktree at 16d3459 (verified earlier this session). No production code is
+touched by this harness, so this baseline must remain unchanged.
 
 Acceptance gates:
-1. Every proposed primitive in REQUIREMENTS_FROM_FAILURES.md is traced to
-   a specific measured result (E0/E1/E2A/E2B/E2C) and a specific invariant
-   (I1-I9), with a "could a simpler mechanism satisfy this" check answered
-   explicitly, not skipped.
-2. MECHANISM_CANDIDATES.md compares at least three genuinely different
-   architectures against the full evaluation list (11 attack/property
-   rows + assumptions/TCB), with stated reasons, not scores alone.
-3. AUTHORITY_MODEL.md gives a deterministic (not hand-waved) rule for
-   Authority(M) given parents P1..Pn, covering every case the user listed
-   (untrusted parent, trusted parent, independent corroboration,
-   correlated corroboration, action-type-dependent authority).
-4. TRANSFORMATION_MODEL.md addresses every hostile question the user
-   posed (undeclared context, huge retrieval, hallucination, incomplete
-   attribution, weak contribution, memory+fresh-tool mixing) with an
-   explicit fallback, not silence.
-5. TOOL_RELAY_MODEL.md states the trusted-computing-base assumption
-   honestly if arbitrary tools cannot supply trustworthy upstream
-   provenance, rather than inventing provenance that cannot exist.
-6. DESIGN_FALSIFIER.md's PASS/CAUTION/KILL gates are fixed in that
-   document before any implementation is authorized, and cover all six
-   required scenario elements (tool echo, benign paraphrase, malicious
-   paraphrase, multi-parent synthesis, later compromise, unaffected
-   sibling).
-7. MECHANISM_DECISION.md renders exactly one of the four allowed verdicts
-   with reasoning tied to the acceptance gates above, and does not use
-   the words "novel" or "solves memory poisoning" as conclusions.
+1. scripts/p7_run.py imports tests.test_b7_production_equivalence and injects
+   a Firestore-backed store via _world() monkeypatch, without duplicating or
+   altering any case construction logic (A1/A2/B-M reused verbatim).
+2. Cases N/O/P are implemented against real Firestore with real independent
+   OS processes (multiprocessing, spawn context), not threads/SQLite.
+3. Evidence freeze order is enforced: raw trace written+digested before the
+   scorer runs; result written+digested before cleanup; cleanup never
+   rewrites raw trace or result files.
+4. Resource counters (reads/writes/deletes) are tracked and compared against
+   the frozen ceiling; the script refuses to run if expected-output files
+   already exist or the namespace is not empty.
+5. The script requires an explicit `--i-understand-this-spends-real-firestore-quota`
+   flag and is not invoked in this session.
 
-Verification: manual read-through for internal consistency (no claim in
-MECHANISM_DECISION.md exceeds what AUTHORITY_MODEL.md/TRANSFORMATION_
-MODEL.md/TOOL_RELAY_MODEL.md actually specify); `git diff --stat custody/
-tests/` empty; `python -m unittest discover tests` still 381/381 at the
-end, confirming no code drift occurred during a docs-only phase.
+Verification: `python -m py_compile scripts/p7_run.py`; manual read-through
+against research/production_b7/EQUIVALENCE_TEST_PLAN.md's frozen case table
+and metrics; `git diff --stat custody/ tests/` empty.
 
-Status: complete. Mechanism verdict: DESIGN-CAUTION. Eleven design documents
-completed under research/design/, with all seven document acceptance gates
-checked. Architecture A is specified for an isolated E2D falsifier only;
-production remains architecturally unshippable until context-id capture,
-authoritative timestamps, atomic publication, current-generation action checks,
-and crash/retry recovery are proved. No production code or falsifier
-implementation was written. `git diff --stat custody/ tests/` is empty and
-`.venv/bin/python -m unittest discover tests` reports 381/381. Uncommitted
-pending user review.
+Status: active
