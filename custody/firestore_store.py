@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import dataclasses
 import hashlib
+import json
 import threading
 from datetime import datetime
 from typing import Callable, Iterable, Mapping
@@ -40,6 +41,7 @@ from custody.authority import (
     LinearizedAuthorityDecision,
     PolicyKey,
     PolicySnapshot,
+    ReceiptRootKey,
     RootRevocation,
     canonical_json_bytes,
 )
@@ -226,12 +228,14 @@ class _FirestoreTransactionPort:
         self._transaction = transaction
 
     def get(self, document):
-        return document.get(transaction=self._transaction)
+        return self._transaction.get(document)
 
     def create(self, document, data: dict) -> None:
+        _require_firestore_safe_document(data)
         self._transaction.create(document, data)
 
     def set(self, document, data: dict) -> None:
+        _require_firestore_safe_document(data)
         self._transaction.set(document, data)
 
 
@@ -374,7 +378,7 @@ class FirestoreAuthorityStore:
         )
         expected_document = {
             "record_kind": "b7",
-            "b7_envelope": envelope.as_dict(),
+            "b7_envelope": _firestore_encode_envelope(envelope),
             "b7_dependencies": [item.as_dict() for item in canonical_dependencies],
             "receipt_binding_digest": receipt_binding_digest,
             "b7_created_at": firestore.SERVER_TIMESTAMP,
@@ -590,7 +594,7 @@ class FirestoreAuthorityStore:
                 {
                     "request_id": request_id,
                     "request_digest": request_digest,
-                    "decision": decision.as_dict(),
+                    "decision": _firestore_encode_decision(decision),
                     "decided_at": firestore.SERVER_TIMESTAMP,
                 },
             )
@@ -646,7 +650,7 @@ class FirestoreAuthorityStore:
             transaction.create(
                 reference,
                 {
-                    "revocation": revocation.as_dict(),
+                    "revocation": _firestore_encode_root_revocation(revocation),
                     "revoked_at": firestore.SERVER_TIMESTAMP,
                 },
             )
@@ -657,7 +661,7 @@ class FirestoreAuthorityStore:
                         marker,
                         {
                             "root_key_digest": root_key.digest,
-                            "root_key": root_key.as_list(),
+                            "root_key": _firestore_encode_root_key(root_key),
                             "first_revocation_id": revocation.revocation_id,
                             "revoked_at": firestore.SERVER_TIMESTAMP,
                         },
@@ -726,7 +730,11 @@ class FirestoreAuthorityStore:
         try:
             fake_runner = getattr(self._client, "run_transaction", None)
             if fake_runner is not None:
-                return fake_runner(operation)
+                return fake_runner(
+                    lambda transaction: operation(
+                        _FirestoreTransactionPort(transaction)
+                    )
+                )
             raw_transaction = self._client.transaction()
 
             @firestore.transactional
@@ -766,6 +774,228 @@ class FirestoreAuthorityStore:
                 raise AuthorityConflict("receipt binding row has different bytes")
 
 
+_FIRESTORE_ENCODING_FIELD = "firestore_encoding"
+_FIRESTORE_ENVELOPE_ENCODING = "b7/firestore-envelope-v1"
+_FIRESTORE_SOURCE_CLAIM_ENCODING = "b7/canonical-json-v1"
+_FIRESTORE_DECISION_ENCODING = "b7/firestore-decision-v1"
+_FIRESTORE_ROOT_KEY_ENCODING = "b7/firestore-root-key-v1"
+_FIRESTORE_ROOT_REVOCATION_ENCODING = "b7/firestore-root-revocation-v1"
+
+
+def _require_firestore_safe_document(document: Mapping[str, object]) -> None:
+    """Reject arrays that directly contain arrays before a Firestore RPC."""
+
+    def visit(value: object, *, path: str, parent_is_array: bool) -> None:
+        if isinstance(value, (list, tuple)):
+            if parent_is_array:
+                raise AuthorityDataError(
+                    f"Firestore document contains a nested array at {path}"
+                )
+            for index, item in enumerate(value):
+                visit(item, path=f"{path}[{index}]", parent_is_array=True)
+            return
+        if isinstance(value, Mapping):
+            for key, item in value.items():
+                visit(item, path=f"{path}.{key}", parent_is_array=False)
+
+    if not isinstance(document, Mapping):
+        raise AuthorityDataError("Firestore document must be a mapping")
+    visit(document, path="$", parent_is_array=False)
+
+
+def _firestore_exact_fields(
+    value: Mapping[str, object], expected: frozenset[str], *, kind: str
+) -> None:
+    if frozenset(value) != expected:
+        raise AuthorityDataError(f"stored Firestore {kind} fields are malformed")
+
+
+def _firestore_encode_source_claim(claim: Mapping[str, object]) -> dict[str, str]:
+    return {
+        _FIRESTORE_ENCODING_FIELD: _FIRESTORE_SOURCE_CLAIM_ENCODING,
+        "canonical_json": canonical_json_bytes(claim).decode("utf-8"),
+    }
+
+
+def _firestore_decode_source_claim(value: object) -> Mapping[str, object]:
+    if not isinstance(value, Mapping):
+        raise AuthorityDataError("stored Firestore source claim is malformed")
+    _firestore_exact_fields(
+        value,
+        frozenset({_FIRESTORE_ENCODING_FIELD, "canonical_json"}),
+        kind="source claim",
+    )
+    if value.get(_FIRESTORE_ENCODING_FIELD) != _FIRESTORE_SOURCE_CLAIM_ENCODING:
+        raise AuthorityDataError("unsupported Firestore source claim encoding")
+    canonical = value.get("canonical_json")
+    if not isinstance(canonical, str):
+        raise AuthorityDataError("stored Firestore source claim JSON is malformed")
+    try:
+        decoded = json.loads(canonical)
+    except (json.JSONDecodeError, TypeError) as error:
+        raise AuthorityDataError(
+            "stored Firestore source claim JSON is malformed"
+        ) from error
+    if not isinstance(decoded, Mapping):
+        raise AuthorityDataError("stored Firestore source claim must be an object")
+    if canonical_json_bytes(decoded).decode("utf-8") != canonical:
+        raise AuthorityDataError("stored Firestore source claim is not canonical")
+    return decoded
+
+
+def _firestore_encode_envelope(envelope: AdmissionEnvelope) -> dict[str, object]:
+    encoded = envelope.as_dict()
+    encoded[_FIRESTORE_ENCODING_FIELD] = _FIRESTORE_ENVELOPE_ENCODING
+    if envelope.source_object_claim is not None:
+        encoded["source_object_claim"] = _firestore_encode_source_claim(
+            envelope.source_object_claim
+        )
+    return encoded
+
+
+def _firestore_decode_envelope(value: Mapping[str, object]) -> AdmissionEnvelope:
+    encoding = value.get(_FIRESTORE_ENCODING_FIELD)
+    if encoding is None:
+        return AdmissionEnvelope.from_mapping(value)
+    if encoding != _FIRESTORE_ENVELOPE_ENCODING:
+        raise AuthorityDataError("unsupported Firestore envelope encoding")
+    decoded = dict(value)
+    decoded.pop(_FIRESTORE_ENCODING_FIELD)
+    if decoded.get("source_object_claim") is not None:
+        decoded["source_object_claim"] = _firestore_decode_source_claim(
+            decoded["source_object_claim"]
+        )
+    return AdmissionEnvelope.from_mapping(decoded)
+
+
+def _firestore_encode_decision(decision: AuthorityDecision) -> dict[str, object]:
+    encoded = decision.as_dict()
+    encoded[_FIRESTORE_ENCODING_FIELD] = _FIRESTORE_DECISION_ENCODING
+    encoded["record_reasons"] = [
+        {"record_id": record_id, "reason": reason}
+        for record_id, reason in decision.record_reasons
+    ]
+    return encoded
+
+
+def _firestore_decode_decision(value: Mapping[str, object]) -> AuthorityDecision:
+    encoding = value.get(_FIRESTORE_ENCODING_FIELD)
+    if encoding is None:
+        return AuthorityDecision.from_mapping(value)
+    if encoding != _FIRESTORE_DECISION_ENCODING:
+        raise AuthorityDataError("unsupported Firestore decision encoding")
+    raw_reasons = value.get("record_reasons")
+    if not isinstance(raw_reasons, list):
+        raise AuthorityDataError("stored Firestore decision reasons are malformed")
+    reasons: list[list[object]] = []
+    for raw_reason in raw_reasons:
+        if not isinstance(raw_reason, Mapping):
+            raise AuthorityDataError("stored Firestore decision reason is malformed")
+        _firestore_exact_fields(
+            raw_reason,
+            frozenset({"record_id", "reason"}),
+            kind="decision reason",
+        )
+        reasons.append([raw_reason.get("record_id"), raw_reason.get("reason")])
+    decoded = dict(value)
+    decoded.pop(_FIRESTORE_ENCODING_FIELD)
+    decoded["record_reasons"] = reasons
+    return AuthorityDecision.from_mapping(decoded)
+
+
+def _firestore_encode_root_key(root_key: ReceiptRootKey) -> dict[str, object]:
+    return {
+        _FIRESTORE_ENCODING_FIELD: _FIRESTORE_ROOT_KEY_ENCODING,
+        "issuer_id": root_key.issuer_id,
+        "receipt_id": root_key.receipt_id,
+        "upstream_record_id": root_key.upstream_record_id,
+        "upstream_object_commitment": root_key.upstream_object_commitment,
+        "policy_key": root_key.policy_key.as_list(),
+        "granting_generation": root_key.granting_generation,
+        "custody_root_record_id": root_key.custody_root_record_id,
+    }
+
+
+def _firestore_decode_root_key(value: object) -> ReceiptRootKey:
+    if not isinstance(value, Mapping):
+        raise AuthorityDataError("stored Firestore root key is malformed")
+    _firestore_exact_fields(
+        value,
+        frozenset(
+            {
+                _FIRESTORE_ENCODING_FIELD,
+                "issuer_id",
+                "receipt_id",
+                "upstream_record_id",
+                "upstream_object_commitment",
+                "policy_key",
+                "granting_generation",
+                "custody_root_record_id",
+            }
+        ),
+        kind="root key",
+    )
+    if value.get(_FIRESTORE_ENCODING_FIELD) != _FIRESTORE_ROOT_KEY_ENCODING:
+        raise AuthorityDataError("unsupported Firestore root key encoding")
+    return ReceiptRootKey.from_value(
+        [
+            value.get("issuer_id"),
+            value.get("receipt_id"),
+            value.get("upstream_record_id"),
+            value.get("upstream_object_commitment"),
+            value.get("policy_key"),
+            value.get("granting_generation"),
+            value.get("custody_root_record_id"),
+        ]
+    )
+
+
+def _firestore_encode_root_revocation(
+    revocation: RootRevocation,
+) -> dict[str, object]:
+    return {
+        _FIRESTORE_ENCODING_FIELD: _FIRESTORE_ROOT_REVOCATION_ENCODING,
+        "schema_version": revocation.schema_version,
+        "revocation_id": revocation.revocation_id,
+        "root_keys": [
+            _firestore_encode_root_key(root_key) for root_key in revocation.root_keys
+        ],
+        "revoked_at": revocation.revoked_at,
+    }
+
+
+def _firestore_decode_root_revocation(
+    value: Mapping[str, object],
+) -> RootRevocation:
+    _firestore_exact_fields(
+        value,
+        frozenset(
+            {
+                _FIRESTORE_ENCODING_FIELD,
+                "schema_version",
+                "revocation_id",
+                "root_keys",
+                "revoked_at",
+            }
+        ),
+        kind="root revocation",
+    )
+    if value.get(_FIRESTORE_ENCODING_FIELD) != _FIRESTORE_ROOT_REVOCATION_ENCODING:
+        raise AuthorityDataError("unsupported Firestore root revocation encoding")
+    raw_root_keys = value.get("root_keys")
+    if not isinstance(raw_root_keys, list):
+        raise AuthorityDataError("stored Firestore revocation roots are malformed")
+    decoded = {
+        "schema_version": value.get("schema_version"),
+        "revocation_id": value.get("revocation_id"),
+        "root_keys": [
+            _firestore_decode_root_key(root_key).as_list() for root_key in raw_root_keys
+        ],
+        "revoked_at": value.get("revoked_at"),
+    }
+    return RootRevocation.from_mapping(decoded)
+
+
 def _identity_digest(value: object) -> str:
     return hashlib.sha256(canonical_json_bytes(value)).hexdigest()
 
@@ -791,7 +1021,7 @@ def _firestore_envelope_document(
         raise AuthorityDataError("stored receipt binding is malformed")
     if binding is not None:
         _firestore_sha256(binding, "stored receipt binding")
-    envelope = AdmissionEnvelope.from_mapping(raw_envelope)
+    envelope = _firestore_decode_envelope(raw_envelope)
     dependencies = tuple(
         sorted(
             (
@@ -826,14 +1056,14 @@ def _firestore_decision(data: Mapping[str, object]) -> AuthorityDecision:
     raw = data.get("decision")
     if not isinstance(raw, Mapping):
         raise AuthorityDataError("stored Firestore decision is malformed")
-    return AuthorityDecision.from_mapping(raw)
+    return _firestore_decode_decision(raw)
 
 
 def _firestore_revocation(data: Mapping[str, object]) -> RootRevocation:
     raw = data.get("revocation")
     if not isinstance(raw, Mapping):
         raise AuthorityDataError("stored Firestore revocation is malformed")
-    return RootRevocation.from_mapping(raw)
+    return _firestore_decode_root_revocation(raw)
 
 
 def _validate_firestore_admission(
@@ -921,7 +1151,9 @@ class FirestoreRevisionCatalog:
     ) -> None:
         pins = {
             tool.tool_id: _dump_pin(
-                ApprovedTool(tool.tool_id, tool.runtime_name, tool.revision, runtime_binding)
+                ApprovedTool(
+                    tool.tool_id, tool.runtime_name, tool.revision, runtime_binding
+                )
             )
             for tool in surface.tools
         }

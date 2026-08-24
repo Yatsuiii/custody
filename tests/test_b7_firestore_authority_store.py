@@ -10,13 +10,16 @@ from __future__ import annotations
 
 import os
 import unittest
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from unittest.mock import patch
+
+from google.cloud.firestore_v1._helpers import pbs_for_create
 
 from custody.action import AuthorityAction, AuthorityGateway
 from custody.authority import (
     AdmissionGate,
+    AuthorityDataError,
     AuthorityOutput,
     AuthorityUnavailable,
     Capability,
@@ -29,11 +32,25 @@ from custody.authority import (
     TransformRef,
 )
 from custody.firestore_store import (
+    AUTHORITY_ACTION_DECISIONS_COLLECTION,
     AUTHORITY_DEPENDENCIES_COLLECTION,
+    AUTHORITY_ISSUER_KEYS_COLLECTION,
+    AUTHORITY_POLICIES_COLLECTION,
     AUTHORITY_RECEIPT_ROOTS_COLLECTION,
+    AUTHORITY_REVOCATIONS_COLLECTION,
+    AUTHORITY_REVOKED_ROOTS_COLLECTION,
     CUSTODY_COLLECTION,
     FirestoreAuthorityStore,
     FirestoreCustodyGraph,
+    _firestore_decode_decision,
+    _firestore_decode_envelope,
+    _firestore_decode_root_key,
+    _firestore_decode_root_revocation,
+    _firestore_encode_decision,
+    _firestore_encode_envelope,
+    _firestore_encode_root_key,
+    _firestore_encode_root_revocation,
+    _require_firestore_safe_document,
 )
 from custody.control_plane import _default_plane
 from tests.test_firestore_store import FakeFirestoreClient, _record
@@ -45,6 +62,16 @@ REGISTERED = PolicyKey(
     "finance", "custody", "vendor_projection", "R1", "export.send"
 )
 FREEFORM = PolicyKey("finance", "model", "freeform", "R1", "export.send")
+B7_COLLECTIONS = (
+    CUSTODY_COLLECTION,
+    AUTHORITY_DEPENDENCIES_COLLECTION,
+    AUTHORITY_POLICIES_COLLECTION,
+    AUTHORITY_ISSUER_KEYS_COLLECTION,
+    AUTHORITY_RECEIPT_ROOTS_COLLECTION,
+    AUTHORITY_REVOCATIONS_COLLECTION,
+    AUTHORITY_REVOKED_ROOTS_COLLECTION,
+    AUTHORITY_ACTION_DECISIONS_COLLECTION,
+)
 
 
 @dataclass
@@ -259,6 +286,135 @@ class FirestoreAuthorityAtomicityTests(unittest.TestCase):
         self.assertFalse(result.decision.allowed)
         self.assertEqual(result.decision.reason, "AUTHORITY_STATE_UNAVAILABLE")
         self.assertEqual(dispatcher.calls, [])
+
+
+class FirestoreAuthorityCodecTests(unittest.TestCase):
+    def _persist_every_b7_document_family(self):
+        client = FakeFirestoreClient()
+        store = FirestoreAuthorityStore(client)
+        event = _configure(store)
+        self.assertTrue(_admit_root(store).admitted)
+        execution = AuthorityGateway(store).execute(
+            _action("codec-action"), ("ROOT-01",), _Dispatcher()
+        )
+        root_key = ReceiptRootKey.from_receipt(
+            event.receipt, custody_root_record_id="ROOT-01"
+        )
+        revocation = (
+            RevocationController(store)
+            .revoke_receipt_roots(
+                revocation_id="codec-revocation", root_keys=(root_key,)
+            )
+            .revocation
+        )
+        return client, store, execution.decision, root_key, revocation
+
+    def test_every_persisted_b7_document_is_safe_and_sdk_serializable(self) -> None:
+        client, _, _, _, _ = self._persist_every_b7_document_family()
+
+        for collection_name in B7_COLLECTIONS:
+            documents = client.collection(collection_name).docs
+            self.assertTrue(documents, collection_name)
+            for document_id, (document, _) in documents.items():
+                _require_firestore_safe_document(document)
+                writes = pbs_for_create(
+                    "projects/test/databases/(default)/documents/"
+                    f"{collection_name}/{document_id}",
+                    document,
+                )
+                self.assertTrue(writes)
+
+    def test_codecs_round_trip_without_changing_security_identities(self) -> None:
+        _, store, decision, root_key, revocation = (
+            self._persist_every_b7_document_family()
+        )
+        envelope = store.envelope("ROOT-01")
+        self.assertIsNotNone(envelope)
+        assert envelope is not None
+        nested_claim_envelope = replace(
+            envelope,
+            source_object_claim={
+                "matrix": [[1, 2], [3, 4]],
+                "wrapped": [{"items": [["a"], ["b"]]}],
+            },
+        )
+
+        encoded_envelope = _firestore_encode_envelope(nested_claim_envelope)
+        decoded_envelope = _firestore_decode_envelope(encoded_envelope)
+        encoded_decision = _firestore_encode_decision(decision)
+        decoded_decision = _firestore_decode_decision(encoded_decision)
+        encoded_root_key = _firestore_encode_root_key(root_key)
+        decoded_root_key = _firestore_decode_root_key(encoded_root_key)
+        encoded_revocation = _firestore_encode_root_revocation(revocation)
+        decoded_revocation = _firestore_decode_root_revocation(encoded_revocation)
+
+        for encoded in (
+            encoded_envelope,
+            encoded_decision,
+            encoded_root_key,
+            encoded_revocation,
+        ):
+            _require_firestore_safe_document(encoded)
+        self.assertEqual(decoded_envelope, nested_claim_envelope)
+        self.assertEqual(decoded_decision, decision)
+        self.assertEqual(decoded_root_key, root_key)
+        self.assertEqual(decoded_root_key.digest, root_key.digest)
+        self.assertEqual(decoded_revocation, revocation)
+        self.assertEqual(
+            decoded_revocation.selector_bytes(), revocation.selector_bytes()
+        )
+        self.assertEqual(
+            tuple(key.digest for key in decoded_revocation.root_keys),
+            tuple(key.digest for key in revocation.root_keys),
+        )
+        self.assertEqual(
+            decoded_envelope.authority_receipt,
+            nested_claim_envelope.authority_receipt,
+        )
+        assert decoded_envelope.authority_receipt is not None
+        assert nested_claim_envelope.authority_receipt is not None
+        self.assertEqual(
+            decoded_envelope.authority_receipt.canonical_bytes(),
+            nested_claim_envelope.authority_receipt.canonical_bytes(),
+        )
+        self.assertEqual(
+            decoded_envelope.authority_receipt.binding_digest,
+            nested_claim_envelope.authority_receipt.binding_digest,
+        )
+        self.assertEqual(
+            decoded_envelope.authority_receipt.issuer_signature,
+            nested_claim_envelope.authority_receipt.issuer_signature,
+        )
+
+    def test_valid_legacy_envelope_and_empty_reason_decision_remain_readable(
+        self,
+    ) -> None:
+        _, store, decision, _, _ = self._persist_every_b7_document_family()
+        envelope = store.envelope("ROOT-01")
+        self.assertIsNotNone(envelope)
+        assert envelope is not None
+        legacy_decision = replace(decision, record_reasons=())
+
+        self.assertEqual(_firestore_decode_envelope(envelope.as_dict()), envelope)
+        self.assertEqual(
+            _firestore_decode_decision(legacy_decision.as_dict()),
+            legacy_decision,
+        )
+
+    def test_old_nested_shapes_are_rejected_before_firestore(self) -> None:
+        _, _, decision, root_key, revocation = self._persist_every_b7_document_family()
+        self.assertTrue(decision.record_reasons)
+
+        for document in (
+            {"decision": decision.as_dict()},
+            {"revocation": revocation.as_dict()},
+            {"root_key": root_key.as_list()},
+            {"arbitrary_source_claim": {"matrix": [[1, 2], [3, 4]]}},
+        ):
+            with self.assertRaisesRegex(
+                AuthorityDataError, "Firestore document contains a nested array"
+            ):
+                _require_firestore_safe_document(document)
 
 
 class LegacyAndB7FirestoreDocumentsStaySeparate(unittest.TestCase):
