@@ -1,0 +1,17 @@
+{
+  "completed_at": "2026-08-24T20:38:31.417488+00:00",
+  "database": "(default)",
+  "failure": {
+    "message": "_P7Client.__init__() got an unexpected keyword argument 'process_role'",
+    "module": "builtins",
+    "traceback": "Traceback (most recent call last):\n  File \"/tmp/custody-p7-run02.wKEkrQ/scripts/p7_casep_lifecycle_validation.py\", line 135, in main\n    lifecycle = harness._run_case_p_lifecycle(\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/custody-p7-run02.wKEkrQ/scripts/p7_run.py\", line 907, in _run_case_p_lifecycle\n    setup = _setup_case_p(raw, project, database, prefix, counters)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/custody-p7-run02.wKEkrQ/scripts/p7_run.py\", line 817, in _setup_case_p\n    client = _P7Client(\n             ^^^^^^^^^^\nTypeError: _P7Client.__init__() got an unexpected keyword argument 'process_role'\n",
+    "type": "TypeError"
+  },
+  "namespace_prefix": "custody_p7_casep_lifecycle_validation_02",
+  "production_sha_required": "16d34593dbc765e4ce3c34f03a0625783127f205",
+  "project": "project-988bc9fe-092c-4b32-90c",
+  "runtime_seconds": 12.855494309998903,
+  "started_at": "2026-08-24T20:38:18.561965+00:00",
+  "validation_id": "p7-casep-lifecycle-validation-02",
+  "verdict": "CASEP-LIFECYCLE-HARNESS-FAIL"
+}

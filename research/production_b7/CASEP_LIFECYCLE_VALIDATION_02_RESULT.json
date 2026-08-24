@@ -1,0 +1,6 @@
+{
+  "raw_trace_digest": "1f13917593d12786d4283c784374644e931ac6c67dee955a584986a3689d1767",
+  "raw_trace_path": "research/production_b7/CASEP_LIFECYCLE_VALIDATION_02_RAW_TRACE.json",
+  "validation_id": "p7-casep-lifecycle-validation-02",
+  "verdict": "CASEP-LIFECYCLE-HARNESS-FAIL"
+}

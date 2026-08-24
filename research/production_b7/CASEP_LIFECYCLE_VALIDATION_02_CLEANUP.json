@@ -1,0 +1,27 @@
+{
+  "cleanup": {
+    "complete": true,
+    "deleted_documents": {
+      "authority_action_decisions": 0,
+      "authority_dependencies": 0,
+      "authority_issuer_keys": 0,
+      "authority_policies": 0,
+      "authority_receipt_roots": 0,
+      "authority_revocations": 0,
+      "custody": 0,
+      "revoked_receipt_roots": 0
+    },
+    "final_collection_counts": {
+      "authority_action_decisions": 0,
+      "authority_dependencies": 0,
+      "authority_issuer_keys": 0,
+      "authority_policies": 0,
+      "authority_receipt_roots": 0,
+      "authority_revocations": 0,
+      "custody": 0,
+      "revoked_receipt_roots": 0
+    }
+  },
+  "result_digest": "4d43609a5f639deff8d95ce8b316af65642f754c512759b83a2737781587acdf",
+  "validation_id": "p7-casep-lifecycle-validation-02"
+}
