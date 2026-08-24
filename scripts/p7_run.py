@@ -27,12 +27,13 @@ import argparse
 import hashlib
 import json
 import multiprocessing
+import os
 import sys
 import threading
 import time
 import traceback
 from collections.abc import Mapping as MappingABC
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Mapping
@@ -96,6 +97,211 @@ RESOURCE_CEILING = {
 RECOVERY_BOUND_SECONDS = 90
 
 
+def _document_path(project: str, database: str, collection: str, document_id: str) -> str:
+    """Return the Firestore API path used by transaction telemetry and barriers."""
+
+    return (
+        f"projects/{project}/databases/{database}/documents/"
+        f"{collection}/{document_id}"
+    )
+
+
+def _reference_document_path(reference) -> str:
+    """Read the installed SDK's canonical document path without an RPC."""
+
+    path = getattr(reference, "_document_path", None)
+    if not isinstance(path, str) or not path:
+        raise RuntimeError("Firestore reference did not expose _document_path")
+    return path
+
+
+@dataclass
+class _TransactionAttempt:
+    process_role: str
+    pid: int
+    callback_attempt: int
+    transaction_start_monotonic: float
+    transaction_id: str | None = None
+    document_reads: list[str] = field(default_factory=list)
+    document_creates: list[str] = field(default_factory=list)
+    document_sets: list[str] = field(default_factory=list)
+    document_deletes: list[str] = field(default_factory=list)
+    barrier_matched: bool = False
+    exact_matched_path: str | None = None
+    commit_attempted: bool = False
+    commit_result: str | None = None
+    retry_reason: str | None = None
+    callback_end_monotonic: float | None = None
+    transaction_end_monotonic: float | None = None
+
+    def as_dict(self) -> dict[str, object]:
+        paths = (
+            self.document_reads
+            + self.document_creates
+            + self.document_sets
+            + self.document_deletes
+        )
+        if any("/authority_issuer_keys/" in path for path in paths):
+            purpose = "issuer-key-setup"
+        elif any("/authority_policies/" in path for path in paths):
+            purpose = "policy-setup"
+        elif any(path.endswith("/custody/P-ROOT") for path in paths):
+            purpose = "P-ROOT-admission"
+        elif "/authority_action_decisions/" in " ".join(paths):
+            purpose = "action-decision"
+        else:
+            purpose = "unknown"
+        return {
+            "process_role": self.process_role,
+            "pid": self.pid,
+            "transaction_purpose": purpose,
+            "callback_attempt": self.callback_attempt,
+            "transaction_start_monotonic": self.transaction_start_monotonic,
+            "transaction_id": self.transaction_id,
+            "document_reads": list(self.document_reads),
+            "document_creates": list(self.document_creates),
+            "document_sets": list(self.document_sets),
+            "document_deletes": list(self.document_deletes),
+            "barrier_matched": self.barrier_matched,
+            "exact_matched_path": self.exact_matched_path,
+            "commit_attempted": self.commit_attempted,
+            "commit_result": self.commit_result,
+            "retry_reason": self.retry_reason,
+            "callback_end_monotonic": self.callback_end_monotonic,
+            "transaction_end_monotonic": self.transaction_end_monotonic,
+        }
+
+
+class _TransactionTelemetry:
+    """Capture transaction attempts without changing production code."""
+
+    def __init__(self, process_role: str) -> None:
+        self.process_role = process_role
+        self.pid = os.getpid()
+        self._states: dict[int, dict[str, object]] = {}
+        self._attempts: list[_TransactionAttempt] = []
+        self._by_transaction_id: dict[str, _TransactionAttempt] = {}
+
+    @staticmethod
+    def _transaction_key(value: object) -> str:
+        if isinstance(value, bytes):
+            return value.hex()
+        return str(value)
+
+    def attach(self, transaction) -> None:
+        self._states[id(transaction)] = {"attempt": 0, "current": None}
+
+    def begin(self, transaction, original_begin, *args, **kwargs):
+        state = self._states.setdefault(id(transaction), {"attempt": 0, "current": None})
+        state["attempt"] = int(state["attempt"]) + 1
+        attempt = _TransactionAttempt(
+            process_role=self.process_role,
+            pid=self.pid,
+            callback_attempt=int(state["attempt"]),
+            transaction_start_monotonic=time.monotonic(),
+        )
+        self._attempts.append(attempt)
+        state["current"] = attempt
+        try:
+            result = original_begin(*args, **kwargs)
+            transaction_id = getattr(transaction, "id", None)
+            if transaction_id is not None:
+                attempt.transaction_id = self._transaction_key(transaction_id)
+                self._by_transaction_id[attempt.transaction_id] = attempt
+            return result
+        except BaseException as error:
+            self.finish(attempt, commit_result=f"begin-error:{type(error).__name__}")
+            raise
+
+    def current(self, transaction) -> _TransactionAttempt | None:
+        state = self._states.get(id(transaction))
+        if state is None:
+            return None
+        current = state.get("current")
+        return current if isinstance(current, _TransactionAttempt) else None
+
+    def by_transaction_id(self, transaction_id: object) -> _TransactionAttempt | None:
+        return self._by_transaction_id.get(self._transaction_key(transaction_id))
+
+    def finish(self, attempt: _TransactionAttempt, *, commit_result: str) -> None:
+        if attempt.transaction_end_monotonic is not None:
+            return
+        attempt.callback_end_monotonic = time.monotonic()
+        attempt.transaction_end_monotonic = attempt.callback_end_monotonic
+        attempt.commit_result = commit_result
+
+    def commit(self, transaction, original_commit, *args, **kwargs):
+        attempt = self.current(transaction)
+        if attempt is not None:
+            attempt.commit_attempted = True
+        try:
+            result = original_commit(*args, **kwargs)
+        except BaseException as error:
+            if attempt is not None:
+                attempt.retry_reason = f"{type(error).__module__}.{type(error).__name__}: {error}"
+                self.finish(attempt, commit_result=f"failure:{type(error).__name__}")
+            raise
+        else:
+            if attempt is not None:
+                self.finish(attempt, commit_result="success")
+            return result
+
+    def rollback(self, transaction, original_rollback, *args, **kwargs):
+        attempt = self.current(transaction)
+        try:
+            return original_rollback(*args, **kwargs)
+        finally:
+            if attempt is not None:
+                self.finish(attempt, commit_result=attempt.commit_result or "rollback")
+
+    def record_read(self, transaction_id: object, document: str) -> None:
+        attempt = self.by_transaction_id(transaction_id)
+        if attempt is not None and document not in attempt.document_reads:
+            attempt.document_reads.append(document)
+
+    def record_write(self, transaction, operation: str, reference) -> _TransactionAttempt | None:
+        attempt = self.current(transaction)
+        if attempt is None:
+            return None
+        document = _reference_document_path(reference)
+        targets = {
+            "create": attempt.document_creates,
+            "set": attempt.document_sets,
+            "delete": attempt.document_deletes,
+        }
+        if document not in targets[operation]:
+            targets[operation].append(document)
+        return attempt
+
+    def attempts(self) -> list[dict[str, object]]:
+        return [attempt.as_dict() for attempt in self._attempts]
+
+    def current_snapshot(self) -> dict[str, object] | None:
+        current = next(
+            (
+                attempt
+                for attempt in reversed(self._attempts)
+                if attempt.transaction_end_monotonic is None
+            ),
+            None,
+        )
+        return None if current is None else current.as_dict()
+
+    def has_provisioning_writes(self) -> bool:
+        return any(
+            "/authority_issuer_keys/" in path or "/authority_policies/" in path
+            for attempt in self._attempts
+            for path in (
+                attempt.document_creates
+                + attempt.document_sets
+                + attempt.document_deletes
+            )
+        )
+
+    def as_dict(self) -> dict[str, object]:
+        return {"process_role": self.process_role, "pid": self.pid, "attempts": self.attempts()}
+
+
 class _Barrier:
     """One-shot pause inside a real Firestore transaction.
 
@@ -105,12 +311,20 @@ class _Barrier:
     because production code must not be modified to add this hook.
     """
 
-    def __init__(self, *, mode: str, match_record_id: str | None = None) -> None:
+    def __init__(
+        self,
+        *,
+        mode: str,
+        match_record_id: str | None = None,
+        match_document_path: str | None = None,
+    ) -> None:
         self.mode = mode  # "get" or "create"
         self.match_record_id = match_record_id
+        self.match_document_path = match_document_path
         self.armed = False
         self.reached = threading.Event()
         self.release = threading.Event()
+        self.matched_path: str | None = None
 
     def arm(self) -> None:
         """Enable the one-shot pause after its caller has finished setup."""
@@ -126,13 +340,33 @@ class _Barrier:
         if not self.release.wait(timeout=15):
             raise TimeoutError("O barrier release timed out")
 
-    def before_create(self, reference) -> None:
+    def before_create(self, reference, attempt: _TransactionAttempt | None = None) -> None:
         if not self.armed or self.mode != "create":
             return
+        document_path = _reference_document_path(reference)
+        if (
+            self.match_document_path is not None
+            and document_path != self.match_document_path
+        ):
+            return
         self.armed = False
+        self.matched_path = document_path
+        if attempt is not None:
+            attempt.barrier_matched = True
+            attempt.exact_matched_path = document_path
         self.reached.set()
         if not self.release.wait(timeout=30):
             raise TimeoutError("P barrier release timed out")
+
+    def snapshot(self) -> dict[str, object]:
+        return {
+            "mode": self.mode,
+            "armed": self.armed,
+            "reached": self.reached.is_set(),
+            "match_document_path": self.match_document_path,
+            "matched_path": self.matched_path,
+            "released": self.release.is_set(),
+        }
 
 
 @dataclass
@@ -160,10 +394,12 @@ class _P7FirestoreApi:
         delegate,
         counters: _Counters,
         barrier: _Barrier | None,
+        telemetry: _TransactionTelemetry | None,
     ) -> None:
         self._delegate = delegate
         self._counters = counters
         self._barrier = barrier
+        self._telemetry = telemetry
 
     @staticmethod
     def _request_value(request, name: str):
@@ -181,6 +417,9 @@ class _P7FirestoreApi:
         if self._barrier is not None and transaction_id:
             for document in documents:
                 self._barrier.before_get(document.rsplit("/", 1)[-1])
+        if self._telemetry is not None and transaction_id:
+            for document in documents:
+                self._telemetry.record_read(transaction_id, document)
         return self._delegate.batch_get_documents(*args, **kwargs)
 
     def __getattr__(self, name: str):
@@ -196,16 +435,18 @@ class _P7Client:
         prefix: str,
         counters: _Counters,
         barrier: _Barrier | None = None,
+        telemetry: _TransactionTelemetry | None = None,
     ) -> None:
         self._raw = raw
         self._prefix = prefix
         self.counters = counters
         self.barrier = barrier
+        self.telemetry = telemetry
         api = self._raw._firestore_api
         if isinstance(api, _P7FirestoreApi):
             api = api._delegate
         self._raw._firestore_api_internal = _P7FirestoreApi(
-            api, self.counters, self.barrier
+            api, self.counters, self.barrier, self.telemetry
         )
 
     def collection(self, name: str):
@@ -216,20 +457,54 @@ class _P7Client:
         original_create = transaction.create
         original_set = transaction.set
         original_delete = transaction.delete
+        original_begin = transaction._begin
+        original_commit = transaction._commit
+        original_rollback = transaction._rollback
+
+        if self.telemetry is not None:
+            self.telemetry.attach(transaction)
+
+            def tracked_begin(*args, **kwargs):
+                return self.telemetry.begin(
+                    transaction, original_begin, *args, **kwargs
+                )
+
+            def tracked_commit(*args, **kwargs):
+                return self.telemetry.commit(
+                    transaction, original_commit, *args, **kwargs
+                )
+
+            def tracked_rollback(*args, **kwargs):
+                return self.telemetry.rollback(
+                    transaction, original_rollback, *args, **kwargs
+                )
+
+            transaction._begin = tracked_begin
+            transaction._commit = tracked_commit
+            transaction._rollback = tracked_rollback
 
         def counted_create(reference, data, *args, **kwargs):
             self.counters.writes += 1
+            attempt = (
+                None
+                if self.telemetry is None
+                else self.telemetry.record_write(transaction, "create", reference)
+            )
             if self.barrier is not None:
-                self.barrier.before_create(reference)
+                self.barrier.before_create(reference, attempt)
             return original_create(reference, data, *args, **kwargs)
 
         def counted_set(reference, data, *args, **kwargs):
             self.counters.writes += 1
+            if self.telemetry is not None:
+                self.telemetry.record_write(transaction, "set", reference)
             return original_set(reference, data, *args, **kwargs)
 
-        def counted_delete(*args, **kwargs):
+        def counted_delete(reference, *args, **kwargs):
             self.counters.deletes += 1
-            return original_delete(*args, **kwargs)
+            if self.telemetry is not None:
+                self.telemetry.record_write(transaction, "delete", reference)
+            return original_delete(reference, *args, **kwargs)
 
         transaction.create = counted_create
         transaction.set = counted_set
@@ -431,70 +706,357 @@ def _run_firestore_race(raw: firestore.Client, counters: _Counters) -> dict[str,
 # ---------------------------------------------------------------------------
 
 
-def _p_worker(project: str, database: str, prefix: str, ready) -> None:
+def _configured_world(store) -> object:
+    """Build the frozen world wiring without provisioning any Firestore state."""
+
+    events = p6._events()
+    return p6._World(
+        events=events,
+        store=store,
+        gate=p6.AdmissionGate(
+            store=store,
+            source_policy_keys=(events[0].receipt.policy_key,),
+            identity_policy_key=p6.IDENTITY,
+            registered_policy_keys=(p6.REGISTERED,),
+            freeform_policy_key=p6.FREEFORM,
+        ),
+        gateway=p6.AuthorityGateway(store),
+        controller=p6.RevocationController(store),
+        dispatcher=p6._Dispatcher(),
+    )
+
+
+def _verify_case_p_setup(
+    raw: firestore.Client,
+    project: str,
+    database: str,
+    prefix: str,
+) -> dict[str, object]:
+    """Verify setup through an independent client after all setup commits."""
+
+    verify_raw = firestore.Client(project=project, database=database)
+    verify_client = _P7Client(
+        verify_raw,
+        prefix,
+        _Counters(),
+        process_role="setup-verifier",
+    )
+    verify_store = FirestoreAuthorityStore(verify_client)
+    events = p6._events()
+    expected_issuers = (
+        (
+            events[0].receipt.issuer_id,
+            events[0].receipt.issuer_key_id,
+            bytes.fromhex((p6.FIXTURES / "issuer_public_key.hex").read_text().strip()),
+        ),
+        (
+            events[1].receipt.issuer_id,
+            events[1].receipt.issuer_key_id,
+            bytes.fromhex(
+                (p6.FIXTURES / "issuer_public_key_v2.hex").read_text().strip()
+            ),
+        ),
+    )
+    issuer_checks = [
+        {
+            "issuer_id": issuer_id,
+            "issuer_key_id": issuer_key_id,
+            "present_and_exact": verify_store.public_key_for(
+                issuer_id=issuer_id, issuer_key_id=issuer_key_id
+            )
+            == public_key,
+        }
+        for issuer_id, issuer_key_id, public_key in expected_issuers
+    ]
+    expected_policies = (
+        p6.PolicySnapshot(
+            events[0].receipt.policy_key,
+            "v7",
+            7,
+            p6.OperationRole.ORIGIN,
+            {"export.send": p6.Capability.ACT},
+        ),
+        *(
+            p6.PolicySnapshot(
+                key,
+                "v1",
+                1,
+                p6.OperationRole.RELAY,
+                {"export.send": p6.Capability.ACT},
+            )
+            for key in (p6.IDENTITY, p6.REGISTERED, p6.FREEFORM)
+        ),
+    )
+    policy_checks = [
+        {
+            "policy_key": snapshot.policy_key.as_list(),
+            "present_and_exact": verify_store.policy(snapshot.policy_key) == snapshot,
+        }
+        for snapshot in expected_policies
+    ]
+    if hasattr(verify_raw, "close"):
+        verify_raw.close()
+    return {
+        "issuer_checks": issuer_checks,
+        "policy_checks": policy_checks,
+        "complete": all(item["present_and_exact"] for item in issuer_checks)
+        and all(item["present_and_exact"] for item in policy_checks),
+    }
+
+
+def _setup_case_p(
+    raw: firestore.Client,
+    project: str,
+    database: str,
+    prefix: str,
+    counters: _Counters,
+) -> dict[str, object]:
+    """Provision Case P before the measured process exists."""
+
+    telemetry = _TransactionTelemetry("setup-parent")
+    client = _P7Client(
+        raw,
+        prefix,
+        counters,
+        process_role="setup-parent",
+        telemetry=telemetry,
+    )
+    setup_store = FirestoreAuthorityStore(client)
+    p6._world(setup_store)
+    verification = _verify_case_p_setup(raw, project, database, prefix)
+    if not verification["complete"]:
+        raise RuntimeError("Case P setup verification failed")
+    return {
+        "setup_complete": True,
+        "setup_completed_at": datetime.now(UTC).isoformat(),
+        "setup_complete_monotonic": time.monotonic(),
+        "setup_telemetry": telemetry.as_dict(),
+        "verification": verification,
+    }
+
+
+def _p_worker(
+    project: str,
+    database: str,
+    prefix: str,
+    expected_path: str,
+    startup_ready,
+    startup_queue,
+    barrier_ready,
+    barrier_queue,
+) -> None:
     raw = firestore.Client(project=project, database=database)
     counters = _Counters()
-    barrier = _Barrier(mode="create")
-    client = _P7Client(raw, prefix, counters, barrier=barrier)
+    telemetry = _TransactionTelemetry("measured-child")
+    barrier = _Barrier(mode="create", match_document_path=expected_path)
+    client = _P7Client(
+        raw,
+        prefix,
+        counters,
+        barrier=barrier,
+        process_role="measured-child",
+        telemetry=telemetry,
+    )
     store = FirestoreAuthorityStore(client)
+
+    world = _configured_world(store)
+    startup_queue.put(
+        {
+            "process_role": "measured-child",
+            "pid": os.getpid(),
+            "barrier": barrier.snapshot(),
+            "telemetry": telemetry.as_dict(),
+            "provisioning_transactions": len(telemetry.attempts()),
+        }
+    )
+    startup_ready.set()
+    if telemetry.attempts():
+        return
 
     def watch() -> None:
         if barrier.reached.wait(timeout=25):
-            ready.set()
+            barrier_queue.put(
+                {
+                    "process_role": "measured-child",
+                    "pid": os.getpid(),
+                    "barrier": barrier.snapshot(),
+                    "current_transaction": telemetry.current_snapshot(),
+                    "telemetry": telemetry.as_dict(),
+                }
+            )
+            barrier_ready.set()
 
     watcher = threading.Thread(target=watch, daemon=True)
     watcher.start()
     barrier.arm()
-    world = p6._world(store)
     p6._admit_source(world, 0, "P-ROOT")
+
+
+def _run_case_p_lifecycle(
+    raw: firestore.Client,
+    project: str,
+    database: str,
+    prefix: str,
+    counters: _Counters,
+) -> dict[str, object]:
+    """Run the redesigned setup/measure/kill/recovery lifecycle once."""
+
+    preflight_counts = _collection_counts(raw, prefix)
+    if any(preflight_counts.values()):
+        raise RuntimeError(f"Case P namespace is not fresh: {preflight_counts}")
+    setup = _setup_case_p(raw, project, database, prefix, counters)
+    expected_path = _document_path(
+        project, database, f"{prefix}__{CUSTODY_COLLECTION}", "P-ROOT"
+    )
+    context = multiprocessing.get_context("spawn")
+    startup_ready = context.Event()
+    startup_queue = context.Queue()
+    barrier_ready = context.Event()
+    barrier_queue = context.Queue()
+    process = context.Process(
+        target=_p_worker,
+        args=(
+            project,
+            database,
+            prefix,
+            expected_path,
+            startup_ready,
+            startup_queue,
+            barrier_ready,
+            barrier_queue,
+        ),
+    )
+    parent_pid = os.getpid()
+    child_start_at = datetime.now(UTC).isoformat()
+    child_start_monotonic = time.monotonic()
+    process.start()
+    if not startup_ready.wait(timeout=25):
+        if process.is_alive():
+            process.terminate()
+            process.join(timeout=10)
+        raise RuntimeError("Case P child did not complete startup")
+    startup = startup_queue.get(timeout=5)
+    if startup["provisioning_transactions"] != 0:
+        if process.is_alive():
+            process.terminate()
+            process.join(timeout=10)
+        raise RuntimeError("measured child performed provisioning transactions")
+    if not barrier_ready.wait(timeout=25):
+        if process.is_alive():
+            process.terminate()
+            process.join(timeout=10)
+        raise RuntimeError("Case P child did not reach the exact P-ROOT barrier")
+    barrier_report = barrier_queue.get(timeout=5)
+    current_transaction = barrier_report["current_transaction"]
+    exact_match = (
+        barrier_report["barrier"]["matched_path"] == expected_path
+        and current_transaction["exact_matched_path"] == expected_path
+        and current_transaction["commit_attempted"] is False
+    )
+    if not exact_match:
+        if process.is_alive():
+            process.terminate()
+            process.join(timeout=10)
+        raise RuntimeError("Case P barrier did not match the exact P-ROOT transaction")
+
+    kill_at = datetime.now(UTC).isoformat()
+    recovery_started = time.monotonic()
+    process.kill()
+    process.join(timeout=10)
+
+    recovered_raw = firestore.Client(project=project, database=database)
+    recovery_telemetry = _TransactionTelemetry("recovery-parent")
+    recovered_client = _P7Client(
+        recovered_raw,
+        prefix,
+        counters,
+        process_role="recovery-parent",
+        telemetry=recovery_telemetry,
+    )
+    recovered_store = FirestoreAuthorityStore(recovered_client)
+    records_before_retry = [item.record_id for item in recovered_store.records()]
+    dependencies_before_retry = [
+        item.canonical_bytes().hex() for item in recovered_store.dependencies("P-ROOT")
+    ]
+    events = p6._events()
+    receipt_root_before_retry = recovered_store.root_record_id_for_receipt(
+        events[0].receipt
+    )
+    partial_state_after_kill = bool(
+        records_before_retry or dependencies_before_retry or receipt_root_before_retry
+    )
+    dispatcher = p6._Dispatcher()
+    immediate = p6.AuthorityGateway(recovered_store).execute(
+        p6._action("action-P-after-kill"), ("P-ROOT",), dispatcher
+    )
+    retry = p6._admit_source(_configured_world(recovered_store), 0, "P-ROOT")
+    recovery_seconds = time.monotonic() - recovery_started
+    verify_raw = firestore.Client(project=project, database=database)
+    verify_client = _P7Client(
+        verify_raw,
+        prefix,
+        _Counters(),
+        process_role="recovery-verifier",
+    )
+    verify_store = FirestoreAuthorityStore(verify_client)
+    final_ids = [item.record_id for item in verify_store.records()]
+    final_dependencies = [
+        item.canonical_bytes().hex() for item in verify_store.dependencies("P-ROOT")
+    ]
+    final_receipt_root = verify_store.root_record_id_for_receipt(events[0].receipt)
+    final_policy = verify_store.policy(events[0].receipt.policy_key)
+    recovery_attempts = recovery_telemetry.attempts()
+    issuer_contention = any(
+        "/authority_issuer_keys/" in path
+        and (attempt["commit_result"] or "").startswith("failure:")
+        for attempt in recovery_attempts
+        for path in attempt["document_reads"] + attempt["document_creates"]
+    )
+    if hasattr(verify_raw, "close"):
+        verify_raw.close()
+    if hasattr(recovered_raw, "close"):
+        recovered_raw.close()
+    return {
+        "setup": setup,
+        "expected_p_root_path": expected_path,
+        "parent_pid": parent_pid,
+        "child_start_at": child_start_at,
+        "child_start_monotonic": child_start_monotonic,
+        "child_pid": process.pid,
+        "startup": startup,
+        "barrier_report": barrier_report,
+        "kill_at": kill_at,
+        "killed_exitcode": process.exitcode,
+        "records_before_retry": records_before_retry,
+        "dependencies_before_retry": dependencies_before_retry,
+        "receipt_root_before_retry": receipt_root_before_retry,
+        "partial_authoritative_state_after_kill": partial_state_after_kill,
+        "immediate": p6._execution_observation(immediate),
+        "dispatches": list(dispatcher.calls),
+        "retry": p6._admission_observation(retry),
+        "final_record_ids": final_ids,
+        "final_dependencies": final_dependencies,
+        "final_receipt_root": final_receipt_root,
+        "final_policy_generation": (
+            None if final_policy is None else final_policy.generation
+        ),
+        "duplicate_envelopes": len(final_ids) - len(set(final_ids)),
+        "recovery_seconds": recovery_seconds,
+        "recovery_completed_within_90_seconds": int(recovery_seconds <= RECOVERY_BOUND_SECONDS),
+        "recovery_telemetry": recovery_telemetry.as_dict(),
+        "issuer_key_contention_observed": issuer_contention,
+        "recovery_repeated_provisioning": recovery_telemetry.has_provisioning_writes(),
+        "backend": "firestore-killed-writer-real-process",
+    }
 
 
 def _run_firestore_killed_writer(
     raw: firestore.Client, counters: _Counters
 ) -> dict[str, object]:
     prefix = f"{NAMESPACE_PREFIX}__caseP"
-    context = multiprocessing.get_context("spawn")
-    ready = context.Event()
-    process = context.Process(
-        target=_p_worker,
-        args=(DEFAULT_PROJECT, DEFAULT_DATABASE, prefix, ready),
+    return _run_case_p_lifecycle(
+        raw, DEFAULT_PROJECT, DEFAULT_DATABASE, prefix, counters
     )
-    process.start()
-    if not ready.wait(timeout=25):
-        if process.is_alive():
-            process.kill()
-            process.join(timeout=10)
-        return {"worker_error": "writer did not reach transaction barrier"}
-    recovery_started = time.monotonic()
-    process.kill()
-    process.join(timeout=10)
-
-    recovered_client = _P7Client(raw, prefix, counters)
-    recovered_store = FirestoreAuthorityStore(recovered_client)
-    records_before_retry = [item.record_id for item in recovered_store.records()]
-    dependencies_before_retry = [
-        item.canonical_bytes().hex() for item in recovered_store.dependencies("P-ROOT")
-    ]
-    dispatcher = p6._Dispatcher()
-    immediate = p6.AuthorityGateway(recovered_store).execute(
-        p6._action("action-P-after-kill"), ("P-ROOT",), dispatcher
-    )
-    retry = p6._admit_source(p6._world(recovered_store), 0, "P-ROOT")
-    recovery_seconds = time.monotonic() - recovery_started
-    final_ids = [item.record_id for item in recovered_store.records()]
-    return {
-        "killed_exitcode": process.exitcode,
-        "records_before_retry": records_before_retry,
-        "dependencies_before_retry": dependencies_before_retry,
-        "immediate": p6._execution_observation(immediate),
-        "dispatches": list(dispatcher.calls),
-        "retry": p6._admission_observation(retry),
-        "final_record_ids": final_ids,
-        "duplicate_envelopes": len(final_ids) - len(set(final_ids)),
-        "recovery_seconds": recovery_seconds,
-        "recovery_completed_within_90_seconds": int(recovery_seconds <= RECOVERY_BOUND_SECONDS),
-        "backend": "firestore-killed-writer-real-process",
-    }
 
 
 def _sha256_json(value: Mapping[str, object]) -> str:
