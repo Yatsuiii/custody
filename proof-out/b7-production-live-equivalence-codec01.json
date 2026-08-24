@@ -1,0 +1,42 @@
+{
+  "canonical_result_digest": "b94ddecb6a4de0db8df0bf70f6842ac554561c4bf97e762167f2566a7079adac",
+  "cleanup": {
+    "cleaned_at": "2026-08-24T15:50:43.256915+00:00",
+    "cleanup_complete": true,
+    "deleted_documents": {
+      "authority_action_decisions": 0,
+      "authority_dependencies": 0,
+      "authority_issuer_keys": 0,
+      "authority_policies": 0,
+      "authority_receipt_roots": 0,
+      "authority_revocations": 0,
+      "custody": 0,
+      "revoked_receipt_roots": 0
+    },
+    "final_collection_counts": {
+      "authority_action_decisions": 0,
+      "authority_dependencies": 0,
+      "authority_issuer_keys": 0,
+      "authority_policies": 0,
+      "authority_receipt_roots": 0,
+      "authority_revocations": 0,
+      "custody": 0,
+      "revoked_receipt_roots": 0
+    },
+    "namespace_prefix": "custody_p7_b7_20260824_codec01",
+    "run_id": "p7-b7-20260824-codec01"
+  },
+  "error": "ROLE_COMMAND_FAILED:POLICY:AttributeError:'generator' object has no attribute 'exists'",
+  "error_type": "_RoleCommandError",
+  "experiment_id": "P7_LIVE_PRODUCTION_B7_INTEGRATION_PROOF",
+  "metrics": {},
+  "production_b7_sha": "3f85af9d2f3a956ca28ea45ddb8417a9c83a5c75",
+  "raw_trace_digest": "c60b327e9a22aac2c7ab77b3a70bd0c050781faf7bfb8306ca5c419b6044aafe",
+  "run_id": "p7-b7-20260824-codec01",
+  "runner_commit": "66fb30738ee2e45d2875ee68e627bd74eca626e5",
+  "validity": {
+    "reason": "INVALID_RUNNER_ATTEMPT",
+    "valid": false
+  },
+  "verdict": "P7-INVALID-RUNNER-ATTEMPT"
+}

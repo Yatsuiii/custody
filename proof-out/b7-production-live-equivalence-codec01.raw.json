@@ -1,0 +1,89 @@
+{
+  "error": "ROLE_COMMAND_FAILED:POLICY:AttributeError:'generator' object has no attribute 'exists'",
+  "error_type": "_RoleCommandError",
+  "execution_status": "INVALID_RUNNER_ATTEMPT",
+  "experiment_id": "P7_LIVE_PRODUCTION_B7_INTEGRATION_PROOF",
+  "failed_at": "2026-08-24T15:50:28.342930+00:00",
+  "preflight": {
+    "collection_plan": {
+      "authority_action_decisions": "custody_p7_b7_20260824_codec01__authority_action_decisions",
+      "authority_dependencies": "custody_p7_b7_20260824_codec01__authority_dependencies",
+      "authority_issuer_keys": "custody_p7_b7_20260824_codec01__authority_issuer_keys",
+      "authority_policies": "custody_p7_b7_20260824_codec01__authority_policies",
+      "authority_receipt_roots": "custody_p7_b7_20260824_codec01__authority_receipt_roots",
+      "authority_revocations": "custody_p7_b7_20260824_codec01__authority_revocations",
+      "custody": "custody_p7_b7_20260824_codec01__custody",
+      "revoked_receipt_roots": "custody_p7_b7_20260824_codec01__revoked_receipt_roots"
+    },
+    "cost_ceiling_usd": 0.01,
+    "database": "(default)",
+    "database_class": "FIRESTORE_NATIVE",
+    "estimated_deletes": 200,
+    "estimated_monetary_cost_usd": 0.00065,
+    "estimated_reads": 1500,
+    "estimated_writes": 200,
+    "git": {
+      "head": "66fb30738ee2e45d2875ee68e627bd74eca626e5",
+      "production_file_commit_diff": [],
+      "production_hashes": {
+        "custody/action.py": "92bccb5586d45e2c267253b3256d84377362d43029a6400195eaa43423b3fec7",
+        "custody/authority.py": "e05254a00a7a4ad9e7cf54e2488a40478798a1d11238b3ab8acfdfe5cf7b5b6f",
+        "custody/firestore_store.py": "25c9f8a7cb03d429c3686202e4f25807809501fd6cb40b00d28cba046958ddb5",
+        "custody/store.py": "01e7980166a80b2862930cd167df064dfecfcc11b5ac1f407c95aff693c93e63"
+      },
+      "production_sha_is_ancestor": true,
+      "tracked_worktree_dirty": []
+    },
+    "initial_collection_counts": {
+      "authority_action_decisions": 0,
+      "authority_dependencies": 0,
+      "authority_issuer_keys": 0,
+      "authority_policies": 0,
+      "authority_receipt_roots": 0,
+      "authority_revocations": 0,
+      "custody": 0,
+      "revoked_receipt_roots": 0
+    },
+    "max_runtime_seconds": 600.0,
+    "namespace_prefix": "custody_p7_b7_20260824_codec01",
+    "pricing_basis": {
+      "deletes_per_100k_usd": 0.01,
+      "reads_per_100k_usd": 0.03,
+      "source": "https://cloud.google.com/firestore/pricing",
+      "writes_per_100k_usd": 0.09
+    },
+    "project": "project-988bc9fe-092c-4b32-90c",
+    "recovery_bound_seconds": 90.0,
+    "region": "us-central1",
+    "run_id": "p7-b7-20260824-codec01",
+    "source_producer": "TEST-OWNED",
+    "valid": true
+  },
+  "production_b7_sha": "3f85af9d2f3a956ca28ea45ddb8417a9c83a5c75",
+  "production_hashes_after_treatment": {
+    "custody/action.py": "92bccb5586d45e2c267253b3256d84377362d43029a6400195eaa43423b3fec7",
+    "custody/authority.py": "e05254a00a7a4ad9e7cf54e2488a40478798a1d11238b3ab8acfdfe5cf7b5b6f",
+    "custody/firestore_store.py": "25c9f8a7cb03d429c3686202e4f25807809501fd6cb40b00d28cba046958ddb5",
+    "custody/store.py": "01e7980166a80b2862930cd167df064dfecfcc11b5ac1f407c95aff693c93e63"
+  },
+  "raw_trace_frozen_before_scoring": true,
+  "role_failure": {
+    "error": "'generator' object has no attribute 'exists'",
+    "error_chain": [
+      "AttributeError:'generator' object has no attribute 'exists'"
+    ],
+    "error_type": "AttributeError",
+    "integrity": {
+      "pid": 533298,
+      "ppid": 533224,
+      "private_key_input_paths": [],
+      "role": "POLICY",
+      "scorer_field_paths": []
+    },
+    "ok": false,
+    "role": "POLICY"
+  },
+  "run_id": "p7-b7-20260824-codec01",
+  "runner_commit": "66fb30738ee2e45d2875ee68e627bd74eca626e5",
+  "treatment_scorer_reads": 0
+}

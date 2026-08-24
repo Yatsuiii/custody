@@ -1,0 +1,26 @@
+{
+  "cleaned_at": "2026-08-24T15:50:43.256915+00:00",
+  "cleanup_complete": true,
+  "deleted_documents": {
+    "authority_action_decisions": 0,
+    "authority_dependencies": 0,
+    "authority_issuer_keys": 0,
+    "authority_policies": 0,
+    "authority_receipt_roots": 0,
+    "authority_revocations": 0,
+    "custody": 0,
+    "revoked_receipt_roots": 0
+  },
+  "final_collection_counts": {
+    "authority_action_decisions": 0,
+    "authority_dependencies": 0,
+    "authority_issuer_keys": 0,
+    "authority_policies": 0,
+    "authority_receipt_roots": 0,
+    "authority_revocations": 0,
+    "custody": 0,
+    "revoked_receipt_roots": 0
+  },
+  "namespace_prefix": "custody_p7_b7_20260824_codec01",
+  "run_id": "p7-b7-20260824-codec01"
+}
