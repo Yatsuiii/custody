@@ -10,7 +10,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
+import tempfile
 import traceback
 from datetime import UTC, datetime
 from pathlib import Path
@@ -83,6 +85,10 @@ class _ProbeDispatcher:
         return f"stored:{action.request_id}"
 
 
+class _ProbePreflightFailure(RuntimeError):
+    """The namespace was not fresh; never clean it under this identity."""
+
+
 def _exception_record(error: BaseException) -> dict[str, object]:
     chain = []
     current: BaseException | None = error
@@ -120,6 +126,35 @@ def _collection_counts(client: _NamespacedClient) -> dict[str, int]:
     }
 
 
+def _write_json_atomic(path: Path, value: dict[str, object]) -> None:
+    """Publish a complete probe artifact or leave the previous one intact."""
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary_path: str | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            "w",
+            encoding="utf-8",
+            dir=path.parent,
+            prefix=f".{path.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as temporary:
+            temporary_path = temporary.name
+            json.dump(value, temporary, indent=2, sort_keys=True)
+            temporary.write("\n")
+            temporary.flush()
+            os.fsync(temporary.fileno())
+        os.replace(temporary_path, path)
+        temporary_path = None
+    finally:
+        if temporary_path is not None:
+            try:
+                os.unlink(temporary_path)
+            except FileNotFoundError:
+                pass
+
+
 def _cleanup(client: _NamespacedClient) -> dict[str, object]:
     deleted: dict[str, int] = {}
     for name in COLLECTIONS:
@@ -141,52 +176,54 @@ def _run_step(
     sdk_call: str,
     operation: Callable[[], object],
 ) -> object:
-    result = operation()
-    operations.append({"name": name, "sdk_call": sdk_call, "ok": True})
+    entry: dict[str, object] = {"name": name, "sdk_call": sdk_call, "ok": False}
+    operations.append(entry)
+    try:
+        result = operation()
+    except BaseException as error:
+        entry["exception"] = _exception_record(error)
+        raise
+    entry["ok"] = True
     return result
 
 
 def run_probe(*, project: str, prefix: str, output: Path) -> dict[str, object]:
-    raw_client = firestore.Client(project=project, database=DEFAULT_DATABASE)
-    client = _NamespacedClient(raw_client, prefix)
     operations: list[dict[str, object]] = []
     cleanup: dict[str, object] | None = None
     failure: dict[str, object] | None = None
-
-    initial_counts = _collection_counts(client)
-    if any(initial_counts.values()):
-        result = {
-            "status": "INVALID-PREFLIGHT",
-            "project": project,
-            "database": DEFAULT_DATABASE,
-            "region": DEFAULT_REGION,
-            "namespace_prefix": prefix,
-            "initial_collection_counts": initial_counts,
-            "operations": operations,
-            "cleanup": None,
-            "security_metrics": False,
-            "scorer_reads": 0,
-        }
-        output.parent.mkdir(parents=True, exist_ok=True)
-        output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
-        return result
-
-    store = FirestoreAuthorityStore(client)  # type: ignore[arg-type]
-    event = SourceAuthorityEvent.from_json(
-        (ROOT / "tests" / "fixtures" / "b7" / "source_event.json").read_bytes()
-    )
-    source_key = event.receipt.policy_key
-    issuer_public_key = bytes.fromhex(
-        (ROOT / "tests" / "fixtures" / "b7" / "issuer_public_key.hex")
-        .read_text()
-        .strip()
-    )
-    identity_key = PolicyKey("probe", "custody", "identity", "R1", "export.send")
-    registered_key = PolicyKey("probe", "custody", "registered", "R1", "export.send")
-    freeform_key = PolicyKey("probe", "model", "freeform", "R1", "export.send")
-    root_id = "PROBE-ROOT"
-
+    client: _NamespacedClient | None = None
+    initial_counts: dict[str, int] | None = None
+    preflight_failed = False
     try:
+        raw_client = firestore.Client(project=project, database=DEFAULT_DATABASE)
+        client = _NamespacedClient(raw_client, prefix)
+        initial_counts = _run_step(
+            operations,
+            "namespace_preflight_counts",
+            "CollectionReference.stream() -> snapshots",
+            lambda: _collection_counts(client),
+        )
+        if any(initial_counts.values()):
+            preflight_failed = True
+            raise _ProbePreflightFailure("fresh probe namespace contains documents")
+
+        store = FirestoreAuthorityStore(client)  # type: ignore[arg-type]
+        event = SourceAuthorityEvent.from_json(
+            (ROOT / "tests" / "fixtures" / "b7" / "source_event.json").read_bytes()
+        )
+        source_key = event.receipt.policy_key
+        issuer_public_key = bytes.fromhex(
+            (ROOT / "tests" / "fixtures" / "b7" / "issuer_public_key.hex")
+            .read_text()
+            .strip()
+        )
+        identity_key = PolicyKey("probe", "custody", "identity", "R1", "export.send")
+        registered_key = PolicyKey(
+            "probe", "custody", "registered", "R1", "export.send"
+        )
+        freeform_key = PolicyKey("probe", "model", "freeform", "R1", "export.send")
+        root_id = "PROBE-ROOT"
+
         missing_ref = client.collection(AUTHORITY_POLICIES_COLLECTION).document(
             "missing-outside"
         )
@@ -198,21 +235,19 @@ def run_probe(*, project: str, prefix: str, output: Path) -> dict[str, object]:
         )
         operations[-1]["observation"] = _snapshot_summary(outside)
 
-        missing_in_transaction = store._run_transaction(
-            lambda transaction: transaction.get(
-                client.collection(AUTHORITY_POLICIES_COLLECTION).document(
-                    "missing-inside"
+        missing_in_transaction = _run_step(
+            operations,
+            "missing_document_inside_transaction",
+            "DocumentReference.get(transaction=transaction) -> DocumentSnapshot",
+            lambda: store._run_transaction(
+                lambda transaction: transaction.get(
+                    client.collection(AUTHORITY_POLICIES_COLLECTION).document(
+                        "missing-inside"
+                    )
                 )
-            )
+            ),
         )
-        operations.append(
-            {
-                "name": "missing_document_inside_transaction",
-                "sdk_call": "DocumentReference.get(transaction=transaction) -> DocumentSnapshot",
-                "ok": True,
-                "observation": _snapshot_summary(missing_in_transaction),
-            }
-        )
+        operations[-1]["observation"] = _snapshot_summary(missing_in_transaction)
 
         _run_step(
             operations,
@@ -379,17 +414,44 @@ def run_probe(*, project: str, prefix: str, output: Path) -> dict[str, object]:
     except BaseException as error:
         failure = {
             "failed_operation": operations[-1]["name"] if operations else None,
+            "classification": (
+                "INVALID-PREFLIGHT"
+                if isinstance(error, _ProbePreflightFailure)
+                else "PROBE-OPERATION-FAILURE"
+            ),
             "exception": _exception_record(error),
         }
     finally:
-        try:
-            cleanup = _cleanup(client)
-        except BaseException as error:
-            cleanup = {
-                "complete": False,
-                "exception": _exception_record(error),
-            }
+        if not preflight_failed and client is not None and initial_counts is not None:
+            try:
+                cleanup = _cleanup(client)
+            except BaseException as error:
+                cleanup = {
+                    "complete": False,
+                    "exception": _exception_record(error),
+                }
 
+    return _probe_result(
+        project=project,
+        prefix=prefix,
+        initial_counts=initial_counts,
+        operations=operations,
+        cleanup=cleanup,
+        failure=failure,
+        output=output,
+    )
+
+
+def _probe_result(
+    *,
+    project: str,
+    prefix: str,
+    initial_counts: dict[str, int] | None,
+    operations: list[dict[str, object]],
+    cleanup: dict[str, object] | None,
+    failure: dict[str, object] | None,
+    output: Path,
+) -> dict[str, object]:
     result = {
         "status": "FAIL" if failure is not None else "PASS",
         "project": project,
@@ -405,8 +467,7 @@ def run_probe(*, project: str, prefix: str, output: Path) -> dict[str, object]:
         "model_calls": 0,
         "completed_at": datetime.now(UTC).isoformat(),
     }
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
+    _write_json_atomic(output, result)
     return result
 
 
@@ -416,11 +477,29 @@ def main() -> int:
     parser.add_argument("--prefix", default=DEFAULT_PREFIX)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     arguments = parser.parse_args()
-    result = run_probe(
-        project=arguments.project,
-        prefix=arguments.prefix,
-        output=arguments.output,
-    )
+    try:
+        result = run_probe(
+            project=arguments.project,
+            prefix=arguments.prefix,
+            output=arguments.output,
+        )
+    except BaseException as error:
+        result = {
+            "status": "FAIL",
+            "classification": "PROBE-HARNESS-FAIL",
+            "project": arguments.project,
+            "database": DEFAULT_DATABASE,
+            "region": DEFAULT_REGION,
+            "namespace_prefix": arguments.prefix,
+            "operations": [],
+            "failure": {"exception": _exception_record(error)},
+            "cleanup": None,
+            "security_metrics": False,
+            "scorer_reads": 0,
+            "model_calls": 0,
+            "completed_at": datetime.now(UTC).isoformat(),
+        }
+        _write_json_atomic(arguments.output, result)
     print(json.dumps(result, indent=2, sort_keys=True))
     cleanup = result.get("cleanup") or {}
     return 0 if result["status"] == "PASS" and cleanup.get("complete") else 2
