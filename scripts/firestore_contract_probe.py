@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 import traceback
 from datetime import UTC, datetime
 from pathlib import Path
@@ -17,8 +18,12 @@ from typing import Callable
 
 from google.cloud import firestore
 
-from custody.action import AuthorityAction, AuthorityGateway
-from custody.authority import (
+ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from custody.action import AuthorityAction, AuthorityGateway  # noqa: E402
+from custody.authority import (  # noqa: E402
     AdmissionGate,
     AuthorityOutput,
     Capability,
@@ -29,7 +34,7 @@ from custody.authority import (
     RevocationController,
     SourceAuthorityEvent,
 )
-from custody.firestore_store import (
+from custody.firestore_store import (  # noqa: E402
     AUTHORITY_ACTION_DECISIONS_COLLECTION,
     AUTHORITY_DEPENDENCIES_COLLECTION,
     AUTHORITY_ISSUER_KEYS_COLLECTION,
@@ -42,7 +47,6 @@ from custody.firestore_store import (
 )
 
 
-ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_PROJECT = "project-988bc9fe-092c-4b32-90c"
 DEFAULT_DATABASE = "(default)"
 DEFAULT_REGION = "us-central1"
