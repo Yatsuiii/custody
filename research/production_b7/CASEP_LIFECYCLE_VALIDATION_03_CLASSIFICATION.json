@@ -1,0 +1,27 @@
+{
+  "validation_id": "p7-casep-lifecycle-validation-03",
+  "raw_trace_digest": "f6cec52dfdd7125f2f1e760159be049727d3991452f043562e4ba9fc916809b1",
+  "runner_emitted_verdict": "CASEP-LIFECYCLE-HARNESS-FAIL",
+  "corrected_verdict": "PRODUCTION-CONTENTION-DISCOVERED",
+  "basis": {
+    "setup_completed_before_child": true,
+    "child_performed_no_provisioning": true,
+    "exact_p_root_barrier_reached": true,
+    "child_commit_attempted_at_kill_gate": false,
+    "child_exitcode": -9,
+    "partial_authoritative_state_after_kill": false,
+    "recovery_repeated_provisioning": false,
+    "issuer_key_contention_observed": false,
+    "recovery_attempts": 5,
+    "recovery_aborted_attempts": 4,
+    "recovery_retry_succeeded": true,
+    "recovery_seconds": 117.02650213500237,
+    "recovery_bound_seconds": 90,
+    "production_required_contention_paths": [
+      "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__custody/P-ROOT",
+      "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_dependencies/b4c2ca5a60a1eeffff7197ba236236d58a8855c028eed49b52c10cbbb6ae009c",
+      "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_receipt_roots/e4136369073c3fac08dbb5ca4f6aaa4a49f42ce45eea5f03628f8207b551ba11"
+    ]
+  },
+  "interpretation": "The generic setup hotspot is absent. The remaining contention occurs in the required killed-writer recovery transaction over authoritative P-ROOT admission state and violates the frozen 90-second recovery gate."
+}

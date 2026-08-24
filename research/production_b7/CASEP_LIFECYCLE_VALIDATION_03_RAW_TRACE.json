@@ -1,0 +1,542 @@
+{
+  "completed_at": "2026-08-24T20:44:10.480441+00:00",
+  "database": "(default)",
+  "lifecycle": {
+    "backend": "firestore-killed-writer-real-process",
+    "barrier_report": {
+      "barrier": {
+        "armed": false,
+        "match_document_path": "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__custody/P-ROOT",
+        "matched_path": "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__custody/P-ROOT",
+        "mode": "create",
+        "reached": true,
+        "released": false
+      },
+      "current_transaction": {
+        "barrier_matched": true,
+        "callback_attempt": 1,
+        "callback_end_monotonic": null,
+        "commit_attempted": false,
+        "commit_result": null,
+        "document_creates": [
+          "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__custody/P-ROOT"
+        ],
+        "document_deletes": [],
+        "document_reads": [
+          "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__custody/P-ROOT",
+          "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_policies/81913b1cdfcadb31df8461aab1823900fc05efb05400e9ffcdb876cc3360cf43",
+          "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_dependencies/b4c2ca5a60a1eeffff7197ba236236d58a8855c028eed49b52c10cbbb6ae009c",
+          "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_receipt_roots/e4136369073c3fac08dbb5ca4f6aaa4a49f42ce45eea5f03628f8207b551ba11"
+        ],
+        "document_sets": [],
+        "exact_matched_path": "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__custody/P-ROOT",
+        "pid": 1503880,
+        "process_role": "measured-child",
+        "retry_reason": null,
+        "transaction_end_monotonic": null,
+        "transaction_id": "116ccbc613be567601225900eabc4ac6923143713ae720a65e217c472034a8e2daa0de7716f65bd6a339f83793fb65fed68913d33c57ca60d0b9d92a17ddc8f270976af27683904e5cd4bfc8cfc13d743ed48f9237ae4655c28c3b1b3b6e155fc6e597f3",
+        "transaction_purpose": "unknown",
+        "transaction_start_monotonic": 27781.645088105
+      },
+      "pid": 1503880,
+      "process_role": "measured-child",
+      "telemetry": {
+        "attempts": [
+          {
+            "barrier_matched": true,
+            "callback_attempt": 1,
+            "callback_end_monotonic": null,
+            "commit_attempted": false,
+            "commit_result": null,
+            "document_creates": [
+              "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__custody/P-ROOT"
+            ],
+            "document_deletes": [],
+            "document_reads": [
+              "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__custody/P-ROOT",
+              "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_policies/81913b1cdfcadb31df8461aab1823900fc05efb05400e9ffcdb876cc3360cf43",
+              "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_dependencies/b4c2ca5a60a1eeffff7197ba236236d58a8855c028eed49b52c10cbbb6ae009c",
+              "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_receipt_roots/e4136369073c3fac08dbb5ca4f6aaa4a49f42ce45eea5f03628f8207b551ba11"
+            ],
+            "document_sets": [],
+            "exact_matched_path": "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__custody/P-ROOT",
+            "pid": 1503880,
+            "process_role": "measured-child",
+            "retry_reason": null,
+            "transaction_end_monotonic": null,
+            "transaction_id": "116ccbc613be567601225900eabc4ac6923143713ae720a65e217c472034a8e2daa0de7716f65bd6a339f83793fb65fed68913d33c57ca60d0b9d92a17ddc8f270976af27683904e5cd4bfc8cfc13d743ed48f9237ae4655c28c3b1b3b6e155fc6e597f3",
+            "transaction_purpose": "unknown",
+            "transaction_start_monotonic": 27781.645088105
+          }
+        ],
+        "pid": 1503880,
+        "process_role": "measured-child"
+      }
+    },
+    "child_pid": 1503880,
+    "child_start_at": "2026-08-24T20:41:59.791459+00:00",
+    "child_start_monotonic": 27776.747316103,
+    "dependencies_before_retry": [],
+    "dispatches": [],
+    "duplicate_envelopes": 0,
+    "expected_p_root_path": "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__custody/P-ROOT",
+    "final_dependencies": [
+      "7b22616374696f6e5f73636f7065223a226578706f72742e73656e64222c226772616e74696e675f67656e65726174696f6e223a372c226b696e64223a22534f555243455f415554484f52495459222c22706f6c6963795f6b6579223a5b2266696e616e6365222c2276656e646f725f6c6f6f6b7570222c226c6f6f6b7570222c225231222c226578706f72742e73656e64225d2c22726563656970745f6964223a22726563656970742d303031222c227265636f72645f6964223a22502d524f4f54222c22726f6f745f6b65795f646967657374223a2232653563613736313737303835643665626532343961643234646461323564383038626336633439393761333735333435343165376135343931373839376163222c22726f6f745f7265636f72645f6964223a22502d524f4f54227d0a"
+    ],
+    "final_policy_generation": 7,
+    "final_receipt_root": "P-ROOT",
+    "final_record_ids": [
+      "P-ROOT"
+    ],
+    "immediate": {
+      "allowed": false,
+      "dispatched": false,
+      "effective_cap": "NONE",
+      "evaluated_record_ids": [
+        "P-ROOT"
+      ],
+      "reason": "MISSING_AUTHORITY_RECORD",
+      "support_root_key_digests": []
+    },
+    "issuer_key_contention_observed": false,
+    "kill_at": "2026-08-24T20:42:08.892002+00:00",
+    "killed_exitcode": -9,
+    "parent_pid": 1503606,
+    "partial_authoritative_state_after_kill": false,
+    "receipt_root_before_retry": null,
+    "records_before_retry": [],
+    "recovery_completed_within_90_seconds": 0,
+    "recovery_repeated_provisioning": false,
+    "recovery_seconds": 117.02650213500237,
+    "recovery_telemetry": {
+      "attempts": [
+        {
+          "barrier_matched": false,
+          "callback_attempt": 1,
+          "callback_end_monotonic": 27793.270488432,
+          "commit_attempted": true,
+          "commit_result": "success",
+          "document_creates": [
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_action_decisions/482f083a0a632154014d098bf0f9f147049c053c471500b792261e525b81cbc4"
+          ],
+          "document_deletes": [],
+          "document_reads": [
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_action_decisions/482f083a0a632154014d098bf0f9f147049c053c471500b792261e525b81cbc4",
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__custody/P-ROOT"
+          ],
+          "document_sets": [],
+          "exact_matched_path": null,
+          "pid": 1503606,
+          "process_role": "recovery-parent",
+          "retry_reason": null,
+          "transaction_end_monotonic": 27793.270488432,
+          "transaction_id": "11e6233255f541b074225900eabc4ac65fbad99cc544b63d67b0121b230ed7e162ffda745c20c669d30b8486585b19c58bbd7e0afce8cf7db6535668ab3bd20e237ed4e42c1b0b468e13b3ae7f2d0749662de061c743df8f9488ef1739c305dc466f7d17",
+          "transaction_purpose": "unknown",
+          "transaction_start_monotonic": 27790.227879394
+        },
+        {
+          "barrier_matched": false,
+          "callback_attempt": 1,
+          "callback_end_monotonic": 27820.647368384,
+          "commit_attempted": true,
+          "commit_result": "failure:Aborted",
+          "document_creates": [
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__custody/P-ROOT",
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_dependencies/b4c2ca5a60a1eeffff7197ba236236d58a8855c028eed49b52c10cbbb6ae009c",
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_receipt_roots/e4136369073c3fac08dbb5ca4f6aaa4a49f42ce45eea5f03628f8207b551ba11"
+          ],
+          "document_deletes": [],
+          "document_reads": [
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__custody/P-ROOT",
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_policies/81913b1cdfcadb31df8461aab1823900fc05efb05400e9ffcdb876cc3360cf43",
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_dependencies/b4c2ca5a60a1eeffff7197ba236236d58a8855c028eed49b52c10cbbb6ae009c",
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_receipt_roots/e4136369073c3fac08dbb5ca4f6aaa4a49f42ce45eea5f03628f8207b551ba11"
+          ],
+          "document_sets": [],
+          "exact_matched_path": null,
+          "pid": 1503606,
+          "process_role": "recovery-parent",
+          "retry_reason": "google.api_core.exceptions.Aborted: 409 Too much contention on these documents. Please try again.",
+          "transaction_end_monotonic": 27820.647368384,
+          "transaction_id": "111feb28f16e023c9d225900eabc4ac62f51a63e6b441f651f648021d0b386f306358f6ca21b83e0e53a38cc20f3cb67036342f221fdb37f402e107f06375f7ce2c3def835e381e4fc2f2698803f94c28abae82043693d999a697e5e9f5b14c85b94f1e3",
+          "transaction_purpose": "unknown",
+          "transaction_start_monotonic": 27796.345301252
+        },
+        {
+          "barrier_matched": false,
+          "callback_attempt": 2,
+          "callback_end_monotonic": 27844.734270692,
+          "commit_attempted": true,
+          "commit_result": "failure:Aborted",
+          "document_creates": [
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__custody/P-ROOT",
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_dependencies/b4c2ca5a60a1eeffff7197ba236236d58a8855c028eed49b52c10cbbb6ae009c",
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_receipt_roots/e4136369073c3fac08dbb5ca4f6aaa4a49f42ce45eea5f03628f8207b551ba11"
+          ],
+          "document_deletes": [],
+          "document_reads": [
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__custody/P-ROOT",
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_policies/81913b1cdfcadb31df8461aab1823900fc05efb05400e9ffcdb876cc3360cf43",
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_dependencies/b4c2ca5a60a1eeffff7197ba236236d58a8855c028eed49b52c10cbbb6ae009c",
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_receipt_roots/e4136369073c3fac08dbb5ca4f6aaa4a49f42ce45eea5f03628f8207b551ba11"
+          ],
+          "document_sets": [],
+          "exact_matched_path": null,
+          "pid": 1503606,
+          "process_role": "recovery-parent",
+          "retry_reason": "google.api_core.exceptions.Aborted: 409 Too much contention on these documents. Please try again.",
+          "transaction_end_monotonic": 27844.734270692,
+          "transaction_id": "1190d63f1b40a92ef5225900eabc4ac6ac9617dd9577a724fffd18dd83c77020b960a3ae8e4c1e03201242d0bfc6c557fb9f0f74f1f5a8b58024680eba32811e8df98f43bed45f3f7528d1f346df4ba2d475669dfd44b5769475619838f486b32e8eb759",
+          "transaction_purpose": "unknown",
+          "transaction_start_monotonic": 27820.647391818
+        },
+        {
+          "barrier_matched": false,
+          "callback_attempt": 3,
+          "callback_end_monotonic": 27868.701162796,
+          "commit_attempted": true,
+          "commit_result": "failure:Aborted",
+          "document_creates": [
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__custody/P-ROOT",
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_dependencies/b4c2ca5a60a1eeffff7197ba236236d58a8855c028eed49b52c10cbbb6ae009c",
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_receipt_roots/e4136369073c3fac08dbb5ca4f6aaa4a49f42ce45eea5f03628f8207b551ba11"
+          ],
+          "document_deletes": [],
+          "document_reads": [
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__custody/P-ROOT",
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_policies/81913b1cdfcadb31df8461aab1823900fc05efb05400e9ffcdb876cc3360cf43",
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_dependencies/b4c2ca5a60a1eeffff7197ba236236d58a8855c028eed49b52c10cbbb6ae009c",
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_receipt_roots/e4136369073c3fac08dbb5ca4f6aaa4a49f42ce45eea5f03628f8207b551ba11"
+          ],
+          "document_sets": [],
+          "exact_matched_path": null,
+          "pid": 1503606,
+          "process_role": "recovery-parent",
+          "retry_reason": "google.api_core.exceptions.Aborted: 409 Too much contention on these documents. Please try again.",
+          "transaction_end_monotonic": 27868.701162796,
+          "transaction_id": "11ba8bcfa508755921225900eabc4ac67d8cc3b01a8cff29c2c73a31783de8e8f407ad4dec676de29c987f11d284639fe2ee5eb31a27ca6aafe888c576fc583756eb142198b07f82f6e418fcb639f74646fa25ec7270d908f8783a896b84a1d62d847e85",
+          "transaction_purpose": "unknown",
+          "transaction_start_monotonic": 27844.734300478
+        },
+        {
+          "barrier_matched": false,
+          "callback_attempt": 4,
+          "callback_end_monotonic": 27893.035881755,
+          "commit_attempted": true,
+          "commit_result": "failure:Aborted",
+          "document_creates": [
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__custody/P-ROOT",
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_dependencies/b4c2ca5a60a1eeffff7197ba236236d58a8855c028eed49b52c10cbbb6ae009c",
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_receipt_roots/e4136369073c3fac08dbb5ca4f6aaa4a49f42ce45eea5f03628f8207b551ba11"
+          ],
+          "document_deletes": [],
+          "document_reads": [
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__custody/P-ROOT",
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_policies/81913b1cdfcadb31df8461aab1823900fc05efb05400e9ffcdb876cc3360cf43",
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_dependencies/b4c2ca5a60a1eeffff7197ba236236d58a8855c028eed49b52c10cbbb6ae009c",
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_receipt_roots/e4136369073c3fac08dbb5ca4f6aaa4a49f42ce45eea5f03628f8207b551ba11"
+          ],
+          "document_sets": [],
+          "exact_matched_path": null,
+          "pid": 1503606,
+          "process_role": "recovery-parent",
+          "retry_reason": "google.api_core.exceptions.Aborted: 409 Too much contention on these documents. Please try again.",
+          "transaction_end_monotonic": 27893.035881755,
+          "transaction_id": "114b5c4b2d088de5be225900eabc4ac6af6d87c507d22d08582b4753debd765420d93c23462cc289781329bed60d6814a00f719ea88fdc48d509c83da993d2ade5f22514862b5f4c45d742075cb116f81fc7f29b24121c6a7d9f7fd22a6e02beee0c79f6",
+          "transaction_purpose": "unknown",
+          "transaction_start_monotonic": 27868.701183656
+        },
+        {
+          "barrier_matched": false,
+          "callback_attempt": 5,
+          "callback_end_monotonic": 27902.874345372,
+          "commit_attempted": true,
+          "commit_result": "success",
+          "document_creates": [
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__custody/P-ROOT",
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_dependencies/b4c2ca5a60a1eeffff7197ba236236d58a8855c028eed49b52c10cbbb6ae009c",
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_receipt_roots/e4136369073c3fac08dbb5ca4f6aaa4a49f42ce45eea5f03628f8207b551ba11"
+          ],
+          "document_deletes": [],
+          "document_reads": [
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__custody/P-ROOT",
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_policies/81913b1cdfcadb31df8461aab1823900fc05efb05400e9ffcdb876cc3360cf43",
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_dependencies/b4c2ca5a60a1eeffff7197ba236236d58a8855c028eed49b52c10cbbb6ae009c",
+            "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_receipt_roots/e4136369073c3fac08dbb5ca4f6aaa4a49f42ce45eea5f03628f8207b551ba11"
+          ],
+          "document_sets": [],
+          "exact_matched_path": null,
+          "pid": 1503606,
+          "process_role": "recovery-parent",
+          "retry_reason": null,
+          "transaction_end_monotonic": 27902.874345372,
+          "transaction_id": "11e677aa78ffb7a6d6225900eabc4ac65b8cabebabfe5cc05cea5b142cbf4fb41d64fc50d25a9892f79021c05b853db6603270a05bb6749868bf058c3b2bfa299cd12a56fd7666cc4cf08767ea8ea4a72a27fc624d25c964908fd6d2f329c55eda101128",
+          "transaction_purpose": "unknown",
+          "transaction_start_monotonic": 27893.035903415
+        }
+      ],
+      "pid": 1503606,
+      "process_role": "recovery-parent"
+    },
+    "retry": {
+      "admitted": true,
+      "reason": "ADMITTED",
+      "record_id": "P-ROOT"
+    },
+    "setup": {
+      "setup_complete": true,
+      "setup_complete_monotonic": 27776.735155867,
+      "setup_completed_at": "2026-08-24T20:41:59.779298+00:00",
+      "setup_telemetry": {
+        "attempts": [
+          {
+            "barrier_matched": false,
+            "callback_attempt": 1,
+            "callback_end_monotonic": 27758.90907939,
+            "commit_attempted": true,
+            "commit_result": "success",
+            "document_creates": [
+              "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_issuer_keys/5439bc463d3bb7d001f44e3c595e7ff16023a567d8b54918196c07664121a989"
+            ],
+            "document_deletes": [],
+            "document_reads": [
+              "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_issuer_keys/5439bc463d3bb7d001f44e3c595e7ff16023a567d8b54918196c07664121a989"
+            ],
+            "document_sets": [],
+            "exact_matched_path": null,
+            "pid": 1503606,
+            "process_role": "setup-parent",
+            "retry_reason": null,
+            "transaction_end_monotonic": 27758.90907939,
+            "transaction_id": "11ab08df1e11c3a448225900eabc4ac653c82c17d5b99ab6a893d7e8e46b28bd966234580935ac39fcdaeadf725203623854c85ccec4dfecfe9965fbfd55a1e77aa3d55e635199782565ae43ee53fb78af7607dd8e88fada926fdbc9aa94bd80ad6968c5",
+            "transaction_purpose": "unknown",
+            "transaction_start_monotonic": 27757.079297839
+          },
+          {
+            "barrier_matched": false,
+            "callback_attempt": 1,
+            "callback_end_monotonic": 27761.650375297,
+            "commit_attempted": true,
+            "commit_result": "success",
+            "document_creates": [
+              "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_issuer_keys/0bc2538c98b345a1c9898023f01edd3e46185bbb09998dfd4fcbbd3bb14abcd7"
+            ],
+            "document_deletes": [],
+            "document_reads": [
+              "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_issuer_keys/0bc2538c98b345a1c9898023f01edd3e46185bbb09998dfd4fcbbd3bb14abcd7"
+            ],
+            "document_sets": [],
+            "exact_matched_path": null,
+            "pid": 1503606,
+            "process_role": "setup-parent",
+            "retry_reason": null,
+            "transaction_end_monotonic": 27761.650375297,
+            "transaction_id": "117fb1d77e24f79738225900eabc4ac66f8c341ecc8ad410d183fe0729ff5deb8639c0dbf2b94e45ee6128859b42aea2c3a6b0418d9252d529f3677866ee1d161326b21dbb58db8f255c6bbe6de7108f804d26045193f1400ed80985d523abdcce223dc8",
+            "transaction_purpose": "unknown",
+            "transaction_start_monotonic": 27758.909467176
+          },
+          {
+            "barrier_matched": false,
+            "callback_attempt": 1,
+            "callback_end_monotonic": 27763.476599166,
+            "commit_attempted": true,
+            "commit_result": "success",
+            "document_creates": [
+              "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_policies/81913b1cdfcadb31df8461aab1823900fc05efb05400e9ffcdb876cc3360cf43"
+            ],
+            "document_deletes": [],
+            "document_reads": [
+              "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_policies/81913b1cdfcadb31df8461aab1823900fc05efb05400e9ffcdb876cc3360cf43"
+            ],
+            "document_sets": [],
+            "exact_matched_path": null,
+            "pid": 1503606,
+            "process_role": "setup-parent",
+            "retry_reason": null,
+            "transaction_end_monotonic": 27763.476599166,
+            "transaction_id": "1164df151b7b2d46ba225900eabc4ac6c4db701af6d0c82bbecd780312938eec4be80c5c7451d151471242e352ab6f0c8ebe89443a1b342d64aa72acc473b996604378dfac35c453803cfed497779015823881d893410659304b87aff74d67e0eee74a3a",
+            "transaction_purpose": "unknown",
+            "transaction_start_monotonic": 27761.650514208
+          },
+          {
+            "barrier_matched": false,
+            "callback_attempt": 1,
+            "callback_end_monotonic": 27766.185894833,
+            "commit_attempted": true,
+            "commit_result": "success",
+            "document_creates": [
+              "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_policies/fc2cf18f8ae127909cf6f6dbb1d0b803d416e2f75879c4e9ea22c1b7b851b362"
+            ],
+            "document_deletes": [],
+            "document_reads": [
+              "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_policies/fc2cf18f8ae127909cf6f6dbb1d0b803d416e2f75879c4e9ea22c1b7b851b362"
+            ],
+            "document_sets": [],
+            "exact_matched_path": null,
+            "pid": 1503606,
+            "process_role": "setup-parent",
+            "retry_reason": null,
+            "transaction_end_monotonic": 27766.185894833,
+            "transaction_id": "11cc82a20e7e45528f225900eabc4ac6392222f31f8a141a1603937d31b5595430949f575ad585d81cc7568df680d6029cba79878bb997fef75f7a91705c1fad7c5f0c69bdca08f2cdcaef94afad6572d3501b7c1082c6d0239d1e82b0f0504ce7786aba",
+            "transaction_purpose": "unknown",
+            "transaction_start_monotonic": 27763.476760157
+          },
+          {
+            "barrier_matched": false,
+            "callback_attempt": 1,
+            "callback_end_monotonic": 27768.001935044,
+            "commit_attempted": true,
+            "commit_result": "success",
+            "document_creates": [
+              "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_policies/879655cd5c29f6b093747835ab29c69ef2deb3e4f2c30b79149e7aea8fb22574"
+            ],
+            "document_deletes": [],
+            "document_reads": [
+              "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_policies/879655cd5c29f6b093747835ab29c69ef2deb3e4f2c30b79149e7aea8fb22574"
+            ],
+            "document_sets": [],
+            "exact_matched_path": null,
+            "pid": 1503606,
+            "process_role": "setup-parent",
+            "retry_reason": null,
+            "transaction_end_monotonic": 27768.001935044,
+            "transaction_id": "118269c9a8628e9ca7225900eabc4ac6948c1e289ce1a8d7830dcf7b108f2ddf44e0aaf3c94b3f3687ca6cf6b8345ae63ce421281b073e55b7c76a038a4943be4feaffbfec17ce77371d75250163adc1a5787876ed9aa12b90732467cb423619118c5ab8",
+            "transaction_purpose": "unknown",
+            "transaction_start_monotonic": 27766.186109966
+          },
+          {
+            "barrier_matched": false,
+            "callback_attempt": 1,
+            "callback_end_monotonic": 27770.713913453,
+            "commit_attempted": true,
+            "commit_result": "success",
+            "document_creates": [
+              "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_policies/f4cdc4a9a444150a2f08c1015a68c35d18dc4f9adca9867f6b2a8c9bba4b6a9b"
+            ],
+            "document_deletes": [],
+            "document_reads": [
+              "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__authority_policies/f4cdc4a9a444150a2f08c1015a68c35d18dc4f9adca9867f6b2a8c9bba4b6a9b"
+            ],
+            "document_sets": [],
+            "exact_matched_path": null,
+            "pid": 1503606,
+            "process_role": "setup-parent",
+            "retry_reason": null,
+            "transaction_end_monotonic": 27770.713913453,
+            "transaction_id": "1156285a2aff391234225900eabc4ac6f53ed206b5807e211ca2ecde40b66f3ccb6bff5ab5946eff8ff241fb026f058fb3ec52d42cb95e2d6e4e2ea4b732b5d3c0658e2a963ddfb093869fda2d52243832667de848bdebd6159ba1545254ca60c88fd9e5",
+            "transaction_purpose": "unknown",
+            "transaction_start_monotonic": 27768.002046823
+          }
+        ],
+        "pid": 1503606,
+        "process_role": "setup-parent"
+      },
+      "verification": {
+        "complete": true,
+        "issuer_checks": [
+          {
+            "issuer_id": "vendor-source-authority",
+            "issuer_key_id": "issuer-ed25519-v1",
+            "present_and_exact": true
+          },
+          {
+            "issuer_id": "vendor-source-authority-fixture-v2",
+            "issuer_key_id": "issuer-ed25519-v2",
+            "present_and_exact": true
+          }
+        ],
+        "policy_checks": [
+          {
+            "policy_key": [
+              "finance",
+              "vendor_lookup",
+              "lookup",
+              "R1",
+              "export.send"
+            ],
+            "present_and_exact": true
+          },
+          {
+            "policy_key": [
+              "finance",
+              "custody",
+              "identity",
+              "R1",
+              "export.send"
+            ],
+            "present_and_exact": true
+          },
+          {
+            "policy_key": [
+              "finance",
+              "custody",
+              "vendor_projection",
+              "R1",
+              "export.send"
+            ],
+            "present_and_exact": true
+          },
+          {
+            "policy_key": [
+              "finance",
+              "model",
+              "freeform",
+              "R1",
+              "export.send"
+            ],
+            "present_and_exact": true
+          }
+        ]
+      }
+    },
+    "startup": {
+      "barrier": {
+        "armed": false,
+        "match_document_path": "projects/project-988bc9fe-092c-4b32-90c/databases/(default)/documents/custody_p7_casep_lifecycle_validation_03__custody/P-ROOT",
+        "matched_path": null,
+        "mode": "create",
+        "reached": false,
+        "released": false
+      },
+      "pid": 1503880,
+      "process_role": "measured-child",
+      "provisioning_transactions": 0,
+      "telemetry": {
+        "attempts": [],
+        "pid": 1503880,
+        "process_role": "measured-child"
+      }
+    }
+  },
+  "namespace_prefix": "custody_p7_casep_lifecycle_validation_03",
+  "production_sha_required": "16d34593dbc765e4ce3c34f03a0625783127f205",
+  "project": "project-988bc9fe-092c-4b32-90c",
+  "runtime_seconds": 164.93182566500036,
+  "started_at": "2026-08-24T20:41:25.548593+00:00",
+  "validation": {
+    "all_pass": false,
+    "checks": {
+      "barrier_disarmed_during_startup": true,
+      "barrier_reached": true,
+      "child_performed_no_provisioning": true,
+      "child_sigkill": true,
+      "commit_not_started_at_kill_gate": true,
+      "exact_path_intercepted": true,
+      "exactly_one_final_envelope": true,
+      "issuer_key_contention_absent": true,
+      "issuer_key_present_before_child": true,
+      "no_partial_authoritative_state": true,
+      "no_post_kill_issuer_create": true,
+      "parent_observed_barrier": true,
+      "policy_present_before_child": true,
+      "recovery_did_not_provision": true,
+      "recovery_time_recorded": true,
+      "recovery_transaction_attempts_recorded": true,
+      "recovery_within_90_seconds": false,
+      "retry_follows_frozen_admission": true,
+      "setup_completed_before_child": true
+    }
+  },
+  "validation_id": "p7-casep-lifecycle-validation-03",
+  "verdict": "CASEP-LIFECYCLE-HARNESS-FAIL"
+}
