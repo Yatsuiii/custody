@@ -59,19 +59,21 @@ from custody.firestore_store import (  # noqa: E402
 import tests.test_b7_production_equivalence as p6  # noqa: E402
 
 # ---------------------------------------------------------------------------
-# Fresh identity. This revision must not reuse run01, whose behavior was tied
-# to the pre-fix read-barrier implementation.
+# Fresh identity. run03 was invalidated by a namespace-scoping bug in this
+# harness's own preflight/cleanup (fixed below), which let it collide with
+# leftover data from prior informal runs under the same prefix. run04 does
+# not reuse run01/run02/run03's identity or namespace.
 # ---------------------------------------------------------------------------
-RUN_ID = "p7-b7-20260825-run03"
-NAMESPACE_PREFIX = "custody_p7_b7_20260825_run03"
+RUN_ID = "p7-b7-20260825-run04"
+NAMESPACE_PREFIX = "custody_p7_b7_20260825_run04"
 DEFAULT_PROJECT = "project-988bc9fe-092c-4b32-90c"
 DEFAULT_DATABASE = "(default)"
 DEFAULT_REGION = "us-central1"
 
 PROOF_DIR = ROOT / "research" / "production_b7"
-RAW_TRACE_PATH = PROOF_DIR / "P7_RUN03_RAW_TRACE.json"
-RESULT_PATH = PROOF_DIR / "P7_RUN03_RESULT.json"
-CLEANUP_PATH = PROOF_DIR / "P7_RUN03_CLEANUP.json"
+RAW_TRACE_PATH = PROOF_DIR / "P7_RUN04_RAW_TRACE.json"
+RESULT_PATH = PROOF_DIR / "P7_RUN04_RESULT.json"
+CLEANUP_PATH = PROOF_DIR / "P7_RUN04_CLEANUP.json"
 
 COLLECTIONS = (
     CUSTODY_COLLECTION,
@@ -237,17 +239,33 @@ class _P7Client:
         return transaction
 
 
+def _namespace_collections(raw: firestore.Client, prefix: str) -> list[str]:
+    """Every top-level collection actually used by this namespace.
+
+    Cases A-M each get their own sub-prefix (``{prefix}__w01``, ``__w02``,
+    ...) and cases N/O/P use ``__caseN``/``__caseO``/``__caseP``, so a
+    correct freshness/cleanup check cannot enumerate ``COLLECTIONS`` under
+    the bare prefix alone -- it must find every collection whose name starts
+    with ``prefix``, wherever it lives in the namespace.
+    """
+    return sorted(
+        collection.id
+        for collection in raw.collections()
+        if collection.id == prefix or collection.id.startswith(f"{prefix}__")
+    )
+
+
 def _collection_counts(raw: firestore.Client, prefix: str) -> dict[str, int]:
     return {
-        name: sum(1 for _ in raw.collection(f"{prefix}__{name}").stream())
-        for name in COLLECTIONS
+        name: sum(1 for _ in raw.collection(name).stream())
+        for name in _namespace_collections(raw, prefix)
     }
 
 
 def _cleanup(raw: firestore.Client, prefix: str) -> dict[str, object]:
     deleted: dict[str, int] = {}
-    for name in COLLECTIONS:
-        snapshots = tuple(raw.collection(f"{prefix}__{name}").stream())
+    for name in _namespace_collections(raw, prefix):
+        snapshots = tuple(raw.collection(name).stream())
         for snapshot in snapshots:
             snapshot.reference.delete()
         deleted[name] = len(snapshots)
