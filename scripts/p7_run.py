@@ -61,19 +61,20 @@ import tests.test_b7_production_equivalence as p6  # noqa: E402
 # ---------------------------------------------------------------------------
 # Fresh identity. run03 was invalidated by a namespace-scoping bug in this
 # harness's own preflight/cleanup (fixed below), which let it collide with
-# leftover data from prior informal runs under the same prefix. run04 does
-# not reuse run01/run02/run03's identity or namespace.
+# leftover data from prior informal runs under the same prefix. run04 was
+# killed by an external timeout before it could record any result. run05
+# does not reuse run01/run02/run03/run04's identity or namespace.
 # ---------------------------------------------------------------------------
-RUN_ID = "p7-b7-20260825-run04"
-NAMESPACE_PREFIX = "custody_p7_b7_20260825_run04"
+RUN_ID = "p7-b7-20260825-run05"
+NAMESPACE_PREFIX = "custody_p7_b7_20260825_run05"
 DEFAULT_PROJECT = "project-988bc9fe-092c-4b32-90c"
 DEFAULT_DATABASE = "(default)"
 DEFAULT_REGION = "us-central1"
 
 PROOF_DIR = ROOT / "research" / "production_b7"
-RAW_TRACE_PATH = PROOF_DIR / "P7_RUN04_RAW_TRACE.json"
-RESULT_PATH = PROOF_DIR / "P7_RUN04_RESULT.json"
-CLEANUP_PATH = PROOF_DIR / "P7_RUN04_CLEANUP.json"
+RAW_TRACE_PATH = PROOF_DIR / "P7_RUN05_RAW_TRACE.json"
+RESULT_PATH = PROOF_DIR / "P7_RUN05_RESULT.json"
+CLEANUP_PATH = PROOF_DIR / "P7_RUN05_CLEANUP.json"
 
 COLLECTIONS = (
     CUSTODY_COLLECTION,
