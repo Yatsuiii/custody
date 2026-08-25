@@ -1,0 +1,15 @@
+{
+  "raw_trace_digest": "d4de7e303b0a4ec67048c5a30e12fc3cf95db90b15badadba91de290f1e43e6d",
+  "raw_trace_path": "research/production_b7/P7_RUN03_RAW_TRACE.json",
+  "run_id": "p7-b7-20260825-run03",
+  "status": "P7-INVALID-RUNNER-ATTEMPT",
+  "validity": {
+    "detail": {
+      "message": "policy generation compare-and-set failed",
+      "module": "custody.authority",
+      "traceback": "Traceback (most recent call last):\n  File \"/run/media/Yatsuiii/Windows-SSD/custody-p7-verify/scripts/p7_run.py\", line 551, in main\n    frozen = _run_frozen_cases_against_firestore(raw_client, counters)\n  File \"/run/media/Yatsuiii/Windows-SSD/custody-p7-verify/scripts/p7_run.py\", line 292, in _run_frozen_cases_against_firestore\n    first = p6._run_treatment()\n  File \"/run/media/Yatsuiii/Windows-SSD/custody-p7-verify/tests/test_b7_production_equivalence.py\", line 308, in _run_treatment\n    world_e = _world()\n  File \"/run/media/Yatsuiii/Windows-SSD/custody-p7-verify/scripts/p7_run.py\", line 288, in firestore_world\n    return real_world(FirestoreAuthorityStore(client))\n  File \"/run/media/Yatsuiii/Windows-SSD/custody-p7-verify/tests/test_b7_production_equivalence.py\", line 151, in _world\n    events = _configure(resolved)\n  File \"/run/media/Yatsuiii/Windows-SSD/custody-p7-verify/tests/test_b7_production_equivalence.py\", line 127, in _configure\n    store.put_policy(\n    ~~~~~~~~~~~~~~~~^\n        PolicySnapshot(\n        ^^^^^^^^^^^^^^^\n    ...<5 lines>...\n        )\n        ^\n    )\n    ^\n  File \"/run/media/Yatsuiii/Windows-SSD/custody-p7-verify/custody/firestore_store.py\", line 345, in put_policy\n    self._run_transaction(write)\n    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^\n  File \"/run/media/Yatsuiii/Windows-SSD/custody-p7-verify/custody/firestore_store.py\", line 736, in _run_transaction\n    return run(raw_transaction)\n  File \"/run/media/Yatsuiii/Windows-SSD/custody-p7-verify/.venv/lib/python3.14/site-packages/google/cloud/firestore_v1/transaction.py\", line 312, in __call__\n    result = self._pre_commit(transaction, *args, **kwargs)\n  File \"/run/media/Yatsuiii/Windows-SSD/custody-p7-verify/.venv/lib/python3.14/site-packages/google/cloud/firestore_v1/transaction.py\", line 283, in _pre_commit\n    return self.to_wrap(transaction, *args, **kwargs)\n           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/run/media/Yatsuiii/Windows-SSD/custody-p7-verify/custody/firestore_store.py\", line 734, in run\n    return operation(_FirestoreTransactionPort(transaction))\n  File \"/run/media/Yatsuiii/Windows-SSD/custody-p7-verify/custody/firestore_store.py\", line 342, in write\n    raise AuthorityConflict(\"policy generation compare-and-set failed\")\ncustody.authority.AuthorityConflict: policy generation compare-and-set failed\n",
+      "type": "AuthorityConflict"
+    },
+    "status": "P7-INVALID-RUNNER-ATTEMPT"
+  }
+}
