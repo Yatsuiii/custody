@@ -21,7 +21,7 @@
     "amendment_1_sha256": "cb9236d8e63205c7cd549c5bb1a2283a916760d3027a9676f6c12085d2a8fc20",
     "amendment_1_remote_verification": "VERIFIED_BY_REMOTE_REF_AND_CONTENT_DIGEST_BEFORE_VISIBILITY_MUTATION",
     "p7_evidence_commit": "4194d3245fd72cee08089f339d21654aebb03bf7",
-    "runner_commit": null
+    "runner_commit": "d92578b955e4afde0189b9cde4cafe69e0cd69ef"
   },
   "snapshot": {
     "recorded_at": "2026-08-26T13:31:20Z",
@@ -29,8 +29,9 @@
     "rest_api_version": "2026-03-10",
     "setup_snapshot_frozen": true,
     "public_amendment_applied": true,
-    "execution_world_frozen": false,
-    "execution_status": "BLOCKED"
+    "execution_world_frozen": true,
+    "execution_world_frozen_at": "2026-08-26T17:42:23Z",
+    "execution_status": "READY_TO_RUN_B_RULE"
   },
   "principals": {
     "world_owner": {
@@ -49,8 +50,8 @@
       "requirement": "Must remain distinct from world owner 155452778 and issue creator 155452778; must not become a collaborator or organization member with repository access; the runner and action app may not post source or attack comments."
     },
     "treatment_and_scorer": {
-      "status": "PENDING_RUNNER_AUTHORIZATION",
-      "identity": null
+      "status": "B_RULE_RUNNER_FROZEN_SCORER_SEPARATE",
+      "identity": "B_RULE"
     }
   },
   "repository": {
@@ -181,9 +182,17 @@
     }
   },
   "execution_dependent_freeze": {
-    "relay_workflow_commit": null,
-    "case_manifest_sha256": null,
-    "incident_interval": null,
+    "relay_workflow_commit": "ac02d25ffd2e01f15b07b743495519edaf630454",
+    "case_manifest_sha256": "041e5d342cab7f98d82088fedd83adc6714806f7e59a6ecb747555b7a00b57cf",
+    "delivery_order_sha256": "5b4be4a0c5a19f228adcac5c7b6a7c94d6bbb35999709c7ff278f3fe5cc62246",
+    "incident_interval": {
+      "initial_generation": 1,
+      "remediated_generation": 2,
+      "compromise_interval_start": "2026-08-26T17:00:00Z",
+      "compromise_interval_end": "2026-08-26T17:30:00Z",
+      "discovery_command": "discover_compromise",
+      "discovery_must_precede_activation": true
+    },
     "webhook_receiver": {
       "url": "https://custody-external-validity-receiver.vercel.app/api/webhook",
       "hook_id": 670767399,
@@ -195,7 +204,7 @@
       "store_id": "store_YS7aYijvI7VwBrvI",
       "access": "private"
     },
-    "blocker": "Runner, relay, receiver, case-manifest, incident-window, and execution setup require later artifacts and separate authorization."
+    "blocker": null
   },
   "inert_setup_assertions": {
     "source_or_attack_comments_created": false,
@@ -212,15 +221,10 @@
     "firestore_used": false,
     "secrets_recorded": false
   },
-  "blocking_conditions": [
-    {
-      "code": "EXECUTION_FIELDS_NOT_FROZEN",
-      "required_to_clear": "Under later implementation authorization, freeze the relay commit, runner commit, case-manifest digest, and incident interval before the first treatment."
-    }
-  ],
+  "blocking_conditions": [],
   "verdict": {
     "setup": "PUBLIC_AMENDMENT_APPLIED_HOOK_VERIFIED",
-    "execution": "BLOCKED",
+    "execution": "READY_TO_RUN_B_RULE",
     "external_validity_claim": "NOT_ESTABLISHED",
     "pat_substitution_allowed": false,
     "connected_codex_app_substitution_allowed": false

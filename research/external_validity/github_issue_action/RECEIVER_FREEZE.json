@@ -35,13 +35,10 @@
     "syntax_command": "node --check receiver/api/webhook.js && node --check receiver/api/delivery.js && node --check receiver/api/health.js",
     "invalid_signature_probe": "HTTP 401 / invalid_signature",
     "protected_read_invalid_token_probe": "HTTP 404 / not_found",
-    "valid_live_delivery": "NOT RUN (setup ping only)",
+    "valid_live_delivery": "17 initial issue_comment deliveries and 1 controlled redelivery observed before treatment",
     "hook_id": 670767399,
     "hook_event_readback": ["issue_comment"],
     "hook_active_readback": true
   },
-  "blockers": [
-    "Separate red-team API authentication is not configured on this machine; only Yatsuiii SSH identity is present.",
-    "No treatment or case-manifest freeze has occurred."
-  ]
+  "blockers": []
 }
