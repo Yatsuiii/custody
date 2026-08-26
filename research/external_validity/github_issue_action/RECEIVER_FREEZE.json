@@ -3,6 +3,8 @@
   "schema_version": 1,
   "status": "DEPLOYED_HOOK_UNCONFIGURED",
   "experiment_id": "EXTERNAL_VALIDITY_GITHUB_ISSUE_ACTION_V1",
+  "source_commit": "a64a606a8cdf8b7b49fb224aceeaddc726baf0df",
+  "source_remote_branch": "research/external-validity-github-issue-execution-20260826",
   "receiver": {
     "project": "cave2/custody-external-validity-receiver",
     "production_url": "https://custody-external-validity-receiver.vercel.app",
