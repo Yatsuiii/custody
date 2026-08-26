@@ -1,0 +1,26 @@
+{
+  "format": "custody.external-validity.github-delivery-order",
+  "schema_version": 1,
+  "treatment": "B_RULE",
+  "delivery_guids": [
+    "dd7e0a30-a170-11f1-92af-ea751ce7b39c",
+    "de147dd0-a170-11f1-8a97-dc8f335453fc",
+    "df24dc60-a170-11f1-9f61-86ed82735be3",
+    "df72ae40-a170-11f1-8f85-e3bd8109f49d",
+    "e0113830-a170-11f1-972f-0a79937b6536",
+    "e0113830-a170-11f1-972f-0a79937b6536",
+    "e0601b80-a170-11f1-9509-b5eb9dd12b1c",
+    "e0e81030-a170-11f1-818f-61f9006017b5",
+    "e16d6cd0-a170-11f1-84cb-436a6e3ed2d2",
+    "e22af070-a170-11f1-89e5-49df6f0e15a7",
+    "e2a1f530-a170-11f1-9d27-2fcdf036cc4b",
+    "e3654530-a170-11f1-9490-cba1120708a5",
+    "e3e2b290-a170-11f1-961b-9023a83533c3",
+    "e42539d0-a170-11f1-8bf5-969c30cf5f15",
+    "e4b592f0-a170-11f1-8d2a-797859b42cfd",
+    "e5480ef0-a170-11f1-8c9b-1ce7243c6804",
+    "e5ca1030-a170-11f1-8e0a-221e8149e248",
+    "e6ab6f80-a170-11f1-94b9-df6cdf0821a6"
+  ],
+  "redelivery_guid": "e0113830-a170-11f1-972f-0a79937b6536"
+}
