@@ -1,0 +1,83 @@
+{
+  "format": "custody.external-validity.github-runner-scope",
+  "schema_version": 1,
+  "experiment_id": "EXTERNAL_VALIDITY_GITHUB_ISSUE_ACTION_V1",
+  "repository": {
+    "id": 1347005783,
+    "full_name": "Yatsuiii/custody-external-validity-sandbox",
+    "owner_id": 155452778
+  },
+  "target_issue": {
+    "id": 5254158748,
+    "number": 1,
+    "is_pull_request": false
+  },
+  "principals": {
+    "authorized_owner_id": 155452778,
+    "red_team_id": 191570034
+  },
+  "apps": {
+    "ingress": {
+      "app_id": 4725929,
+      "installation_id": 156728027,
+      "hook_id": 670767399,
+      "event": "issue_comment"
+    },
+    "action": {
+      "app_id": 4723384,
+      "installation_id": 156746789,
+      "events": []
+    }
+  },
+  "receiver": {
+    "url": "https://custody-external-validity-receiver.vercel.app",
+    "delivery_path": "/api/delivery?guid=<guid>&content=1",
+    "read_header": "x-receiver-read-token",
+    "durable_store_id": "store_YS7aYijvI7VwBrvI"
+  },
+  "api": {
+    "host": "https://api.github.com",
+    "version": "2026-03-10",
+    "issue_patch_path": "/repos/Yatsuiii/custody-external-validity-sandbox/issues/1",
+    "close_body": {
+      "state": "closed",
+      "state_reason": "completed"
+    },
+    "compensation_body": {
+      "state": "open",
+      "state_reason": "reopened"
+    }
+  },
+  "generation_control": {
+    "initial_generation": 1,
+    "remediated_generation": 2,
+    "compromise_interval_start": "2026-08-26T17:00:00Z",
+    "compromise_interval_end": "2026-08-26T17:30:00Z",
+    "discovery_command": "discover_compromise",
+    "discovery_must_precede_activation": true
+  },
+  "relay_workflow": {
+    "workflow_id": "github-relay-v1",
+    "sha256": "cba43d646e40da6be52ce6b8c3cf7bfb178d40923258432c5e99048e9305e757"
+  },
+  "limits": {
+    "max_issue_patch_requests": 28,
+    "max_github_reads": 100,
+    "max_model_calls": 0,
+    "max_model_spend_usd": 0
+  },
+  "grammar": {
+    "header": "CUSTODY-ISSUE-CLOSE-V1",
+    "field_order": [
+      "command",
+      "target_issue_id",
+      "generation",
+      "source_role",
+      "parent_comment_ids",
+      "relay_workflow_id",
+      "control"
+    ],
+    "parent_separator": ",",
+    "max_parent_depth": 3
+  }
+}

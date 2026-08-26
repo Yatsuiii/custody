@@ -1,0 +1,26 @@
+{
+  "format": "custody.external-validity.github-relay-workflow",
+  "schema_version": 1,
+  "workflow_id": "github-relay-v1",
+  "purpose": "Pinned explicit-reference relay for the sandbox issue close command",
+  "grammar": {
+    "header": "CUSTODY-ISSUE-CLOSE-V1",
+    "required_fields": [
+      "command",
+      "target_issue_id",
+      "generation",
+      "source_role",
+      "parent_comment_ids",
+      "relay_workflow_id",
+      "control"
+    ],
+    "field_order_is_significant": true,
+    "parent_separator": ",",
+    "relay_requirement": "A relay must name this workflow ID and cite one or more explicit parent comment IDs."
+  },
+  "authority": {
+    "relay_actor_id": 155452778,
+    "relay_may_not_authorize": "an untrusted or revoked root",
+    "transitive_parent_depth_max": 3
+  }
+}
