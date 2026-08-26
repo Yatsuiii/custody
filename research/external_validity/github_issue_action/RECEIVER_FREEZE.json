@@ -1,9 +1,9 @@
 {
   "format": "custody.external-validity.github-receiver-freeze",
   "schema_version": 1,
-  "status": "DEPLOYED_HOOK_UNCONFIGURED",
+  "status": "SIGNED_INGRESS_CONFIGURED_PRE_TREATMENT",
   "experiment_id": "EXTERNAL_VALIDITY_GITHUB_ISSUE_ACTION_V1",
-  "source_commit": "a64a606a8cdf8b7b49fb224aceeaddc726baf0df",
+  "source_commit": "4568494",
   "source_remote_branch": "research/external-validity-github-issue-execution-20260826",
   "receiver": {
     "project": "cave2/custody-external-validity-receiver",
@@ -34,12 +34,12 @@
     "unit_result": "PASS",
     "syntax_command": "node --check receiver/api/webhook.js && node --check receiver/api/delivery.js && node --check receiver/api/health.js",
     "invalid_signature_probe": "HTTP 401 / invalid_signature",
-    "valid_live_delivery": "NOT RUN",
-    "hook_id": null
+    "valid_live_delivery": "NOT RUN (setup ping only)",
+    "hook_id": 670767399,
+    "hook_event_readback": ["issue_comment"],
+    "hook_active_readback": true
   },
   "blockers": [
-    "Ingress App private key must be generated/downloaded locally before GitHub App hook configuration.",
-    "Action App private key must be generated/downloaded locally before installation-token/API readback.",
     "Separate red-team API authentication is not configured on this machine; only Yatsuiii SSH identity is present.",
     "No treatment or case-manifest freeze has occurred."
   ]

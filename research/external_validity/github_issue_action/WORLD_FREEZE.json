@@ -2,7 +2,7 @@
   "format": "custody.external-validity.github-world-freeze",
   "schema_version": 1,
   "experiment_id": "EXTERNAL_VALIDITY_GITHUB_ISSUE_ACTION_V1",
-  "status": "PUBLIC-AMENDMENT-APPLIED-SETUP-PARTIAL-BLOCKED",
+  "status": "PUBLIC-AMENDMENT-APPLIED-SETUP-HOOK-VERIFIED",
   "evidence_labels": {
     "preregistration_lineage": "VERIFIED",
     "repository_and_target": "VERIFIED",
@@ -115,7 +115,7 @@
     "registration_flow_reference": "https://docs.github.com/en/apps/sharing-github-apps/registering-a-github-app-from-a-manifest",
     "registration_blocker": "Interactive account-owner registration and installation are complete. The available GitHub CLI OAuth token cannot independently enumerate private App metadata, so immutable IDs and permission/repository-selection readbacks are recorded from the owner UI without recording credentials.",
     "ingress": {
-      "status": "SCREEN_READBACK_VERIFIED",
+      "status": "HOOK_CONFIGURED_READBACK_VERIFIED",
       "proposed_name": "custody-ev-ingress-yatsuiii",
       "public": false,
       "app_id": 4725929,
@@ -141,8 +141,15 @@
         "issue_comment"
       ],
       "readback_source": "account_owner_ui_screenshot",
-      "webhook_hook_id": null,
-      "webhook_active": false,
+      "webhook_hook_id": 670767399,
+      "webhook_active": true,
+      "webhook_config_readback": {
+        "url": "https://custody-external-validity-receiver.vercel.app/api/webhook",
+        "content_type": "json",
+        "insecure_ssl": "0",
+        "secret": "PRESENT_BUT_NOT_RECORDED"
+      },
+      "webhook_setup_ping_observed": true,
       "credential_material_recorded": false
     },
     "action": {
@@ -177,8 +184,17 @@
     "relay_workflow_commit": null,
     "case_manifest_sha256": null,
     "incident_interval": null,
-    "webhook_receiver": null,
-    "raw_delivery_store": null,
+    "webhook_receiver": {
+      "url": "https://custody-external-validity-receiver.vercel.app/api/webhook",
+      "hook_id": 670767399,
+      "event": "issue_comment",
+      "active": true
+    },
+    "raw_delivery_store": {
+      "provider": "vercel_blob",
+      "store_id": "store_YS7aYijvI7VwBrvI",
+      "access": "private"
+    },
     "blocker": "Runner, relay, receiver, case-manifest, incident-window, and execution setup require later artifacts and separate authorization."
   },
   "inert_setup_assertions": {
@@ -191,22 +207,19 @@
     "repository_commits_observed": "EMPTY_GIT_REPOSITORY",
     "issue_close_or_reopen_attempted": false,
     "webhook_delivery_created": false,
+    "webhook_setup_ping_observed": true,
     "runner_built": false,
     "firestore_used": false,
     "secrets_recorded": false
   },
   "blocking_conditions": [
     {
-      "code": "INGRESS_HOOK_NOT_CONFIGURED",
-      "required_to_clear": "After separate receiver authorization, configure the ingress App's signed webhook and record the immutable hook ID without exposing its secret."
-    },
-    {
       "code": "EXECUTION_FIELDS_NOT_FROZEN",
       "required_to_clear": "Under later implementation authorization, freeze the relay commit, runner commit, case-manifest digest, and incident interval before the first treatment."
     }
   ],
   "verdict": {
-    "setup": "PUBLIC_AMENDMENT_APPLIED_PARTIAL",
+    "setup": "PUBLIC_AMENDMENT_APPLIED_HOOK_VERIFIED",
     "execution": "BLOCKED",
     "external_validity_claim": "NOT_ESTABLISHED",
     "pat_substitution_allowed": false,
