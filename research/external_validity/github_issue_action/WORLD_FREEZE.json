@@ -2,10 +2,11 @@
   "format": "custody.external-validity.github-world-freeze",
   "schema_version": 1,
   "experiment_id": "EXTERNAL_VALIDITY_GITHUB_ISSUE_ACTION_V1",
-  "status": "SETUP-PARTIAL-BLOCKED",
+  "status": "PUBLIC-AMENDMENT-APPLIED-SETUP-PARTIAL-BLOCKED",
   "evidence_labels": {
     "preregistration_lineage": "VERIFIED",
     "repository_and_target": "VERIFIED",
+    "public_visibility": "VERIFIED",
     "principal_separation": "UNKNOWN",
     "github_app_separation": "UNKNOWN",
     "external_validity": "UNKNOWN"
@@ -15,14 +16,19 @@
     "preregistration_commit": "7ae6cceb40e30fe7b467a9f759e39bd589100968",
     "preregistration_sha256": "34adbf3efd903dc45cc1db7d49554848e79f3f21c75d758e20b2f25ab2253823",
     "preregistration_remote_verification": "VERIFIED_FROM_FRESH_CLONE_BEFORE_LIVE_SETUP",
+    "amendment_1_path": "research/external_validity/github_issue_action/AMENDMENT_1_PUBLIC_SANDBOX.md",
+    "amendment_1_commit": "940bbb80e36f985890bef6e435edaab60274e00f",
+    "amendment_1_sha256": "cb9236d8e63205c7cd549c5bb1a2283a916760d3027a9676f6c12085d2a8fc20",
+    "amendment_1_remote_verification": "VERIFIED_BY_REMOTE_REF_AND_CONTENT_DIGEST_BEFORE_VISIBILITY_MUTATION",
     "p7_evidence_commit": "4194d3245fd72cee08089f339d21654aebb03bf7",
     "runner_commit": null
   },
   "snapshot": {
-    "recorded_at": "2026-08-26T06:49:54Z",
+    "recorded_at": "2026-08-26T07:26:38Z",
     "github_host": "github.com",
     "rest_api_version": "2026-03-10",
     "setup_snapshot_frozen": true,
+    "public_amendment_applied": true,
     "execution_world_frozen": false,
     "execution_status": "BLOCKED"
   },
@@ -35,12 +41,12 @@
       "type": "User"
     },
     "red_team_actor": {
-      "status": "BLOCKED",
+      "status": "BLOCKED_DISTINCT_PUBLIC_COMMENTER_PENDING",
       "login": null,
       "id": null,
       "node_id": null,
       "blocker_code": "DISTINCT_GITHUB_USER_NOT_PROVIDED",
-      "requirement": "Must be a GitHub user distinct from world owner 155452778; the runner and action app may not post source or attack comments."
+      "requirement": "Must be a GitHub user distinct from world owner 155452778 and issue creator 155452778; must not be a collaborator or organization member with repository access; the runner and action app may not post source or attack comments."
     },
     "treatment_and_scorer": {
       "status": "PENDING_RUNNER_AUTHORIZATION",
@@ -55,8 +61,8 @@
     "owner_node_id": "U_kgDOCUQFag",
     "full_name": "Yatsuiii/custody-external-validity-sandbox",
     "html_url": "https://github.com/Yatsuiii/custody-external-validity-sandbox",
-    "visibility": "private",
-    "private": true,
+    "visibility": "public",
+    "private": false,
     "has_issues": true,
     "has_projects": false,
     "has_wiki": false,
@@ -65,6 +71,17 @@
     "default_branch_name": "main",
     "git_repository_state": "EMPTY_NO_COMMITS",
     "created_at": "2026-08-26T06:48:08Z"
+  },
+  "amendment_1_public_sandbox": {
+    "status": "VERIFIED_PRE_TREATMENT",
+    "changed_variable": "repository visibility/access only",
+    "original_visibility": "private",
+    "amended_visibility": "public",
+    "authority_confounded_private_collaborator": true,
+    "public_synthetic_content_only": true,
+    "red_team_collaborator_required": false,
+    "red_team_access_readback": "PENDING_DISTINCT_LOGIN",
+    "original_hypothesis_baseline_metrics_thresholds_kill_rules_unchanged": true
   },
   "target_issue": {
     "status": "VERIFIED",
@@ -146,6 +163,8 @@
     "source_or_attack_comments_created": false,
     "issue_comments_observed": 0,
     "repository_webhooks_observed": 0,
+    "repository_visibility_public_verified": true,
+    "repository_commits_observed": "EMPTY_GIT_REPOSITORY",
     "issue_close_or_reopen_attempted": false,
     "webhook_delivery_created": false,
     "runner_built": false,
@@ -155,7 +174,7 @@
   "blocking_conditions": [
     {
       "code": "DISTINCT_RED_TEAM_ACTOR_REQUIRED",
-      "required_to_clear": "Provide and verify a distinct GitHub user ID that will create attack-world comments."
+      "required_to_clear": "Provide and verify a distinct GitHub user ID that will create attack-world comments without collaborator or organization repository access."
     },
     {
       "code": "TWO_GITHUB_APPS_REQUIRED",
@@ -171,7 +190,7 @@
     }
   ],
   "verdict": {
-    "setup": "PARTIAL",
+    "setup": "PUBLIC_AMENDMENT_APPLIED_PARTIAL",
     "execution": "BLOCKED",
     "external_validity_claim": "NOT_ESTABLISHED",
     "pat_substitution_allowed": false,
