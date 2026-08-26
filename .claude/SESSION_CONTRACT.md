@@ -76,4 +76,4 @@ Verification:
   remains content-empty.
 - Fresh-clone remote commit and artifact-digest verification.
 
-Status: in_progress_public_sandbox_amendment
+Status: complete_with_blockers_public_amendment
