@@ -15,7 +15,7 @@ async function readEnvelope(pathname) {
     token: process.env.BLOB_READ_WRITE_TOKEN,
   });
   if (!result) {
-    return { status: 404, envelope: null };
+    return { kind: "missing", envelope: null };
   }
   const chunks = [];
   let total = 0;
@@ -23,17 +23,17 @@ async function readEnvelope(pathname) {
     const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     total += bytes.length;
     if (total > MAX_ENVELOPE_BYTES) {
-      return { status: 502, envelope: null };
+      return { kind: "invalid", envelope: null };
     }
     chunks.push(bytes);
   }
   try {
     return {
-      status: 200,
+      kind: "ok",
       envelope: JSON.parse(Buffer.concat(chunks).toString("utf8")),
     };
   } catch {
-    return { status: 502, envelope: null };
+    return { kind: "invalid", envelope: null };
   }
 }
 
@@ -56,12 +56,12 @@ export default async function delivery(request, response) {
     });
     if (request.query?.content === "1") {
       const loaded = await readEnvelope(pathname);
-      if (loaded.status === 404) {
+      if (loaded.kind === "missing") {
         return response.status(404).json({ ok: false, code: "not_found" });
       }
       const envelope = loaded.envelope;
       if (
-        loaded.status !== 200 ||
+        loaded.kind !== "ok" ||
         !envelope ||
         envelope.schema !== "github-issue-comment-raw-delivery-v1"
       ) {
