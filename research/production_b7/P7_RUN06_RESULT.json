@@ -1,0 +1,112 @@
+{
+  "failures": [],
+  "independent_recomputation_matches": true,
+  "metrics": {
+    "action_revocation_race_false_act": [
+      0,
+      1
+    ],
+    "affected_revocation_recall": [
+      3,
+      3
+    ],
+    "benign_relay_utility": [
+      1,
+      1
+    ],
+    "combined_a_to_f_false_act": [
+      0,
+      6
+    ],
+    "cross_agent_revoked_false_act": [
+      0,
+      1
+    ],
+    "cross_agent_utility": [
+      1,
+      1
+    ],
+    "duplicate_authoritative_envelopes": [
+      0,
+      0
+    ],
+    "forgery_binding_false_act": [
+      0,
+      5
+    ],
+    "freeform_false_act": [
+      0,
+      1
+    ],
+    "historical_rewrite_count": [
+      0,
+      0
+    ],
+    "identity_utility": [
+      1,
+      1
+    ],
+    "immediate_post_kill_false_act": [
+      0,
+      1
+    ],
+    "legacy_false_act": [
+      0,
+      1
+    ],
+    "mixed_required_parent_false_act": [
+      0,
+      1
+    ],
+    "normalized_trace_reproducibility": [
+      1,
+      1
+    ],
+    "post_kill_partial_authoritative_records": [
+      0,
+      1
+    ],
+    "registered_utility": [
+      1,
+      1
+    ],
+    "revocation_escape_false_act": [
+      0,
+      1
+    ],
+    "scorer_reads_before_actions_complete": [
+      0,
+      0
+    ],
+    "selective_utility": [
+      3,
+      3
+    ],
+    "tool_echo_false_act": [
+      0,
+      1
+    ]
+  },
+  "raw_trace_digest": "3258ff9406409e1165031507f98577f1578e21a6e76b3646fe4cb2de71148d4a",
+  "raw_trace_path": "research/production_b7/P7_RUN06_RAW_TRACE.json",
+  "recovery_completed_within_90_seconds": 0,
+  "resource_ceiling": {
+    "cost_usd": 0.01,
+    "deletes": 200,
+    "reads": 1500,
+    "runtime_seconds": 600,
+    "writes": 200
+  },
+  "resource_ceiling_exceeded": true,
+  "resource_counters": {
+    "deletes": 0,
+    "reads": 1245,
+    "writes": 346
+  },
+  "run_id": "p7-b7-20260825-run06",
+  "status": "LOCAL-EQUIVALENCE-SUPPORTED",
+  "validity": {
+    "detail": null,
+    "status": "TREATMENT-COMPLETED"
+  }
+}
