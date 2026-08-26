@@ -26,7 +26,7 @@ Frozen inputs:
 - P7 evidence commit 4194d3245fd72cee08089f339d21654aebb03bf7.
 - Repository ID 1347005783 and target issue ID 5254158748.
 - World owner ID 155452778; red-team actor ID 191570034.
-- Ingress App ID 47525929 / installation 156728027; action App ID 4723384 /
+- Ingress App ID 4725929 / installation 156728027; action App ID 4723384 /
   installation 156746789; selected repository is exactly 1347005783.
 - The preregistration, case set, endpoint, metrics, thresholds, and kill rules
   are immutable. No P7 or production module edits are permitted.

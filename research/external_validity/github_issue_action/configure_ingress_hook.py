@@ -20,7 +20,7 @@ from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 
 
-APP_ID = 47_525_929
+APP_ID = 4_725_929
 API_VERSION = "2026-03-10"
 EXPECTED_EVENT = "issue_comment"
 EXPECTED_URL = "https://custody-external-validity-receiver.vercel.app/api/webhook"
@@ -64,6 +64,56 @@ def _request(method: str, path: str, token: str, **kwargs: Any) -> requests.Resp
     return response
 
 
+def _json(response: requests.Response) -> dict[str, Any]:
+    value = response.json()
+    if not isinstance(value, dict):
+        raise RuntimeError("github_response_not_object")
+    return value
+
+
+def _hook_id(token: str) -> int:
+    """Read the hook ID from delivery metadata after the config exists.
+
+    GitHub exposes App webhook configuration at ``/app/hook/config`` and
+    includes the numeric hook ID in each delivery's request headers. Updating
+    the config emits a ping, so polling delivery metadata gives us an
+    independently queryable immutable hook ID without storing payloads.
+    """
+    deadline = time.monotonic() + 30
+    while time.monotonic() < deadline:
+        deliveries = _request(
+            "GET", "/app/hook/deliveries?per_page=20", token
+        ).json()
+        if not isinstance(deliveries, list):
+            raise RuntimeError("github_deliveries_response_not_list")
+        for delivery in deliveries:
+            if not isinstance(delivery, dict) or not isinstance(delivery.get("id"), int):
+                continue
+            detail = _json(
+                _request("GET", f"/app/hook/deliveries/{delivery['id']}", token)
+            )
+            request = detail.get("request")
+            headers = request.get("headers") if isinstance(request, dict) else None
+            if not isinstance(headers, dict):
+                continue
+            raw_id = next(
+                (
+                    value
+                    for key, value in headers.items()
+                    if str(key).lower() == "x-github-hook-id"
+                ),
+                None,
+            )
+            try:
+                hook_id = int(raw_id)
+            except (TypeError, ValueError):
+                continue
+            if hook_id > 0:
+                return hook_id
+        time.sleep(1)
+    raise RuntimeError("github_hook_id_unavailable")
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -98,17 +148,19 @@ def main() -> int:
             "insecure_ssl": "0",
         },
     )
-    hook = _request("GET", "/app/hook", token).json()
-    if hook.get("active") is not True:
-        raise RuntimeError("github_hook_not_active")
-    if hook.get("events") != [EXPECTED_EVENT]:
-        raise RuntimeError("github_hook_event_mismatch")
-    config = hook.get("config")
-    if not isinstance(config, dict) or config.get("url") != args.receiver_url:
+    config = _json(_request("GET", "/app/hook/config", token))
+    if config.get("url") != args.receiver_url:
         raise RuntimeError("github_hook_url_mismatch")
-    hook_id = hook.get("id")
-    if not isinstance(hook_id, int) or hook_id <= 0:
-        raise RuntimeError("github_hook_id_missing")
+    if config.get("content_type") != "json":
+        raise RuntimeError("github_hook_content_type_mismatch")
+    if str(config.get("insecure_ssl")) != "0":
+        raise RuntimeError("github_hook_ssl_mismatch")
+    app = _json(_request("GET", "/app", token))
+    if app.get("id") != APP_ID or app.get("slug") != "custody-ev-ingress-yatsuiii":
+        raise RuntimeError("github_app_identity_mismatch")
+    if app.get("events") != [EXPECTED_EVENT]:
+        raise RuntimeError("github_hook_event_mismatch")
+    hook_id = _hook_id(token)
     # Only this immutable identifier is allowed on stdout.
     print(f"hook_id={hook_id}")
     return 0
