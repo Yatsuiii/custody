@@ -1,10 +1,33 @@
-import { head } from "@vercel/blob";
+import { get, head } from "@vercel/blob";
+
+const MAX_ENVELOPE_BYTES = 4 * 1024 * 1024;
 
 function authorized(request) {
   return (
     process.env.RECEIVER_READ_TOKEN &&
     request.headers["x-receiver-read-token"] === process.env.RECEIVER_READ_TOKEN
   );
+}
+
+async function readEnvelope(pathname) {
+  const result = await get(pathname, {
+    access: "private",
+    token: process.env.BLOB_READ_WRITE_TOKEN,
+  });
+  if (!result) {
+    return null;
+  }
+  const chunks = [];
+  let total = 0;
+  for await (const chunk of result.stream) {
+    const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+    total += bytes.length;
+    if (total > MAX_ENVELOPE_BYTES) {
+      throw new Error("envelope_too_large");
+    }
+    chunks.push(bytes);
+  }
+  return JSON.parse(Buffer.concat(chunks).toString("utf8"));
 }
 
 export default async function delivery(request, response) {
@@ -20,9 +43,17 @@ export default async function delivery(request, response) {
     return response.status(400).json({ ok: false, code: "invalid_delivery_guid" });
   }
   try {
-    const blob = await head(`deliveries/${guid}.json`, {
+    const pathname = `deliveries/${guid}.json`;
+    const blob = await head(pathname, {
       token: process.env.BLOB_READ_WRITE_TOKEN,
     });
+    if (request.query?.content === "1") {
+      const envelope = await readEnvelope(pathname);
+      if (!envelope || envelope.schema !== "github-issue-comment-raw-delivery-v1") {
+        return response.status(502).json({ ok: false, code: "invalid_delivery_envelope" });
+      }
+      return response.status(200).json(envelope);
+    }
     return response.status(200).json({
       pathname: blob.pathname,
       url: blob.url,
