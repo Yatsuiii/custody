@@ -52,6 +52,7 @@ def _build_index(tmp_path) -> DecisionIndex:
 # ---------------------------------------------------------------------------
 
 
+@pytest.mark.live
 def test_gemini_timeout_during_collaboration_propagates_not_swallowed(monkeypatch, tmp_path):
     """collaborate.answer() must not catch a Gemini failure and return a
     confident-looking claim in its place — the caller (UI, judge, test)

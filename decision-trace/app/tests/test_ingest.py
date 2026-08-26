@@ -5,6 +5,8 @@ import json
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from ingest import (  # noqa: E402
@@ -32,6 +34,7 @@ def test_normalize_collapses_whitespace_for_substring_matching():
     assert _normalize("a   b\n c") == "a b c"
 
 
+@pytest.mark.live
 def test_ingest_produces_a_decision_not_already_in_the_benchmark(tmp_path):
     """Ingests a small number of fresh revert pairs from a repo already
     used by the falsifier, but must find at least one decision whose id
@@ -46,6 +49,7 @@ def test_ingest_produces_a_decision_not_already_in_the_benchmark(tmp_path):
     assert new_ids, "expected at least one decision not already in the frozen benchmark"
 
 
+@pytest.mark.live
 def test_every_accepted_evidence_quote_is_a_real_substring(tmp_path):
     decisions = ingest_repo("kubernetes/kubernetes", revert_target=5, kep_target=3)
     assert decisions
@@ -61,6 +65,7 @@ def test_every_accepted_evidence_quote_is_a_real_substring(tmp_path):
                 assert len(e.quote.strip()) > 10
 
 
+@pytest.mark.live
 def test_extraction_never_fabricates_when_no_real_quote_exists():
     from ingest import extract_decision_fields
     source = "PR #999999: Bump dependency version. r? @someone"
@@ -71,6 +76,7 @@ def test_extraction_never_fabricates_when_no_real_quote_exists():
         assert _verify_quote(fields["rationale_quote"], source)
 
 
+@pytest.mark.live
 def test_reingested_known_pair_is_consistent_with_falsifier_rationale():
     """Cross-validates the live extraction pipeline against the falsifier's
     hand-verified record for the same real decision

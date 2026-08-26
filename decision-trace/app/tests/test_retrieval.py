@@ -9,6 +9,8 @@ the same discipline the falsifier itself used.
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from loader import load_decisions  # noqa: E402
@@ -27,6 +29,7 @@ def _build_index(tmp_path) -> DecisionIndex:
     return DecisionIndex(store)
 
 
+@pytest.mark.live
 def test_search_returns_evidence_bearing_candidates(tmp_path):
     index = _build_index(tmp_path)
     results = index.search("why do we use synchronous processing here", k=5)
@@ -36,6 +39,7 @@ def test_search_returns_evidence_bearing_candidates(tmp_path):
         assert r.decision.evidence[0].url.startswith("http")
 
 
+@pytest.mark.live
 def test_delayed_preemption_query_retrieves_the_real_k8s_pair(tmp_path):
     index = _build_index(tmp_path)
     results = index.search(
@@ -48,6 +52,7 @@ def test_delayed_preemption_query_retrieves_the_real_k8s_pair(tmp_path):
     assert "kubernetes/kubernetes-pr-137662" in ids
 
 
+@pytest.mark.live
 def test_reverted_decision_never_surfaces_as_current_without_its_resolution(tmp_path):
     """The retrieved original (reverted) decision must carry a resolution
     that says it's inactive, and must name the decision that IS active —

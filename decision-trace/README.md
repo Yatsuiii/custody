@@ -118,25 +118,25 @@ Google Cloud stack, all actually wired and exercised, not aspirational:
   decision, kill the process, start a fresh one, confirm it's still there
   and still shapes answers.
 - **Vertex AI via the Google GenAI SDK** (`google-genai`, `gemini-3.7-flash`
-  for generation, `text-embedding-005` for retrieval) — every model call
-  in the product goes through this SDK; nothing is mocked, including in
-  the test suite.
+  for generation, `text-embedding-005` for retrieval) — every product model
+  call goes through this SDK. Credentialed integration tests exercise the
+  real endpoints; deterministic failure-path tests inject only the failure
+  they are designed to verify.
 
 ## Spin up locally
 
 ```bash
 git clone <this-repo-url>
 cd decision-trace
-uv venv .venv --python 3.13
-uv pip install --python .venv/bin/python google-genai google-cloud-firestore numpy streamlit pytest
+uv sync --frozen
 gcloud auth application-default login   # or point CLOUDSDK_CONFIG at existing ADC
 
 # Local dev default: JSONFileDecisionStore, no GCP credentials required to just look around
-.venv/bin/streamlit run app/ui.py --server.headless true --server.port 8765
+uv run streamlit run app/ui.py --server.headless true --server.port 8765
 
 # To run against the same Firestore-backed store the deployed service uses:
 DECISIONTRACE_STORE=firestore VERTEX_PROJECT=<your-project> \
-  .venv/bin/streamlit run app/ui.py --server.headless true --server.port 8765
+  uv run streamlit run app/ui.py --server.headless true --server.port 8765
 ```
 
 First load embeds the current decision store once (~30s), then caches to
@@ -146,12 +146,18 @@ changes). The checked-in `data/decisions.jsonl` remains the frozen
 local, user-owned expansion to 42 source rows / 63 domain records remains
 uncommitted and ungraded; it must not be used to claim new benchmark numbers.
 
-Run the tests (53 tests, including real Gemini/embedding calls, live GitHub
-ingestion, a real Firestore round trip, and targeted failure-injection tests
-for conditions that cannot be forced against a real backend on demand):
+Run the deterministic release gate without network access or cloud credentials:
 
 ```bash
-.venv/bin/python -m pytest app/tests/ -v
+make check
+```
+
+Credentialed Gemini/embedding, GitHub ingestion, and Firestore checks are
+explicitly separated so a clean clone never silently depends on local cloud
+state:
+
+```bash
+make test-live
 ```
 
 ## Deploy your own copy

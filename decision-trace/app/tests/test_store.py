@@ -7,6 +7,8 @@ import sys
 import uuid
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
@@ -163,6 +165,7 @@ def test_pre_partial_acceptance_json_record_deserializes_safely():
     assert decision.partial_acceptance is False
 
 
+@pytest.mark.live
 def test_firestore_store_round_trip_persists_and_reloads():
     """Real Firestore, no mocks. Writes to a throwaway collection under the
     project vertex.py already talks to, reads back via a fresh client
@@ -197,6 +200,7 @@ def test_firestore_store_round_trip_persists_and_reloads():
             store._collection.document(_firestore_doc_id(d.id)).delete()
 
 
+@pytest.mark.live
 def test_firestore_store_round_trip_preserves_partial_acceptance():
     """Real Firestore, disposable collection, cleaned up in `finally` —
     same discipline as the test above. Isolated to one narrow claim:

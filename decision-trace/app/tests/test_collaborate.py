@@ -5,6 +5,8 @@ import sys
 import json
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from collaborate import (  # noqa: E402
@@ -30,6 +32,7 @@ def _build_index(tmp_path) -> DecisionIndex:
     return DecisionIndex(store)
 
 
+@pytest.mark.live
 def test_answer_never_claims_the_reverted_original_is_current(tmp_path):
     """The single non-negotiable safety property: Gemini must not
     contradict resolve_active's ground truth by tagging the reverted
@@ -47,6 +50,7 @@ def test_answer_never_claims_the_reverted_original_is_current(tmp_path):
             )
 
 
+@pytest.mark.live
 def test_answer_correctly_identifies_the_revert_as_current(tmp_path):
     index = _build_index(tmp_path)
     result = answer(
@@ -59,6 +63,7 @@ def test_answer_correctly_identifies_the_revert_as_current(tmp_path):
     assert any(c.decision_id == "kubernetes/kubernetes-pr-137662" for c in current_claims)
 
 
+@pytest.mark.live
 def test_answer_cites_historical_fact_with_a_real_decision_id(tmp_path):
     index = _build_index(tmp_path)
     result = answer(
@@ -71,6 +76,7 @@ def test_answer_cites_historical_fact_with_a_real_decision_id(tmp_path):
     assert any(c.decision_id in known_ids for c in historical)
 
 
+@pytest.mark.live
 def test_unrelated_question_yields_missing_or_uncertain_not_fabrication(tmp_path):
     """A question with nothing relevant in the decision store must not
     produce a confident, fabricated answer."""

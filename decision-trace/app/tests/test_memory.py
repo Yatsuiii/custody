@@ -5,6 +5,8 @@ file, must recall a candidate decision created in an earlier "session"."""
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from collaborate import answer  # noqa: E402
@@ -47,6 +49,7 @@ def test_candidate_persists_links_correctly_and_does_not_alter_resolution(tmp_pa
     assert result.active_id == RECONSIDER_TARGET
 
 
+@pytest.mark.live
 def test_fresh_session_retrieval_recalls_the_candidate_decision(tmp_path):
     """The mandatory cross-session proof: a genuinely new store/index
     built from the same file, not the same in-process objects."""
@@ -74,6 +77,7 @@ def test_fresh_session_retrieval_recalls_the_candidate_decision(tmp_path):
     assert candidate_id in result_ids
 
 
+@pytest.mark.live
 def test_proposed_candidate_never_reads_as_currently_active(tmp_path):
     """Regression test for a real bug caught during Stage 6's manual UI
     walkthrough: a freshly created PROPOSED candidate has no lineage edges
@@ -98,6 +102,7 @@ def test_proposed_candidate_never_reads_as_currently_active(tmp_path):
     assert real_active_result.is_current
 
 
+@pytest.mark.live
 def test_fresh_session_answer_considers_the_candidate_decision(tmp_path):
     store_path = tmp_path / "store.jsonl"
 

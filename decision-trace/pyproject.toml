@@ -1,0 +1,24 @@
+[project]
+name = "decisiontrace"
+version = "0.1.0"
+description = "Evidence-backed decision history with deterministic authority proofs."
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "google-cloud-firestore>=2.29,<3",
+    "google-genai>=2.20,<3",
+    "numpy>=2.5,<3",
+    "streamlit>=1.62,<2",
+]
+
+[dependency-groups]
+dev = ["pytest>=9.1,<10"]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+pythonpath = ["app", "."]
+testpaths = ["app/tests"]
+markers = [
+    "live: requires network access, cloud credentials, or an external service",
+]
