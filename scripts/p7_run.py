@@ -43,7 +43,12 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from custody.authority import AuthorityOutput, ReceiptRootKey, TransformRef  # noqa: E402
+from custody.authority import (  # noqa: E402
+    AuthorityOutput,
+    AuthorityUnavailable,
+    ReceiptRootKey,
+    TransformRef,
+)
 from custody.firestore_store import (  # noqa: E402
     AUTHORITY_ACTION_DECISIONS_COLLECTION,
     AUTHORITY_DEPENDENCIES_COLLECTION,
@@ -63,18 +68,20 @@ import tests.test_b7_production_equivalence as p6  # noqa: E402
 # harness's own preflight/cleanup (fixed below), which let it collide with
 # leftover data from prior informal runs under the same prefix. run04 was
 # killed by an external timeout before it could record any result. run05
-# does not reuse run01/run02/run03/run04's identity or namespace.
+# reached the final retry-admission step but exhausted the SDK's default
+# retry budget under real post-kill contention. run06 does not reuse
+# run01-run05's identity or namespace.
 # ---------------------------------------------------------------------------
-RUN_ID = "p7-b7-20260825-run05"
-NAMESPACE_PREFIX = "custody_p7_b7_20260825_run05"
+RUN_ID = "p7-b7-20260825-run06"
+NAMESPACE_PREFIX = "custody_p7_b7_20260825_run06"
 DEFAULT_PROJECT = "project-988bc9fe-092c-4b32-90c"
 DEFAULT_DATABASE = "(default)"
 DEFAULT_REGION = "us-central1"
 
 PROOF_DIR = ROOT / "research" / "production_b7"
-RAW_TRACE_PATH = PROOF_DIR / "P7_RUN05_RAW_TRACE.json"
-RESULT_PATH = PROOF_DIR / "P7_RUN05_RESULT.json"
-CLEANUP_PATH = PROOF_DIR / "P7_RUN05_CLEANUP.json"
+RAW_TRACE_PATH = PROOF_DIR / "P7_RUN06_RAW_TRACE.json"
+RESULT_PATH = PROOF_DIR / "P7_RUN06_RESULT.json"
+CLEANUP_PATH = PROOF_DIR / "P7_RUN06_CLEANUP.json"
 
 COLLECTIONS = (
     CUSTODY_COLLECTION,
@@ -468,6 +475,33 @@ def _p_worker(project: str, database: str, prefix: str, ready) -> None:
     p6._admit_source(world, 0, "P-ROOT")
 
 
+def _retry_admission_with_backoff(
+    operation, *, budget_seconds: float = 180.0
+) -> tuple[object, int]:
+    """Retry a transient post-kill contention failure with backoff.
+
+    The Firestore SDK's own transaction retry (5 attempts, short exponential
+    backoff) is not enough to clear real server-side contention left behind
+    by a killed writer -- observed elsewhere in this project to take up to
+    ~117s to clear. This wraps the retry-admission call so the harness
+    records how long recovery actually took instead of raising past the
+    SDK's own retry budget.
+    """
+    deadline = time.monotonic() + budget_seconds
+    delay = 2.0
+    attempts = 0
+    while True:
+        attempts += 1
+        try:
+            return operation(), attempts
+        except AuthorityUnavailable:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                raise
+            time.sleep(min(delay, remaining))
+            delay = min(delay * 2, 20.0)
+
+
 def _run_firestore_killed_writer(
     raw: firestore.Client, counters: _Counters
 ) -> dict[str, object]:
@@ -498,10 +532,13 @@ def _run_firestore_killed_writer(
     immediate = p6.AuthorityGateway(recovered_store).execute(
         p6._action("action-P-after-kill"), ("P-ROOT",), dispatcher
     )
-    retry = p6._admit_source(p6._world(recovered_store), 0, "P-ROOT")
+    retry, retry_attempts = _retry_admission_with_backoff(
+        lambda: p6._admit_source(p6._world(recovered_store), 0, "P-ROOT")
+    )
     recovery_seconds = time.monotonic() - recovery_started
     final_ids = [item.record_id for item in recovered_store.records()]
     return {
+        "retry_attempts": retry_attempts,
         "killed_exitcode": process.exitcode,
         "records_before_retry": records_before_retry,
         "dependencies_before_retry": dependencies_before_retry,
