@@ -3,7 +3,7 @@
   "schema_version": 1,
   "status": "SIGNED_INGRESS_CONFIGURED_PRE_TREATMENT",
   "experiment_id": "EXTERNAL_VALIDITY_GITHUB_ISSUE_ACTION_V1",
-  "source_commit": "4568494",
+  "source_commit": "e0733bd",
   "source_remote_branch": "research/external-validity-github-issue-execution-20260826",
   "receiver": {
     "project": "cave2/custody-external-validity-receiver",
@@ -11,8 +11,8 @@
     "webhook_path": "/api/webhook",
     "health_path": "/api/health",
     "delivery_read_path": "/api/delivery?guid=<guid>",
-    "latest_deployment_id": "dpl_6wAbvuQBcBjLAhGjqejq7eTseWv8",
-    "latest_deployment_url": "https://custody-external-validity-receiver-p3kcmp5vb-cave2.vercel.app",
+    "latest_deployment_id": "dpl_iEvTHtGtdMueQrUHA3jQmhi3ELoP",
+    "latest_deployment_url": "https://custody-external-validity-receiver-1ixzihs24-cave2.vercel.app",
     "health_readback": "READY"
   },
   "durable_store": {
@@ -34,6 +34,7 @@
     "unit_result": "PASS",
     "syntax_command": "node --check receiver/api/webhook.js && node --check receiver/api/delivery.js && node --check receiver/api/health.js",
     "invalid_signature_probe": "HTTP 401 / invalid_signature",
+    "protected_read_invalid_token_probe": "HTTP 404 / not_found",
     "valid_live_delivery": "NOT RUN (setup ping only)",
     "hook_id": 670767399,
     "hook_event_readback": ["issue_comment"],
