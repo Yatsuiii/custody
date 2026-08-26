@@ -10,6 +10,9 @@ import sys
 import tempfile
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
+from action_compliance_test_contract import execute_contract
+
 
 MODULE_PATH = Path("Lib/_pyio.py")
 TEST_PATH = Path("Lib/test/test__pyio_locale.py")
@@ -51,11 +54,9 @@ def probe_binary_scope(module, worktree: Path) -> tuple[bool, str]:
 
 
 def run_tests(worktree: Path, python_exe: str) -> tuple[bool, str]:
-    process = subprocess.run(
-        [python_exe, str(TEST_PATH)],
-        cwd=worktree,
-        capture_output=True,
-        text=True,
+    _, process = execute_contract(
+        worktree,
+        expected_task="task-04-cpython-locale-encoding-scope",
         timeout=120,
     )
     tail = "\n".join((process.stdout + process.stderr).splitlines()[-20:])

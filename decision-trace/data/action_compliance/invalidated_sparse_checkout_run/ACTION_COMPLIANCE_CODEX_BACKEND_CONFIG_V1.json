@@ -1,0 +1,63 @@
+{
+  "backend": "codex",
+  "cli": "codex",
+  "cli_version": "codex-cli 0.146.1",
+  "model": "gpt-5.6-luna",
+  "reasoning_effort": "high",
+  "approval_policy": "never",
+  "sandbox": "workspace-write",
+  "session_isolation": {
+    "ephemeral": true,
+    "fresh_invocation_per_run": true,
+    "fresh_worktree_per_run": true,
+    "resume_model_session": false
+  },
+  "invocation": [
+    "codex",
+    "-a",
+    "never",
+    "-c",
+    "model_reasoning_effort=\"high\"",
+    "-m",
+    "gpt-5.6-luna",
+    "exec",
+    "--sandbox",
+    "workspace-write",
+    "--ephemeral",
+    "--json",
+    "--color",
+    "never",
+    "<SERIALIZED_PROMPT>"
+  ],
+  "prompt_serialization": "ACTION_COMPLIANCE_CODING_SYSTEM_PROMPT.txt bytes, then two LF bytes, then the exact materialized A/B/C context bytes",
+  "output_capture": "stdout JSONL events, stderr log, parsed turn.completed usage, final message retained in stdout log",
+  "timeout_seconds": 600,
+  "network_policy": {
+    "coding_agent_search_flag": false,
+    "effective_environment_marker": "CODEX_SANDBOX_NETWORK_DISABLED=1",
+    "coding_agent_network": "disabled in the verified execution environment",
+    "worktree_setup_network": "may use network before Codex invocation to fetch pinned repositories and prepare caches",
+    "all_arms_identical": true
+  },
+  "patch_capture": [
+    "git add -A",
+    "git diff --cached --binary --no-ext-diff"
+  ],
+  "concurrency": 1,
+  "preflight": {
+    "fixture": "pilot/task-01-k8s-postfilter-victims",
+    "attempts_used": 1,
+    "high_succeeded": true,
+    "approval_prompts_observed": false,
+    "edit_write_verified": true,
+    "new_file_capture_verified": true,
+    "actual_tests_executed": true,
+    "no_tests_ran": false,
+    "preflight_gate_pass": true,
+    "input_tokens": 1458537,
+    "cached_input_tokens": 1363456,
+    "output_tokens": 9786,
+    "reasoning_output_tokens": 4231,
+    "wall_seconds": 281.674
+  }
+}

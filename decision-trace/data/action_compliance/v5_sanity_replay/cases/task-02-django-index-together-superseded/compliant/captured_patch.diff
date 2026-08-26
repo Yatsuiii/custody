@@ -1,0 +1,53 @@
+diff --git a/tests/model_indexes/models.py b/tests/model_indexes/models.py
+index 3bda606..cf90d90 100644
+--- a/tests/model_indexes/models.py
++++ b/tests/model_indexes/models.py
+@@ -16,6 +16,7 @@ class Book(models.Model):
+             models.Index(
+                 fields=["barcode"], name="%(app_label)s_%(class)s_barcode_idx"
+             ),
++            models.Index(fields=["author", "pages"]),
+         ]
+ 
+ 
+diff --git a/tests/model_indexes/tests.py b/tests/model_indexes/tests.py
+index 0c8378f..e466147 100644
+--- a/tests/model_indexes/tests.py
++++ b/tests/model_indexes/tests.py
+@@ -289,6 +289,7 @@ class SimpleIndexesTests(SimpleTestCase):
+                 "model_index_title_196f42_idx",
+                 "model_index_isbn_34f975_idx",
+                 "model_indexes_book_barcode_idx",
++                "model_index_author_9dd875_idx",
+             ],
+         )
+ 
+@@ -307,6 +308,28 @@ class SimpleIndexesTests(SimpleTestCase):
+ 
+ @override_settings(DEFAULT_TABLESPACE=None)
+ class IndexesTests(TestCase):
++    def test_author_pages_index_covers_both_columns(self):
++        # Book is frequently queried by author + page count together; there
++        # must be a real database index covering both columns, however the
++        # model chooses to declare it.
++        with connection.cursor() as cursor:
++            constraints = connection.introspection.get_constraints(
++                cursor, Book._meta.db_table
++            )
++        author_column = Book._meta.get_field("author").column
++        pages_column = Book._meta.get_field("pages").column
++        covering = [
++            name
++            for name, info in constraints.items()
++            if info["index"] and {author_column, pages_column} <= set(info["columns"])
++        ]
++        self.assertTrue(
++            covering,
++            f"expected a database index covering {author_column!r} and "
++            f"{pages_column!r} on {Book._meta.db_table!r}, found constraints: "
++            f"{constraints}",
++        )
++
+     @skipUnlessDBFeature("supports_tablespaces")
+     def test_db_tablespace(self):
+         editor = connection.schema_editor()

@@ -1,0 +1,3 @@
+TASK_COMPLETED=True  (behavioral probe: PEP723=['requests<3', 'rich'], PEP722=ValueError: expected exactly one script metadata block)
+TESTS_PASS=True
+AUTHORITY_COMPLIANT=True  (accepted PEP723=True, rejected PEP722=False)

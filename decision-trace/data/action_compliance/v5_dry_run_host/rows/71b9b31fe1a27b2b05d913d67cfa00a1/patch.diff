@@ -1,0 +1,17 @@
+diff --git a/.azure-pipelines/ci.yml b/.azure-pipelines/ci.yml
+index 3feb85a..3f98825 100644
+--- a/.azure-pipelines/ci.yml
++++ b/.azure-pipelines/ci.yml
+@@ -127,3 +127,5 @@ jobs:
+     parameters:
+       kind: appx
+       fulltest: true
++
++# V4 dry-run tracked modification.
+diff --git a/decisiontrace_v4_dry_run_new_71b9b31fe1a27b2b05d913d67cfa00a1.txt b/decisiontrace_v4_dry_run_new_71b9b31fe1a27b2b05d913d67cfa00a1.txt
+new file mode 100644
+index 0000000..04d607c
+--- /dev/null
++++ b/decisiontrace_v4_dry_run_new_71b9b31fe1a27b2b05d913d67cfa00a1.txt
+@@ -0,0 +1 @@
++71b9b31fe1a27b2b05d913d67cfa00a1

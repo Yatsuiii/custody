@@ -1,0 +1,136 @@
+{
+  "decisions": [
+    {
+      "chosen_approach": "Deprecate Meta.index_together and AlterIndexTogether in favor of Meta.indexes with models.Index",
+      "constraints": [
+        "Migrating existing index_together should be handled as a migration",
+        "warnings.warn f\"'index_together' is deprecated. Use 'Meta.indexes' in {self.label!r} instead.\", RemovedInDjango51Warning"
+      ],
+      "context": null,
+      "current_status": "IMPLEMENTED",
+      "evidence": [
+        {
+          "quote": "The `AlterIndexTogether` migration operation is deprecated.",
+          "type": "document",
+          "url": "https://docs.djangoproject.com/en/4.2/releases/4.2/#index-together-option-is-deprecated-in-favor-of-indexes"
+        },
+        {
+          "quote": "warnings.warn(\n        f\"'index_together' is deprecated. Use 'Meta.indexes' in \"\n        f\"{self.label!r} instead.\",\n        RemovedInDjango51Warning,\n    )",
+          "type": "document",
+          "url": "bundle:artifact_001"
+        }
+      ],
+      "id": "bundle-artifact_002-decision-0",
+      "introduced_at": null,
+      "partial_acceptance": false,
+      "rationale": "'index_together' is deprecated in favor of the 'indexes' option",
+      "rejected_alternatives": [
+        "Meta.index_together",
+        "AlterIndexTogether"
+      ],
+      "related_components": [
+        "Meta.index_together",
+        "Meta.indexes",
+        "AlterIndexTogether"
+      ],
+      "related_decisions": [],
+      "subject": "Deprecate Meta.index_together in favor of Meta.indexes",
+      "superseded_at": null
+    },
+    {
+      "chosen_approach": "Remove the model's Meta.index_together option in Django 5.1",
+      "constraints": [],
+      "context": null,
+      "current_status": "IMPLEMENTED",
+      "evidence": [
+        {
+          "quote": "The model's `Meta.index_together` option is removed.",
+          "type": "document",
+          "url": "https://docs.djangoproject.com/en/5.1/releases/5.1/#features-removed-in-5-1"
+        },
+        {
+          "quote": "Refs #27236 -- Removed Meta.index_together per deprecation timeline.",
+          "type": "document",
+          "url": "https://docs.djangoproject.com/en/5.1/releases/5.1/#features-removed-in-5-1"
+        }
+      ],
+      "id": "bundle-artifact_003-decision-1",
+      "introduced_at": null,
+      "partial_acceptance": false,
+      "rationale": "Removed Meta.index_together per deprecation timeline.",
+      "rejected_alternatives": [
+        "Meta.index_together"
+      ],
+      "related_components": [
+        "Meta.index_together",
+        "BaseUserManager.make_random_password()"
+      ],
+      "related_decisions": [
+        {
+          "relationship": "IMPLEMENTS",
+          "target": "bundle-artifact_002-decision-0"
+        }
+      ],
+      "subject": "Remove Meta.index_together per deprecation timeline in Django 5.1",
+      "superseded_at": null
+    }
+  ],
+  "failures": [
+    "decision[0] contained an unverifiable evidence quote"
+  ],
+  "records": [
+    {
+      "evidence": [
+        {
+          "quote": "The `AlterIndexTogether` migration operation is deprecated.",
+          "url": "https://docs.djangoproject.com/en/4.2/releases/4.2/#index-together-option-is-deprecated-in-favor-of-indexes"
+        },
+        {
+          "quote": "warnings.warn(\n        f\"'index_together' is deprecated. Use 'Meta.indexes' in \"\n        f\"{self.label!r} instead.\",\n        RemovedInDjango51Warning,\n    )",
+          "url": "bundle:artifact_001"
+        }
+      ],
+      "id": "bundle-artifact_002-decision-0",
+      "related_decisions": [],
+      "role": "policy",
+      "scope": [
+        "Meta.index_together",
+        "Meta.indexes",
+        "AlterIndexTogether"
+      ],
+      "source_id": "artifact_002",
+      "status": "IMPLEMENTED"
+    },
+    {
+      "evidence": [
+        {
+          "quote": "The model's `Meta.index_together` option is removed.",
+          "url": "https://docs.djangoproject.com/en/5.1/releases/5.1/#features-removed-in-5-1"
+        },
+        {
+          "quote": "Refs #27236 -- Removed Meta.index_together per deprecation timeline.",
+          "url": "https://docs.djangoproject.com/en/5.1/releases/5.1/#features-removed-in-5-1"
+        }
+      ],
+      "id": "bundle-artifact_003-decision-1",
+      "related_decisions": [
+        {
+          "relationship": "IMPLEMENTS",
+          "target": "bundle-artifact_002-decision-0"
+        }
+      ],
+      "role": "policy",
+      "scope": [
+        "Meta.index_together",
+        "BaseUserManager.make_random_password()"
+      ],
+      "source_id": "artifact_003",
+      "status": "IMPLEMENTED"
+    }
+  ],
+  "requested_scope": "The `Book` model in `tests/model_indexes/models.py` is frequently queried by filtering on `author` and `pages` together, but there is currently no database index covering both columns. Add a composite index on these two fields to `Book`. Then add a regression test to `tests/model_indexes/tests.py` (in the `IndexesTests` class) that proves, at the database schema level (via `connection.introspection.get_constraints` against `Book._meta.db_table`), that an index actually covering both the `author` column and the `pages` field's column now exists.",
+  "uncertainty": [
+    "The raw artifacts do not include the contents of tests/model_indexes/tests.py or the regression test implementation.",
+    "The raw artifacts do not contain the implementation commit adding the composite index to Book for author and pages."
+  ]
+}

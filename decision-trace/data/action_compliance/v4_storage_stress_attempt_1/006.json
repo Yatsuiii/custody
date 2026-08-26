@@ -1,0 +1,84 @@
+{
+  "disk_after_capture": {
+    "filesystem": {
+      "free_bytes": 103140052992,
+      "free_inodes": 25180677,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 334626791424
+    },
+    "sizes_bytes": {
+      "root": 2135680372,
+      "shared": 1858577802,
+      "slot": 72413117,
+      "slot_tmp": 0,
+      "tmp": 0
+    }
+  },
+  "disk_after_setup": {
+    "filesystem": {
+      "free_bytes": 103140077568,
+      "free_inodes": 25180683,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 334626766848
+    },
+    "sizes_bytes": {
+      "root": 2135675824,
+      "shared": 1858577802,
+      "slot": 72410843,
+      "slot_tmp": 0,
+      "tmp": 0
+    }
+  },
+  "disk_after_test": {
+    "filesystem": {
+      "free_bytes": 103140184064,
+      "free_inodes": 25180709,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 334626660352
+    },
+    "sizes_bytes": {
+      "root": 2135675032,
+      "shared": 1858577802,
+      "slot": 72410447,
+      "slot_tmp": 0,
+      "tmp": 0
+    }
+  },
+  "full_worktree": true,
+  "index": 6,
+  "model_calls": 0,
+  "new_file": "decisiontrace_v4_storage_new_006.txt",
+  "patch_capture": {
+    "capture_command": "git add -A && git diff --cached --binary --no-ext-diff",
+    "patch_bytes": 3656,
+    "patch_has_new_file": true,
+    "patch_sha256": "3bb1817cec8db7b0f4109f6b9aa1a27c828c5998c8311928bcd07d474ce67025"
+  },
+  "pinned_sha": "879e5d587b84e6fc961829611999431778eb9f6a",
+  "run_id": "stress-006-task-02-django-index-together-superseded",
+  "setup_output_tail": "{\"contract_version\": \"test-command-v1\", \"full_worktree\": true, \"grader_interpreter\": \"/usr/bin/python3.14\", \"interpreter\": \"/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-00/task-02-django-index-together-superseded/worktree/.venv/bin/python\", \"interpreter_kind\": \"worktree_venv\", \"pinned_sha\": \"879e5d587b84e6fc961829611999431778eb9f6a\", \"setup_interpreter\": \"/usr/bin/python3.14\", \"setup_python_argument\": \"/home/Yatsuiii/.pyenv/versions/3.12.13/bin/python\", \"sparse_checkout\": false, \"status_porcelain\": \"?? .decisiontrace_setup_metadata.json\\n?? .venv/\\n\", \"task\": \"task-02-django-index-together-superseded\", \"test_command\": [\"/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-00/task-02-django-index-together-superseded/worktree/.venv/bin/python\", \"runtests.py\", \"model_indexes\", \"-v1\"], \"test_cwd\": \"tests\", \"test_env\": {}}\n",
+  "setup_returncode": 0,
+  "slot": 0,
+  "sparse_checkout": false,
+  "status": "PASS",
+  "status_after": "",
+  "status_before": "?? .venv/\n",
+  "task": "task-02-django-index-together-superseded",
+  "test_command": [
+    "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-00/task-02-django-index-together-superseded/worktree/.venv/bin/python",
+    "runtests.py",
+    "model_indexes",
+    "-v1"
+  ],
+  "test_cwd": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-00/task-02-django-index-together-superseded/worktree/tests",
+  "test_env": {},
+  "test_execution_status": "executed_with_tests",
+  "test_output_tail": "Testing against Django installed in '/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-00/task-02-django-index-together-superseded/worktree/django' with up to 16 processes\nFound 30 test(s).\nSystem check identified no issues (0 silenced).\nCreating test database for alias 'default'...\nCloning test database for alias 'default'...\nCloning test database for alias 'default'...\n............................ss\n----------------------------------------------------------------------\nRan 30 tests in 0.018s\n\nOK (skipped=2)\nDestroying test database for alias 'default'...\nDestroying test database for alias 'default'...\nDestroying test database for alias 'default'...\n",
+  "test_returncode": 0,
+  "tests_executed": true,
+  "tracked_edit": ".github/CODE_OF_CONDUCT.md",
+  "wall_seconds": 35.801
+}

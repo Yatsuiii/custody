@@ -1,0 +1,8 @@
+{
+  "bundle_dir": "data/action_compliance/dev_corpus/dev-04-rust-span-lowering-dedup",
+  "decision_count": 2,
+  "extractor_version": "v2",
+  "failure_count": 0,
+  "proof_generated": true,
+  "raw_model_response_sha256": "e473f6ef562755ff5cbb0d9d3d295199e0b72545715b6e43e2aeed4fe5108bca"
+}

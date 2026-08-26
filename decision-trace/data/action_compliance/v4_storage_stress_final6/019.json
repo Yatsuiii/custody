@@ -1,0 +1,106 @@
+{
+  "disk_after_capture": {
+    "filesystem": {
+      "free_bytes": 103106838528,
+      "free_inodes": 25172568,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 334660005888
+    },
+    "host_root_filesystem": {
+      "free_bytes": 11310596096,
+      "free_inodes": 2761376,
+      "total_bytes": 63090503680,
+      "total_inodes": 15402955,
+      "used_bytes": 48541904896
+    },
+    "sizes_bytes": {
+      "codex_sqlite": 0,
+      "root": 2106533582,
+      "shared": 1858577802,
+      "slot": 115500906,
+      "slot_tmp": 0,
+      "tmp": 0
+    }
+  },
+  "disk_after_setup": {
+    "filesystem": {
+      "free_bytes": 103231381504,
+      "free_inodes": 25202974,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 334535462912
+    },
+    "host_root_filesystem": {
+      "free_bytes": 11310608384,
+      "free_inodes": 2761379,
+      "total_bytes": 63090503680,
+      "total_inodes": 15402955,
+      "used_bytes": 48541892608
+    },
+    "sizes_bytes": {
+      "codex_sqlite": 0,
+      "root": 2106532439,
+      "shared": 1858577802,
+      "slot": 115500169,
+      "slot_tmp": 0,
+      "tmp": 0
+    }
+  },
+  "disk_after_test": {
+    "filesystem": {
+      "free_bytes": 103106834432,
+      "free_inodes": 25172567,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 334660009984
+    },
+    "host_root_filesystem": {
+      "free_bytes": 11310587904,
+      "free_inodes": 2761374,
+      "total_bytes": 63090503680,
+      "total_inodes": 15402955,
+      "used_bytes": 48541913088
+    },
+    "sizes_bytes": {
+      "codex_sqlite": 0,
+      "root": 2222034188,
+      "shared": 1858577802,
+      "slot": 115501750,
+      "slot_tmp": 0,
+      "tmp": 0
+    }
+  },
+  "full_worktree": true,
+  "index": 19,
+  "model_calls": 0,
+  "new_file": "decisiontrace_v4_storage_new_019.txt",
+  "patch_capture": {
+    "capture_command": "git add -A && git diff --cached --binary --no-ext-diff",
+    "patch_bytes": 561,
+    "patch_has_new_file": true,
+    "patch_sha256": "90330a6e315dfe8d150b3afdd8db8113cec062bb7155ef674a52902dc29596b6"
+  },
+  "pinned_sha": "261a452a1300eeeae1428ffd6e6623329c085e2c",
+  "run_id": "stress-019-task-04-cpython-locale-encoding-scope",
+  "setup_output_tail": "{\"contract_version\": \"test-command-v1\", \"full_worktree\": true, \"grader_interpreter\": \"/usr/bin/python3.14\", \"interpreter\": \"/home/Yatsuiii/.pyenv/versions/3.12.13/bin/python\", \"interpreter_kind\": \"pinned_host_python\", \"pinned_sha\": \"261a452a1300eeeae1428ffd6e6623329c085e2c\", \"setup_interpreter\": \"/usr/bin/python3.14\", \"setup_python_argument\": \"/home/Yatsuiii/.pyenv/versions/3.12.13/bin/python\", \"sparse_checkout\": false, \"status_porcelain\": \"?? .decisiontrace_setup_metadata.json\\n\", \"task\": \"task-04-cpython-locale-encoding-scope\", \"test_command\": [\"/home/Yatsuiii/.pyenv/versions/3.12.13/bin/python\", \"Lib/test/test__pyio_locale.py\"], \"test_cwd\": \".\", \"test_env\": {}}\n",
+  "setup_returncode": 0,
+  "slot": 1,
+  "sparse_checkout": false,
+  "status": "PASS",
+  "status_after": "",
+  "status_before": "",
+  "task": "task-04-cpython-locale-encoding-scope",
+  "test_command": [
+    "/home/Yatsuiii/.pyenv/versions/3.12.13/bin/python",
+    "Lib/test/test__pyio_locale.py"
+  ],
+  "test_cwd": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-01/task-04-cpython-locale-encoding-scope/worktree",
+  "test_env": {},
+  "test_execution_status": "executed_with_tests",
+  "test_output_tail": ".\n----------------------------------------------------------------------\nRan 1 test in 0.001s\n\nOK\n",
+  "test_returncode": 0,
+  "tests_executed": true,
+  "tracked_edit": ".github/PULL_REQUEST_TEMPLATE.md",
+  "wall_seconds": 64.425
+}

@@ -1,0 +1,15 @@
+diff --git a/.clippy.toml b/.clippy.toml
+index b95e806..71fd0ba 100644
+--- a/.clippy.toml
++++ b/.clippy.toml
+@@ -1 +1,3 @@
+ allow-mixed-uninlined-format-args = false
++
++# V4 dry-run tracked modification.
+diff --git a/decisiontrace_v4_dry_run_new_53485db0cf67f239c5220fc16130b503.txt b/decisiontrace_v4_dry_run_new_53485db0cf67f239c5220fc16130b503.txt
+new file mode 100644
+index 0000000..578e543
+--- /dev/null
++++ b/decisiontrace_v4_dry_run_new_53485db0cf67f239c5220fc16130b503.txt
+@@ -0,0 +1 @@
++53485db0cf67f239c5220fc16130b503

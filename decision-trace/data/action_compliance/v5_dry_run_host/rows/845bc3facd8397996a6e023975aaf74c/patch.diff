@@ -1,0 +1,17 @@
+diff --git a/.git-blame-ignore-revs b/.git-blame-ignore-revs
+index f395648..48ede63 100644
+--- a/.git-blame-ignore-revs
++++ b/.git-blame-ignore-revs
+@@ -35,3 +35,5 @@ c7ee560e00b85f7486b452c14ff49e4737996eda  # Blacken tools/
+ 585037a80a1177f1fa92e159a7079855782e543e  # Cleanup implicit string concatenation
+ 8a6f6ac19b80a6dc35900a47016c851d9fcd2ee2  # Blacken src/pip/_internal/resolution directory
+ acfcae8941bb12ecfc372a05c875a7b414992604  # Reformat with Black's 2025 code style
++
++# V4 dry-run tracked modification.
+diff --git a/decisiontrace_v4_dry_run_new_845bc3facd8397996a6e023975aaf74c.txt b/decisiontrace_v4_dry_run_new_845bc3facd8397996a6e023975aaf74c.txt
+new file mode 100644
+index 0000000..d3a9038
+--- /dev/null
++++ b/decisiontrace_v4_dry_run_new_845bc3facd8397996a6e023975aaf74c.txt
+@@ -0,0 +1 @@
++845bc3facd8397996a6e023975aaf74c

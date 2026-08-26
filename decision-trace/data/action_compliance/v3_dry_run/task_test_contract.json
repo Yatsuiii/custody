@@ -1,0 +1,122 @@
+{
+  "task-02-django-index-together-superseded": {
+    "contract_version": "test-command-v1",
+    "interpreter": "/tmp/action-compliance-v3-dry-run-tsnxnva1/bases/task-02-django-index-together-superseded/worktree/.venv/bin/python",
+    "pinned_sha": "879e5d587b84e6fc961829611999431778eb9f6a",
+    "task": "task-02-django-index-together-superseded",
+    "test_command": [
+      "/tmp/action-compliance-v3-dry-run-tsnxnva1/bases/task-02-django-index-together-superseded/worktree/.venv/bin/python",
+      "runtests.py",
+      "model_indexes",
+      "-v1"
+    ],
+    "test_cwd": "tests",
+    "test_env": {}
+  },
+  "task-03-pip-inline-script-metadata": {
+    "contract_version": "test-command-v1",
+    "interpreter": "/usr/bin/python3.14",
+    "pinned_sha": "b35182d8f7245f046eed2975275c57b54ce3ba56",
+    "task": "task-03-pip-inline-script-metadata",
+    "test_command": [
+      "/usr/bin/python3.14",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests/unit",
+      "-p",
+      "test_script_metadata.py"
+    ],
+    "test_cwd": ".",
+    "test_env": {
+      "PYTHONPATH": "/tmp/action-compliance-v3-dry-run-tsnxnva1/bases/task-03-pip-inline-script-metadata/worktree/src"
+    }
+  },
+  "task-04-cpython-locale-encoding-scope": {
+    "contract_version": "test-command-v1",
+    "interpreter": "/home/Yatsuiii/.pyenv/versions/3.12.13/bin/python",
+    "pinned_sha": "261a452a1300eeeae1428ffd6e6623329c085e2c",
+    "task": "task-04-cpython-locale-encoding-scope",
+    "test_command": [
+      "/home/Yatsuiii/.pyenv/versions/3.12.13/bin/python",
+      "Lib/test/test__pyio_locale.py"
+    ],
+    "test_cwd": ".",
+    "test_env": {}
+  },
+  "task-05-packaging-manylinux-aliases": {
+    "contract_version": "test-command-v1",
+    "interpreter": "/usr/bin/python3.14",
+    "pinned_sha": "19fbc45b24ca0d577c9b256bb404b0dbaf4903da",
+    "task": "task-05-packaging-manylinux-aliases",
+    "test_command": [
+      "/usr/bin/python3.14",
+      "tests/test_manylinux_pep600.py"
+    ],
+    "test_cwd": ".",
+    "test_env": {
+      "PYTHONPATH": "/tmp/action-compliance-v3-dry-run-tsnxnva1/bases/task-05-packaging-manylinux-aliases/worktree"
+    }
+  },
+  "task-06-opentofu-static-source-scope": {
+    "contract_version": "test-command-v1",
+    "interpreter": "go",
+    "pinned_sha": "3fdc8090501234c55093078255969ecbc46f2fe2",
+    "task": "task-06-opentofu-static-source-scope",
+    "test_command": [
+      "go",
+      "test",
+      "./internal/configs",
+      "-run",
+      "^TestDecisionTrace",
+      "-count=1"
+    ],
+    "test_cwd": ".",
+    "test_env": {
+      "GOCACHE": "/tmp/action-compliance-v3-dry-run-tsnxnva1/caches/task-06-opentofu-static-source-scope/go-cache/build",
+      "GOMODCACHE": "/tmp/action-compliance-v3-dry-run-tsnxnva1/caches/task-06-opentofu-static-source-scope/go-cache/modules"
+    }
+  },
+  "task-07-axum-optional-typed-header": {
+    "contract_version": "test-command-v1",
+    "interpreter": "cargo",
+    "pinned_sha": "fd11d8efde4895a2159a29dcd586a7db99917057",
+    "task": "task-07-axum-optional-typed-header",
+    "test_command": [
+      "cargo",
+      "test",
+      "--offline",
+      "-p",
+      "axum-extra",
+      "--features",
+      "typed-header",
+      "--test",
+      "decisiontrace_optional_typed_header",
+      "--",
+      "--nocapture"
+    ],
+    "test_cwd": ".",
+    "test_env": {
+      "CARGO_HOME": "/tmp/action-compliance-v3-dry-run-tsnxnva1/caches/task-07-axum-optional-typed-header/cargo-home",
+      "CARGO_TARGET_DIR": "/tmp/action-compliance-v3-dry-run-tsnxnva1/caches/task-07-axum-optional-typed-header/cargo-target"
+    }
+  },
+  "task-go-01-maps-sorted-keys": {
+    "contract_version": "test-command-v1",
+    "interpreter": "go",
+    "pinned_sha": "56ebf80e57db9f61981fc0636fc6419dc6f68eda",
+    "task": "task-go-01-maps-sorted-keys",
+    "test_command": [
+      "go",
+      "test",
+      "-overlay=/tmp/action-compliance-v3-dry-run-tsnxnva1/bases/task-go-01-maps-sorted-keys/worktree/overlay.json",
+      "maps"
+    ],
+    "test_cwd": ".",
+    "test_env": {
+      "GOCACHE": "/tmp/action-compliance-v3-dry-run-tsnxnva1/caches/task-go-01-maps-sorted-keys/go-cache",
+      "GOWORK": "off"
+    }
+  }
+}

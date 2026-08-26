@@ -1,0 +1,8 @@
+{
+  "bundle_dir": "data/action_compliance/bundle_inputs/task-06-opentofu-static-source-scope",
+  "decision_count": 2,
+  "extractor_version": "v2",
+  "failure_count": 0,
+  "proof_generated": true,
+  "raw_model_response_sha256": "59e0f9e75b6a59ed6ee5c0b3190a8f45ded3060e0e63ee97ac2517a8e249c1bb"
+}

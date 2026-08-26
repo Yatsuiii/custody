@@ -1,0 +1,57 @@
+{
+  "completed_cycles": 63,
+  "concurrency": 2,
+  "failed_cycles": 0,
+  "failures": [],
+  "final_filesystem": {
+    "filesystem": {
+      "free_bytes": 103335301120,
+      "free_inodes": 25228345,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 334431543296
+    },
+    "host_root_filesystem": {
+      "free_bytes": 11124740096,
+      "free_inodes": 2716001,
+      "total_bytes": 63090503680,
+      "total_inodes": 15402955,
+      "used_bytes": 48727760896
+    },
+    "sizes_bytes": {
+      "codex_sqlite": 13463920,
+      "root": 2004541302,
+      "shared": 1858577802,
+      "tmp": 0
+    }
+  },
+  "initial_filesystem": {
+    "filesystem": {
+      "free_bytes": 103329779712,
+      "free_inodes": 25226997,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 334437064704
+    },
+    "host_root_filesystem": {
+      "free_bytes": 11288621056,
+      "free_inodes": 2756011,
+      "total_bytes": 63090503680,
+      "total_inodes": 15402955,
+      "used_bytes": 48563879936
+    },
+    "sizes_bytes": {
+      "codex_sqlite": 13463920,
+      "root": 2004540425,
+      "shared": 1858577802,
+      "tmp": 0
+    }
+  },
+  "initial_residual_bytes": 2004540425,
+  "model_calls": 0,
+  "passed_cycles": 63,
+  "planned_cycles": 63,
+  "recovery": [],
+  "residual_bytes": 2004541302,
+  "worktree_count": 0
+}

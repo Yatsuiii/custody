@@ -1,0 +1,28 @@
+diff --git a/src/maps/maps_test.go b/src/maps/maps_test.go
+index c8ee3cd..1607c09 100644
+--- a/src/maps/maps_test.go
++++ b/src/maps/maps_test.go
+@@ -6,6 +6,7 @@ package maps
+ 
+ import (
+ 	"math"
++	"slices"
+ 	"strconv"
+ 	"testing"
+ )
+@@ -240,3 +241,15 @@ func TestCloneLarge(t *testing.T) {
+ 		}
+ 	}
+ }
++
++// TestKeysAsSortedSlice verifies that a map's keys can be reliably
++// obtained as a deterministic, sorted slice for use in golden-output
++// or order-independent comparisons.
++func TestKeysAsSortedSlice(t *testing.T) {
++	got := slices.Sorted(Keys(m1))
++	want := []int{1, 2, 4, 8}
++	if !slices.Equal(got, want) {
++		t.Errorf("sorted keys of %v = %v, want %v", m1, got, want)
++	}
++}
++

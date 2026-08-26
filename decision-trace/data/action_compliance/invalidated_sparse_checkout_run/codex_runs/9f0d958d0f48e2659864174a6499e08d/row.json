@@ -1,0 +1,13 @@
+{
+  "failure_stage": "worktree_setup",
+  "prompt_path": "data/action_compliance/codex_runs/9f0d958d0f48e2659864174a6499e08d/prompt.txt",
+  "prompt_sha256": "13b7ae69aa5ffb5c0d64fe04b605ef6ac8cf6dd8342968d56b24df4f3af622b7",
+  "repetition": 1,
+  "round": 1,
+  "run_id": "9f0d958d0f48e2659864174a6499e08d",
+  "setup_returncode": 128,
+  "setup_wall_seconds": 0.016,
+  "status": "infrastructure_failure",
+  "system_prompt_sha256": "bdcb4f0d165e3091e06d47d92fdefbec9c7c044f5126ad530dfc1d4fcc5ed76d",
+  "task": "task-07-axum-optional-typed-header"
+}

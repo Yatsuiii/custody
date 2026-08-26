@@ -32,6 +32,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
+from action_compliance_test_contract import execute_contract
+
 TEST_PACKAGE = "maps"
 PROBE = Path(__file__).with_name("semantic_probe.go")
 
@@ -68,13 +71,11 @@ def run_semantic_probe(
 def run_tests(worktree_dir: Path, go_cache: Path) -> tuple[bool, str]:
     overlay = worktree_dir / "overlay.json"
     try:
-        proc = subprocess.run(
-            ["go", "test", f"-overlay={overlay}", TEST_PACKAGE],
-            cwd=worktree_dir,
-            env=go_environment(go_cache),
-            capture_output=True,
-            text=True,
+        _, proc = execute_contract(
+            worktree_dir,
+            expected_task="task-go-01-maps-sorted-keys",
             timeout=120,
+            base_env=go_environment(go_cache),
         )
     except Exception as e:
         return False, f"go test failed to run: {e}"

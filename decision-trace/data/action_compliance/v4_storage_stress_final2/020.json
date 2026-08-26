@@ -1,0 +1,10 @@
+{
+  "error": "V4StorageError('worker slot is not clean before run: /run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-00')",
+  "index": 20,
+  "model_calls": 0,
+  "run_id": "stress-020-task-04-cpython-locale-encoding-scope",
+  "slot": 0,
+  "status": "FAIL",
+  "task": "task-04-cpython-locale-encoding-scope",
+  "wall_seconds": 11.173
+}

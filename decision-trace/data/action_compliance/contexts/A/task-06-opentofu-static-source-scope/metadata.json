@@ -1,0 +1,14 @@
+{
+  "bundle": "data/action_compliance/bundle_inputs/task-06-opentofu-static-source-scope",
+  "condition": "A",
+  "context_bytes": 2714,
+  "context_sha256": "1840dfafa9be410f353d084aa187b96e1ff5bf4e1c797ddf48172b1cd3f33d5e",
+  "context_words": 306,
+  "estimated_tokens": 803,
+  "raw_bytes": 2714,
+  "raw_content_sha256": "7468c5a21892e8fd9519e48142502191e807d7fdd671cef65789cc5e5299668b",
+  "raw_prefix_sha256": "1840dfafa9be410f353d084aa187b96e1ff5bf4e1c797ddf48172b1cd3f33d5e",
+  "raw_words": 306,
+  "system_bytes": 496,
+  "total_bytes": 3212
+}

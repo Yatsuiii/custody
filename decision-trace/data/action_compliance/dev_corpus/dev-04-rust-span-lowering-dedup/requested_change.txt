@@ -1,0 +1,1 @@
+The compiler's span-lowering path currently does not early-return on duplicate span lowerings. Implement early-return-on-duplicate-span-lowering for this compiler pass, given the history below, and note any known performance risk.

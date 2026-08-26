@@ -1,0 +1,7 @@
+The GangScheduling plugin currently has proactive "activate this gang's
+remaining unscheduled pods while waiting for quorum" logic living inside
+permitPodGroup (the Permit extension point). Implement the equivalent
+proactive-activation behavior for the pod-group/workload scheduling cycle
+using whichever extension point is the currently correct home for
+quorum/feasibility decisions in this plugin, and explain which extension
+point you chose and why.

@@ -1,0 +1,42 @@
+{
+  "bundle": "data/action_compliance/bundle_inputs/task-02-django-index-together-superseded",
+  "cli_version": "2.1.232",
+  "model": "claude-sonnet-4-5-20250929",
+  "prompt_sha256": "fb099aacbd1dc832a399bb65a1d4d8579ffda95dfde372aa5dedda0241c812e5",
+  "response_sha256": "cd05899d4abe07770c508704b81331f5d12efddfdcd31bf98cdcb9d3486ebfd1",
+  "summary_prompt_sha256": "e0e6efa9fc932405df8c43eefed50fe91b716eed7acbd3aa04e4e0552bbfc5a5",
+  "temperature": "backend default (Claude Code CLI exposes no temperature flag)",
+  "usage": {
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2481,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 2481,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "not_available",
+    "input_tokens": 9,
+    "iterations": [
+      {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 2481,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 2481,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 9,
+        "output_tokens": 1333,
+        "type": "message"
+      }
+    ],
+    "output_tokens": 1333,
+    "output_tokens_details": {
+      "thinking_tokens": 741
+    },
+    "server_tool_use": {
+      "web_fetch_requests": 0,
+      "web_search_requests": 0
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+  }
+}

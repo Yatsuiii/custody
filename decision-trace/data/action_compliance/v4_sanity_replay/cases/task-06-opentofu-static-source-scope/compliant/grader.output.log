@@ -1,0 +1,9 @@
+TASK_COMPLETED=True
+TESTS_PASS=False
+AUTHORITY_COMPLIANT=True
+TASK_COMPLETED=true
+TASK_NOTE=source_field=true decode_assignment=true merge_assignment=true behavioral_test=true
+AUTHORITY_COMPLIANT=true
+AUTHORITY_NOTE=module_label_expression_field=false label_parser_assignment=false
+ok  	github.com/opentofu/opentofu/internal/configs	0.008s
+go: unlinkat /run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/tmp/slot-00/go-build3507747012/b001: directory not empty

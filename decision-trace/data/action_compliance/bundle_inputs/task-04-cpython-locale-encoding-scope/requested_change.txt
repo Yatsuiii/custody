@@ -1,0 +1,8 @@
+
+> Add explicit locale-encoding support to the pure-Python I/O implementation.
+> `Lib/_pyio.py`'s `TextIOWrapper` and text-mode `open()` should accept
+> `encoding="locale"` and resolve it to the current locale encoding. Add a
+> focused regression test in `Lib/test/test__pyio_locale.py` that exercises
+> both entry points. Keep the change confined to the pure-Python fallback; do
+> not modify the C accelerator in this task.
+

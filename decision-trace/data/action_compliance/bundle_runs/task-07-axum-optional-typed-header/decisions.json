@@ -1,0 +1,135 @@
+{
+  "decisions": [
+    {
+      "chosen_approach": "Introduce separate `OptionalFromRequest` and `OptionalFromRequestParts` traits implemented only for types where discarding a specific missing-value error makes sense.",
+      "constraints": [],
+      "context": null,
+      "current_status": "ACCEPTED",
+      "evidence": [
+        {
+          "quote": "The issue identifies that blanket `Option<Extractor>` behavior caused users to expect different semantics for particular extractors. It proposes separate `OptionalFromRequest` and `OptionalFromRequestParts` traits, implemented only for the types where discarding a specific missing-value error makes sense.",
+          "type": "document",
+          "url": "https://github.com/tokio-rs/axum/issues/2298"
+        },
+        {
+          "quote": "Pedersen answers, \u201cI think that sounds like a good path!\u201d The issue is closed by the merge of PR #2475.",
+          "type": "document",
+          "url": "https://github.com/tokio-rs/axum/issues/2298"
+        }
+      ],
+      "id": "bundle-artifact_001-decision-0",
+      "introduced_at": null,
+      "partial_acceptance": false,
+      "rationale": "Blanket `Option<Extractor>` behavior caused users to expect different semantics for particular extractors.",
+      "rejected_alternatives": [
+        "blanket `Option<Extractor>` behavior"
+      ],
+      "related_components": [
+        "OptionalFromRequest",
+        "OptionalFromRequestParts"
+      ],
+      "related_decisions": [],
+      "subject": "Replace blanket Option<Extractor> behavior with separate optional extractor traits",
+      "superseded_at": null
+    },
+    {
+      "chosen_approach": "Add the two optional-extractor traits, implement them only for relevant types, deprecate old optional wrappers, and have `TypedHeader` return `Ok(None)` only when missing and `TypedHeaderRejection` when a present header fails to decode.",
+      "constraints": [],
+      "context": null,
+      "current_status": "IMPLEMENTED",
+      "evidence": [
+        {
+          "quote": "PR #2475, \u201cAdd a separate trait for optional extractors,\u201d merged on 2024-12-10 as `ec75ee38274ed5423ece5f3ae0b6e947a7e6ec43`. Its checklist adds the two optional-extractor traits, implements them only for relevant types, deprecates the old optional wrappers, documents the behavior, and updates changelogs.",
+          "type": "document",
+          "url": "https://github.com/tokio-rs/axum/pull/2475"
+        },
+        {
+          "quote": "The merged `TypedHeader` implementation records whether the header is missing, returns `Ok(None)` only for that case, and returns `TypedHeaderRejection` for a decode failure when a value was present.",
+          "type": "document",
+          "url": "https://github.com/tokio-rs/axum/pull/2475"
+        }
+      ],
+      "id": "bundle-artifact_002-decision-1",
+      "introduced_at": "2024-12-10",
+      "partial_acceptance": false,
+      "rationale": "A missing header produces `None`, whereas a present header that fails to parse rejects the request.",
+      "rejected_alternatives": [
+        "swallowing all error conditions in `Option<Path<T>>` and `Option<Query<T>>`",
+        "collapsing every rejection to absence via `.await.ok()`"
+      ],
+      "related_components": [
+        "axum",
+        "axum-extra",
+        "TypedHeader",
+        "Option<Path<T>>",
+        "Option<Query<T>>"
+      ],
+      "related_decisions": [
+        {
+          "relationship": "IMPLEMENTS",
+          "target": "bundle-artifact_001-decision-0"
+        }
+      ],
+      "subject": "Implement optional extractor traits and TypedHeader missing vs. malformed distinction",
+      "superseded_at": null
+    }
+  ],
+  "failures": [],
+  "records": [
+    {
+      "evidence": [
+        {
+          "quote": "The issue identifies that blanket `Option<Extractor>` behavior caused users to expect different semantics for particular extractors. It proposes separate `OptionalFromRequest` and `OptionalFromRequestParts` traits, implemented only for the types where discarding a specific missing-value error makes sense.",
+          "url": "https://github.com/tokio-rs/axum/issues/2298"
+        },
+        {
+          "quote": "Pedersen answers, \u201cI think that sounds like a good path!\u201d The issue is closed by the merge of PR #2475.",
+          "url": "https://github.com/tokio-rs/axum/issues/2298"
+        }
+      ],
+      "id": "bundle-artifact_001-decision-0",
+      "related_decisions": [],
+      "role": "policy",
+      "scope": [
+        "OptionalFromRequest",
+        "OptionalFromRequestParts"
+      ],
+      "source_id": "artifact_001",
+      "status": "ACCEPTED"
+    },
+    {
+      "evidence": [
+        {
+          "quote": "PR #2475, \u201cAdd a separate trait for optional extractors,\u201d merged on 2024-12-10 as `ec75ee38274ed5423ece5f3ae0b6e947a7e6ec43`. Its checklist adds the two optional-extractor traits, implements them only for relevant types, deprecates the old optional wrappers, documents the behavior, and updates changelogs.",
+          "url": "https://github.com/tokio-rs/axum/pull/2475"
+        },
+        {
+          "quote": "The merged `TypedHeader` implementation records whether the header is missing, returns `Ok(None)` only for that case, and returns `TypedHeaderRejection` for a decode failure when a value was present.",
+          "url": "https://github.com/tokio-rs/axum/pull/2475"
+        }
+      ],
+      "id": "bundle-artifact_002-decision-1",
+      "related_decisions": [
+        {
+          "relationship": "IMPLEMENTS",
+          "target": "bundle-artifact_001-decision-0"
+        }
+      ],
+      "role": "implementation",
+      "scope": [
+        "axum",
+        "axum-extra",
+        "TypedHeader",
+        "Option<Path<T>>",
+        "Option<Query<T>>"
+      ],
+      "source_id": "artifact_002",
+      "status": "IMPLEMENTED"
+    }
+  ],
+  "requested_scope": "Replace blanket request-parts optional extraction with an explicit, extractor-specific contract. Implement that contract for `TypedHeader` so `Option<TypedHeader<_>>` has deliberate behavior for both absent and malformed header values. Add focused tests covering an absent `Content-Type` header and a malformed `Content-Type` header.",
+  "uncertainty": [
+    "Specific implementation details or test code for the absent Content-Type and malformed Content-Type test cases are not included in the artifacts.",
+    "The exact names and contents of the three modified source files and one new source module referenced in artifact_003 are not fully specified."
+  ]
+}

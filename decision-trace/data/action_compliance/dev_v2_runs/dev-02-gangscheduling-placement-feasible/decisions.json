@@ -1,0 +1,139 @@
+{
+  "decisions": [
+    {
+      "chosen_approach": "Reuse the existing Permit extension point during the Workload Scheduling Cycle",
+      "constraints": [],
+      "context": null,
+      "current_status": "SUPERSEDED",
+      "evidence": [],
+      "id": "bundle-artifact_001-decision-0",
+      "introduced_at": null,
+      "partial_acceptance": false,
+      "rationale": null,
+      "rejected_alternatives": [],
+      "related_components": [
+        "gangscheduling-feasibility-extension-point"
+      ],
+      "related_decisions": [],
+      "subject": "Reuse Permit extension point for PodGroup feasibility checking during Workload Scheduling Cycle",
+      "superseded_at": null
+    },
+    {
+      "chosen_approach": "Introduce PlacementFeasiblePlugin interface called after each pod in a pod group is evaluated to determine PodGroup schedulability",
+      "constraints": [],
+      "context": null,
+      "current_status": "PROPOSED",
+      "evidence": [
+        {
+          "quote": "`PlacementFeasible` is the dedicated, purpose-built replacement for that role in the pod-group scheduling cycle. `Permit` itself is not deleted by this KEP (it still exists for the ordinary pod-by-pod scheduling cycle at the time of writing), but it is explicitly superseded as the mechanism for workload/pod-group-cycle feasibility/quorum decisions.",
+          "type": "document",
+          "url": "bundle:artifact_001"
+        }
+      ],
+      "id": "bundle-artifact_001-decision-1",
+      "introduced_at": null,
+      "partial_acceptance": false,
+      "rationale": "Permit usage was inconsistent during the Workload Scheduling Cycle because the waiting phase was skipped and Permit behaved differently depending on cycle phase, and a fast rejection path was needed",
+      "rejected_alternatives": [
+        "Reusing the existing Permit extension point"
+      ],
+      "related_components": [
+        "gangscheduling-feasibility-extension-point"
+      ],
+      "related_decisions": [
+        {
+          "relationship": "SUPERSEDES",
+          "target": "bundle-artifact_001-decision-0"
+        }
+      ],
+      "subject": "Introduce PlacementFeasible extension point for PodGroup feasibility checking in Workload Scheduling Cycle",
+      "superseded_at": null
+    },
+    {
+      "chosen_approach": "Delete Permit, permitPodGroup, permitPodForHierarchy, and related functions from the GangScheduling plugin, leaving PlacementFeasible as the feasibility/quorum mechanism",
+      "constraints": [],
+      "context": null,
+      "current_status": "PROPOSED",
+      "evidence": [],
+      "id": "bundle-artifact_002-decision-2",
+      "introduced_at": null,
+      "partial_acceptance": false,
+      "rationale": "Removing Permit simplifies scheduling flow, improves performance, and reduces code maintenance without impacting flow, since failure scenarios prior to binding are rare and Permit does not fully guarantee against partial deployment",
+      "rejected_alternatives": [
+        "Retaining Permit support as a safeguard",
+        "Per-pod Permit checks for group-level synchronization"
+      ],
+      "related_components": [
+        "gangscheduling-feasibility-extension-point"
+      ],
+      "related_decisions": [
+        {
+          "relationship": "DEPENDS_ON",
+          "target": "bundle-artifact_001-decision-1"
+        }
+      ],
+      "subject": "Remove Permit extension point implementation from GangScheduling plugin",
+      "superseded_at": null
+    }
+  ],
+  "failures": [
+    "decision[0] contained an unverifiable evidence quote",
+    "decision[1] contained an unverifiable evidence quote",
+    "decision[2] contained an unverifiable evidence quote",
+    "decision[2] contained an unverifiable evidence quote"
+  ],
+  "records": [
+    {
+      "evidence": [],
+      "id": "bundle-artifact_001-decision-0",
+      "related_decisions": [],
+      "role": "implementation",
+      "scope": [
+        "gangscheduling-feasibility-extension-point"
+      ],
+      "source_id": "artifact_001",
+      "status": "SUPERSEDED"
+    },
+    {
+      "evidence": [
+        {
+          "quote": "`PlacementFeasible` is the dedicated, purpose-built replacement for that role in the pod-group scheduling cycle. `Permit` itself is not deleted by this KEP (it still exists for the ordinary pod-by-pod scheduling cycle at the time of writing), but it is explicitly superseded as the mechanism for workload/pod-group-cycle feasibility/quorum decisions.",
+          "url": "bundle:artifact_001"
+        }
+      ],
+      "id": "bundle-artifact_001-decision-1",
+      "related_decisions": [
+        {
+          "relationship": "SUPERSEDES",
+          "target": "bundle-artifact_001-decision-0"
+        }
+      ],
+      "role": "implementation",
+      "scope": [
+        "gangscheduling-feasibility-extension-point"
+      ],
+      "source_id": "artifact_001",
+      "status": "PROPOSED"
+    },
+    {
+      "evidence": [],
+      "id": "bundle-artifact_002-decision-2",
+      "related_decisions": [
+        {
+          "relationship": "DEPENDS_ON",
+          "target": "bundle-artifact_001-decision-1"
+        }
+      ],
+      "role": "implementation",
+      "scope": [
+        "gangscheduling-feasibility-extension-point"
+      ],
+      "source_id": "artifact_002",
+      "status": "PROPOSED"
+    }
+  ],
+  "requested_scope": "gangscheduling-feasibility-extension-point",
+  "uncertainty": [
+    "Artifact 002 (PR #141182) was open and not yet merged at the time of writing, so complete removal of Permit from the codebase remains proposed rather than merged/implemented."
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "disk_after_capture": {
+    "filesystem": {
+      "free_bytes": 103153258496,
+      "free_inodes": 25183901,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 334613585920
+    },
+    "host_root_filesystem": {
+      "free_bytes": 11281465344,
+      "free_inodes": 2754264,
+      "total_bytes": 63090503680,
+      "total_inodes": 15402955,
+      "used_bytes": 48571035648
+    },
+    "sizes_bytes": {
+      "codex_sqlite": 13463920,
+      "root": 2077245543,
+      "shared": 1858577802,
+      "slot": 72704677,
+      "slot_tmp": 0,
+      "tmp": 0
+    }
+  },
+  "disk_after_setup": {
+    "filesystem": {
+      "free_bytes": 103241498624,
+      "free_inodes": 25205444,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 334525345792
+    },
+    "host_root_filesystem": {
+      "free_bytes": 11287412736,
+      "free_inodes": 2755716,
+      "total_bytes": 63090503680,
+      "total_inodes": 15402955,
+      "used_bytes": 48565088256
+    },
+    "sizes_bytes": {
+      "codex_sqlite": 13463920,
+      "root": 2077242858,
+      "shared": 1858577802,
+      "slot": 72702403,
+      "slot_tmp": 0,
+      "tmp": 0
+    }
+  },
+  "disk_after_test": {
+    "filesystem": {
+      "free_bytes": 103153254400,
+      "free_inodes": 25183900,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 334613590016
+    },
+    "host_root_filesystem": {
+      "free_bytes": 11273191424,
+      "free_inodes": 2752244,
+      "total_bytes": 63090503680,
+      "total_inodes": 15402955,
+      "used_bytes": 48579309568
+    },
+    "sizes_bytes": {
+      "codex_sqlite": 13463920,
+      "root": 2149945935,
+      "shared": 1858577802,
+      "slot": 72703077,
+      "slot_tmp": 0,
+      "tmp": 0
+    }
+  },
+  "full_worktree": true,
+  "index": 3,
+  "model_calls": 0,
+  "new_file": "decisiontrace_v4_storage_new_003.txt",
+  "patch_capture": {
+    "capture_command": "git add -A && git diff --cached --binary --no-ext-diff",
+    "patch_bytes": 3656,
+    "patch_has_new_file": true,
+    "patch_sha256": "cd85d0631428c90a30c259609682b2b8d3b9ada6486f148dc0df4624650f6087"
+  },
+  "pinned_sha": "879e5d587b84e6fc961829611999431778eb9f6a",
+  "run_id": "stress-003-task-02-django-index-together-superseded",
+  "setup_output_tail": "{\"contract_version\": \"test-command-v1\", \"full_worktree\": true, \"grader_interpreter\": \"/usr/bin/python3.14\", \"interpreter\": \"/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-01/task-02-django-index-together-superseded/worktree/.venv/bin/python\", \"interpreter_kind\": \"worktree_venv\", \"pinned_sha\": \"879e5d587b84e6fc961829611999431778eb9f6a\", \"setup_interpreter\": \"/usr/bin/python3.14\", \"setup_python_argument\": \"/home/Yatsuiii/.pyenv/versions/3.12.13/bin/python\", \"sparse_checkout\": false, \"status_porcelain\": \"?? .decisiontrace_setup_metadata.json\\n?? .venv/\\n\", \"task\": \"task-02-django-index-together-superseded\", \"test_command\": [\"/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-01/task-02-django-index-together-superseded/worktree/.venv/bin/python\", \"runtests.py\", \"model_indexes\", \"-v1\"], \"test_cwd\": \"tests\", \"test_env\": {}}\n",
+  "setup_returncode": 0,
+  "slot": 1,
+  "sparse_checkout": false,
+  "status": "PASS",
+  "status_after": "",
+  "status_before": "?? .venv/\n",
+  "task": "task-02-django-index-together-superseded",
+  "test_command": [
+    "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-01/task-02-django-index-together-superseded/worktree/.venv/bin/python",
+    "runtests.py",
+    "model_indexes",
+    "-v1"
+  ],
+  "test_cwd": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-01/task-02-django-index-together-superseded/worktree/tests",
+  "test_env": {},
+  "test_execution_status": "executed_with_tests",
+  "test_output_tail": "Testing against Django installed in '/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-01/task-02-django-index-together-superseded/worktree/django' with up to 16 processes\nFound 31 test(s).\nSystem check identified no issues (0 silenced).\nCreating test database for alias 'default'...\nCloning test database for alias 'default'...\nCloning test database for alias 'default'...\n.............................ss\n----------------------------------------------------------------------\nRan 31 tests in 0.029s\n\nOK (skipped=2)\nDestroying test database for alias 'default'...\nDestroying test database for alias 'default'...\nDestroying test database for alias 'default'...\n",
+  "test_returncode": 0,
+  "tests_executed": true,
+  "tracked_edit": ".github/CODE_OF_CONDUCT.md",
+  "wall_seconds": 82.912
+}

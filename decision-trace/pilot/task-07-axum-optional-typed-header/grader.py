@@ -9,6 +9,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
+from action_compliance_test_contract import execute_contract
+
 
 TASK_DIR = Path(__file__).resolve().parent
 PROBE_SOURCE = TASK_DIR / "semantic_probe.rs"
@@ -66,25 +69,11 @@ def main() -> int:
     probe_target.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(PROBE_SOURCE, probe_target)
     try:
-        process = subprocess.run(
-            [
-                "cargo",
-                "test",
-                "--offline",
-                "-p",
-                "axum-extra",
-                "--features",
-                "typed-header",
-                "--test",
-                "decisiontrace_optional_typed_header",
-                "--",
-                "--nocapture",
-            ],
-            cwd=worktree,
-            env=environment,
-            capture_output=True,
-            text=True,
+        _, process = execute_contract(
+            worktree,
+            expected_task="task-07-axum-optional-typed-header",
             timeout=600,
+            base_env=environment,
         )
         output = process.stdout + process.stderr
         absent = "DECISIONTRACE_ABSENT_STATUS=204" in output

@@ -1,0 +1,15 @@
+{
+  "error": "RuntimeError(\"command failed (128): git status --porcelain=v1\\nfatal: detected dubious ownership in repository at '/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-00/task-03-pip-inline-script-metadata/worktree'\\nTo add an exception for this directory, call:\\n\\n\\tgit config --global --add safe.directory /run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-00/task-03-pip-inline-script-metadata/worktree\")",
+  "full_worktree": true,
+  "index": 10,
+  "model_calls": 0,
+  "pinned_sha": "b35182d8f7245f046eed2975275c57b54ce3ba56",
+  "run_id": "stress-010-task-03-pip-inline-script-metadata",
+  "setup_output_tail": "{\"contract_version\": \"test-command-v1\", \"full_worktree\": true, \"grader_interpreter\": \"/usr/bin/python3.14\", \"interpreter\": \"/usr/bin/python3.14\", \"interpreter_kind\": \"setup_host_python\", \"pinned_sha\": \"b35182d8f7245f046eed2975275c57b54ce3ba56\", \"setup_interpreter\": \"/usr/bin/python3.14\", \"setup_python_argument\": \"/home/Yatsuiii/.pyenv/versions/3.12.13/bin/python\", \"sparse_checkout\": false, \"status_porcelain\": \"?? .decisiontrace_setup_metadata.json\\n\", \"task\": \"task-03-pip-inline-script-metadata\", \"test_command\": [\"/usr/bin/python3.14\", \"-m\", \"unittest\", \"discover\", \"-s\", \"tests/unit\", \"-p\", \"test_script_metadata.py\"], \"test_cwd\": \".\", \"test_env\": {\"PYTHONPATH\": \"/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-00/task-03-pip-inline-script-metadata/worktree/src\"}}\n",
+  "setup_returncode": 0,
+  "slot": 0,
+  "sparse_checkout": false,
+  "status": "FAIL",
+  "task": "task-03-pip-inline-script-metadata",
+  "wall_seconds": 29.333
+}

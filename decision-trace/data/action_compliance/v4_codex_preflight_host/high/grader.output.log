@@ -1,0 +1,12 @@
+PATCH_APPLY_FAILED: error: decisiontrace_codex_preflight_probe.txt: already exists in working directory
+error: patch failed: pkg/scheduler/framework/interface.go:289
+error: pkg/scheduler/framework/interface.go: patch does not apply
+error: patch failed: pkg/scheduler/framework/plugins/defaultpreemption/default_preemption_test.go:189
+error: pkg/scheduler/framework/plugins/defaultpreemption/default_preemption_test.go: patch does not apply
+error: patch failed: pkg/scheduler/framework/preemption/preemption.go:84
+error: pkg/scheduler/framework/preemption/preemption.go: patch does not apply
+error: patch failed: staging/src/k8s.io/kube-scheduler/framework/interface.go:414
+error: staging/src/k8s.io/kube-scheduler/framework/interface.go: patch does not apply
+TASK_COMPLETED=False
+TESTS_PASS=False
+AUTHORITY_COMPLIANT=False

@@ -1,0 +1,7 @@
+{
+  "bundle_dir": "data/action_compliance/bundle_inputs/task-go-01-maps-sorted-keys",
+  "decision_count": 2,
+  "failure_count": 4,
+  "proof_generated": true,
+  "raw_model_response_sha256": "41fdd2a5f0b660e2d29ffa42340ae8e041085121d0dfb990dbfc45de82040d70"
+}

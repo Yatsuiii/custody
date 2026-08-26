@@ -1,0 +1,58 @@
+diff --git a/.editorconfig b/.editorconfig
+index e43144c..809d156 100644
+--- a/.editorconfig
++++ b/.editorconfig
+@@ -45,3 +45,5 @@ max_line_length = 79
+ 
+ [*.yml]
+ indent_size = 2
++
++# V4 dry-run tracked modification.
+diff --git a/.venv/lib/python3.12/site-packages/setuptools/_vendor/jaraco/text/Lorem ipsum.txt b/.venv/lib/python3.12/site-packages/setuptools/_vendor/jaraco/text/Lorem ipsum.txt
+new file mode 100644
+index 0000000..986f944
+--- /dev/null
++++ b/.venv/lib/python3.12/site-packages/setuptools/_vendor/jaraco/text/Lorem ipsum.txt	
+@@ -0,0 +1,2 @@
++Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
++Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida. Duis ac tellus et risus vulputate vehicula. Donec lobortis risus a elit. Etiam tempor. Ut ullamcorper, ligula eu tempor congue, eros est euismod turpis, id tincidunt sapien risus a quam. Maecenas fermentum consequat mi. Donec fermentum. Pellentesque malesuada nulla a mi. Duis sapien sem, aliquet nec, commodo eget, consequat quis, neque. Aliquam faucibus, elit ut dictum aliquet, felis nisl adipiscing sapien, sed malesuada diam lacus eget erat. Cras mollis scelerisque nunc. Nullam arcu. Aliquam consequat. Curabitur augue lorem, dapibus quis, laoreet et, pretium ac, nisi. Aenean magna nisl, mollis quis, molestie eu, feugiat in, orci. In hac habitasse platea dictumst.
+diff --git a/.venv/lib/python3.12/site-packages/setuptools/launcher manifest.xml b/.venv/lib/python3.12/site-packages/setuptools/launcher manifest.xml
+new file mode 100644
+index 0000000..5972a96
+--- /dev/null
++++ b/.venv/lib/python3.12/site-packages/setuptools/launcher manifest.xml	
+@@ -0,0 +1,15 @@
++<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
++<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
++    <assemblyIdentity version="1.0.0.0"
++                      processorArchitecture="X86"
++                      name="%(name)s"
++                      type="win32"/>
++    <!-- Identify the application security requirements. -->
++    <trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">
++        <security>
++            <requestedPrivileges>
++                <requestedExecutionLevel level="asInvoker" uiAccess="false"/>
++            </requestedPrivileges>
++        </security>
++    </trustInfo>
++</assembly>
+diff --git a/.venv/lib/python3.12/site-packages/setuptools/script (dev).tmpl b/.venv/lib/python3.12/site-packages/setuptools/script (dev).tmpl
+new file mode 100644
+index 0000000..39a24b0
+--- /dev/null
++++ b/.venv/lib/python3.12/site-packages/setuptools/script (dev).tmpl	
+@@ -0,0 +1,6 @@
++# EASY-INSTALL-DEV-SCRIPT: %(spec)r,%(script_name)r
++__requires__ = %(spec)r
++__import__('pkg_resources').require(%(spec)r)
++__file__ = %(dev_path)r
++with open(__file__) as f:
++    exec(compile(f.read(), __file__, 'exec'))
+diff --git a/decisiontrace_v4_dry_run_new_736c2905d1adebbb64f2390f348b9bc3.txt b/decisiontrace_v4_dry_run_new_736c2905d1adebbb64f2390f348b9bc3.txt
+new file mode 100644
+index 0000000..2d3c54f
+--- /dev/null
++++ b/decisiontrace_v4_dry_run_new_736c2905d1adebbb64f2390f348b9bc3.txt
+@@ -0,0 +1 @@
++736c2905d1adebbb64f2390f348b9bc3

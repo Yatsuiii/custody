@@ -1,0 +1,6 @@
+{
+  "attempt": "high",
+  "failure_stage": "worktree_setup",
+  "setup_returncode": 128,
+  "status": "infrastructure_failure"
+}

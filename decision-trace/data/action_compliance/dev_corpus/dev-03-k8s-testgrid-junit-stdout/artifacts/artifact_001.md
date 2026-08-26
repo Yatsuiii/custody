@@ -1,0 +1,11 @@
+PR #129769: Revert "tests: include stdout of failed commands in JUnit"
+
+Reverts kubernetes/kubernetes#129701
+
+It breaks testgrid reporting , probably because some invalid characters
+
+https://github.com/kubernetes/kubernetes/pull/129701#issuecomment-2608402902
+
+```release-note
+NONE
+```

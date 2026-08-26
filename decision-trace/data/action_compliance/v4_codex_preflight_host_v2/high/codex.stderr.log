@@ -1,0 +1,1 @@
+2026-08-24T20:23:05.371381Z ERROR codex_core::tools::router: error=apply_patch verification failed: Failed to read file to update /run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-00/task-01-k8s-postfilter-victims/staging/src/k8s.io/kube-scheduler/framework/interface.go: No such file or directory (os error 2)

@@ -1,0 +1,108 @@
+{
+  "disk_after_capture": {
+    "filesystem": {
+      "free_bytes": 103313625088,
+      "free_inodes": 25223053,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 334453219328
+    },
+    "host_root_filesystem": {
+      "free_bytes": 11349704704,
+      "free_inodes": 2770924,
+      "total_bytes": 63090503680,
+      "total_inodes": 15402955,
+      "used_bytes": 48502796288
+    },
+    "sizes_bytes": {
+      "codex_sqlite": 0,
+      "root": 1991912053,
+      "shared": 1858577802,
+      "slot": 486088,
+      "slot_tmp": 0,
+      "tmp": 0
+    }
+  },
+  "disk_after_setup": {
+    "filesystem": {
+      "free_bytes": 103313641472,
+      "free_inodes": 25223057,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 334453202944
+    },
+    "host_root_filesystem": {
+      "free_bytes": 11349704704,
+      "free_inodes": 2770924,
+      "total_bytes": 63090503680,
+      "total_inodes": 15402955,
+      "used_bytes": 48502796288
+    },
+    "sizes_bytes": {
+      "codex_sqlite": 0,
+      "root": 1991907511,
+      "shared": 1858577802,
+      "slot": 483817,
+      "slot_tmp": 0,
+      "tmp": 0
+    }
+  },
+  "disk_after_test": {
+    "filesystem": {
+      "free_bytes": 103313625088,
+      "free_inodes": 25223053,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 334453219328
+    },
+    "host_root_filesystem": {
+      "free_bytes": 11349696512,
+      "free_inodes": 2770922,
+      "total_bytes": 63090503680,
+      "total_inodes": 15402955,
+      "used_bytes": 48502804480
+    },
+    "sizes_bytes": {
+      "codex_sqlite": 0,
+      "root": 1991913795,
+      "shared": 1858577802,
+      "slot": 486959,
+      "slot_tmp": 0,
+      "tmp": 0
+    }
+  },
+  "full_worktree": true,
+  "index": 34,
+  "model_calls": 0,
+  "new_file": "decisiontrace_v4_storage_new_034.txt",
+  "patch_capture": {
+    "capture_command": "git add -A && git diff --cached --binary --no-ext-diff",
+    "patch_bytes": 501,
+    "patch_has_new_file": true,
+    "patch_sha256": "b817679509bedce161935031a298ad55c179a5742278e03f6c9b9d6b6416288f"
+  },
+  "pinned_sha": "19fbc45b24ca0d577c9b256bb404b0dbaf4903da",
+  "run_id": "stress-034-task-05-packaging-manylinux-aliases",
+  "setup_output_tail": "{\"contract_version\": \"test-command-v1\", \"full_worktree\": true, \"grader_interpreter\": \"/usr/bin/python3.14\", \"interpreter\": \"/usr/bin/python3.14\", \"interpreter_kind\": \"setup_host_python\", \"pinned_sha\": \"19fbc45b24ca0d577c9b256bb404b0dbaf4903da\", \"setup_interpreter\": \"/usr/bin/python3.14\", \"setup_python_argument\": \"/home/Yatsuiii/.pyenv/versions/3.12.13/bin/python\", \"sparse_checkout\": false, \"status_porcelain\": \"?? .decisiontrace_setup_metadata.json\\n\", \"task\": \"task-05-packaging-manylinux-aliases\", \"test_command\": [\"/usr/bin/python3.14\", \"tests/test_manylinux_pep600.py\"], \"test_cwd\": \".\", \"test_env\": {\"PYTHONPATH\": \"/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-00/task-05-packaging-manylinux-aliases/worktree\"}}\n",
+  "setup_returncode": 0,
+  "slot": 0,
+  "sparse_checkout": false,
+  "status": "PASS",
+  "status_after": "",
+  "status_before": "",
+  "task": "task-05-packaging-manylinux-aliases",
+  "test_command": [
+    "/usr/bin/python3.14",
+    "tests/test_manylinux_pep600.py"
+  ],
+  "test_cwd": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-00/task-05-packaging-manylinux-aliases/worktree",
+  "test_env": {
+    "PYTHONPATH": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-00/task-05-packaging-manylinux-aliases/worktree"
+  },
+  "test_execution_status": "executed_with_tests",
+  "test_output_tail": ".\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nOK\n",
+  "test_returncode": 0,
+  "tests_executed": true,
+  "tracked_edit": "docs/conf.py",
+  "wall_seconds": 26.349
+}

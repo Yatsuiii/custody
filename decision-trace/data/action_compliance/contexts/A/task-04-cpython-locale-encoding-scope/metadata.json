@@ -1,0 +1,14 @@
+{
+  "bundle": "data/action_compliance/bundle_inputs/task-04-cpython-locale-encoding-scope",
+  "condition": "A",
+  "context_bytes": 2580,
+  "context_sha256": "dd431d602b6747c6d3b0522aff7c2d9822a82b350a10ffbf9920e62e3c4ec62b",
+  "context_words": 312,
+  "estimated_tokens": 770,
+  "raw_bytes": 2580,
+  "raw_content_sha256": "8dfadb5e07b47db0d26f2b2e913a31e43a8196c84e00ebebd1053311985bbe5e",
+  "raw_prefix_sha256": "dd431d602b6747c6d3b0522aff7c2d9822a82b350a10ffbf9920e62e3c4ec62b",
+  "raw_words": 312,
+  "system_bytes": 496,
+  "total_bytes": 3078
+}

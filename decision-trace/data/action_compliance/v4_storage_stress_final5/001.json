@@ -1,0 +1,49 @@
+{
+  "disk_after_setup": {
+    "filesystem": {
+      "free_bytes": 103268409344,
+      "free_inodes": 25212014,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 334498435072
+    },
+    "host_root_filesystem": {
+      "free_bytes": 11338080256,
+      "free_inodes": 2768086,
+      "total_bytes": 63090503680,
+      "total_inodes": 15402955,
+      "used_bytes": 48514420736
+    },
+    "sizes_bytes": {
+      "codex_sqlite": 0,
+      "root": 2135854444,
+      "shared": 1858577802,
+      "slot": 72411095,
+      "slot_tmp": 0,
+      "tmp": 0
+    }
+  },
+  "error": "CalledProcessError(128, ['git', 'ls-files', '-z'])",
+  "full_worktree": true,
+  "index": 1,
+  "model_calls": 0,
+  "pinned_sha": "879e5d587b84e6fc961829611999431778eb9f6a",
+  "run_id": "stress-001-task-02-django-index-together-superseded",
+  "setup_output_tail": "{\"contract_version\": \"test-command-v1\", \"full_worktree\": true, \"grader_interpreter\": \"/usr/bin/python3.14\", \"interpreter\": \"/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-01/task-02-django-index-together-superseded/worktree/.venv/bin/python\", \"interpreter_kind\": \"worktree_venv\", \"pinned_sha\": \"879e5d587b84e6fc961829611999431778eb9f6a\", \"setup_interpreter\": \"/usr/bin/python3.14\", \"setup_python_argument\": \"/home/Yatsuiii/.pyenv/versions/3.12.13/bin/python\", \"sparse_checkout\": false, \"status_porcelain\": \"?? .decisiontrace_setup_metadata.json\\n?? .venv/\\n\", \"task\": \"task-02-django-index-together-superseded\", \"test_command\": [\"/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-01/task-02-django-index-together-superseded/worktree/.venv/bin/python\", \"runtests.py\", \"model_indexes\", \"-v1\"], \"test_cwd\": \"tests\", \"test_env\": {}}\n",
+  "setup_returncode": 0,
+  "slot": 1,
+  "sparse_checkout": false,
+  "status": "FAIL",
+  "status_before": "?? .venv/\n",
+  "task": "task-02-django-index-together-superseded",
+  "test_command": [
+    "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-01/task-02-django-index-together-superseded/worktree/.venv/bin/python",
+    "runtests.py",
+    "model_indexes",
+    "-v1"
+  ],
+  "test_cwd": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-01/task-02-django-index-together-superseded/worktree/tests",
+  "test_env": {},
+  "traceback": "Traceback (most recent call last):\n  File \"/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/scripts/stress_action_compliance_v4_storage.py\", line 106, in _run_cycle\n    tracked = _dummy_tracked_edit(worktree, index)\n  File \"/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/scripts/stress_action_compliance_v4_storage.py\", line 52, in _dummy_tracked_edit\n    candidates = subprocess.run(\n                 ~~~~~~~~~~~~~~^\n        [\"git\", \"ls-files\", \"-z\"], cwd=worktree, capture_output=True, check=True\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ).stdout.split(b\"\\0\")\n    ^\n  File \"/usr/lib/python3.14/subprocess.py\", line 578, in run\n    raise CalledProcessError(retcode, process.args,\n                             output=stdout, stderr=stderr)\nsubprocess.CalledProcessError: Command '['git', 'ls-files', '-z']' returned non-zero exit status 128.\n",
+  "wall_seconds": 76.569
+}

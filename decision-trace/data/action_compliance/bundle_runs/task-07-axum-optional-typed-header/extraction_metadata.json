@@ -1,0 +1,7 @@
+{
+  "bundle_dir": "data/action_compliance/bundle_inputs/task-07-axum-optional-typed-header",
+  "decision_count": 2,
+  "failure_count": 0,
+  "proof_generated": true,
+  "raw_model_response_sha256": "0bc09c884880e9211801692aa1f5bb57545ee6884d2463431726a7eca1618266"
+}

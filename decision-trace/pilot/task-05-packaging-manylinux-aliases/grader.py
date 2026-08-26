@@ -9,6 +9,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
+from action_compliance_test_contract import execute_contract
+
 
 TEST_PATH = Path("tests/test_manylinux_pep600.py")
 PERENNIAL = [f"manylinux_2_{minor}_x86_64" for minor in range(17, 4, -1)]
@@ -60,13 +63,9 @@ def probe(worktree: Path) -> tuple[bool, bool, str]:
 
 
 def run_tests(worktree: Path, python_exe: str) -> tuple[bool, str]:
-    environment = {**os.environ, "PYTHONPATH": str(worktree)}
-    process = subprocess.run(
-        [python_exe, str(TEST_PATH)],
-        cwd=worktree,
-        env=environment,
-        capture_output=True,
-        text=True,
+    _, process = execute_contract(
+        worktree,
+        expected_task="task-05-packaging-manylinux-aliases",
         timeout=120,
     )
     tail = "\n".join((process.stdout + process.stderr).splitlines()[-20:])

@@ -1,0 +1,183 @@
+{
+  "decisions": [
+    {
+      "chosen_approach": "Discrete legacy manylinux tag policies (PEPs 513, 571, and 599)",
+      "constraints": [],
+      "context": null,
+      "current_status": "SUPERSEDED",
+      "evidence": [
+        {
+          "quote": "Header: replaces PEPs 513, 571, and 599.",
+          "type": "document",
+          "url": "https://peps.python.org/pep-0600/"
+        }
+      ],
+      "id": "bundle-artifact_002-decision-0",
+      "introduced_at": null,
+      "partial_acceptance": false,
+      "rationale": null,
+      "rejected_alternatives": [],
+      "related_components": [
+        "manylinux-pep600-platform-tags"
+      ],
+      "related_decisions": [],
+      "subject": "PEPs 513, 571, and 599 discrete legacy manylinux policies",
+      "superseded_at": null
+    },
+    {
+      "chosen_approach": "Perennial, glibc-versioned policy for future tags, preserving legacy names as aliases: manylinux1 for glibc 2.5 on x86, manylinux2010 for glibc 2.12 on x86, and manylinux2014 for glibc 2.17 on supported architectures",
+      "constraints": [
+        "\u201creplaces\u201d is not authority to delete every behavior established by the earlier PEPs."
+      ],
+      "context": null,
+      "current_status": "ACCEPTED",
+      "evidence": [
+        {
+          "quote": "Status: Final.",
+          "type": "document",
+          "url": "https://peps.python.org/pep-0600/"
+        },
+        {
+          "quote": "The replacement is a perennial, glibc-versioned policy for future tags.",
+          "type": "document",
+          "url": "https://peps.python.org/pep-0600/"
+        },
+        {
+          "quote": "The accepted \u201cLegacy manylinux tags\u201d section preserves the old names as aliases: `manylinux1` for glibc 2.5 on x86, `manylinux2010` for glibc 2.12 on x86, and `manylinux2014` for glibc 2.17 on its supported architectures.",
+          "type": "document",
+          "url": "https://peps.python.org/pep-0600/"
+        }
+      ],
+      "id": "bundle-artifact_002-decision-1",
+      "introduced_at": null,
+      "partial_acceptance": false,
+      "rationale": null,
+      "rejected_alternatives": [],
+      "related_components": [
+        "manylinux-pep600-platform-tags"
+      ],
+      "related_decisions": [
+        {
+          "relationship": "SUPERSEDES",
+          "target": "bundle-artifact_002-decision-0"
+        }
+      ],
+      "subject": "PEP 600 perennial glibc-versioned tag policy with legacy aliases",
+      "superseded_at": null
+    },
+    {
+      "chosen_approach": "Use _LEGACY_MANYLINUX_MAP to emit each legacy alias directly after the corresponding manylinux_<major>_<minor> tag",
+      "constraints": [
+        "maintainers required emitted legacy names to remain alongside their matching perennial tags"
+      ],
+      "context": null,
+      "current_status": "IMPLEMENTED",
+      "evidence": [
+        {
+          "quote": "PR #293 implemented PEP 600.",
+          "type": "document",
+          "url": "https://github.com/pypa/packaging/pull/293"
+        },
+        {
+          "quote": "During review, maintainers required emitted legacy names to remain alongside their matching perennial tags. The merged implementation contains `_LEGACY_MANYLINUX_MAP` and emits each alias directly after the corresponding `manylinux_<major>_<minor>` tag.",
+          "type": "document",
+          "url": "https://github.com/pypa/packaging/pull/293"
+        }
+      ],
+      "id": "bundle-artifact_001-decision-2",
+      "introduced_at": null,
+      "partial_acceptance": false,
+      "rationale": "Maintainers required emitted legacy names to remain alongside their matching perennial tags",
+      "rejected_alternatives": [],
+      "related_components": [
+        "manylinux-pep600-platform-tags"
+      ],
+      "related_decisions": [
+        {
+          "relationship": "IMPLEMENTS",
+          "target": "bundle-artifact_002-decision-1"
+        }
+      ],
+      "subject": "Emitting legacy manylinux aliases directly after matching perennial tags in packaging",
+      "superseded_at": null
+    }
+  ],
+  "failures": [],
+  "records": [
+    {
+      "evidence": [
+        {
+          "quote": "Header: replaces PEPs 513, 571, and 599.",
+          "url": "https://peps.python.org/pep-0600/"
+        }
+      ],
+      "id": "bundle-artifact_002-decision-0",
+      "related_decisions": [],
+      "role": "policy",
+      "scope": [
+        "manylinux-pep600-platform-tags"
+      ],
+      "source_id": "artifact_002",
+      "status": "SUPERSEDED"
+    },
+    {
+      "evidence": [
+        {
+          "quote": "Status: Final.",
+          "url": "https://peps.python.org/pep-0600/"
+        },
+        {
+          "quote": "The replacement is a perennial, glibc-versioned policy for future tags.",
+          "url": "https://peps.python.org/pep-0600/"
+        },
+        {
+          "quote": "The accepted \u201cLegacy manylinux tags\u201d section preserves the old names as aliases: `manylinux1` for glibc 2.5 on x86, `manylinux2010` for glibc 2.12 on x86, and `manylinux2014` for glibc 2.17 on its supported architectures.",
+          "url": "https://peps.python.org/pep-0600/"
+        }
+      ],
+      "id": "bundle-artifact_002-decision-1",
+      "related_decisions": [
+        {
+          "relationship": "SUPERSEDES",
+          "target": "bundle-artifact_002-decision-0"
+        }
+      ],
+      "role": "policy",
+      "scope": [
+        "manylinux-pep600-platform-tags"
+      ],
+      "source_id": "artifact_002",
+      "status": "ACCEPTED"
+    },
+    {
+      "evidence": [
+        {
+          "quote": "PR #293 implemented PEP 600.",
+          "url": "https://github.com/pypa/packaging/pull/293"
+        },
+        {
+          "quote": "During review, maintainers required emitted legacy names to remain alongside their matching perennial tags. The merged implementation contains `_LEGACY_MANYLINUX_MAP` and emits each alias directly after the corresponding `manylinux_<major>_<minor>` tag.",
+          "url": "https://github.com/pypa/packaging/pull/293"
+        }
+      ],
+      "id": "bundle-artifact_001-decision-2",
+      "related_decisions": [
+        {
+          "relationship": "IMPLEMENTS",
+          "target": "bundle-artifact_002-decision-1"
+        }
+      ],
+      "role": "implementation",
+      "scope": [
+        "manylinux-pep600-platform-tags"
+      ],
+      "source_id": "artifact_001",
+      "status": "IMPLEMENTED"
+    }
+  ],
+  "requested_scope": "manylinux-pep600-platform-tags",
+  "uncertainty": [
+    "The artifacts do not establish specific dates for PEP 600 or PR #293.",
+    "The artifacts do not provide details on support or handling of future glibc major versions."
+  ]
+}

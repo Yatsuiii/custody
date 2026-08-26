@@ -1,0 +1,179 @@
+{
+  "decisions": [
+    {
+      "chosen_approach": "Leave block label interpolation out of scope",
+      "constraints": [],
+      "context": null,
+      "current_status": "ACCEPTED",
+      "evidence": [
+        {
+          "quote": "A maintainer requested that label interpolation be left out because of rename/identity complexity; the author agreed and edited the issue to mark the section out of scope. The issue's resolved questions explicitly answer label interpolation with \u201cNo.\u201d",
+          "type": "document",
+          "url": "https://github.com/opentofu/opentofu/issues/1042"
+        }
+      ],
+      "id": "bundle-artifact_001-decision-0",
+      "introduced_at": null,
+      "partial_acceptance": false,
+      "rationale": "Left out because of rename/identity complexity",
+      "rejected_alternatives": [
+        "interpolating block labels"
+      ],
+      "related_components": [
+        "init-time evaluation of constant locals and variables for configuration attributes",
+        "block labels"
+      ],
+      "related_decisions": [],
+      "subject": "Exclusion of block label interpolation from init-time evaluation",
+      "superseded_at": null
+    },
+    {
+      "chosen_approach": "Define a static evaluation context for HCL expressions used in init-time attributes, retaining the module source expression and evaluating it in module scope",
+      "constraints": [
+        "It does not authorize block-label evaluation."
+      ],
+      "context": null,
+      "current_status": "IMPLEMENTED",
+      "evidence": [
+        {
+          "quote": "The merged implementation RFC defines a static evaluation context for HCL expressions used in init-time attributes such as module sources and backend configuration. It describes retaining the module source expression and evaluating it in module scope. It does not authorize block-label evaluation.",
+          "type": "document",
+          "url": "https://github.com/opentofu/opentofu/pull/1649"
+        },
+        {
+          "quote": "PR #1718 then merged the static-evaluation base, module-source support, and backend configuration support for OpenTofu 1.8.",
+          "type": "document",
+          "url": "https://github.com/opentofu/opentofu/pull/1649"
+        }
+      ],
+      "id": "bundle-artifact_002-decision-1",
+      "introduced_at": null,
+      "partial_acceptance": false,
+      "rationale": null,
+      "rejected_alternatives": [
+        "block-label evaluation"
+      ],
+      "related_components": [
+        "init-time attributes",
+        "module sources",
+        "backend configuration"
+      ],
+      "related_decisions": [
+        {
+          "relationship": "RELATED_TO",
+          "target": "bundle-artifact_001-decision-0"
+        }
+      ],
+      "subject": "Static evaluation context for init-time attributes and retention of module source expression",
+      "superseded_at": null
+    },
+    {
+      "chosen_approach": "Introduce expression retention on ModuleCall needed by the accepted source-attribute work, preserving unevaluated hcl.Expression even with diagnostics and during override replacement",
+      "constraints": [
+        "Do not implement the evaluator itself in this task.",
+        "Module block labels are fixed parser identity strings."
+      ],
+      "context": null,
+      "current_status": "PROPOSED",
+      "evidence": [
+        {
+          "quote": "The requested patch introduces only the expression retention needed by the accepted source-attribute work.",
+          "type": "document",
+          "url": "bundle:artifact_003"
+        }
+      ],
+      "id": "bundle-artifact_003-decision-2",
+      "introduced_at": null,
+      "partial_acceptance": false,
+      "rationale": null,
+      "rejected_alternatives": [
+        "eagerly decodes the module source attribute into a string and address, discarding the expression as a first-class field"
+      ],
+      "related_components": [
+        "internal/configs/module_call.go",
+        "internal/configs/module_merge.go"
+      ],
+      "related_decisions": [
+        {
+          "relationship": "IMPLEMENTS",
+          "target": "bundle-artifact_002-decision-1"
+        }
+      ],
+      "subject": "Retaining module source expression in module call parsing and merging",
+      "superseded_at": null
+    }
+  ],
+  "failures": [
+    "decision[2] contained an unverifiable evidence quote"
+  ],
+  "records": [
+    {
+      "evidence": [
+        {
+          "quote": "A maintainer requested that label interpolation be left out because of rename/identity complexity; the author agreed and edited the issue to mark the section out of scope. The issue's resolved questions explicitly answer label interpolation with \u201cNo.\u201d",
+          "url": "https://github.com/opentofu/opentofu/issues/1042"
+        }
+      ],
+      "id": "bundle-artifact_001-decision-0",
+      "related_decisions": [],
+      "role": "policy",
+      "scope": [
+        "init-time evaluation of constant locals and variables for configuration attributes",
+        "block labels"
+      ],
+      "source_id": "artifact_001",
+      "status": "ACCEPTED"
+    },
+    {
+      "evidence": [
+        {
+          "quote": "The merged implementation RFC defines a static evaluation context for HCL expressions used in init-time attributes such as module sources and backend configuration. It describes retaining the module source expression and evaluating it in module scope. It does not authorize block-label evaluation.",
+          "url": "https://github.com/opentofu/opentofu/pull/1649"
+        },
+        {
+          "quote": "PR #1718 then merged the static-evaluation base, module-source support, and backend configuration support for OpenTofu 1.8.",
+          "url": "https://github.com/opentofu/opentofu/pull/1649"
+        }
+      ],
+      "id": "bundle-artifact_002-decision-1",
+      "related_decisions": [
+        {
+          "relationship": "RELATED_TO",
+          "target": "bundle-artifact_001-decision-0"
+        }
+      ],
+      "role": "policy",
+      "scope": [
+        "init-time attributes",
+        "module sources",
+        "backend configuration"
+      ],
+      "source_id": "artifact_002",
+      "status": "IMPLEMENTED"
+    },
+    {
+      "evidence": [
+        {
+          "quote": "The requested patch introduces only the expression retention needed by the accepted source-attribute work.",
+          "url": "bundle:artifact_003"
+        }
+      ],
+      "id": "bundle-artifact_003-decision-2",
+      "related_decisions": [
+        {
+          "relationship": "IMPLEMENTS",
+          "target": "bundle-artifact_002-decision-1"
+        }
+      ],
+      "role": "implementation",
+      "scope": [
+        "internal/configs/module_call.go",
+        "internal/configs/module_merge.go"
+      ],
+      "source_id": "artifact_003",
+      "status": "PROPOSED"
+    }
+  ],
+  "requested_scope": "Prepare module-call parsing for init-time static evaluation by retaining the module source attribute's unevaluated hcl.Expression on ModuleCall, even when eager address decoding reports diagnostics. Preserve that expression when an override replaces a module source. Add a focused parser test proving that a source = local.module_source traversal survives decoding. Do not implement the evaluator itself in this task.",
+  "uncertainty": []
+}

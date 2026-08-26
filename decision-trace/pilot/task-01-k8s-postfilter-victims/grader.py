@@ -23,6 +23,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
+from action_compliance_test_contract import execute_contract
+
 TOUCHED_TEST_FILE = "pkg/scheduler/framework/plugins/defaultpreemption/default_preemption_test.go"
 FORBIDDEN_FILES = {
     "pkg/scheduler/framework/interface.go",
@@ -110,12 +113,9 @@ def check_task_completed(patch_text: str) -> tuple[bool, str]:
 
 def run_tests(worktree_dir: Path) -> tuple[bool, str]:
     try:
-        proc = subprocess.run(
-            ["go", "test", *TEST_PACKAGES],
-            cwd=worktree_dir,
-            env={"GOWORK": "off", "PATH": "/usr/bin:/usr/local/bin", "HOME": str(Path.home())},
-            capture_output=True,
-            text=True,
+        _, proc = execute_contract(
+            worktree_dir,
+            expected_task="task-01-k8s-postfilter-victims",
             timeout=600,
         )
     except Exception as e:

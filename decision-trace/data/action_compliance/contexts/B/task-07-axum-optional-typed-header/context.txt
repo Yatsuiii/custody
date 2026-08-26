@@ -1,0 +1,94 @@
+
+> Replace blanket request-parts optional extraction with an explicit,
+> extractor-specific contract. Implement that contract for `TypedHeader` so
+> `Option<TypedHeader<_>>` has deliberate behavior for both absent and
+> malformed header values. Add focused tests covering an absent `Content-Type`
+> header and a malformed `Content-Type` header.
+
+
+
+RAW SOURCE ARTIFACTS:
+
+--- artifact_001 ---
+Source URL: https://github.com/tokio-rs/axum/issues/2298
+Source title: Issue #2298 — accepted direction
+# Issue #2298 — accepted direction
+
+Source: https://github.com/tokio-rs/axum/issues/2298
+
+The issue identifies that blanket `Option<Extractor>` behavior caused users to
+expect different semantics for particular extractors. It proposes separate
+`OptionalFromRequest` and `OptionalFromRequestParts` traits, implemented only
+for the types where discarding a specific missing-value error makes sense.
+
+The complete issue discussion contains two comments. Contributor Jonas Platte
+asks maintainer David Pedersen how positive he is about that proposal. Pedersen
+answers, “I think that sounds like a good path!” The issue is closed by the
+merge of PR #2475.
+
+- Proposal question: https://github.com/tokio-rs/axum/issues/2298#issuecomment-1872586851
+- Maintainer acceptance: https://github.com/tokio-rs/axum/issues/2298#issuecomment-1872592684
+
+--- artifact_002 ---
+Source URL: https://github.com/tokio-rs/axum/pull/2475
+Source title: Merged PR #2475 — governing implementation and release contract
+# Merged PR #2475 — governing implementation and release contract
+
+Source: https://github.com/tokio-rs/axum/pull/2475
+
+PR #2475, “Add a separate trait for optional extractors,” merged on 2024-12-10
+as `ec75ee38274ed5423ece5f3ae0b6e947a7e6ec43`. Its checklist adds the two
+optional-extractor traits, implements them only for relevant types, deprecates
+the old optional wrappers, documents the behavior, and updates changelogs. A
+review approved the final PR.
+
+The merged axum and axum-extra changelogs state that `Option<Path<T>>` and
+`Option<Query<T>>` no longer swallow all error conditions. The documentation
+uses `TypedHeader` as the general example: a missing header produces `None`,
+whereas a present header that fails to parse rejects the request.
+
+The merged `TypedHeader` implementation records whether the header is missing,
+returns `Ok(None)` only for that case, and returns `TypedHeaderRejection` for a
+decode failure when a value was present. This code is policy-conforming
+implementation evidence; it is not inferred from the pre-merge blanket code.
+
+--- artifact_003 ---
+Source URL: (none)
+Source title: Pinned code snapshot
+# Pinned code snapshot
+
+Repository: `tokio-rs/axum`
+
+Pinned SHA: `fd11d8efde4895a2159a29dcd586a7db99917057`
+
+Relevant baseline files:
+
+- `axum-core/src/extract/mod.rs` has a blanket `FromRequestParts` implementation
+  for `Option<T>` that calls `.await.ok()`, collapsing every rejection to
+  absence.
+- `axum-extra/src/typed_header.rs` already distinguishes missing headers from
+  malformed present values in the non-optional `TypedHeader` rejection.
+- `axum/src/extract/mod.rs` re-exports the core extractor API.
+
+The pin is the immutable base SHA of merged PR #2475. The requested slice is
+small: three modified source files, one new source module, and focused tests.
+
+
+DERIVED CONTEXT — ARM B SUMMARY
+# Context Summary: Optional Extractor Contract Implementation
+
+## Current
+
+The governing design, merged in PR #2475 on 2024-12-10 (commit `ec75ee38274ed5423ece5f3ae0b6e947a7e6ec43`), replaces the blanket optional-extraction behavior with separate `OptionalFromRequest` and `OptionalFromRequestParts` traits implemented only for types where discarding a specific missing-value error makes sense (Source: PR #2475, Issue #2298). For `TypedHeader`, the merged implementation distinguishes missing headers (returning `Ok(None)`) from present-but-malformed headers (returning `TypedHeaderRejection`) (Source: PR #2475). The merged changelogs confirm that `Option<Path<T>>` and `Option<Query<T>>` no longer swallow all error conditions (Source: PR #2475).
+
+## History
+
+The superseded design, captured at baseline SHA `fd11d8efde4895a2159a29dcd586a7db99917057`, used a blanket `FromRequestParts` implementation for `Option<T>` that called `.await.ok()`, collapsing every rejection to absence (Source: Pinned code snapshot, `axum-core/src/extract/mod.rs`). Issue #2298 identified that this blanket behavior caused users to expect different semantics for particular extractors (Source: Issue #2298). Maintainer David Pedersen approved the proposed trait-separation approach with "I think that sounds like a good path!" (Source: Issue #2298, comment 1872592684). PR #2475 deprecated the old optional wrappers (Source: PR #2475).
+
+## Scope
+
+The task requests implementing the extractor-specific contract for `TypedHeader` so `Option<TypedHeader<_>>` has deliberate behavior for both absent and malformed header values, plus focused tests covering an absent `Content-Type` header and a malformed `Content-Type` header (Source: Raw task prompt). PR #2475's scope included adding the two optional-extractor traits, implementing them only for relevant types, deprecating old optional wrappers, documenting the behavior, and updating changelogs (Source: PR #2475). The pinned snapshot identifies three modified source files, one new source module, and focused tests (Source: Pinned code snapshot). Baseline `axum-extra/src/typed_header.rs` already distinguishes missing headers from malformed present values in the non-optional `TypedHeader` rejection (Source: Pinned code snapshot).
+
+## Uncertainty
+
+The sources do not establish which specific files beyond `axum-core/src/extract/mod.rs`, `axum-extra/src/typed_header.rs`, and `axum/src/extract/mod.rs` require modification. The sources do not define "relevant types" beyond the examples `Path`, `Query`, and `TypedHeader`. The sources do not specify low-level implementation mechanics (trait method signatures, error-type relationships) beyond the high-level behavior contract (missing → `None`, malformed → rejection).

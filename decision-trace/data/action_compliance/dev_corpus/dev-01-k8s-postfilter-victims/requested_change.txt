@@ -1,0 +1,13 @@
+
+> The scheduler's `DefaultPreemption` plugin test suite
+> (`pkg/scheduler/framework/plugins/defaultpreemption/default_preemption_test.go`)
+> currently only checks the nominated node name returned from `PostFilter`
+> — it never checks which specific Pods were chosen as preemption victims.
+> Add a way for at least one `TestPostFilter` case to assert on the exact
+> set of victim Pods selected during that `PostFilter` call (not just that
+> "some" preemption happened), so future test cases can catch regressions
+> in victim selection, not only in the nominated node. Wire up whatever
+> plumbing is needed to make that victim information available to the
+> test, and update the "pod with higher priority can be made schedulable"
+> case to assert `p1` is the (only) victim.
+

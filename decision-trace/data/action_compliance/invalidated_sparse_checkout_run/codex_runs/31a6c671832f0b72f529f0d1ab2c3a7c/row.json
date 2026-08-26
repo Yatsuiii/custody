@@ -1,0 +1,13 @@
+{
+  "failure_stage": "worktree_setup",
+  "prompt_path": "data/action_compliance/codex_runs/31a6c671832f0b72f529f0d1ab2c3a7c/prompt.txt",
+  "prompt_sha256": "191404b3f421640e8a7e39f07b79f81d1d6a41863678ec93b19390e68e5d4f66",
+  "repetition": 1,
+  "round": 1,
+  "run_id": "31a6c671832f0b72f529f0d1ab2c3a7c",
+  "setup_returncode": 128,
+  "setup_wall_seconds": 0.016,
+  "status": "infrastructure_failure",
+  "system_prompt_sha256": "bdcb4f0d165e3091e06d47d92fdefbec9c7c044f5126ad530dfc1d4fcc5ed76d",
+  "task": "task-05-packaging-manylinux-aliases"
+}

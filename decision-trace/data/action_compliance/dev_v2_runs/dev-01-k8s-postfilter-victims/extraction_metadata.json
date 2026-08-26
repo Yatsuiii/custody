@@ -1,0 +1,8 @@
+{
+  "bundle_dir": "data/action_compliance/dev_corpus/dev-01-k8s-postfilter-victims",
+  "decision_count": 2,
+  "extractor_version": "v2",
+  "failure_count": 3,
+  "proof_generated": true,
+  "raw_model_response_sha256": "2cee9fa26f4bc8ce552fdf8cdf8e5774c92af9daceb6d6ca2f87abdfcf687271"
+}

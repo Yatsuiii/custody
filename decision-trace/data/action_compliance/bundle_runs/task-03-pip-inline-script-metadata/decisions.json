@@ -1,0 +1,168 @@
+{
+  "decisions": [
+    {
+      "chosen_approach": "Proposed marker `# Script Dependencies:` followed by comment lines holding PEP 508 requirement strings",
+      "constraints": [],
+      "context": null,
+      "current_status": "SUPERSEDED",
+      "evidence": [
+        {
+          "quote": "- Status: `Rejected`.\n- Superseded-By: `723`.\n- Proposed marker: `# Script Dependencies:` followed by comment lines holding PEP 508 requirement strings.",
+          "type": "document",
+          "url": "https://peps.python.org/pep-0722/"
+        }
+      ],
+      "id": "bundle-artifact_001-decision-0",
+      "introduced_at": "2023-10-21",
+      "partial_acceptance": false,
+      "rationale": null,
+      "rejected_alternatives": [],
+      "related_components": [],
+      "related_decisions": [
+        {
+          "relationship": "RELATED_TO",
+          "target": "bundle-artifact_002-decision-1"
+        }
+      ],
+      "subject": "PEP 722 inline script dependencies specification",
+      "superseded_at": null
+    },
+    {
+      "chosen_approach": "A block starts with `# /// TYPE`, ends with `# ///`, and has comment-prefixed content between delimiters containing TOML with a top-level `dependencies` field as a list of PEP 508 strings",
+      "constraints": [
+        "Multiple blocks of the same type are an error",
+        "unclosed blocks are ignored"
+      ],
+      "context": null,
+      "current_status": "ACCEPTED",
+      "evidence": [
+        {
+          "quote": "- Status: `Final`.\n- Replaces: `722`.\n- A block starts with `# /// TYPE`, ends with `# ///`, and has comment-prefixed content between the delimiters.",
+          "type": "document",
+          "url": "https://peps.python.org/pep-0723/"
+        },
+        {
+          "quote": "Multiple blocks of the same type are an error; unclosed blocks are ignored.",
+          "type": "document",
+          "url": "https://peps.python.org/pep-0723/"
+        }
+      ],
+      "id": "bundle-artifact_002-decision-1",
+      "introduced_at": null,
+      "partial_acceptance": false,
+      "rationale": null,
+      "rejected_alternatives": [
+        "722"
+      ],
+      "related_components": [
+        "script"
+      ],
+      "related_decisions": [
+        {
+          "relationship": "SUPERSEDES",
+          "target": "bundle-artifact_001-decision-0"
+        }
+      ],
+      "subject": "PEP 723 inline script metadata standard",
+      "superseded_at": null
+    },
+    {
+      "chosen_approach": "Implement dedicated PEP 723 parser and focused functional tests merged via PR #13052",
+      "constraints": [],
+      "context": null,
+      "current_status": "IMPLEMENTED",
+      "evidence": [
+        {
+          "quote": "PR #13052 is titled \u201cSupport installing requirements from inline script metadata (PEP 723),\u201d merged on 2025-11-27, and closes #12891. Its merge commit adds a dedicated PEP 723 parser and focused functional tests.",
+          "type": "document",
+          "url": "https://github.com/pypa/pip/issues/12891"
+        }
+      ],
+      "id": "bundle-artifact_003-decision-2",
+      "introduced_at": "2025-11-27",
+      "partial_acceptance": false,
+      "rationale": null,
+      "rejected_alternatives": [],
+      "related_components": [],
+      "related_decisions": [
+        {
+          "relationship": "IMPLEMENTS",
+          "target": "bundle-artifact_002-decision-1"
+        }
+      ],
+      "subject": "Pip support for installing requirements from PEP 723 inline script metadata",
+      "superseded_at": null
+    }
+  ],
+  "failures": [],
+  "records": [
+    {
+      "evidence": [
+        {
+          "quote": "- Status: `Rejected`.\n- Superseded-By: `723`.\n- Proposed marker: `# Script Dependencies:` followed by comment lines holding PEP 508 requirement strings.",
+          "url": "https://peps.python.org/pep-0722/"
+        }
+      ],
+      "id": "bundle-artifact_001-decision-0",
+      "related_decisions": [
+        {
+          "relationship": "RELATED_TO",
+          "target": "bundle-artifact_002-decision-1"
+        }
+      ],
+      "role": "policy",
+      "scope": [],
+      "source_id": "artifact_001",
+      "status": "SUPERSEDED"
+    },
+    {
+      "evidence": [
+        {
+          "quote": "- Status: `Final`.\n- Replaces: `722`.\n- A block starts with `# /// TYPE`, ends with `# ///`, and has comment-prefixed content between the delimiters.",
+          "url": "https://peps.python.org/pep-0723/"
+        },
+        {
+          "quote": "Multiple blocks of the same type are an error; unclosed blocks are ignored.",
+          "url": "https://peps.python.org/pep-0723/"
+        }
+      ],
+      "id": "bundle-artifact_002-decision-1",
+      "related_decisions": [
+        {
+          "relationship": "SUPERSEDES",
+          "target": "bundle-artifact_001-decision-0"
+        }
+      ],
+      "role": "policy",
+      "scope": [
+        "script"
+      ],
+      "source_id": "artifact_002",
+      "status": "ACCEPTED"
+    },
+    {
+      "evidence": [
+        {
+          "quote": "PR #13052 is titled \u201cSupport installing requirements from inline script metadata (PEP 723),\u201d merged on 2025-11-27, and closes #12891. Its merge commit adds a dedicated PEP 723 parser and focused functional tests.",
+          "url": "https://github.com/pypa/pip/issues/12891"
+        }
+      ],
+      "id": "bundle-artifact_003-decision-2",
+      "related_decisions": [
+        {
+          "relationship": "IMPLEMENTS",
+          "target": "bundle-artifact_002-decision-1"
+        }
+      ],
+      "role": "implementation",
+      "scope": [],
+      "source_id": "artifact_003",
+      "status": "IMPLEMENTED"
+    }
+  ],
+  "requested_scope": "src/pip/_internal/req/script_metadata.py",
+  "uncertainty": [
+    "The exact implementation details of the CLI integration for inline script metadata in pip",
+    "The publication date of PEP 723"
+  ]
+}

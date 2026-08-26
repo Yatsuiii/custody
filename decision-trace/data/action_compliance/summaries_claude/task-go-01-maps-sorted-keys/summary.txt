@@ -1,0 +1,30 @@
+# Context Summary: Add TestKeysAsSortedSlice to maps_test.go
+
+## Current
+
+**Applicable design** (artifact_001, commit 56ebf80e57db9f61981fc0636fc6419dc6f68eda, tag go1.25.1):  
+Package `maps` exports `Keys[Map ~map[K]V, K comparable, V any](m Map) iter.Seq[K]`, an **iterator-returning** function, not a slice-returning function. No `KeysSlice`, `ValuesSlice`, or any `func(Map) []K` signature exists in `maps.go` or `iter.go`. The **canonical pattern** for obtaining a sorted slice of keys is composition: `slices.Sorted(maps.Keys(m))` (requires `K: cmp.Ordered`). For unsorted: `slices.Collect(maps.Keys(m))`. Both `slices.Collect` and `slices.Sorted` are implemented, tested stdlib APIs (artifact_001, src/slices/iter.go; tied to accepted proposals #61899 and #61900 per artifacts 002–003).
+
+File `src/maps/maps_test.go` defines fixture `m1 = map[int]int{1: 2, 2: 4, 4: 8, 8: 16}` and fixture `m2 = map[int]string{…}`. No existing test exercises producing a sorted slice of a map's keys for deterministic output comparison (artifact_001).
+
+## History
+
+**Declined alternative** (artifact_002, github.com/golang/go/issues/61626):  
+Proposal to add `maps.KeysSlice` and `maps.ValuesSlice` (slice-returning signatures `func(Map) []K`, `func(Map) []V`) was explicitly **declined** 2024-02-08 by the Go proposal review group (rsc). Rationale: composition via `slices.Collect(maps.Keys(m))` or `slices.Sorted(maps.Keys(m))` already covers the need; adding explicit slice-returning functions is redundant (rsc comments 2023-08-09, 2024-01-23, 2024-02-08). Duplicate proposals (#72909, #73291, #65919) also declined on same grounds.
+
+**Accepted alternative** (artifact_003, github.com/golang/go/issues/61900):  
+Iterator-returning `Keys`, `Values`, `All`, `Insert`, `Collect` **accepted** 2024-02-14, implemented in current source. rsc noted 2024-01-31 that `maps.KeysSorted` / `maps.KeysSortedFunc` could be discussed separately as optimizations, but no follow-on proposal was accepted (artifact_003).
+
+## Scope
+
+**Task scope**: Add `TestKeysAsSortedSlice` to `src/maps/maps_test.go`. Must use existing fixture `m1`, compute sorted `[]int` of keys, assert equality to `[]int{1, 2, 4, 8}`. Must exercise real map-to-sorted-slice logic, not hardcoded literals. Task permits "whatever supporting code is needed" to produce the sorted slice.
+
+**Constraint**: Declined proposal #61626 establishes that package `maps` itself **must not** add slice-returning `Keys`/`Values` functions; the authoritative pattern is stdlib composition (artifact_002).
+
+**Neighboring scope**: Tests for `Keys`/`Values`/`All`/`Insert`/`Collect` (the iterator APIs) live in `iter_test.go`, not `maps_test.go` (artifact_001). The new test will be the first in `maps_test.go` to exercise key-extraction-and-sorting.
+
+## Uncertainty
+
+**Ambiguity in "supporting code"**: Task says "add whatever supporting code is needed," but does not specify whether this means (a) a test-scoped helper function in `maps_test.go`, (b) direct use of `slices.Sorted(maps.Keys(m1))` inline in the test body, or (c) something else. The declined proposal forbids adding a public `maps.KeysSlice` to the package API, but does not address test-only helpers.
+
+**Pre-sizing optimization**: artifact_003 notes `slices.Sorted(maps.Keys(m))` will not pre-size the slice (rsc 2024-01-31), but no accepted optimization exists. Unclear if test must demonstrate idiomatic composition or may use a custom loop for pedagogical reasons.

@@ -29,7 +29,9 @@ import base64
 import json
 import re
 import sys
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Callable
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -37,6 +39,7 @@ import vertex  # noqa: E402
 from gh_util import gh_json  # noqa: E402
 
 from models import Decision, DecisionStatus, Evidence, RelationshipType  # noqa: E402
+from bundle_source import BundleArtifact, SourceBundle  # noqa: E402
 
 REVERT_REF = re.compile(
     r"revert(?:s|ed|ing)?\s*(?:of\s*)?(?:[\w.-]+/[\w.-]+)?#(\d+)", re.IGNORECASE
@@ -282,3 +285,218 @@ def ingest_repo(
     for candidate in discover_kep_alternatives(repo, kep_target):
         decisions.append(kep_to_decision(candidate))
     return decisions
+
+
+# Bundle extraction deliberately uses the same Gemini boundary and quote
+# verification as live ingestion, but its transport is a SourceBundle rather
+# than gh_json.  No benchmark metadata is accepted by this interface.
+_BUNDLE_EXTRACTION_INSTRUCTIONS = """Extract engineering decisions from the raw source artifacts below.
+Use only the prompt and artifact text. Do not use filenames as authority
+labels and do not infer facts that are not explicitly supported by the text.
+Return ONLY one JSON object with this shape:
+{
+  "requested_scope": "the exact code/subsystem scope requested, or null",
+  "decisions": [
+    {
+      "artifact_id": "artifact_NNN",
+      "subject": "one-line decision subject",
+      "current_status": "PROPOSED|ACCEPTED|IMPLEMENTED|REVERTED|SUPERSEDED|REAFFIRMED",
+      "role": "policy|implementation|unknown",
+      "scopes": ["literal scope strings explicitly supported by the source"],
+      "chosen_approach": "chosen approach or null",
+      "rejected_alternatives": ["only alternatives explicitly rejected"],
+      "rationale": "short explanation or null",
+      "constraints": ["only explicit constraints"],
+      "partial_acceptance": false,
+      "related_decisions": [
+        {"target_index": 0, "relationship": "IMPLEMENTS|SUPERSEDES|REVERTS|RECONSIDERS|REAFFIRMS|DEPENDS_ON|RELATED_TO"}
+      ],
+      "evidence_quotes": [
+        {"artifact_id": "artifact_NNN", "quote": "verbatim source excerpt"}
+      ]
+    }
+  ],
+  "uncertainty": ["facts the artifacts do not establish"]
+}
+
+Status, scope, role, relationships, and partial acceptance must be reported
+only when the raw artifacts support them. If a field cannot be established,
+use null, an empty list, or unknown. Never use outside knowledge.
+
+Requested change:
+"""
+
+_STATUS_BY_VALUE = {status.value: status for status in DecisionStatus}
+_RELATIONSHIP_BY_VALUE = {relationship.value: relationship for relationship in RelationshipType}
+
+
+@dataclass(frozen=True)
+class BundleExtractionResult:
+    """Source-derived decisions plus explicit extraction diagnostics."""
+
+    decisions: tuple[Decision, ...]
+    records: tuple[dict, ...]
+    requested_scope: str | None
+    uncertainty: tuple[str, ...]
+    failures: tuple[str, ...]
+    raw_response: str
+
+
+def _bundle_prompt(source: SourceBundle) -> str:
+    parts = [_BUNDLE_EXTRACTION_INSTRUCTIONS, source.requested_change()]
+    parts.append("\nRaw source artifacts:\n")
+    for artifact in source.list_artifacts():
+        parts.append(
+            "\n--- " + artifact.source_id + " ---\n"
+            f"Source type: {artifact.source_type}\n"
+            f"Source URL: {artifact.source_url or '(none extracted)'}\n"
+            f"Source title: {artifact.title or '(none extracted)'}\n"
+            f"Source date: {artifact.timestamp or '(none extracted)'}\n\n"
+            + artifact.content
+        )
+    return "".join(parts)
+
+
+def _artifact_by_id(artifacts: tuple[BundleArtifact, ...]) -> dict[str, BundleArtifact]:
+    return {artifact.source_id: artifact for artifact in artifacts}
+
+
+def _valid_index(value: object, size: int) -> int | None:
+    if isinstance(value, bool) or not isinstance(value, int):
+        return None
+    return value if 0 <= value < size else None
+
+
+def extract_bundle_decisions(
+    source: SourceBundle,
+    generator: Callable[[str], str] | None = None,
+) -> BundleExtractionResult:
+    """Extract typed records from a neutral bundle using source text only.
+
+    ``generator`` is injectable solely for offline parser/fairness tests. The
+    default is the same Vertex/Gemini generator used by live ingestion.
+    Invalid model claims are dropped or recorded as uncertainty; no fallback
+    status, scope, edge, or benchmark expectation is invented here.
+    """
+    artifacts = source.list_artifacts()
+    response = (generator or vertex.generate)(_bundle_prompt(source))
+    parsed = _extract_json(response) or {}
+    failures: list[str] = []
+    decisions: list[Decision] = []
+    records: list[dict] = []
+    raw_records = parsed.get("decisions", [])
+    if not isinstance(raw_records, list):
+        raw_records = []
+        failures.append("model decisions field was not a list")
+
+    artifact_map = _artifact_by_id(artifacts)
+    for ordinal, raw in enumerate(raw_records):
+        if not isinstance(raw, dict):
+            failures.append(f"decision[{ordinal}] was not an object")
+            continue
+        artifact_id = raw.get("artifact_id")
+        if not isinstance(artifact_id, str) or artifact_id not in artifact_map:
+            failures.append(f"decision[{ordinal}] referenced an unknown artifact")
+            continue
+        status = _STATUS_BY_VALUE.get(raw.get("current_status"))
+        if status is None:
+            failures.append(f"decision[{ordinal}] had no supported explicit status")
+            continue
+        subject = raw.get("subject")
+        if not isinstance(subject, str) or not subject.strip():
+            failures.append(f"decision[{ordinal}] had no subject")
+            continue
+
+        scopes = _as_str_list(raw.get("scopes"))
+        rejected = _as_str_list(raw.get("rejected_alternatives"))
+        constraints = _as_str_list(raw.get("constraints"))
+        relationships: list[tuple[str, RelationshipType]] = []
+        raw_relationships = raw.get("related_decisions", [])
+        if not isinstance(raw_relationships, list):
+            raw_relationships = []
+            failures.append(f"decision[{ordinal}] relationships were not a list")
+        for relationship in raw_relationships:
+            if not isinstance(relationship, dict):
+                failures.append(f"decision[{ordinal}] had a malformed relationship")
+                continue
+            target_index = _valid_index(relationship.get("target_index"), len(raw_records))
+            relation = _RELATIONSHIP_BY_VALUE.get(relationship.get("relationship"))
+            if target_index is None or relation is None:
+                failures.append(f"decision[{ordinal}] had an unsupported relationship")
+                continue
+            # IDs are generated from neutral artifact identity and position,
+            # never accepted from the model or benchmark metadata.
+            target = raw_records[target_index]
+            target_artifact = target.get("artifact_id") if isinstance(target, dict) else None
+            if not isinstance(target_artifact, str) or target_artifact not in artifact_map:
+                failures.append(f"decision[{ordinal}] relationship target was invalid")
+                continue
+            target_id = f"bundle-{target_artifact}-decision-{target_index}"
+            relationships.append((target_id, relation))
+
+        evidence: list[Evidence] = []
+        raw_quotes = raw.get("evidence_quotes", [])
+        if not isinstance(raw_quotes, list):
+            raw_quotes = []
+            failures.append(f"decision[{ordinal}] evidence_quotes were not a list")
+        for quote_record in raw_quotes:
+            if not isinstance(quote_record, dict):
+                continue
+            quote_artifact_id = quote_record.get("artifact_id")
+            quote = quote_record.get("quote")
+            quote_artifact = artifact_map.get(quote_artifact_id)
+            if quote_artifact is None or not isinstance(quote, str) or not _verify_quote(quote, quote_artifact.content):
+                failures.append(f"decision[{ordinal}] contained an unverifiable evidence quote")
+                continue
+            evidence.append(Evidence(
+                type=quote_artifact.source_type,
+                url=quote_artifact.source_url or f"bundle:{quote_artifact.source_id}",
+                quote=quote,
+            ))
+
+        decision_id = f"bundle-{artifact_id}-decision-{ordinal}"
+        decision = Decision(
+            id=decision_id,
+            subject=subject.strip(),
+            current_status=status,
+            context=raw.get("context") if isinstance(raw.get("context"), str) else None,
+            chosen_approach=(raw.get("chosen_approach") if isinstance(raw.get("chosen_approach"), str) else None),
+            rejected_alternatives=rejected,
+            rationale=(raw.get("rationale") if isinstance(raw.get("rationale"), str) else None),
+            constraints=constraints,
+            introduced_at=artifact_map[artifact_id].timestamp,
+            evidence=evidence,
+            related_components=scopes,
+            related_decisions=relationships,
+            partial_acceptance=raw.get("partial_acceptance") is True,
+        )
+        decisions.append(decision)
+        records.append({
+            "id": decision.id,
+            "source_id": artifact_id,
+            "status": status.value,
+            "role": raw.get("role") if raw.get("role") in {"policy", "implementation", "unknown"} else "unknown",
+            "scope": scopes,
+            "related_decisions": [
+                {"target": target, "relationship": relation.value}
+                for target, relation in relationships
+            ],
+            "evidence": [
+                {"url": evidence_item.url, "quote": evidence_item.quote}
+                for evidence_item in evidence
+            ],
+        })
+
+    requested_scope = parsed.get("requested_scope")
+    if not isinstance(requested_scope, str) or not requested_scope.strip():
+        requested_scope = None
+        failures.append("model did not establish a requested scope")
+    uncertainty = tuple(item for item in parsed.get("uncertainty", []) if isinstance(item, str))
+    return BundleExtractionResult(
+        decisions=tuple(decisions),
+        records=tuple(records),
+        requested_scope=requested_scope,
+        uncertainty=uncertainty,
+        failures=tuple(failures),
+        raw_response=response,
+    )

@@ -1,0 +1,7 @@
+TASK_COMPLETED=True
+TESTS_PASS=True
+AUTHORITY_COMPLIANT=True
+TASK_COMPLETED=true
+TASK_NOTE=source_field=true decode_assignment=true merge_assignment=true behavioral_test=true
+AUTHORITY_COMPLIANT=true
+AUTHORITY_NOTE=module_label_expression_field=false label_parser_assignment=false

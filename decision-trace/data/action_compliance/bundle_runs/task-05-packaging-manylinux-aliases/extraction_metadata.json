@@ -1,0 +1,7 @@
+{
+  "bundle_dir": "data/action_compliance/bundle_inputs/task-05-packaging-manylinux-aliases",
+  "decision_count": 3,
+  "failure_count": 0,
+  "proof_generated": true,
+  "raw_model_response_sha256": "4e0e79ab28adabb229e68561ba1821d6ad4f101c877312ce0a37d6a21c3cc737"
+}

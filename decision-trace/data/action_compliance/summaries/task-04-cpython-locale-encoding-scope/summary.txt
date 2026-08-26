@@ -1,0 +1,17 @@
+Current
+- `Lib/_pyio.py`'s `TextIOWrapper` and text-mode `open()` must accept `encoding="locale"` and resolve it to the current locale encoding (Raw Task Prompt; https://peps.python.org/pep-0597/).
+- Binary mode `open()` must unconditionally reject any non-`None` encoding value (https://github.com/python/cpython/commit/cfa176685a5e788bafc7749d7a93f43ea3e4de9f; Pinned code boundary).
+- `"locale"` is treated as a text-encoding feature rather than a codec alias because the locale can change at runtime and `TextIOWrapper` handles device-encoding behavior (https://peps.python.org/pep-0597/).
+- A focused regression test exercising both text-mode `open()` and `TextIOWrapper` with `encoding="locale"` is added in `Lib/test/test__pyio_locale.py` (Raw Task Prompt; Pinned code boundary).
+
+History
+- On 2021-03-31, commit `ff3c9739...` modified Python and C `open()` guards so binary mode accepted `encoding="locale"` everywhere `encoding=None` was permitted (https://github.com/python/cpython/commit/ff3c9739bd69aa8b58007e63c9e40e6708b4761e).
+- Later that day, commit `cfa17668...` explicitly reverted `ff3c9739...`, restoring the requirement that binary mode rejects every non-`None` encoding while keeping PEP 597 intact (https://github.com/python/cpython/commit/cfa176685a5e788bafc7749d7a93f43ea3e4de9f).
+- At the pinned base commit (`261a452a...`), `TextIOWrapper` resolves `None` through device/locale encoding but does not yet recognize the `"locale"` sentinel (Pinned code boundary).
+
+Scope
+- In scope: Modifying the pure-Python fallback implementation in `Lib/_pyio.py` and adding tests to `Lib/test/test__pyio_locale.py` (Raw Task Prompt; Pinned code boundary).
+- Out of scope / neighboring scopes: The C accelerator implementation (`_io`) must not be modified (Raw Task Prompt). Adding encoding parameters or `"locale"` support to binary mode streams is also excluded (https://peps.python.org/pep-0597/; https://github.com/python/cpython/commit/cfa176685a5e788bafc7749d7a93f43ea3e4de9f).
+
+Uncertainty
+- The sources do not establish the exact test case assertions or structure within `Lib/test/test__pyio_locale.py` beyond the requirement that it exercise both text-mode `open()` and `TextIOWrapper` entry points (Raw Task Prompt; Pinned code boundary).

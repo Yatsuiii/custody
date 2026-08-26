@@ -1,0 +1,10 @@
+{
+  "error": "V4StorageError('worker slot is not clean before run: /run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-00')",
+  "index": 12,
+  "model_calls": 0,
+  "run_id": "stress-012-task-03-pip-inline-script-metadata",
+  "slot": 0,
+  "status": "FAIL",
+  "task": "task-03-pip-inline-script-metadata",
+  "wall_seconds": 12.102
+}

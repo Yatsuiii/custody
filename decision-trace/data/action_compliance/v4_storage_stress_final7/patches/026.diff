@@ -1,0 +1,17 @@
+diff --git a/.github/PULL_REQUEST_TEMPLATE.md b/.github/PULL_REQUEST_TEMPLATE.md
+index 2731c0e..0c19a3a 100644
+--- a/.github/PULL_REQUEST_TEMPLATE.md
++++ b/.github/PULL_REQUEST_TEMPLATE.md
+@@ -28,3 +28,5 @@ # Backport Pull Request title
+ GH-NNNN refers to the PR number from `master`.
+ 
+ -->
++
++# V4_STORAGE_STRESS_TRACKED_26
+diff --git a/decisiontrace_v4_storage_new_026.txt b/decisiontrace_v4_storage_new_026.txt
+new file mode 100644
+index 0000000..719f8fa
+--- /dev/null
++++ b/decisiontrace_v4_storage_new_026.txt
+@@ -0,0 +1 @@
++V4_STORAGE_STRESS_NEW_FILE_26

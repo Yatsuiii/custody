@@ -1,0 +1,8 @@
+{
+  "bundle_dir": "data/action_compliance/dev_corpus/dev-05-elastic-composite-keyword-ordinals",
+  "decision_count": 2,
+  "extractor_version": "v2",
+  "failure_count": 0,
+  "proof_generated": true,
+  "raw_model_response_sha256": "295ac1f6346de90072e50f3d9f2f59896c8601d99eea3a4af820e1029487b6ed"
+}

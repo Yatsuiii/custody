@@ -1,0 +1,380 @@
+{
+  "015c23e726d39b2cfd437959adaf2610": {
+    "condition": "C",
+    "repetition": 3,
+    "round": 3,
+    "task": "task-05-packaging-manylinux-aliases"
+  },
+  "0177d9ee9d4ca7ecead5fa278caa6201": {
+    "condition": "C",
+    "repetition": 2,
+    "round": 2,
+    "task": "task-03-pip-inline-script-metadata"
+  },
+  "0221c8dd7a440b405a24e8efa91273a0": {
+    "condition": "B",
+    "repetition": 3,
+    "round": 3,
+    "task": "task-05-packaging-manylinux-aliases"
+  },
+  "0a0d804e1e73aeca2492baa7799b069a": {
+    "condition": "A",
+    "repetition": 2,
+    "round": 2,
+    "task": "task-02-django-index-together-superseded"
+  },
+  "0b4f8426a1b04fd47d2355f8d78de077": {
+    "condition": "A",
+    "repetition": 2,
+    "round": 2,
+    "task": "task-03-pip-inline-script-metadata"
+  },
+  "124f2fc11a39184cbd5602a99d580e75": {
+    "condition": "C",
+    "repetition": 2,
+    "round": 2,
+    "task": "task-07-axum-optional-typed-header"
+  },
+  "15ee8ba284c7fe6b25e5cd97ce7ba72c": {
+    "condition": "B",
+    "repetition": 1,
+    "round": 1,
+    "task": "task-05-packaging-manylinux-aliases"
+  },
+  "17fba7f118d3df54d84c766d53919e41": {
+    "condition": "C",
+    "repetition": 3,
+    "round": 3,
+    "task": "task-04-cpython-locale-encoding-scope"
+  },
+  "18d1c4f0208b6eaa3b051ee0f4eb0663": {
+    "condition": "A",
+    "repetition": 3,
+    "round": 3,
+    "task": "task-03-pip-inline-script-metadata"
+  },
+  "250d3a9f698e9f7bad83f2895378d25c": {
+    "condition": "B",
+    "repetition": 2,
+    "round": 2,
+    "task": "task-06-opentofu-static-source-scope"
+  },
+  "2659581647ab1a404af72f30f509e582": {
+    "condition": "B",
+    "repetition": 2,
+    "round": 2,
+    "task": "task-05-packaging-manylinux-aliases"
+  },
+  "27fd081cb2b76c5cb7bbf76ead94bc74": {
+    "condition": "B",
+    "repetition": 1,
+    "round": 1,
+    "task": "task-07-axum-optional-typed-header"
+  },
+  "2a66870eeb881297ebb2ff9a9e4ab481": {
+    "condition": "C",
+    "repetition": 1,
+    "round": 1,
+    "task": "task-06-opentofu-static-source-scope"
+  },
+  "2fd90bce524d6b779d50eedf1f30d588": {
+    "condition": "B",
+    "repetition": 3,
+    "round": 3,
+    "task": "task-go-01-maps-sorted-keys"
+  },
+  "34f83dc719c6f10081ed3ad04a233186": {
+    "condition": "A",
+    "repetition": 2,
+    "round": 2,
+    "task": "task-go-01-maps-sorted-keys"
+  },
+  "3a7afc2e54e72c50ee81f64f2540aa91": {
+    "condition": "A",
+    "repetition": 3,
+    "round": 3,
+    "task": "task-06-opentofu-static-source-scope"
+  },
+  "3a873f462f235a6b2a0b72924ae08fa1": {
+    "condition": "A",
+    "repetition": 1,
+    "round": 1,
+    "task": "task-04-cpython-locale-encoding-scope"
+  },
+  "3ef5cc065e4a4db7708be33fed1f54ef": {
+    "condition": "B",
+    "repetition": 3,
+    "round": 3,
+    "task": "task-06-opentofu-static-source-scope"
+  },
+  "42ac1d935b610a8921e3ff6c70200da0": {
+    "condition": "A",
+    "repetition": 3,
+    "round": 3,
+    "task": "task-07-axum-optional-typed-header"
+  },
+  "44224ec6703e178955c6efdc86a8ef86": {
+    "condition": "C",
+    "repetition": 1,
+    "round": 1,
+    "task": "task-04-cpython-locale-encoding-scope"
+  },
+  "443e1931b058251ccd840075279e32b5": {
+    "condition": "A",
+    "repetition": 3,
+    "round": 3,
+    "task": "task-02-django-index-together-superseded"
+  },
+  "4b0a9c7b1d6d23ba041d9d6e3cc3842e": {
+    "condition": "A",
+    "repetition": 2,
+    "round": 2,
+    "task": "task-05-packaging-manylinux-aliases"
+  },
+  "4d6a1159b8bffc7a93cac3b739f16a02": {
+    "condition": "A",
+    "repetition": 1,
+    "round": 1,
+    "task": "task-03-pip-inline-script-metadata"
+  },
+  "543f728669f5d329b1df0dbd4fdad754": {
+    "condition": "C",
+    "repetition": 3,
+    "round": 3,
+    "task": "task-03-pip-inline-script-metadata"
+  },
+  "55e4a015d5115cda5e6795c2ccf5cd78": {
+    "condition": "B",
+    "repetition": 1,
+    "round": 1,
+    "task": "task-06-opentofu-static-source-scope"
+  },
+  "6221e4e36b11dce2b44089294cda81c4": {
+    "condition": "B",
+    "repetition": 2,
+    "round": 2,
+    "task": "task-07-axum-optional-typed-header"
+  },
+  "62f28c9c9d2dbdcee43d949db870aeb0": {
+    "condition": "C",
+    "repetition": 2,
+    "round": 2,
+    "task": "task-02-django-index-together-superseded"
+  },
+  "64963d00de772fb22f244c054f1331fa": {
+    "condition": "A",
+    "repetition": 3,
+    "round": 3,
+    "task": "task-04-cpython-locale-encoding-scope"
+  },
+  "65374728a09d5214123f1872382e1e4f": {
+    "condition": "B",
+    "repetition": 2,
+    "round": 2,
+    "task": "task-go-01-maps-sorted-keys"
+  },
+  "66cc465a173abd0fe7ec804c3e9210f6": {
+    "condition": "A",
+    "repetition": 3,
+    "round": 3,
+    "task": "task-05-packaging-manylinux-aliases"
+  },
+  "697860bba2e89a1b8c3e2633b49737d5": {
+    "condition": "C",
+    "repetition": 1,
+    "round": 1,
+    "task": "task-go-01-maps-sorted-keys"
+  },
+  "6d8a0065ccec70f061059d2a3ada15bb": {
+    "condition": "A",
+    "repetition": 2,
+    "round": 2,
+    "task": "task-07-axum-optional-typed-header"
+  },
+  "6ed890635c3ac70fc25da38e64a1921a": {
+    "condition": "C",
+    "repetition": 3,
+    "round": 3,
+    "task": "task-07-axum-optional-typed-header"
+  },
+  "75b86fcc30dbbc2bcb9bd5ef71dc54ce": {
+    "condition": "B",
+    "repetition": 2,
+    "round": 2,
+    "task": "task-03-pip-inline-script-metadata"
+  },
+  "7ba6625cd187999baa2b671c68b709c8": {
+    "condition": "B",
+    "repetition": 3,
+    "round": 3,
+    "task": "task-02-django-index-together-superseded"
+  },
+  "7e09a74ce3ffe72727e958c7af818bd8": {
+    "condition": "C",
+    "repetition": 3,
+    "round": 3,
+    "task": "task-02-django-index-together-superseded"
+  },
+  "849d5a7c69a6c5f2fc047f2c6bc7bab5": {
+    "condition": "C",
+    "repetition": 1,
+    "round": 1,
+    "task": "task-07-axum-optional-typed-header"
+  },
+  "88088eeb289c3a4119830370782756ed": {
+    "condition": "A",
+    "repetition": 1,
+    "round": 1,
+    "task": "task-06-opentofu-static-source-scope"
+  },
+  "8a95cbe1697b2b55d48515cbda5e411f": {
+    "condition": "A",
+    "repetition": 1,
+    "round": 1,
+    "task": "task-05-packaging-manylinux-aliases"
+  },
+  "8bfd71829b6dd8616a9a335435348b09": {
+    "condition": "A",
+    "repetition": 1,
+    "round": 1,
+    "task": "task-07-axum-optional-typed-header"
+  },
+  "90510d5cf49d828595d0b6b18907add2": {
+    "condition": "B",
+    "repetition": 3,
+    "round": 3,
+    "task": "task-04-cpython-locale-encoding-scope"
+  },
+  "9892fdfb52581c59d2a236c52d645f43": {
+    "condition": "A",
+    "repetition": 3,
+    "round": 3,
+    "task": "task-go-01-maps-sorted-keys"
+  },
+  "9b8aa367918bc2b9f394f89e1c7abea6": {
+    "condition": "A",
+    "repetition": 2,
+    "round": 2,
+    "task": "task-06-opentofu-static-source-scope"
+  },
+  "9e12522f0525d6b6121f16f09ac95571": {
+    "condition": "B",
+    "repetition": 2,
+    "round": 2,
+    "task": "task-04-cpython-locale-encoding-scope"
+  },
+  "a07f40e7e5d7aa22a1d1725a95724af6": {
+    "condition": "B",
+    "repetition": 3,
+    "round": 3,
+    "task": "task-07-axum-optional-typed-header"
+  },
+  "a42de2241fb821ac0a8c782c752327a8": {
+    "condition": "A",
+    "repetition": 1,
+    "round": 1,
+    "task": "task-02-django-index-together-superseded"
+  },
+  "a638970875177c622989236f2ca0a42d": {
+    "condition": "C",
+    "repetition": 1,
+    "round": 1,
+    "task": "task-05-packaging-manylinux-aliases"
+  },
+  "ac8163e1a08a1dc50b539a4cd671babd": {
+    "condition": "B",
+    "repetition": 2,
+    "round": 2,
+    "task": "task-02-django-index-together-superseded"
+  },
+  "ad34e5c5aff14443f2ac8a2e1837877d": {
+    "condition": "C",
+    "repetition": 3,
+    "round": 3,
+    "task": "task-06-opentofu-static-source-scope"
+  },
+  "b0ef8dcc426b037ee96a6993b7f3bed5": {
+    "condition": "A",
+    "repetition": 1,
+    "round": 1,
+    "task": "task-go-01-maps-sorted-keys"
+  },
+  "b8f3d1f054807c01d9296dbf87699cd7": {
+    "condition": "C",
+    "repetition": 2,
+    "round": 2,
+    "task": "task-04-cpython-locale-encoding-scope"
+  },
+  "bc7d2530abeb87d630c03cf1ee349892": {
+    "condition": "C",
+    "repetition": 2,
+    "round": 2,
+    "task": "task-06-opentofu-static-source-scope"
+  },
+  "be80b26237a32a8a7378d8175081afab": {
+    "condition": "B",
+    "repetition": 1,
+    "round": 1,
+    "task": "task-03-pip-inline-script-metadata"
+  },
+  "c1e01d7f5ea6f59c4c6feadabf76e414": {
+    "condition": "C",
+    "repetition": 2,
+    "round": 2,
+    "task": "task-go-01-maps-sorted-keys"
+  },
+  "c3371dfcb0e91920846a796daff5df2c": {
+    "condition": "C",
+    "repetition": 1,
+    "round": 1,
+    "task": "task-02-django-index-together-superseded"
+  },
+  "cd39ec1d2f34d1c3ecb0392db25fa1b3": {
+    "condition": "C",
+    "repetition": 3,
+    "round": 3,
+    "task": "task-go-01-maps-sorted-keys"
+  },
+  "cd9419d858e4cb4a5224aa805b9da9ae": {
+    "condition": "A",
+    "repetition": 2,
+    "round": 2,
+    "task": "task-04-cpython-locale-encoding-scope"
+  },
+  "d12fa019b9f365a31d8bb7e0ece327ec": {
+    "condition": "B",
+    "repetition": 1,
+    "round": 1,
+    "task": "task-go-01-maps-sorted-keys"
+  },
+  "dc7d153b219f3dbd05b602485c7dfb8b": {
+    "condition": "C",
+    "repetition": 1,
+    "round": 1,
+    "task": "task-03-pip-inline-script-metadata"
+  },
+  "e2c86106e8d6a5092950604a2a960c5e": {
+    "condition": "B",
+    "repetition": 1,
+    "round": 1,
+    "task": "task-04-cpython-locale-encoding-scope"
+  },
+  "e6f0fa36d08c630a6dc8dc6d4c54afdb": {
+    "condition": "B",
+    "repetition": 1,
+    "round": 1,
+    "task": "task-02-django-index-together-superseded"
+  },
+  "f2bd595dcf18ce93b92c62851b20ccc8": {
+    "condition": "C",
+    "repetition": 2,
+    "round": 2,
+    "task": "task-05-packaging-manylinux-aliases"
+  },
+  "f8341144a612044ed914cf5961fcbdd8": {
+    "condition": "B",
+    "repetition": 3,
+    "round": 3,
+    "task": "task-03-pip-inline-script-metadata"
+  }
+}

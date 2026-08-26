@@ -8,6 +8,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
+from action_compliance_test_contract import execute_contract
+
 
 TASK_DIR = Path(__file__).resolve().parent
 PROBE_PATH = TASK_DIR / "semantic_probe.go"
@@ -53,20 +56,11 @@ def run_probe(
 
 
 def run_tests(worktree: Path, go_cache: Path, module_cache: Path) -> tuple[bool, str]:
-    process = subprocess.run(
-        [
-            "go",
-            "test",
-            "./internal/configs",
-            "-run",
-            "^TestDecisionTrace",
-            "-count=1",
-        ],
-        cwd=worktree,
-        env=go_environment(go_cache, module_cache),
-        capture_output=True,
-        text=True,
+    _, process = execute_contract(
+        worktree,
+        expected_task="task-06-opentofu-static-source-scope",
         timeout=600,
+        base_env=go_environment(go_cache, module_cache),
     )
     return process.returncode == 0, (process.stdout + process.stderr).strip()
 

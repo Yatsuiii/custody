@@ -1,0 +1,17 @@
+diff --git a/.coveragerc b/.coveragerc
+index da205e5..32d3973 100644
+--- a/.coveragerc
++++ b/.coveragerc
+@@ -7,3 +7,5 @@ exclude_lines =
+     pragma: no cover
+     @abc.abstractmethod
+     @abc.abstractproperty
++
++# V4 dry-run tracked modification.
+diff --git a/decisiontrace_v4_dry_run_new_18386a643a6a9770e40c170fb7464a08.txt b/decisiontrace_v4_dry_run_new_18386a643a6a9770e40c170fb7464a08.txt
+new file mode 100644
+index 0000000..6a1e0c8
+--- /dev/null
++++ b/decisiontrace_v4_dry_run_new_18386a643a6a9770e40c170fb7464a08.txt
+@@ -0,0 +1 @@
++18386a643a6a9770e40c170fb7464a08

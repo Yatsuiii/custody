@@ -1,0 +1,14 @@
+{
+  "bundle": "data/action_compliance/bundle_inputs/task-05-packaging-manylinux-aliases",
+  "condition": "B",
+  "context_bytes": 4325,
+  "context_sha256": "882d8771be3a9c7c265111f42f7c77d72b24376311064ff72ebaf8acb4550b8c",
+  "context_words": 553,
+  "estimated_tokens": 1206,
+  "raw_bytes": 2381,
+  "raw_content_sha256": "de2d2e062379999aedd2aa1cfc000293520213cac15cdaa9942fc2414f54444a",
+  "raw_prefix_sha256": "65aa63d1b8a25410482a02106bdb900a74c01802fccae7e1c58013ced46e174d",
+  "raw_words": 302,
+  "system_bytes": 496,
+  "total_bytes": 4823
+}

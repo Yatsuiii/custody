@@ -1,0 +1,138 @@
+diff --git a/packaging/tags.py b/packaging/tags.py
+index e35bbda..8ae1e43 100644
+--- a/packaging/tags.py
++++ b/packaging/tags.py
+@@ -56,6 +56,12 @@ INTERPRETER_SHORT_NAMES = {
+ 
+ _32_BIT_INTERPRETER = sys.maxsize <= 2 ** 32
+ 
++_LEGACY_MANYLINUX_MAP = {
++    (2, 17): "manylinux2014",
++    (2, 12): "manylinux2010",
++    (2, 5): "manylinux1",
++}
++
+ 
+ class Tag(object):
+     """
+@@ -505,10 +511,8 @@ def _glibc_version_string_ctypes():
+     return version_str
+ 
+ 
+-# Separated out from have_compatible_glibc for easier unit testing.
+-def _check_glibc_version(version_str, required_major, minimum_minor):
+-    # type: (str, int, int) -> bool
+-    # Parse string and check against requested version.
++def _parse_glibc_version(version_str):
++    # type: (str) -> Tuple[int, int]
+     #
+     # We use a regexp instead of str.split because we want to discard any
+     # random junk that might come after the minor version -- this might happen
+@@ -521,11 +525,23 @@ def _check_glibc_version(version_str, required_major, minimum_minor):
+             " got: %s" % version_str,
+             RuntimeWarning,
+         )
+-        return False
+-    return (
+-        int(m.group("major")) == required_major
+-        and int(m.group("minor")) >= minimum_minor
+-    )
++        return -1, -1
++    return int(m.group("major")), int(m.group("minor"))
++
++
++# Separated out from have_compatible_glibc for easier unit testing.
++def _check_glibc_version(version_str, required_major, minimum_minor):
++    # type: (str, int, int) -> bool
++    major, minor = _parse_glibc_version(version_str)
++    return major == required_major and minor >= minimum_minor
++
++
++def _get_glibc_version():
++    # type: () -> Tuple[int, int]
++    version_str = _glibc_version_string()
++    if version_str is None:
++        return -1, -1
++    return _parse_glibc_version(version_str)
+ 
+ 
+ def _have_compatible_glibc(required_major, minimum_minor):
+@@ -654,6 +670,19 @@ def _have_compatible_manylinux_abi(arch):
+     return True
+ 
+ 
++def _manylinux_tags(linux, arch, current_glibc):
++    # type: (str, str, GlibcVersion) -> Iterator[str]
++    minimum_minor = 5 if arch in {"x86_64", "i686"} else 17
++    if current_glibc[0] != 2 or current_glibc[1] < minimum_minor:
++        return
++    for minor in range(current_glibc[1], minimum_minor - 1, -1):
++        version = (2, minor)
++        yield linux.replace("linux", "manylinux_2_{}".format(minor))
++        legacy = _LEGACY_MANYLINUX_MAP.get(version)
++        if legacy is not None:
++            yield linux.replace("linux", legacy)
++
++
+ def _linux_platforms(is_32bit=_32_BIT_INTERPRETER):
+     # type: (bool) -> Iterator[str]
+     linux = _normalize_string(distutils.util.get_platform())
+@@ -662,28 +691,10 @@ def _linux_platforms(is_32bit=_32_BIT_INTERPRETER):
+             linux = "linux_i686"
+         elif linux == "linux_aarch64":
+             linux = "linux_armv7l"
+-    manylinux_support = []
+     _, arch = linux.split("_", 1)
+     if _have_compatible_manylinux_abi(arch):
+-        if arch in {"x86_64", "i686", "aarch64", "armv7l", "ppc64", "ppc64le", "s390x"}:
+-            manylinux_support.append(
+-                ("manylinux2014", (2, 17))
+-            )  # CentOS 7 w/ glibc 2.17 (PEP 599)
+-        if arch in {"x86_64", "i686"}:
+-            manylinux_support.append(
+-                ("manylinux2010", (2, 12))
+-            )  # CentOS 6 w/ glibc 2.12 (PEP 571)
+-            manylinux_support.append(
+-                ("manylinux1", (2, 5))
+-            )  # CentOS 5 w/ glibc 2.5 (PEP 513)
+-    manylinux_support_iter = iter(manylinux_support)
+-    for name, glibc_version in manylinux_support_iter:
+-        if _is_manylinux_compatible(name, glibc_version):
+-            yield linux.replace("linux", name)
+-            break
+-    # Support for a later manylinux implies support for an earlier version.
+-    for name, _ in manylinux_support_iter:
+-        yield linux.replace("linux", name)
++        for tag in _manylinux_tags(linux, arch, _get_glibc_version()):
++            yield tag
+     yield linux
+ 
+ 
+diff --git a/tests/test_manylinux_pep600.py b/tests/test_manylinux_pep600.py
+new file mode 100644
+index 0000000..9a44735
+--- /dev/null
++++ b/tests/test_manylinux_pep600.py
+@@ -0,0 +1,22 @@
++import distutils.util
++import unittest
++from unittest import mock
++
++from packaging import tags
++
++
++class PerennialManylinuxTests(unittest.TestCase):
++    def test_glibc_217_x86_64_perennial_tags(self):
++        with mock.patch.object(
++            distutils.util, "get_platform", return_value="linux-x86_64"
++        ), mock.patch.object(tags, "_get_glibc_version", return_value=(2, 17)):
++            platforms = list(tags._linux_platforms(is_32bit=False))
++
++        self.assertEqual(platforms[0], "manylinux_2_17_x86_64")
++        self.assertIn("manylinux_2_12_x86_64", platforms)
++        self.assertIn("manylinux_2_5_x86_64", platforms)
++        self.assertEqual(platforms[-1], "linux_x86_64")
++
++
++if __name__ == "__main__":
++    unittest.main()

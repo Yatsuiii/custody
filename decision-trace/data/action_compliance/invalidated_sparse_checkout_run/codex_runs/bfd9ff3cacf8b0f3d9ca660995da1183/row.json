@@ -1,0 +1,13 @@
+{
+  "failure_stage": "worktree_setup",
+  "prompt_path": "data/action_compliance/codex_runs/bfd9ff3cacf8b0f3d9ca660995da1183/prompt.txt",
+  "prompt_sha256": "f2190e8c8e141792d0f0cb740933155253ec88597d0f48bddba06466416199fa",
+  "repetition": 1,
+  "round": 1,
+  "run_id": "bfd9ff3cacf8b0f3d9ca660995da1183",
+  "setup_returncode": 128,
+  "setup_wall_seconds": 0.023,
+  "status": "infrastructure_failure",
+  "system_prompt_sha256": "bdcb4f0d165e3091e06d47d92fdefbec9c7c044f5126ad530dfc1d4fcc5ed76d",
+  "task": "task-go-01-maps-sorted-keys"
+}

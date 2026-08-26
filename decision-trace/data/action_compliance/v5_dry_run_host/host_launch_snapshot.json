@@ -1,0 +1,68 @@
+{
+  "CODEX_HOME": "<host default: ~/.codex>",
+  "approval_policy": "never",
+  "codex_command_preview": [
+    "codex",
+    "-a",
+    "never",
+    "-c",
+    "model_reasoning_effort=\"high\"",
+    "-m",
+    "gpt-5.6-luna",
+    "exec",
+    "--sandbox",
+    "workspace-write",
+    "--ephemeral",
+    "--json",
+    "--color",
+    "never",
+    "<FROZEN PROMPT>"
+  ],
+  "codex_path": "/usr/bin/codex",
+  "codex_version": "codex-cli 0.149.0\nWARNING: proceeding, even though we could not create PATH aliases: Read-only file system (os error 30)",
+  "coding_agents_called": false,
+  "disk": {
+    "host_root_filesystem": {
+      "free_bytes": 7693529088,
+      "free_gib": 7.165,
+      "free_inodes": 1878303,
+      "path": "/",
+      "total_bytes": 63090503680,
+      "total_inodes": 15402955
+    },
+    "storage": {
+      "free_bytes": 102555291648,
+      "free_gib": 95.512,
+      "free_inodes": 25037913,
+      "path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v5_execution_storage",
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671
+    },
+    "workspace_filesystem": {
+      "free_bytes": 102555291648,
+      "free_gib": 95.512,
+      "free_inodes": 25037913,
+      "path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace",
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671
+    }
+  },
+  "managed_network_marker_present": true,
+  "mode": "dry-run",
+  "model": "gpt-5.6-luna",
+  "model_calls": 0,
+  "network_policy": {
+    "codex_provider": "inherit host network environment",
+    "task_dependency_network": "offline pinned caches"
+  },
+  "provider_reachability": {
+    "dns_ok": false,
+    "error": "DNS: [Errno -3] Temporary failure in name resolution",
+    "host": "chatgpt.com",
+    "port": 443,
+    "tcp_connect_ok": false
+  },
+  "reasoning_effort": "high",
+  "sandbox": "workspace-write",
+  "timestamp": 1787721186.2434278
+}

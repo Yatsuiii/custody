@@ -1,0 +1,13 @@
+{
+  "failure_stage": "worktree_setup",
+  "prompt_path": "data/action_compliance/codex_runs/fd9df77863607dd13ea609253ec73767/prompt.txt",
+  "prompt_sha256": "9ed5833b1bbd6688f3f3397e62a1e800eff3f50ce8093094048327bb58cc7bd8",
+  "repetition": 1,
+  "round": 1,
+  "run_id": "fd9df77863607dd13ea609253ec73767",
+  "setup_returncode": 128,
+  "setup_wall_seconds": 0.018,
+  "status": "infrastructure_failure",
+  "system_prompt_sha256": "bdcb4f0d165e3091e06d47d92fdefbec9c7c044f5126ad530dfc1d4fcc5ed76d",
+  "task": "task-04-cpython-locale-encoding-scope"
+}

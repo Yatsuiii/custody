@@ -1,0 +1,309 @@
+You are an autonomous coding agent working in a pinned isolated repository.
+Implement the requested change using the raw engineering context supplied
+below. Inspect the repository, make the smallest correct code change, and run
+the task's available focused tests. Do not ask for organizational labels that
+are not present in the supplied evidence. Do not modify files outside the
+isolated worktree. Finish with the implementation and tests, or clearly report
+why the request cannot be completed.
+
+
+
+> Package `maps`'s test suite (`src/maps/maps_test.go`) has no test that
+> verifies a map's keys can be reliably obtained as a deterministic,
+> sorted slice — useful for golden-output comparisons and order-independent
+> assertions elsewhere in the tree. Add a `TestKeysAsSortedSlice` test to
+> `maps_test.go` using the existing fixture `m1` (already defined in the
+> file: `map[int]int{1: 2, 2: 4, 4: 8, 8: 16}`). The test should compute a
+> sorted `[]int` of `m1`'s keys and assert it equals `[]int{1, 2, 4, 8}`.
+> Add whatever supporting code is needed to produce that sorted slice from
+> `m1`; the test must actually exercise real map-to-sorted-slice logic
+> (not a hardcoded literal comparison).
+
+
+
+RAW SOURCE ARTIFACTS:
+
+--- artifact_001 ---
+Source URL: (none)
+Source title: Current `maps` package source at pinned commit 56ebf80e57db9f61981fc0636fc6419dc6f68eda (tag go1.25.1)
+# Current `maps` package source at pinned commit 56ebf80e57db9f61981fc0636fc6419dc6f68eda (tag go1.25.1)
+
+## src/maps/iter.go (full file, verbatim)
+
+```go
+// Copyright 2024 The Go Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+package maps
+
+import "iter"
+
+// All returns an iterator over key-value pairs from m.
+// The iteration order is not specified and is not guaranteed
+// to be the same from one call to the next.
+func All[Map ~map[K]V, K comparable, V any](m Map) iter.Seq2[K, V] {
+	return func(yield func(K, V) bool) {
+		for k, v := range m {
+			if !yield(k, v) {
+				return
+			}
+		}
+	}
+}
+
+// Keys returns an iterator over keys in m.
+// The iteration order is not specified and is not guaranteed
+// to be the same from one call to the next.
+func Keys[Map ~map[K]V, K comparable, V any](m Map) iter.Seq[K] {
+	return func(yield func(K) bool) {
+		for k := range m {
+			if !yield(k) {
+				return
+			}
+		}
+	}
+}
+
+// Values returns an iterator over values in m.
+// The iteration order is not specified and is not guaranteed
+// to be the same from one call to the next.
+func Values[Map ~map[K]V, K comparable, V any](m Map) iter.Seq[V] {
+	return func(yield func(V) bool) {
+		for _, v := range m {
+			if !yield(v) {
+				return
+			}
+		}
+	}
+}
+
+// Insert adds the key-value pairs from seq to m.
+// If a key in seq already exists in m, its value will be overwritten.
+func Insert[Map ~map[K]V, K comparable, V any](m Map, seq iter.Seq2[K, V]) {
+	for k, v := range seq {
+		m[k] = v
+	}
+}
+
+// Collect collects key-value pairs from seq into a new map
+// and returns it.
+func Collect[K comparable, V any](seq iter.Seq2[K, V]) map[K]V {
+	m := make(map[K]V)
+	Insert(m, seq)
+	return m
+}
+```
+
+## src/maps/maps.go (signatures only — Equal, EqualFunc, Clone, Copy, DeleteFunc)
+
+No `Keys`/`Values`/`KeysSlice`/`ValuesSlice` slice-returning functions
+exist anywhere in this file or `iter.go`. This is the full current
+exported surface of package `maps`: `Equal`, `EqualFunc`, `Clone`, `Copy`,
+`DeleteFunc`, `All`, `Keys`, `Values`, `Insert`, `Collect`.
+
+## Relevant `slices` package functions (src/slices/iter.go), for composition
+
+```go
+func Collect[E any](seq iter.Seq[E]) []E
+func Sorted[E cmp.Ordered](seq iter.Seq[E]) []E
+func SortedFunc[E any](seq iter.Seq[E], cmp func(E, E) int) []E
+func SortedStableFunc[E any](seq iter.Seq[E], cmp func(E, E) int) []E
+```
+
+`slices.Collect(maps.Keys(m))` yields an unsorted `[]K`.
+`slices.Sorted(maps.Keys(m))` yields a sorted `[]K` (requires `K: cmp.Ordered`).
+Both are already implemented, tested, and part of accepted stdlib policy
+(#61899, companion proposal to #61900, also accepted).
+
+## src/maps/maps_test.go (full file, verbatim — this is the file the task modifies)
+
+Tests present: `TestEqual`, `TestEqualFunc`, `TestClone`, `TestCloneNil`,
+`TestCopy`, `TestDeleteFunc`, `BenchmarkMapClone`, `TestCloneWithDelete`,
+`TestCloneWithMapAssign`, `TestCloneLarge`. No test in this file exercises
+`Keys`/`Values`/`All`/`Insert`/`Collect` (those live in `iter_test.go`) and
+no test builds a sorted slice of a map's keys for a deterministic-output
+comparison — see `TASK.md` for the requested addition.
+
+Shared test fixtures already in the file:
+```go
+var m1 = map[int]int{1: 2, 2: 4, 4: 8, 8: 16}
+var m2 = map[int]string{1: "2", 2: "4", 4: "8", 8: "16"}
+```
+
+--- artifact_002 ---
+Source URL: https://github.com/golang/go/issues/61626
+Source title: golang/go#61626 — "proposal: maps: add maps.KeysSlice and maps.ValuesSlice"
+# golang/go#61626 — "proposal: maps: add maps.KeysSlice and maps.ValuesSlice"
+
+Fetched via `gh issue view 61626 --repo golang/go --json title,url,body,comments`.
+State: CLOSED. Final proposal-review ruling: **declined**.
+https://github.com/golang/go/issues/61626
+
+## Original request (body, verbatim)
+
+> Since we need to reserve Keys and Values for iterators.
+> I think we might need to change the old maps.Keys/Values to
+> maps.KeysSlice/ValuesSlice as mention in
+> [513715](https://go-review.googlesource.com/c/go/+/513715)
+
+(i.e., add exported functions to package `maps` that return a map's keys,
+or values, directly as a `[]K` / `[]V` slice — the same shape as the old
+`golang.org/x/exp/maps.Keys` / `.Values`.)
+
+## rsc, 2023-08-09T20:24:21Z (proposal-review comment, verbatim)
+
+> #61900 adds Keys and Values back as iterators.
+> #61899 adds slices.Collect and slices.Sorted.
+>
+> With these, the old maps.Keys(m) would become
+> slices.Collect(maps.Keys(m)) and similarly Values.
+> Better, this idiom:
+>
+> ```
+> keys := maps.Keys(m)
+> slices.Sort(keys)
+> use(keys)
+> ```
+>
+> becomes
+>
+> ```
+> use(slices.Sorted(maps.Keys(m))
+> ```
+>
+> Are there other pattern uses for maps.Keys (other than sorting them) that
+> we should be sure to cover?
+
+## rsc, 2024-01-23T19:52:05Z (verbatim)
+
+> The key issue seems to be
+> https://github.com/golang/go/issues/61626#issuecomment-1672096753.
+> It sounds like if we add maps.Keys, maps.Values, and slices.Collect, then
+> we can use
+>
+> KeySlices(m) => slices.Collect(maps.Keys(m))  (or slices.Sorted(maps.Keys(m)))
+> ValuesSlice(m) => slices.Collect(maps.Values(m))
+>
+> and do not need to add these explicitly.
+
+## rsc, 2024-02-01T20:24:03Z (verbatim)
+
+> Based on the discussion above, this proposal seems like a likely decline.
+> — rsc for the proposal review group
+
+## rsc, 2024-02-08T23:59:34Z — final ruling (verbatim)
+
+> No change in consensus, so declined.
+> — rsc for the proposal review group
+
+## Governing rule established
+
+The stdlib `maps` package deliberately does **not** export a
+slice-returning `Keys`/`Values`-family function (e.g. `KeysSlice`,
+`ValuesSlice`, or any signature `func(m Map) []K`). The accepted,
+authoritative pattern for "I need a map's keys as a slice" is
+**composition**: `slices.Collect(maps.Keys(m))` or, for a sorted slice,
+`slices.Sorted(maps.Keys(m))` — using the iterator-returning `maps.Keys`
+(added by #61900, see companion doc) together with `slices.Collect` /
+`slices.Sorted` (added by #61899). This was an explicit, considered
+decision, not an oversight: the proposal was actively discussed for six
+months and closed with an explicit "declined" ruling from the proposal
+review group, precisely because the composition already covers the need.
+
+--- artifact_003 ---
+Source URL: https://github.com/golang/go/issues/61900
+Source title: golang/go#61900 — "maps: add iterator-related functions"
+# golang/go#61900 — "maps: add iterator-related functions"
+
+Fetched via `gh issue view 61900 --repo golang/go --json title,url,body,comments`.
+State: CLOSED. Final proposal-review ruling: **accepted**.
+https://github.com/golang/go/issues/61900
+
+## Proposal body (excerpt, verbatim)
+
+> We propose to add the following functions to package maps, to provide
+> good support for code using iterators.
+>
+> ```go
+> // All returns an iterator over key-value pairs from m.
+> func All[Map ~map[K]V, K comparable, V any](m Map) iter.Seq2[K, V]
+>
+> // Keys returns an iterator over keys in m.
+> func Keys[Map ~map[K]V, K comparable, V any](m Map) iter.Seq[K]
+>
+> // Values returns an iterator over values in m.
+> func Values[Map ~map[K]V, K comparable, V any](m Map) iter.Seq[V]
+>
+> // Insert adds the key-value pairs from seq to m.
+> func Insert[Map ~map[K]V, K comparable, V any](m Map, seq iter.Seq2[K, V])
+>
+> // Collect collects key-value pairs from seq into a new map and returns it.
+> func Collect[K comparable, V any](seq iter.Seq2[K, V]) map[K]V
+> ```
+
+## rsc, 2024-01-31T18:28:07Z (verbatim)
+
+> It's true that slices.Sorted(maps.Keys(m)) will not pre-size the slice,
+> but that's not necessarily a strike against the iterator forms. We could
+> have a separate discussion about maps.KeysSorted and maps.KeysSortedFunc
+> as optimizations, if that became a concern.
+
+(No such follow-on `maps.KeysSorted` proposal was ever separately accepted;
+the companion decline of `maps.KeysSlice`/`ValuesSlice`, see
+`issue_61626_keysslice_declined.md`, is the closest thing to it, and it
+was declined.)
+
+## rsc, 2024-02-14T23:50:36Z — final ruling (verbatim)
+
+> No change in consensus, so accepted. 🎉
+> This issue now tracks the work of implementing the proposal.
+> — rsc for the proposal review group
+
+The full accepted godoc, as quoted in the ruling comment:
+
+```
+func All[Map ~map[K]V, K comparable, V any](m Map) iter.Seq2[K, V]
+func Collect[K comparable, V any](seq iter.Seq2[K, V]) map[K]V
+func Insert[Map ~map[K]V, K comparable, V any](m Map, seq iter.Seq2[K, V])
+func Keys[Map ~map[K]V, K comparable, V any](m Map) iter.Seq[K]
+func Values[Map ~map[K]V, K comparable, V any](m Map) iter.Seq[V]
+```
+
+This is exactly the API present in the pinned snapshot's
+`src/maps/iter.go` (see `current_maps_package.md`).
+
+## Net effect of #61900 + #61626 together
+
+Package `maps` intentionally exposes `Keys`/`Values` only as
+**iterators** (`iter.Seq[K]` / `iter.Seq[V]`), never as slice-returning
+functions. Getting a `[]K`/`[]V` out of a map is meant to be done by
+composing `maps.Keys`/`maps.Values` with `slices.Collect` (unsorted) or
+`slices.Sorted` (sorted), not by adding a new package-level function that
+does the loop-and-append-and-return-a-slice itself. A later, repeated
+attempt to add that convenience function back (#61626, and its duplicates
+#72909, #73291, #65919) was declined each time on this same rationale.
+
+
+DERIVED CONTEXT — ARM C AUTHORITYPROOF
+{
+  "ambiguity_witnesses": [],
+  "authority_state": "GOVERNING",
+  "considered_candidates": [
+    {
+      "active_resolution": true,
+      "decision_id": "bundle-artifact_002-decision-0",
+      "eligible_to_govern": true,
+      "exclusion_reason": null,
+      "lifecycle_status": "ACCEPTED",
+      "role": "policy",
+      "witness_ids": []
+    }
+  ],
+  "excluded_candidates": [],
+  "explanation": "bundle-artifact_002-decision-0 is the sole eligible active decision in scope 'maps-keys-values-slice-api'.",
+  "governing_decision_id": "bundle-artifact_002-decision-0",
+  "governing_witnesses": [],
+  "requested_scope": "maps-keys-values-slice-api",
+  "transition_witnesses": []
+}

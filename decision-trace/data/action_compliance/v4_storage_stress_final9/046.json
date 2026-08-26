@@ -1,0 +1,118 @@
+{
+  "disk_after_capture": {
+    "filesystem": {
+      "free_bytes": 101985153024,
+      "free_inodes": 24898719,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 335781691392
+    },
+    "host_root_filesystem": {
+      "free_bytes": 11191300096,
+      "free_inodes": 2732251,
+      "total_bytes": 63090503680,
+      "total_inodes": 15402955,
+      "used_bytes": 48661200896
+    },
+    "sizes_bytes": {
+      "codex_sqlite": 13463920,
+      "root": 3489984494,
+      "shared": 1858577802,
+      "slot": 678684874,
+      "slot_tmp": 0,
+      "tmp": 0
+    }
+  },
+  "disk_after_setup": {
+    "filesystem": {
+      "free_bytes": 101985157120,
+      "free_inodes": 24898720,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 335781687296
+    },
+    "host_root_filesystem": {
+      "free_bytes": 11192033280,
+      "free_inodes": 2732430,
+      "total_bytes": 63090503680,
+      "total_inodes": 15402955,
+      "used_bytes": 48660467712
+    },
+    "sizes_bytes": {
+      "codex_sqlite": 13463920,
+      "root": 3361906971,
+      "shared": 1858577802,
+      "slot": 678681052,
+      "slot_tmp": 0,
+      "tmp": 0
+    }
+  },
+  "disk_after_test": {
+    "filesystem": {
+      "free_bytes": 102597607424,
+      "free_inodes": 25048244,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 335169236992
+    },
+    "host_root_filesystem": {
+      "free_bytes": 11191099392,
+      "free_inodes": 2732202,
+      "total_bytes": 63090503680,
+      "total_inodes": 15402955,
+      "used_bytes": 48661401600
+    },
+    "sizes_bytes": {
+      "codex_sqlite": 13463920,
+      "root": 3618053970,
+      "shared": 1858577802,
+      "slot": 806758569,
+      "slot_tmp": 0,
+      "tmp": 0
+    }
+  },
+  "full_worktree": true,
+  "index": 46,
+  "model_calls": 0,
+  "new_file": "decisiontrace_v4_storage_new_046.txt",
+  "patch_capture": {
+    "capture_command": "git add -A && git diff --cached --binary --no-ext-diff",
+    "patch_bytes": 2767,
+    "patch_has_new_file": true,
+    "patch_sha256": "4a3e27e8803015fc46d885b9f8067c8d89a84a2dcf9062ba7f60eba739337a43"
+  },
+  "pinned_sha": "fd11d8efde4895a2159a29dcd586a7db99917057",
+  "run_id": "stress-046-task-07-axum-optional-typed-header",
+  "setup_output_tail": "{\"contract_version\": \"test-command-v1\", \"full_worktree\": true, \"grader_interpreter\": \"/usr/bin/python3.14\", \"interpreter\": \"cargo\", \"interpreter_kind\": \"non_python_test_runner\", \"pinned_sha\": \"fd11d8efde4895a2159a29dcd586a7db99917057\", \"setup_interpreter\": \"/usr/bin/python3.14\", \"setup_python_argument\": \"/home/Yatsuiii/.pyenv/versions/3.12.13/bin/python\", \"sparse_checkout\": false, \"status_porcelain\": \"?? .decisiontrace_setup_metadata.json\\n\", \"task\": \"task-07-axum-optional-typed-header\", \"test_command\": [\"cargo\", \"test\", \"--offline\", \"-p\", \"axum-extra\", \"--features\", \"typed-header\", \"--test\", \"decisiontrace_optional_typed_header\", \"--\", \"--nocapture\"], \"test_cwd\": \".\", \"test_env\": {\"CARGO_HOME\": \"/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/shared/cargo-home\", \"CARGO_TARGET_DIR\": \"/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-00/cargo-target\"}}\n",
+  "setup_returncode": 0,
+  "slot": 0,
+  "sparse_checkout": false,
+  "status": "PASS",
+  "status_after": "",
+  "status_before": "",
+  "task": "task-07-axum-optional-typed-header",
+  "test_command": [
+    "cargo",
+    "test",
+    "--offline",
+    "-p",
+    "axum-extra",
+    "--features",
+    "typed-header",
+    "--test",
+    "decisiontrace_optional_typed_header",
+    "--",
+    "--nocapture"
+  ],
+  "test_cwd": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-00/task-07-axum-optional-typed-header/worktree",
+  "test_env": {
+    "CARGO_HOME": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/shared/cargo-home",
+    "CARGO_TARGET_DIR": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-00/cargo-target"
+  },
+  "test_execution_status": "executed_with_tests",
+  "test_output_tail": "\nrunning 1 test\nDECISIONTRACE_ABSENT_STATUS=204\nDECISIONTRACE_MALFORMED_STATUS=400\ntest decisiontrace_optional_typed_header_behavior ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n   Compiling axum-core v0.5.0-alpha.1 (/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-00/task-07-axum-optional-typed-header/worktree/axum-core)\n   Compiling axum v0.8.0-alpha.1 (/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-00/task-07-axum-optional-typed-header/worktree/axum)\n   Compiling axum-extra v0.10.0-alpha.1 (/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-00/task-07-axum-optional-typed-header/worktree/axum-extra)\nwarning: missing documentation for the crate\n  --> axum-extra/tests/decisiontrace_optional_typed_header.rs:1:1\n   |\n 1 | / use std::convert::Infallible;\n 2 | |\n 3 | | use axum::{\n 4 | |     body::Body,\n...  |\n69 | |     ));\n70 | | }\n   | |_^\n   |\n   = note: requested on the command line with `-W missing-docs`\n\nwarning: `axum-extra` (test \"decisiontrace_optional_typed_header\") generated 1 warning\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.37s\n     Running tests/decisiontrace_optional_typed_header.rs (/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-00/cargo-target/debug/deps/decisiontrace_optional_typed_header-f705fba7a7f325aa)\n",
+  "test_returncode": 0,
+  "tests_executed": true,
+  "tracked_edit": ".github/ISSUE_TEMPLATE/bug_report.md",
+  "wall_seconds": 117.579
+}

@@ -1,0 +1,10 @@
+
+> The `Book` model in `tests/model_indexes/models.py` is frequently queried
+> by filtering on `author` and `pages` together, but there is currently no
+> database index covering both columns. Add a composite index on these two
+> fields to `Book`. Then add a regression test to
+> `tests/model_indexes/tests.py` (in the `IndexesTests` class) that proves,
+> at the database schema level (via `connection.introspection.get_constraints`
+> against `Book._meta.db_table`), that an index actually covering both the
+> `author` column and the `pages` field's column now exists.
+

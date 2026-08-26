@@ -1,0 +1,112 @@
+{
+  "disk_after_capture": {
+    "filesystem": {
+      "free_bytes": 102841692160,
+      "free_inodes": 25107835,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 334925152256
+    },
+    "host_root_filesystem": {
+      "free_bytes": 11264323584,
+      "free_inodes": 2750079,
+      "total_bytes": 63090503680,
+      "total_inodes": 15402955,
+      "used_bytes": 48588177408
+    },
+    "sizes_bytes": {
+      "codex_sqlite": 0,
+      "root": 2454892649,
+      "shared": 1858577802,
+      "slot": 231371048,
+      "slot_tmp": 0,
+      "tmp": 0
+    }
+  },
+  "disk_after_setup": {
+    "filesystem": {
+      "free_bytes": 102841692160,
+      "free_inodes": 25107835,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 334925152256
+    },
+    "host_root_filesystem": {
+      "free_bytes": 11264339968,
+      "free_inodes": 2750083,
+      "total_bytes": 63090503680,
+      "total_inodes": 15402955,
+      "used_bytes": 48588161024
+    },
+    "sizes_bytes": {
+      "codex_sqlite": 0,
+      "root": 2453774076,
+      "shared": 1858577802,
+      "slot": 231370753,
+      "slot_tmp": 0,
+      "tmp": 0
+    }
+  },
+  "disk_after_test": {
+    "filesystem": {
+      "free_bytes": 103098806272,
+      "free_inodes": 25170607,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 334668038144
+    },
+    "host_root_filesystem": {
+      "free_bytes": 11264323584,
+      "free_inodes": 2750079,
+      "total_bytes": 63090503680,
+      "total_inodes": 15402955,
+      "used_bytes": 48588177408
+    },
+    "sizes_bytes": {
+      "codex_sqlite": 0,
+      "root": 2456010558,
+      "shared": 1858577802,
+      "slot": 232489343,
+      "slot_tmp": 0,
+      "tmp": 0
+    }
+  },
+  "full_worktree": true,
+  "index": 58,
+  "model_calls": 0,
+  "new_file": "decisiontrace_v4_storage_new_058.txt",
+  "patch_capture": {
+    "capture_command": "git add -A && git diff --cached --binary --no-ext-diff",
+    "patch_bytes": 548,
+    "patch_has_new_file": true,
+    "patch_sha256": "4597d28a5cfb6de5d28d647c48be6929c5b5dee4dde2db12d08cc086d31eba78"
+  },
+  "pinned_sha": "56ebf80e57db9f61981fc0636fc6419dc6f68eda",
+  "run_id": "stress-058-task-go-01-maps-sorted-keys",
+  "setup_output_tail": "{\"contract_version\": \"test-command-v1\", \"full_worktree\": true, \"grader_interpreter\": \"/usr/bin/python3.14\", \"interpreter\": \"go\", \"interpreter_kind\": \"non_python_test_runner\", \"pinned_sha\": \"56ebf80e57db9f61981fc0636fc6419dc6f68eda\", \"setup_interpreter\": \"/usr/bin/python3.14\", \"setup_python_argument\": \"/home/Yatsuiii/.pyenv/versions/3.12.13/bin/python\", \"sparse_checkout\": false, \"status_porcelain\": \"?? .decisiontrace_setup_metadata.json\\n?? overlay.json\\n\", \"task\": \"task-go-01-maps-sorted-keys\", \"test_command\": [\"go\", \"test\", \"-overlay=/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-00/task-go-01-maps-sorted-keys/worktree/overlay.json\", \"maps\"], \"test_cwd\": \".\", \"test_env\": {\"GOCACHE\": \"/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-00/task-go-01-maps-sorted-keys/go-cache\", \"GOMODCACHE\": \"/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/shared/go-modcache\", \"GOWORK\": \"off\"}}\n",
+  "setup_returncode": 0,
+  "slot": 0,
+  "sparse_checkout": false,
+  "status": "PASS",
+  "status_after": "",
+  "status_before": "",
+  "task": "task-go-01-maps-sorted-keys",
+  "test_command": [
+    "go",
+    "test",
+    "-overlay=/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-00/task-go-01-maps-sorted-keys/worktree/overlay.json",
+    "maps"
+  ],
+  "test_cwd": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-00/task-go-01-maps-sorted-keys/worktree",
+  "test_env": {
+    "GOCACHE": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-00/task-go-01-maps-sorted-keys/go-cache",
+    "GOMODCACHE": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/shared/go-modcache",
+    "GOWORK": "off"
+  },
+  "test_execution_status": "executed_with_tests",
+  "test_output_tail": "ok  \tmaps\t0.003s\n",
+  "test_returncode": 0,
+  "tests_executed": true,
+  "tracked_edit": ".github/CODE_OF_CONDUCT.md",
+  "wall_seconds": 98.629
+}

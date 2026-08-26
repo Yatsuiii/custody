@@ -1,0 +1,14 @@
+{
+  "bundle": "data/action_compliance/bundle_inputs/task-07-axum-optional-typed-header",
+  "condition": "B",
+  "context_bytes": 6107,
+  "context_sha256": "7087b26fe6415c2da3e7dbcc233003b1e8005097244756d93ab7d74d7c49b58f",
+  "context_words": 731,
+  "estimated_tokens": 1652,
+  "raw_bytes": 3312,
+  "raw_content_sha256": "8a736277200b1a88c8bc5ac7b6c07a143f20bea981aacf812c7c8f793abce2e1",
+  "raw_prefix_sha256": "7bb63a12bc255b095dddba7dcb4fd8eb051599fafd1c8aeda659b121ea9fcb58",
+  "raw_words": 400,
+  "system_bytes": 496,
+  "total_bytes": 6605
+}

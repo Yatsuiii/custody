@@ -1,0 +1,447 @@
+{
+  "recovered": [],
+  "rows": [
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/A/task-02-django-index-together-superseded/context.txt",
+      "repetition": 1,
+      "round": 1,
+      "run_id": "cf443759176d593121e837f0d1b679b0",
+      "task": "task-02-django-index-together-superseded"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/B/task-02-django-index-together-superseded/context.txt",
+      "repetition": 1,
+      "round": 1,
+      "run_id": "cf9b6f45c565aa97d8190295c2385ffa",
+      "task": "task-02-django-index-together-superseded"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/C/task-02-django-index-together-superseded/context.txt",
+      "repetition": 1,
+      "round": 1,
+      "run_id": "08ce5575f6f22b4ccaf1c8174abef59c",
+      "task": "task-02-django-index-together-superseded"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/B/task-02-django-index-together-superseded/context.txt",
+      "repetition": 2,
+      "round": 2,
+      "run_id": "3935df5525ded396f0b3478067fcb1e0",
+      "task": "task-02-django-index-together-superseded"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/C/task-02-django-index-together-superseded/context.txt",
+      "repetition": 2,
+      "round": 2,
+      "run_id": "736c2905d1adebbb64f2390f348b9bc3",
+      "task": "task-02-django-index-together-superseded"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/A/task-02-django-index-together-superseded/context.txt",
+      "repetition": 2,
+      "round": 2,
+      "run_id": "9a9ba443995e8f6833d9d788d2f55cfa",
+      "task": "task-02-django-index-together-superseded"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/A/task-02-django-index-together-superseded/context.txt",
+      "repetition": 3,
+      "round": 3,
+      "run_id": "425e65b3f6715756ce4342f9f4099c94",
+      "task": "task-02-django-index-together-superseded"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/C/task-02-django-index-together-superseded/context.txt",
+      "repetition": 3,
+      "round": 3,
+      "run_id": "37425ca8c2af1165603bb0d76fae6688",
+      "task": "task-02-django-index-together-superseded"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/B/task-02-django-index-together-superseded/context.txt",
+      "repetition": 3,
+      "round": 3,
+      "run_id": "5bb5f8314d5bd8d3cedca869a8915538",
+      "task": "task-02-django-index-together-superseded"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/B/task-03-pip-inline-script-metadata/context.txt",
+      "repetition": 1,
+      "round": 1,
+      "run_id": "7fed15bc8c9ac6986cf62cb98a49a94c",
+      "task": "task-03-pip-inline-script-metadata"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/C/task-03-pip-inline-script-metadata/context.txt",
+      "repetition": 1,
+      "round": 1,
+      "run_id": "18aa442207236978c42718bc8b198421",
+      "task": "task-03-pip-inline-script-metadata"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/A/task-03-pip-inline-script-metadata/context.txt",
+      "repetition": 1,
+      "round": 1,
+      "run_id": "3192f2d24328ff3072431f57bf4d11f7",
+      "task": "task-03-pip-inline-script-metadata"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/C/task-03-pip-inline-script-metadata/context.txt",
+      "repetition": 2,
+      "round": 2,
+      "run_id": "13cb558f10b17ff42b8230b7f1a8d596",
+      "task": "task-03-pip-inline-script-metadata"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/B/task-03-pip-inline-script-metadata/context.txt",
+      "repetition": 2,
+      "round": 2,
+      "run_id": "74efc2e4b591bd40d35129168c12cd82",
+      "task": "task-03-pip-inline-script-metadata"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/A/task-03-pip-inline-script-metadata/context.txt",
+      "repetition": 2,
+      "round": 2,
+      "run_id": "845bc3facd8397996a6e023975aaf74c",
+      "task": "task-03-pip-inline-script-metadata"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/A/task-03-pip-inline-script-metadata/context.txt",
+      "repetition": 3,
+      "round": 3,
+      "run_id": "b9b11b93c6a611cd4380f5bed8430151",
+      "task": "task-03-pip-inline-script-metadata"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/B/task-03-pip-inline-script-metadata/context.txt",
+      "repetition": 3,
+      "round": 3,
+      "run_id": "3522594d29064a1425f7d0262a91d26f",
+      "task": "task-03-pip-inline-script-metadata"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/C/task-03-pip-inline-script-metadata/context.txt",
+      "repetition": 3,
+      "round": 3,
+      "run_id": "7cdf2f92c0b53df32fb61639ade7cf7f",
+      "task": "task-03-pip-inline-script-metadata"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/B/task-04-cpython-locale-encoding-scope/context.txt",
+      "repetition": 1,
+      "round": 1,
+      "run_id": "09a0735fbf0cb1811750344edda3fa4c",
+      "task": "task-04-cpython-locale-encoding-scope"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/C/task-04-cpython-locale-encoding-scope/context.txt",
+      "repetition": 1,
+      "round": 1,
+      "run_id": "ebd2f65855d65392975a0c43639c7972",
+      "task": "task-04-cpython-locale-encoding-scope"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/A/task-04-cpython-locale-encoding-scope/context.txt",
+      "repetition": 1,
+      "round": 1,
+      "run_id": "6a214efe47c9c6b5b9dc6fd626fe9934",
+      "task": "task-04-cpython-locale-encoding-scope"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/B/task-04-cpython-locale-encoding-scope/context.txt",
+      "repetition": 2,
+      "round": 2,
+      "run_id": "71b9b31fe1a27b2b05d913d67cfa00a1",
+      "task": "task-04-cpython-locale-encoding-scope"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/C/task-04-cpython-locale-encoding-scope/context.txt",
+      "repetition": 2,
+      "round": 2,
+      "run_id": "a1696bae1991de265a54f1b36e5e227d",
+      "task": "task-04-cpython-locale-encoding-scope"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/A/task-04-cpython-locale-encoding-scope/context.txt",
+      "repetition": 2,
+      "round": 2,
+      "run_id": "6250f07171e9b39043420bad96c3ef5e",
+      "task": "task-04-cpython-locale-encoding-scope"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/A/task-04-cpython-locale-encoding-scope/context.txt",
+      "repetition": 3,
+      "round": 3,
+      "run_id": "de2e51fc350694887571cddf5496e9c0",
+      "task": "task-04-cpython-locale-encoding-scope"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/B/task-04-cpython-locale-encoding-scope/context.txt",
+      "repetition": 3,
+      "round": 3,
+      "run_id": "eff98aabe26a5bfd6caf0b4bde1b6e61",
+      "task": "task-04-cpython-locale-encoding-scope"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/C/task-04-cpython-locale-encoding-scope/context.txt",
+      "repetition": 3,
+      "round": 3,
+      "run_id": "827e5cb5731df6501627330b0b1935b2",
+      "task": "task-04-cpython-locale-encoding-scope"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/B/task-05-packaging-manylinux-aliases/context.txt",
+      "repetition": 1,
+      "round": 1,
+      "run_id": "4e5acbfdc67d293c7f783cd61525f4f6",
+      "task": "task-05-packaging-manylinux-aliases"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/C/task-05-packaging-manylinux-aliases/context.txt",
+      "repetition": 1,
+      "round": 1,
+      "run_id": "896f3289298b5654886207b4a9650ac9",
+      "task": "task-05-packaging-manylinux-aliases"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/A/task-05-packaging-manylinux-aliases/context.txt",
+      "repetition": 1,
+      "round": 1,
+      "run_id": "43fcf49a35aaa34b412da9877eee9a09",
+      "task": "task-05-packaging-manylinux-aliases"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/C/task-05-packaging-manylinux-aliases/context.txt",
+      "repetition": 2,
+      "round": 2,
+      "run_id": "0a29e1380215d64220874e00050a274b",
+      "task": "task-05-packaging-manylinux-aliases"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/A/task-05-packaging-manylinux-aliases/context.txt",
+      "repetition": 2,
+      "round": 2,
+      "run_id": "186762a8ac74519fd8eb042f44ab6a47",
+      "task": "task-05-packaging-manylinux-aliases"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/B/task-05-packaging-manylinux-aliases/context.txt",
+      "repetition": 2,
+      "round": 2,
+      "run_id": "5bda4efe9497ca95c472bd8e61c5b595",
+      "task": "task-05-packaging-manylinux-aliases"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/A/task-05-packaging-manylinux-aliases/context.txt",
+      "repetition": 3,
+      "round": 3,
+      "run_id": "ab0a9267215c4952a6e7087333aaaf9b",
+      "task": "task-05-packaging-manylinux-aliases"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/B/task-05-packaging-manylinux-aliases/context.txt",
+      "repetition": 3,
+      "round": 3,
+      "run_id": "004fd7f42f0676407cc1c94c913af493",
+      "task": "task-05-packaging-manylinux-aliases"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/C/task-05-packaging-manylinux-aliases/context.txt",
+      "repetition": 3,
+      "round": 3,
+      "run_id": "18386a643a6a9770e40c170fb7464a08",
+      "task": "task-05-packaging-manylinux-aliases"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/C/task-06-opentofu-static-source-scope/context.txt",
+      "repetition": 1,
+      "round": 1,
+      "run_id": "c3fe6dbbafd9980fd919f2c394ee49b5",
+      "task": "task-06-opentofu-static-source-scope"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/A/task-06-opentofu-static-source-scope/context.txt",
+      "repetition": 1,
+      "round": 1,
+      "run_id": "af7ceeb691e9c334aef6d5759a361141",
+      "task": "task-06-opentofu-static-source-scope"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/B/task-06-opentofu-static-source-scope/context.txt",
+      "repetition": 1,
+      "round": 1,
+      "run_id": "f0a20aaa3c40fb1d98182d75d1cf0176",
+      "task": "task-06-opentofu-static-source-scope"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/C/task-06-opentofu-static-source-scope/context.txt",
+      "repetition": 2,
+      "round": 2,
+      "run_id": "30af17b8bfbfb7d94714d89be5be738d",
+      "task": "task-06-opentofu-static-source-scope"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/A/task-06-opentofu-static-source-scope/context.txt",
+      "repetition": 2,
+      "round": 2,
+      "run_id": "e4305731e4b1a6bdbf4f7f7a181320f0",
+      "task": "task-06-opentofu-static-source-scope"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/B/task-06-opentofu-static-source-scope/context.txt",
+      "repetition": 2,
+      "round": 2,
+      "run_id": "3aa10153da0fbd55e4348e7cb375dfe9",
+      "task": "task-06-opentofu-static-source-scope"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/C/task-06-opentofu-static-source-scope/context.txt",
+      "repetition": 3,
+      "round": 3,
+      "run_id": "05060a48cd278b0f2d24cec7a265293e",
+      "task": "task-06-opentofu-static-source-scope"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/A/task-06-opentofu-static-source-scope/context.txt",
+      "repetition": 3,
+      "round": 3,
+      "run_id": "165ba861202557228a4191ab80e98ee7",
+      "task": "task-06-opentofu-static-source-scope"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/B/task-06-opentofu-static-source-scope/context.txt",
+      "repetition": 3,
+      "round": 3,
+      "run_id": "01982482bea5a288761ce10a06e093a9",
+      "task": "task-06-opentofu-static-source-scope"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/B/task-07-axum-optional-typed-header/context.txt",
+      "repetition": 1,
+      "round": 1,
+      "run_id": "4d577c4a4a1107966a8c840e2bfd66fc",
+      "task": "task-07-axum-optional-typed-header"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/C/task-07-axum-optional-typed-header/context.txt",
+      "repetition": 1,
+      "round": 1,
+      "run_id": "4bc34a70a1b6bb598f97c4d54d49464f",
+      "task": "task-07-axum-optional-typed-header"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/A/task-07-axum-optional-typed-header/context.txt",
+      "repetition": 1,
+      "round": 1,
+      "run_id": "e15c8b06dd546375d172d264b1c90d51",
+      "task": "task-07-axum-optional-typed-header"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/C/task-07-axum-optional-typed-header/context.txt",
+      "repetition": 2,
+      "round": 2,
+      "run_id": "05b4c46b44820014a43f9dd599da8ea1",
+      "task": "task-07-axum-optional-typed-header"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/A/task-07-axum-optional-typed-header/context.txt",
+      "repetition": 2,
+      "round": 2,
+      "run_id": "48c851830696a4320441354485058121",
+      "task": "task-07-axum-optional-typed-header"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/B/task-07-axum-optional-typed-header/context.txt",
+      "repetition": 2,
+      "round": 2,
+      "run_id": "72a8c5cdacc10c57a70c53b798d16d90",
+      "task": "task-07-axum-optional-typed-header"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/A/task-07-axum-optional-typed-header/context.txt",
+      "repetition": 3,
+      "round": 3,
+      "run_id": "b86cbf7c7a6e6ebd761346a7e7b1f443",
+      "task": "task-07-axum-optional-typed-header"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/C/task-07-axum-optional-typed-header/context.txt",
+      "repetition": 3,
+      "round": 3,
+      "run_id": "ea22f3e38cb700249ec860c185fe1c69",
+      "task": "task-07-axum-optional-typed-header"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/B/task-07-axum-optional-typed-header/context.txt",
+      "repetition": 3,
+      "round": 3,
+      "run_id": "34419de8412b7caf2daed38891ef9c98",
+      "task": "task-07-axum-optional-typed-header"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/B/task-go-01-maps-sorted-keys/context.txt",
+      "repetition": 1,
+      "round": 1,
+      "run_id": "713fc0efb07f17b36a13fd5aa463d310",
+      "task": "task-go-01-maps-sorted-keys"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/A/task-go-01-maps-sorted-keys/context.txt",
+      "repetition": 1,
+      "round": 1,
+      "run_id": "1e88e21dc91de50e1f86b260c80ae13c",
+      "task": "task-go-01-maps-sorted-keys"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/C/task-go-01-maps-sorted-keys/context.txt",
+      "repetition": 1,
+      "round": 1,
+      "run_id": "81df6dcee70ebbe6c35ac512484e2c99",
+      "task": "task-go-01-maps-sorted-keys"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/A/task-go-01-maps-sorted-keys/context.txt",
+      "repetition": 2,
+      "round": 2,
+      "run_id": "f6ef5318c3c8eaa117ae27c62a9eaad8",
+      "task": "task-go-01-maps-sorted-keys"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/C/task-go-01-maps-sorted-keys/context.txt",
+      "repetition": 2,
+      "round": 2,
+      "run_id": "36937f0a67500ec417aa595a3921ac9c",
+      "task": "task-go-01-maps-sorted-keys"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/B/task-go-01-maps-sorted-keys/context.txt",
+      "repetition": 2,
+      "round": 2,
+      "run_id": "5d829c94ebd17f83a227c8d91c2bdaec",
+      "task": "task-go-01-maps-sorted-keys"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/B/task-go-01-maps-sorted-keys/context.txt",
+      "repetition": 3,
+      "round": 3,
+      "run_id": "0ef285e7bc57eb77787a57c2f8393141",
+      "task": "task-go-01-maps-sorted-keys"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/A/task-go-01-maps-sorted-keys/context.txt",
+      "repetition": 3,
+      "round": 3,
+      "run_id": "8357559c12a09fd45a5d61ca42760848",
+      "task": "task-go-01-maps-sorted-keys"
+    },
+    {
+      "context_path": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/contexts/C/task-go-01-maps-sorted-keys/context.txt",
+      "repetition": 3,
+      "round": 3,
+      "run_id": "dcc51117f7a488f3db0cf1b861c51fc0",
+      "task": "task-go-01-maps-sorted-keys"
+    }
+  ],
+  "seed": 2026082601
+}

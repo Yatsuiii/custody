@@ -1,0 +1,47 @@
+diff --git a/tests/model_indexes/models.py b/tests/model_indexes/models.py
+index 3bda606..5486153 100644
+--- a/tests/model_indexes/models.py
++++ b/tests/model_indexes/models.py
+@@ -12,6 +12,7 @@ class Book(models.Model):
+     class Meta:
+         indexes = [
+             models.Index(fields=["title"]),
++            models.Index(fields=["author", "pages"]),
+             models.Index(fields=["isbn", "id"]),
+             models.Index(
+                 fields=["barcode"], name="%(app_label)s_%(class)s_barcode_idx"
+diff --git a/tests/model_indexes/tests.py b/tests/model_indexes/tests.py
+index 0c8378f..fc30d7b 100644
+--- a/tests/model_indexes/tests.py
++++ b/tests/model_indexes/tests.py
+@@ -287,6 +287,7 @@ class SimpleIndexesTests(SimpleTestCase):
+             index_names,
+             [
+                 "model_index_title_196f42_idx",
++                "model_index_author_9dd875_idx",
+                 "model_index_isbn_34f975_idx",
+                 "model_indexes_book_barcode_idx",
+             ],
+@@ -307,6 +308,22 @@ class SimpleIndexesTests(SimpleTestCase):
+ 
+ @override_settings(DEFAULT_TABLESPACE=None)
+ class IndexesTests(TestCase):
++    def test_composite_index(self):
++        with connection.cursor() as cursor:
++            constraints = connection.introspection.get_constraints(
++                cursor, Book._meta.db_table
++            )
++        columns = {
++            Book._meta.get_field("author").column,
++            Book._meta.get_field("pages").column,
++        }
++        self.assertTrue(
++            any(
++                constraint["index"] and columns <= set(constraint["columns"])
++                for constraint in constraints.values()
++            )
++        )
++
+     @skipUnlessDBFeature("supports_tablespaces")
+     def test_db_tablespace(self):
+         editor = connection.schema_editor()

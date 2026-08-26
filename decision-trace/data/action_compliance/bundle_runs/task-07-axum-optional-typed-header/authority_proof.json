@@ -1,0 +1,11 @@
+{
+  "ambiguity_witnesses": [],
+  "authority_state": "NO_GOVERNING_DECISION",
+  "considered_candidates": [],
+  "excluded_candidates": [],
+  "explanation": "No decision has scope 'Replace blanket request-parts optional extraction with an explicit, extractor-specific contract. Implement that contract for `TypedHeader` so `Option<TypedHeader<_>>` has deliberate behavior for both absent and malformed header values. Add focused tests covering an absent `Content-Type` header and a malformed `Content-Type` header.'.",
+  "governing_decision_id": null,
+  "governing_witnesses": [],
+  "requested_scope": "Replace blanket request-parts optional extraction with an explicit, extractor-specific contract. Implement that contract for `TypedHeader` so `Option<TypedHeader<_>>` has deliberate behavior for both absent and malformed header values. Add focused tests covering an absent `Content-Type` header and a malformed `Content-Type` header.",
+  "transition_witnesses": []
+}

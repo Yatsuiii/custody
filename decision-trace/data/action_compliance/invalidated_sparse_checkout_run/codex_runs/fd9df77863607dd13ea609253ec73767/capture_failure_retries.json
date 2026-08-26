@@ -1,0 +1,11 @@
+{
+  "run_id": "fd9df77863607dd13ea609253ec73767",
+  "task": "task-04-cpython-locale-encoding-scope",
+  "usable_output": false,
+  "failure_stage": "patch_capture",
+  "attempts_observed": 2,
+  "capture_command": "git add -A && git diff --cached --binary --no-ext-diff",
+  "error": "The following paths and/or pathspecs matched paths that exist outside of your sparse-checkout definition: Lib/test/test__pyio_locale.py",
+  "retry_policy": "retryable infrastructure failure; no grader or statistical row produced",
+  "backend_changed": false
+}

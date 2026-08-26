@@ -1,0 +1,9 @@
+
+> Add the first bounded slice of PEP 600 support to `packaging.tags`: on an
+> x86-64 Linux system using glibc 2.17, `_linux_platforms()` must emit the
+> compatible perennial tags `manylinux_2_17_x86_64` down through
+> `manylinux_2_5_x86_64` in descending preference order, followed by the
+> generic Linux fallback. Refactor glibc parsing as needed and add a focused
+> test in `tests/test_manylinux_pep600.py`. Support for future glibc major
+> versions is outside this bounded task.
+

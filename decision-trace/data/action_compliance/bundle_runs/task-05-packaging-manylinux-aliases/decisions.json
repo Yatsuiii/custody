@@ -1,0 +1,159 @@
+{
+  "decisions": [
+    {
+      "chosen_approach": "A perennial, glibc-versioned policy for future tags that replaces PEPs 513, 571, and 599 while preserving legacy names as aliases: manylinux1 for glibc 2.5 on x86, manylinux2010 for glibc 2.12 on x86, and manylinux2014 for glibc 2.17 on supported architectures",
+      "constraints": [
+        "Preserve old names as aliases: manylinux1 for glibc 2.5 on x86, manylinux2010 for glibc 2.12 on x86, and manylinux2014 for glibc 2.17 on its supported architectures"
+      ],
+      "context": null,
+      "current_status": "ACCEPTED",
+      "evidence": [
+        {
+          "quote": "Header: replaces PEPs 513, 571, and 599.",
+          "type": "document",
+          "url": "https://peps.python.org/pep-0600/"
+        },
+        {
+          "quote": "The accepted \u201cLegacy manylinux tags\u201d section preserves the old names as aliases: `manylinux1` for glibc 2.5 on x86, `manylinux2010` for glibc 2.12 on x86, and `manylinux2014` for glibc 2.17 on its supported architectures.",
+          "type": "document",
+          "url": "https://peps.python.org/pep-0600/"
+        }
+      ],
+      "id": "bundle-artifact_002-decision-0",
+      "introduced_at": null,
+      "partial_acceptance": false,
+      "rationale": null,
+      "rejected_alternatives": [
+        "deleting every behavior established by the earlier PEPs"
+      ],
+      "related_components": [],
+      "related_decisions": [],
+      "subject": "Adopt PEP 600 perennial glibc-versioned tag policy while preserving legacy tags as aliases",
+      "superseded_at": null
+    },
+    {
+      "chosen_approach": "Include `_LEGACY_MANYLINUX_MAP` and emit each alias directly after the corresponding `manylinux_<major>_<minor>` tag",
+      "constraints": [
+        "Maintainers required emitted legacy names to remain alongside their matching perennial tags"
+      ],
+      "context": null,
+      "current_status": "IMPLEMENTED",
+      "evidence": [
+        {
+          "quote": "During review, maintainers required emitted legacy names to remain alongside their matching perennial tags. The merged implementation contains `_LEGACY_MANYLINUX_MAP` and emits each alias directly after the corresponding `manylinux_<major>_<minor>` tag.",
+          "type": "document",
+          "url": "https://github.com/pypa/packaging/pull/293"
+        }
+      ],
+      "id": "bundle-artifact_001-decision-1",
+      "introduced_at": null,
+      "partial_acceptance": false,
+      "rationale": "Maintainers required emitted legacy names to remain alongside their matching perennial tags during review",
+      "rejected_alternatives": [],
+      "related_components": [],
+      "related_decisions": [
+        {
+          "relationship": "IMPLEMENTS",
+          "target": "bundle-artifact_002-decision-0"
+        }
+      ],
+      "subject": "Emit legacy manylinux aliases alongside perennial tags using `_LEGACY_MANYLINUX_MAP`",
+      "superseded_at": null
+    },
+    {
+      "chosen_approach": "Replace the legacy generation path with a glibc-version sequence",
+      "constraints": [],
+      "context": null,
+      "current_status": "PROPOSED",
+      "evidence": [
+        {
+          "quote": "At this commit, `packaging/tags.py` supports the three discrete legacy manylinux policies but does not yet generate PEP 600 perennial tags. The task patch replaces that generation path with a glibc-version sequence.",
+          "type": "document",
+          "url": "bundle:artifact_003"
+        }
+      ],
+      "id": "bundle-artifact_003-decision-2",
+      "introduced_at": null,
+      "partial_acceptance": false,
+      "rationale": null,
+      "rejected_alternatives": [],
+      "related_components": [
+        "packaging/tags.py"
+      ],
+      "related_decisions": [
+        {
+          "relationship": "IMPLEMENTS",
+          "target": "bundle-artifact_002-decision-0"
+        }
+      ],
+      "subject": "Replace discrete legacy generation path in packaging/tags.py with a glibc-version sequence",
+      "superseded_at": null
+    }
+  ],
+  "failures": [],
+  "records": [
+    {
+      "evidence": [
+        {
+          "quote": "Header: replaces PEPs 513, 571, and 599.",
+          "url": "https://peps.python.org/pep-0600/"
+        },
+        {
+          "quote": "The accepted \u201cLegacy manylinux tags\u201d section preserves the old names as aliases: `manylinux1` for glibc 2.5 on x86, `manylinux2010` for glibc 2.12 on x86, and `manylinux2014` for glibc 2.17 on its supported architectures.",
+          "url": "https://peps.python.org/pep-0600/"
+        }
+      ],
+      "id": "bundle-artifact_002-decision-0",
+      "related_decisions": [],
+      "role": "policy",
+      "scope": [],
+      "source_id": "artifact_002",
+      "status": "ACCEPTED"
+    },
+    {
+      "evidence": [
+        {
+          "quote": "During review, maintainers required emitted legacy names to remain alongside their matching perennial tags. The merged implementation contains `_LEGACY_MANYLINUX_MAP` and emits each alias directly after the corresponding `manylinux_<major>_<minor>` tag.",
+          "url": "https://github.com/pypa/packaging/pull/293"
+        }
+      ],
+      "id": "bundle-artifact_001-decision-1",
+      "related_decisions": [
+        {
+          "relationship": "IMPLEMENTS",
+          "target": "bundle-artifact_002-decision-0"
+        }
+      ],
+      "role": "implementation",
+      "scope": [],
+      "source_id": "artifact_001",
+      "status": "IMPLEMENTED"
+    },
+    {
+      "evidence": [
+        {
+          "quote": "At this commit, `packaging/tags.py` supports the three discrete legacy manylinux policies but does not yet generate PEP 600 perennial tags. The task patch replaces that generation path with a glibc-version sequence.",
+          "url": "bundle:artifact_003"
+        }
+      ],
+      "id": "bundle-artifact_003-decision-2",
+      "related_decisions": [
+        {
+          "relationship": "IMPLEMENTS",
+          "target": "bundle-artifact_002-decision-0"
+        }
+      ],
+      "role": "implementation",
+      "scope": [
+        "packaging/tags.py"
+      ],
+      "source_id": "artifact_003",
+      "status": "PROPOSED"
+    }
+  ],
+  "requested_scope": "packaging.tags",
+  "uncertainty": [
+    "The artifacts do not provide details on how glibc parsing is refactored.",
+    "The artifacts do not establish handling for future glibc major versions."
+  ]
+}

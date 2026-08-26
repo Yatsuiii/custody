@@ -1,0 +1,74 @@
+You are an autonomous coding agent working in a pinned isolated repository.
+Implement the requested change using the raw engineering context supplied
+below. Inspect the repository, make the smallest correct code change, and run
+the task's available focused tests. Do not ask for organizational labels that
+are not present in the supplied evidence. Do not modify files outside the
+isolated worktree. Finish with the implementation and tests, or clearly report
+why the request cannot be completed.
+
+
+
+> Add explicit locale-encoding support to the pure-Python I/O implementation.
+> `Lib/_pyio.py`'s `TextIOWrapper` and text-mode `open()` should accept
+> `encoding="locale"` and resolve it to the current locale encoding. Add a
+> focused regression test in `Lib/test/test__pyio_locale.py` that exercises
+> both entry points. Keep the change confined to the pure-Python fallback; do
+> not modify the C accelerator in this task.
+
+
+
+RAW SOURCE ARTIFACTS:
+
+--- artifact_001 ---
+Source URL: https://github.com/python/cpython/commit/ff3c9739bd69aa8b58007e63c9e40e6708b4761e
+Source title: Binary-mode implementation history
+# Binary-mode implementation history
+
+Primary sources:
+
+- https://github.com/python/cpython/commit/ff3c9739bd69aa8b58007e63c9e40e6708b4761e
+- https://github.com/python/cpython/commit/cfa176685a5e788bafc7749d7a93f43ea3e4de9f
+
+On 2021-03-31, `ff3c9739...` changed both the Python and C `open()` guards so
+binary mode accepted `encoding="locale"`. Its commit message framed the change
+as making the value usable everywhere that `encoding=None` was allowed.
+
+Later the same day, `cfa17668...` explicitly reverted that commit and restored
+the unconditional rule that binary mode rejects every non-`None` encoding.
+The final PEP remained in force; only the over-broad implementation was
+reverted.
+
+--- artifact_002 ---
+Source URL: https://peps.python.org/pep-0597/
+Source title: PEP 597 governing scope
+# PEP 597 governing scope
+
+Primary source: https://peps.python.org/pep-0597/
+
+- Status: Final; Python version 3.10.
+- The specification makes `"locale"` a valid `encoding` value for
+  `io.TextIOWrapper`.
+- `open()` reaches that text wrapper for text mode.
+- The rationale says `"locale"` is not a codec alias because the locale may
+  change at runtime and because `TextIOWrapper` has device-encoding behavior.
+
+This is a text-encoding feature. It does not establish an encoding parameter
+for binary streams.
+
+--- artifact_003 ---
+Source URL: (none)
+Source title: Pinned code boundary
+# Pinned code boundary
+
+Pinned source: `python/cpython@261a452a1300eeeae1428ffd6e6623329c085e2c`.
+
+Relevant applied files:
+
+- `Lib/_pyio.py`: pure-Python `open()` rejects any non-`None` encoding in
+  binary mode; `TextIOWrapper` resolves `None` through device/locale encoding
+  but does not yet recognize the `"locale"` sentinel.
+- `Lib/test/test__pyio_locale.py`: added by the task patch as the focused
+  executable regression test.
+
+The pin precedes PEP 597's merged implementation, so both alternative patches
+perform real implementation work against an immutable public snapshot.

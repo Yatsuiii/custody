@@ -1,0 +1,20 @@
+Current
+- The governing specification is PEP 723 ("Final"), which replaces PEP 722 (https://peps.python.org/pep-0723/).
+- Metadata is embedded in a block starting with `# /// TYPE` (specifically `# /// script`), ending with `# ///`, containing comment-prefixed TOML with a top-level `dependencies` list of PEP 508 strings (https://peps.python.org/pep-0723/).
+- The implementation requires adding `src/pip/_internal/req/script_metadata.py` containing `read_script_dependencies(scriptfile: str) -> list[str]` (Task prompt).
+- The function must read the script text, locate the dependency metadata block, and return dependency strings in source order (Task prompt).
+- A `ValueError` must be raised if no supported block exists or if the block is malformed (Task prompt). Multiple blocks of the same type are errors, while unclosed blocks are ignored (https://peps.python.org/pep-0723/).
+
+History
+- PEP 722 proposed extracting dependencies via a `# Script Dependencies:` comment block format; it was rejected on 2023-10-21 and superseded by PEP 723 (https://peps.python.org/pep-0722/, https://peps.python.org/pep-0723/).
+- Pip Issue #12891 requested inline script metadata support (https://github.com/pypa/pip/issues/12891).
+- PR #13052 ("Support installing requirements from inline script metadata (PEP 723)") merged on 2025-11-27 via commit `36987b0c31b97ffb9fb7949ded628e9a6b10c016` based on parent commit `b35182d8f7245f046eed2975275c57b54ce3ba56` (https://github.com/pypa/pip/pull/13052, https://github.com/pypa/pip/commit/36987b0c31b97ffb9fb7949ded628e9a6b10c016).
+
+Scope
+- In scope: Implement `read_script_dependencies` in `src/pip/_internal/req/script_metadata.py` and write unit tests in `tests/unit/test_script_metadata.py` (Task prompt).
+- Neighboring scope / Out of scope: Exposing or validating other PEP 723 fields like `requires-python` or `[tool]` is intentionally omitted (https://peps.python.org/pep-0723/).
+- Neighboring scope / Out of scope: Wiring the parser into pip's CLI is explicitly excluded for this task (Task prompt).
+
+Uncertainty
+- The sources do not establish which internal or standard TOML library `script_metadata.py` should import to parse the block content.
+- The sources do not specify the exact error messaging or sub-exception handling details for `ValueError` beyond the conditions that trigger it.

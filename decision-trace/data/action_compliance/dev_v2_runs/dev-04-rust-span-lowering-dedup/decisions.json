@@ -1,0 +1,120 @@
+{
+  "decisions": [
+    {
+      "chosen_approach": "Early return on duplicate span lowerings (rust-lang/rust#149060)",
+      "constraints": [],
+      "context": null,
+      "current_status": "REVERTED",
+      "evidence": [
+        {
+          "quote": "PR #149757: Revert \"early return on duplicate span lowerings\"",
+          "type": "document",
+          "url": "bundle:artifact_001"
+        },
+        {
+          "quote": "reverts rust-lang/rust#149060 because of perf regressions that are still wild to me",
+          "type": "document",
+          "url": "bundle:artifact_001"
+        }
+      ],
+      "id": "bundle-artifact_001-decision-0",
+      "introduced_at": null,
+      "partial_acceptance": false,
+      "rationale": null,
+      "rejected_alternatives": [],
+      "related_components": [
+        "span-lowering-duplicate-early-return"
+      ],
+      "related_decisions": [],
+      "subject": "Implement early return on duplicate span lowerings",
+      "superseded_at": null
+    },
+    {
+      "chosen_approach": "Revert rust-lang/rust#149060 via PR #149757",
+      "constraints": [],
+      "context": null,
+      "current_status": "IMPLEMENTED",
+      "evidence": [
+        {
+          "quote": "PR #149757: Revert \"early return on duplicate span lowerings\"",
+          "type": "document",
+          "url": "bundle:artifact_001"
+        },
+        {
+          "quote": "reverts rust-lang/rust#149060 because of perf regressions that are still wild to me",
+          "type": "document",
+          "url": "bundle:artifact_001"
+        }
+      ],
+      "id": "bundle-artifact_001-decision-1",
+      "introduced_at": null,
+      "partial_acceptance": false,
+      "rationale": "perf regressions that are still wild to me",
+      "rejected_alternatives": [],
+      "related_components": [
+        "span-lowering-duplicate-early-return"
+      ],
+      "related_decisions": [
+        {
+          "relationship": "REVERTS",
+          "target": "bundle-artifact_001-decision-0"
+        }
+      ],
+      "subject": "Revert early return on duplicate span lowerings",
+      "superseded_at": null
+    }
+  ],
+  "failures": [],
+  "records": [
+    {
+      "evidence": [
+        {
+          "quote": "PR #149757: Revert \"early return on duplicate span lowerings\"",
+          "url": "bundle:artifact_001"
+        },
+        {
+          "quote": "reverts rust-lang/rust#149060 because of perf regressions that are still wild to me",
+          "url": "bundle:artifact_001"
+        }
+      ],
+      "id": "bundle-artifact_001-decision-0",
+      "related_decisions": [],
+      "role": "implementation",
+      "scope": [
+        "span-lowering-duplicate-early-return"
+      ],
+      "source_id": "artifact_001",
+      "status": "REVERTED"
+    },
+    {
+      "evidence": [
+        {
+          "quote": "PR #149757: Revert \"early return on duplicate span lowerings\"",
+          "url": "bundle:artifact_001"
+        },
+        {
+          "quote": "reverts rust-lang/rust#149060 because of perf regressions that are still wild to me",
+          "url": "bundle:artifact_001"
+        }
+      ],
+      "id": "bundle-artifact_001-decision-1",
+      "related_decisions": [
+        {
+          "relationship": "REVERTS",
+          "target": "bundle-artifact_001-decision-0"
+        }
+      ],
+      "role": "implementation",
+      "scope": [
+        "span-lowering-duplicate-early-return"
+      ],
+      "source_id": "artifact_001",
+      "status": "IMPLEMENTED"
+    }
+  ],
+  "requested_scope": "span-lowering-duplicate-early-return",
+  "uncertainty": [
+    "Specific benchmarks, workloads, or causes of the performance regressions introduced by rust-lang/rust#149060 are not detailed in the text.",
+    "The text does not state whether PR #149757 is already merged or currently in review."
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "decisions": [
+    {
+      "chosen_approach": "Include stdout of failed commands in JUnit",
+      "constraints": [],
+      "context": null,
+      "current_status": "REVERTED",
+      "evidence": [
+        {
+          "quote": "PR #129769: Revert \"tests: include stdout of failed commands in JUnit\"\n\nReverts kubernetes/kubernetes#129701",
+          "type": "document",
+          "url": "https://github.com/kubernetes/kubernetes/pull/129701#issuecomment-2608402902"
+        }
+      ],
+      "id": "bundle-artifact_001-decision-0",
+      "introduced_at": null,
+      "partial_acceptance": false,
+      "rationale": null,
+      "rejected_alternatives": [],
+      "related_components": [
+        "junit-failed-command-stdout"
+      ],
+      "related_decisions": [],
+      "subject": "Include stdout of failed commands in JUnit",
+      "superseded_at": null
+    },
+    {
+      "chosen_approach": "Revert PR #129701 (\"tests: include stdout of failed commands in JUnit\")",
+      "constraints": [],
+      "context": null,
+      "current_status": "IMPLEMENTED",
+      "evidence": [
+        {
+          "quote": "PR #129769: Revert \"tests: include stdout of failed commands in JUnit\"\n\nReverts kubernetes/kubernetes#129701\n\nIt breaks testgrid reporting , probably because some invalid characters",
+          "type": "document",
+          "url": "https://github.com/kubernetes/kubernetes/pull/129701#issuecomment-2608402902"
+        }
+      ],
+      "id": "bundle-artifact_001-decision-1",
+      "introduced_at": null,
+      "partial_acceptance": false,
+      "rationale": "It breaks testgrid reporting , probably because some invalid characters",
+      "rejected_alternatives": [],
+      "related_components": [
+        "junit-failed-command-stdout"
+      ],
+      "related_decisions": [
+        {
+          "relationship": "REVERTS",
+          "target": "bundle-artifact_001-decision-0"
+        }
+      ],
+      "subject": "Revert inclusion of failed command stdout in JUnit",
+      "superseded_at": null
+    }
+  ],
+  "failures": [],
+  "records": [
+    {
+      "evidence": [
+        {
+          "quote": "PR #129769: Revert \"tests: include stdout of failed commands in JUnit\"\n\nReverts kubernetes/kubernetes#129701",
+          "url": "https://github.com/kubernetes/kubernetes/pull/129701#issuecomment-2608402902"
+        }
+      ],
+      "id": "bundle-artifact_001-decision-0",
+      "related_decisions": [],
+      "role": "implementation",
+      "scope": [
+        "junit-failed-command-stdout"
+      ],
+      "source_id": "artifact_001",
+      "status": "REVERTED"
+    },
+    {
+      "evidence": [
+        {
+          "quote": "PR #129769: Revert \"tests: include stdout of failed commands in JUnit\"\n\nReverts kubernetes/kubernetes#129701\n\nIt breaks testgrid reporting , probably because some invalid characters",
+          "url": "https://github.com/kubernetes/kubernetes/pull/129701#issuecomment-2608402902"
+        }
+      ],
+      "id": "bundle-artifact_001-decision-1",
+      "related_decisions": [
+        {
+          "relationship": "REVERTS",
+          "target": "bundle-artifact_001-decision-0"
+        }
+      ],
+      "role": "implementation",
+      "scope": [
+        "junit-failed-command-stdout"
+      ],
+      "source_id": "artifact_001",
+      "status": "IMPLEMENTED"
+    }
+  ],
+  "requested_scope": "junit-failed-command-stdout",
+  "uncertainty": [
+    "The exact root cause of testgrid reporting breakage is unconfirmed beyond the note that it was 'probably because some invalid characters'.",
+    "The specific implementation details of PR #129701 are not detailed in the artifact."
+  ]
+}

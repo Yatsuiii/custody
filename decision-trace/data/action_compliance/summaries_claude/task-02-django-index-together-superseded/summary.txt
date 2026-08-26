@@ -1,0 +1,17 @@
+# Context Summary
+
+## Current
+
+The `Book` model in `tests/model_indexes/models.py` currently has three indexes declared via `Meta.indexes` (on `title`, `isbn`+`id`, and `barcode`), but no index covering both `author` and `pages` together (artifact_001: models.py full file). The `pages` field uses `db_column="page_count"` (artifact_001: models.py). At the pinned commit (Django 4.2 release tag `879e5d587b84e6fc961829611999431778eb9f6a`), `Meta.indexes` is the applicable mechanism for declaring model indexes (artifact_001: options.py excerpt; artifact_002: release notes). Both `Meta.index_together` and `Meta.indexes` produce real database indexes via `SchemaEditor` (artifact_001: schema.py excerpt).
+
+## History
+
+`Meta.index_together` was deprecated in Django 4.2 (commit a6385b382e, ticket #27236) in favor of `Meta.indexes` (artifact_002: release notes, commit link). At Django 4.2, `index_together` still functions but raises `RemovedInDjango51Warning` (artifact_001: options.py excerpt). The option was fully removed in Django 5.1 (commit 2abf417c81, ticket #27236) (artifact_003: release notes, commit link). Django's test suite promotes this warning class to a hard error, making `index_together` unusable in Django's own tests at 4.2 (artifact_003: "What this establishes" section).
+
+## Scope
+
+The task requires: (1) adding a composite index on `author` and `pages` to `Book` in `tests/model_indexes/models.py`, (2) adding a regression test in `tests/model_indexes/tests.py` within the `IndexesTests` class that uses `connection.introspection.get_constraints` against `Book._meta.db_table` to verify an index covering both the `author` column and the `pages` field's column (i.e., `page_count`) exists at the database schema level (task prompt).
+
+## Uncertainty
+
+The sources do not establish: whether to use an explicit `name=` parameter for the new index or rely on Django's auto-generation; the exact assertion logic or method signature for the regression test; whether additional fields beyond `author` and `pages` should be included in the index; the precise string format `get_constraints` returns for multi-column index metadata.

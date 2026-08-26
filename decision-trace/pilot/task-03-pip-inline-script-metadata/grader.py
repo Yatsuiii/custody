@@ -10,6 +10,9 @@ import sys
 import tempfile
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
+from action_compliance_test_contract import execute_contract
+
 MODULE = "pip._internal.req.script_metadata"
 EXPECTED = ["requests<3", "rich"]
 
@@ -50,22 +53,9 @@ def run_parser(worktree: Path, source: str) -> tuple[bool, str]:
 
 
 def run_tests(worktree: Path) -> tuple[bool, str]:
-    environment = {**os.environ, "PYTHONPATH": str(worktree / "src")}
-    process = subprocess.run(
-        [
-            sys.executable,
-            "-m",
-            "unittest",
-            "discover",
-            "-s",
-            "tests/unit",
-            "-p",
-            "test_script_metadata.py",
-        ],
-        cwd=worktree,
-        env=environment,
-        capture_output=True,
-        text=True,
+    _, process = execute_contract(
+        worktree,
+        expected_task="task-03-pip-inline-script-metadata",
         timeout=120,
     )
     tail = "\n".join((process.stdout + process.stderr).splitlines()[-20:])

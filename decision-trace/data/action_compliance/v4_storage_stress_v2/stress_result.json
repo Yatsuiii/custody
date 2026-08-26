@@ -1,0 +1,26 @@
+{
+  "completed_cycles": 63,
+  "concurrency": 2,
+  "failed_cycles": 0,
+  "failures": [],
+  "final_filesystem": {
+    "filesystem": {
+      "free_bytes": 103315615744,
+      "free_inodes": 25223539,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 334451228672
+    },
+    "sizes_bytes": {
+      "root": 1990922390,
+      "shared": 1858577802,
+      "tmp": 0
+    }
+  },
+  "model_calls": 0,
+  "passed_cycles": 63,
+  "planned_cycles": 63,
+  "recovery": [],
+  "residual_bytes": 1990922390,
+  "worktree_count": 0
+}

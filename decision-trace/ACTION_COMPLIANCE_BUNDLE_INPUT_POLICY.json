@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "allow_exact": [
+    "requested_change.txt"
+  ],
+  "allow_artifact_pattern": "artifacts/artifact_[0-9]{3}.md",
+  "deny_names": [
+    "TASK.md",
+    "ACTION_COMPLIANCE_LEDGER.md",
+    "grader.py",
+    "SANITY_RESULTS.md",
+    "sanity_patch_compliant.diff",
+    "sanity_patch_violating.diff",
+    "authority_proof.json"
+  ],
+  "deny_fields": [
+    "governing_authority",
+    "authority_error_category",
+    "authority_violation_shape",
+    "prohibited_authority_interpretation",
+    "compliance_assertions",
+    "expected_governing_id",
+    "expected_exclusion_reason",
+    "human_status",
+    "human_scope",
+    "human_role",
+    "human_relationships"
+  ]
+}

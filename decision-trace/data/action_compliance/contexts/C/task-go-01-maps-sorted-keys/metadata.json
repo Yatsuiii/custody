@@ -1,0 +1,14 @@
+{
+  "bundle": "data/action_compliance/bundle_inputs/task-go-01-maps-sorted-keys",
+  "condition": "C",
+  "context_bytes": 10953,
+  "context_sha256": "8d8e4d434a95f7765357f9891621fc50d8a886d7aafe36cb76ff75d77fb14bee",
+  "context_words": 1532,
+  "estimated_tokens": 2863,
+  "raw_bytes": 10231,
+  "raw_content_sha256": "f960ca53f91cc0facd833f8234b5f154ae01ccd411a544abc15c0aa368ca7cfc",
+  "raw_prefix_sha256": "042af5c19824be957bd1033182b4b8129528854cc3d1eeaac6da35e394930673",
+  "raw_words": 1480,
+  "system_bytes": 496,
+  "total_bytes": 11451
+}

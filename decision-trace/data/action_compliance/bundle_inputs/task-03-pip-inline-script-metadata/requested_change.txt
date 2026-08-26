@@ -1,0 +1,11 @@
+
+> Pip's requirement-command work needs a small reusable parser for dependency
+> metadata embedded in a single-file Python script. Add
+> `src/pip/_internal/req/script_metadata.py` with a function
+> `read_script_dependencies(scriptfile: str) -> list[str]`. It must read the
+> script as text, locate the standardized dependency metadata block, and return
+> its dependency strings in source order. Raise `ValueError` when no supported
+> dependency block exists or the block is malformed. Add a focused unit test in
+> `tests/unit/test_script_metadata.py`. Do not wire the parser into pip's CLI in
+> this task.
+

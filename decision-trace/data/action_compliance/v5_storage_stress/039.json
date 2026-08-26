@@ -1,0 +1,113 @@
+{
+  "disk_after_capture": {
+    "filesystem": {
+      "free_bytes": 101728956416,
+      "free_inodes": 24836171,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 336037888000
+    },
+    "host_root_filesystem": {
+      "free_bytes": 7700631552,
+      "free_inodes": 1880037,
+      "total_bytes": 63090503680,
+      "total_inodes": 15402955,
+      "used_bytes": 52151869440
+    },
+    "sizes_bytes": {
+      "codex_sqlite": 0,
+      "root": 802333583,
+      "shared": 0,
+      "slot": 401069817,
+      "slot_tmp": 0,
+      "tmp": 0
+    }
+  },
+  "disk_after_setup": {
+    "filesystem": {
+      "free_bytes": 101728976896,
+      "free_inodes": 24836176,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 336037867520
+    },
+    "host_root_filesystem": {
+      "free_bytes": 7700660224,
+      "free_inodes": 1880044,
+      "total_bytes": 63090503680,
+      "total_inodes": 15402955,
+      "used_bytes": 52151840768
+    },
+    "sizes_bytes": {
+      "codex_sqlite": 0,
+      "root": 802330949,
+      "shared": 0,
+      "slot": 401068500,
+      "slot_tmp": 0,
+      "tmp": 0
+    }
+  },
+  "disk_after_test": {
+    "filesystem": {
+      "free_bytes": 101719891968,
+      "free_inodes": 24833958,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 336046952448
+    },
+    "host_root_filesystem": {
+      "free_bytes": 7700627456,
+      "free_inodes": 1880036,
+      "total_bytes": 63090503680,
+      "total_inodes": 15402955,
+      "used_bytes": 52151873536
+    },
+    "sizes_bytes": {
+      "codex_sqlite": 0,
+      "root": 811068065,
+      "shared": 0,
+      "slot": 405437058,
+      "slot_tmp": 0,
+      "tmp": 0
+    }
+  },
+  "full_worktree": true,
+  "index": 39,
+  "model_calls": 0,
+  "new_file": "decisiontrace_v4_storage_new_039.txt",
+  "patch_capture": {
+    "capture_command": "git add -A && git diff --cached --binary --no-ext-diff",
+    "patch_bytes": 714,
+    "patch_has_new_file": true,
+    "patch_sha256": "69393a6bc6be50e02f2633bf5149273669379748741431970690479a72edb42f"
+  },
+  "pinned_sha": "3fdc8090501234c55093078255969ecbc46f2fe2",
+  "run_id": "stress-039-task-06-opentofu-static-source-scope",
+  "setup_output_tail": "{\"contract_version\": \"test-command-v2\", \"full_worktree\": true, \"grader_interpreter\": \"/usr/bin/python3.14\", \"interpreter\": \"go\", \"interpreter_kind\": \"non_python_test_runner\", \"pinned_sha\": \"3fdc8090501234c55093078255969ecbc46f2fe2\", \"setup_interpreter\": \"/usr/bin/python3.14\", \"setup_python_argument\": \"/home/Yatsuiii/.pyenv/versions/3.12.13/bin/python\", \"sparse_checkout\": false, \"status_porcelain\": \"?? .decisiontrace_setup_metadata.json\\n\", \"task\": \"task-06-opentofu-static-source-scope\", \"test_command\": [\"go\", \"test\", \"./internal/configs\", \"-run\", \"^TestDecisionTrace\", \"-count=1\"], \"test_cwd\": \".\", \"test_env\": {\"GOCACHE\": \"/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v5_execution_storage/slots/slot-01/task-06-opentofu-static-source-scope/go-cache/build\", \"GOMODCACHE\": \"/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v5_execution_storage/shared/go-modcache\"}, \"test_runner\": \"go-test\"}\n",
+  "setup_returncode": 0,
+  "slot": 1,
+  "sparse_checkout": false,
+  "status": "PASS",
+  "status_after": "",
+  "status_before": "",
+  "task": "task-06-opentofu-static-source-scope",
+  "test_command": [
+    "go",
+    "test",
+    "./internal/configs",
+    "-run",
+    "^TestDecisionTrace",
+    "-count=1"
+  ],
+  "test_cwd": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v5_execution_storage/slots/slot-01/task-06-opentofu-static-source-scope/worktree",
+  "test_env": {
+    "GOCACHE": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v5_execution_storage/slots/slot-01/task-06-opentofu-static-source-scope/go-cache/build",
+    "GOMODCACHE": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v5_execution_storage/shared/go-modcache"
+  },
+  "test_execution_status": "executed_with_tests",
+  "test_output_tail": "ok  \tgithub.com/opentofu/opentofu/internal/configs\t0.009s\ngo: unlinkat /run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v5_execution_storage/tmp/slot-01/go-build1562341908/b001: directory not empty\n",
+  "test_returncode": 1,
+  "tests_executed": true,
+  "tracked_edit": ".github/pull_request_template.md",
+  "wall_seconds": 40.57
+}

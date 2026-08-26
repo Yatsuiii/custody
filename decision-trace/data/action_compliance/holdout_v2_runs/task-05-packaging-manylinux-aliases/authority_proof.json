@@ -1,0 +1,58 @@
+{
+  "ambiguity_witnesses": [],
+  "authority_state": "GOVERNING",
+  "considered_candidates": [
+    {
+      "active_resolution": true,
+      "decision_id": "bundle-artifact_002-decision-1",
+      "eligible_to_govern": true,
+      "exclusion_reason": null,
+      "lifecycle_status": "ACCEPTED",
+      "role": "policy",
+      "witness_ids": []
+    },
+    {
+      "active_resolution": false,
+      "decision_id": "bundle-artifact_001-decision-2",
+      "eligible_to_govern": true,
+      "exclusion_reason": "IMPLEMENTATION_NOT_POLICY_AUTHORITY",
+      "lifecycle_status": "IMPLEMENTED",
+      "role": "implementation",
+      "witness_ids": []
+    },
+    {
+      "active_resolution": false,
+      "decision_id": "bundle-artifact_002-decision-0",
+      "eligible_to_govern": false,
+      "exclusion_reason": "SUPERSEDED",
+      "lifecycle_status": "SUPERSEDED",
+      "role": "policy",
+      "witness_ids": []
+    }
+  ],
+  "excluded_candidates": [
+    {
+      "active_resolution": false,
+      "decision_id": "bundle-artifact_001-decision-2",
+      "eligible_to_govern": true,
+      "exclusion_reason": "IMPLEMENTATION_NOT_POLICY_AUTHORITY",
+      "lifecycle_status": "IMPLEMENTED",
+      "role": "implementation",
+      "witness_ids": []
+    },
+    {
+      "active_resolution": false,
+      "decision_id": "bundle-artifact_002-decision-0",
+      "eligible_to_govern": false,
+      "exclusion_reason": "SUPERSEDED",
+      "lifecycle_status": "SUPERSEDED",
+      "role": "policy",
+      "witness_ids": []
+    }
+  ],
+  "explanation": "bundle-artifact_002-decision-1 is the sole eligible active decision in scope 'manylinux-pep600-platform-tags'.",
+  "governing_decision_id": "bundle-artifact_002-decision-1",
+  "governing_witnesses": [],
+  "requested_scope": "manylinux-pep600-platform-tags",
+  "transition_witnesses": []
+}

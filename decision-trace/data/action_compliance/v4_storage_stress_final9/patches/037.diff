@@ -1,0 +1,17 @@
+diff --git a/.github/pull_request_template.md b/.github/pull_request_template.md
+index cdda543..0f69ce3 100644
+--- a/.github/pull_request_template.md
++++ b/.github/pull_request_template.md
+@@ -38,3 +38,5 @@ Resolves #
+ <!-- If you have changed the website, please follow this checklist: -->
+ 
+ - [ ] I have locally started the website as [described here](https://github.com/opentofu/opentofu/blob/main/website/README.md) and checked my changes.
++
++# V4_STORAGE_STRESS_TRACKED_37
+diff --git a/decisiontrace_v4_storage_new_037.txt b/decisiontrace_v4_storage_new_037.txt
+new file mode 100644
+index 0000000..84fb4c7
+--- /dev/null
++++ b/decisiontrace_v4_storage_new_037.txt
+@@ -0,0 +1 @@
++V4_STORAGE_STRESS_NEW_FILE_37

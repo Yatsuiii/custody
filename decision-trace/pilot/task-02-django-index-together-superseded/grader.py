@@ -31,6 +31,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
+from action_compliance_test_contract import execute_contract
+
 MODELS_FILE = "tests/model_indexes/models.py"
 TESTS_FILE = "tests/model_indexes/tests.py"
 
@@ -158,11 +161,9 @@ def check_task_completed(worktree_dir: Path) -> tuple[bool, str]:
 
 def run_tests(worktree_dir: Path, python_exe: str) -> tuple[bool, str]:
     try:
-        proc = subprocess.run(
-            [python_exe, "runtests.py", "model_indexes", "-v1"],
-            cwd=worktree_dir / "tests",
-            capture_output=True,
-            text=True,
+        _, proc = execute_contract(
+            worktree_dir,
+            expected_task="task-02-django-index-together-superseded",
             timeout=300,
         )
     except Exception as e:

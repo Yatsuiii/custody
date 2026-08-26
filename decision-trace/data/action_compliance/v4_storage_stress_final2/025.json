@@ -1,0 +1,10 @@
+{
+  "error": "FileNotFoundError(2, 'No such file or directory')",
+  "index": 25,
+  "model_calls": 0,
+  "run_id": "stress-025-task-04-cpython-locale-encoding-scope",
+  "slot": 1,
+  "status": "FAIL",
+  "task": "task-04-cpython-locale-encoding-scope",
+  "wall_seconds": 0.001
+}

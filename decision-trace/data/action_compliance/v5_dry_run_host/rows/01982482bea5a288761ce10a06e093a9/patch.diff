@@ -1,0 +1,17 @@
+diff --git a/.copywrite.hcl b/.copywrite.hcl
+index 4b4d238..cc6655a 100644
+--- a/.copywrite.hcl
++++ b/.copywrite.hcl
+@@ -22,3 +22,5 @@ project {
+     "**/mock*.go",
+   ]
+ }
++
++# V4 dry-run tracked modification.
+diff --git a/decisiontrace_v4_dry_run_new_01982482bea5a288761ce10a06e093a9.txt b/decisiontrace_v4_dry_run_new_01982482bea5a288761ce10a06e093a9.txt
+new file mode 100644
+index 0000000..3e84add
+--- /dev/null
++++ b/decisiontrace_v4_dry_run_new_01982482bea5a288761ce10a06e093a9.txt
+@@ -0,0 +1 @@
++01982482bea5a288761ce10a06e093a9

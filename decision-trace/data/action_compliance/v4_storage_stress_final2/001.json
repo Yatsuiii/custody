@@ -1,0 +1,15 @@
+{
+  "error": "RuntimeError(\"command failed (128): git status --porcelain=v1\\nfatal: detected dubious ownership in repository at '/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-01/task-02-django-index-together-superseded/worktree'\\nTo add an exception for this directory, call:\\n\\n\\tgit config --global --add safe.directory /run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-01/task-02-django-index-together-superseded/worktree\")",
+  "full_worktree": true,
+  "index": 1,
+  "model_calls": 0,
+  "pinned_sha": "879e5d587b84e6fc961829611999431778eb9f6a",
+  "run_id": "stress-001-task-02-django-index-together-superseded",
+  "setup_output_tail": "{\"contract_version\": \"test-command-v1\", \"full_worktree\": true, \"grader_interpreter\": \"/usr/bin/python3.14\", \"interpreter\": \"/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-01/task-02-django-index-together-superseded/worktree/.venv/bin/python\", \"interpreter_kind\": \"worktree_venv\", \"pinned_sha\": \"879e5d587b84e6fc961829611999431778eb9f6a\", \"setup_interpreter\": \"/usr/bin/python3.14\", \"setup_python_argument\": \"/home/Yatsuiii/.pyenv/versions/3.12.13/bin/python\", \"sparse_checkout\": false, \"status_porcelain\": \"?? .decisiontrace_setup_metadata.json\\n?? .venv/\\n\", \"task\": \"task-02-django-index-together-superseded\", \"test_command\": [\"/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-01/task-02-django-index-together-superseded/worktree/.venv/bin/python\", \"runtests.py\", \"model_indexes\", \"-v1\"], \"test_cwd\": \"tests\", \"test_env\": {}}\n",
+  "setup_returncode": 0,
+  "slot": 1,
+  "sparse_checkout": false,
+  "status": "FAIL",
+  "task": "task-02-django-index-together-superseded",
+  "wall_seconds": 45.082
+}

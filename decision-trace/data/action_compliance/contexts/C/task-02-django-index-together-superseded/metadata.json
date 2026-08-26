@@ -1,0 +1,14 @@
+{
+  "bundle": "data/action_compliance/bundle_inputs/task-02-django-index-together-superseded",
+  "condition": "C",
+  "context_bytes": 8400,
+  "context_sha256": "088c7621d3fb5942365322e6c68c943e12e87c39a01b16f9d86867e8a6a2e27c",
+  "context_words": 836,
+  "estimated_tokens": 2225,
+  "raw_bytes": 7149,
+  "raw_content_sha256": "2ae4757f7c46a20c0c22e6aa9423c08d3a6779983f980d4ef684b18934de2720",
+  "raw_prefix_sha256": "5f7f11615b5192620f70165b3796f7b339ceb825b72608d8d846ea414d9cbd86",
+  "raw_words": 751,
+  "system_bytes": 496,
+  "total_bytes": 8898
+}

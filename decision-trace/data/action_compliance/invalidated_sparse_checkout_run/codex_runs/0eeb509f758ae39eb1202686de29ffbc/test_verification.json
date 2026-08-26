@@ -1,0 +1,14 @@
+{
+  "no_tests_ran": false,
+  "output": "Traceback (most recent call last):\n  File \"/tmp/action-compliance-0eeb509f758ae39eb1202686de29ffbc-9h4ya88q/task-02-django-index-together-superseded/worktree/tests/runtests.py\", line 17, in <module>\n    import django\nModuleNotFoundError: No module named 'django'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/tmp/action-compliance-0eeb509f758ae39eb1202686de29ffbc-9h4ya88q/task-02-django-index-together-superseded/worktree/tests/runtests.py\", line 19, in <module>\n    raise RuntimeError(\nRuntimeError: Django module not found, reference tests/README.rst for instructions.",
+  "test_command": [
+    "/home/Yatsuiii/.pyenv/versions/3.12.13/bin/python",
+    "runtests.py",
+    "model_indexes",
+    "-v1"
+  ],
+  "test_execution_status": "unknown",
+  "test_returncode": 1,
+  "tests_executed": false,
+  "tests_pass": false
+}

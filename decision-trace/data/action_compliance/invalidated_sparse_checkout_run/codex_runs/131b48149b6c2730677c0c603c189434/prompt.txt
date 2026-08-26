@@ -1,0 +1,130 @@
+You are an autonomous coding agent working in a pinned isolated repository.
+Implement the requested change using the raw engineering context supplied
+below. Inspect the repository, make the smallest correct code change, and run
+the task's available focused tests. Do not ask for organizational labels that
+are not present in the supplied evidence. Do not modify files outside the
+isolated worktree. Finish with the implementation and tests, or clearly report
+why the request cannot be completed.
+
+
+
+> Add the first bounded slice of PEP 600 support to `packaging.tags`: on an
+> x86-64 Linux system using glibc 2.17, `_linux_platforms()` must emit the
+> compatible perennial tags `manylinux_2_17_x86_64` down through
+> `manylinux_2_5_x86_64` in descending preference order, followed by the
+> generic Linux fallback. Refactor glibc parsing as needed and add a focused
+> test in `tests/test_manylinux_pep600.py`. Support for future glibc major
+> versions is outside this bounded task.
+
+
+
+RAW SOURCE ARTIFACTS:
+
+--- artifact_001 ---
+Source URL: https://github.com/pypa/packaging/pull/293
+Source title: packaging adoption evidence
+# packaging adoption evidence
+
+Primary sources:
+
+- https://github.com/pypa/packaging/pull/293
+- https://github.com/pypa/packaging/commit/28a2e2bb88a8d3fdc4035783597e22a53eff4445
+
+PR #293 implemented PEP 600. During review, maintainers required emitted legacy
+names to remain alongside their matching perennial tags. The merged
+implementation contains `_LEGACY_MANYLINUX_MAP` and emits each alias directly
+after the corresponding `manylinux_<major>_<minor>` tag.
+
+This implementation evidence agrees with the accepted PEP's explicit alias
+section; it is not being used as a substitute for policy authority.
+
+--- artifact_002 ---
+Source URL: https://peps.python.org/pep-0600/
+Source title: PEP 600 authority summary
+# PEP 600 authority summary
+
+Primary source: https://peps.python.org/pep-0600/
+
+- Status: Final.
+- Header: replaces PEPs 513, 571, and 599.
+- The replacement is a perennial, glibc-versioned policy for future tags.
+- The accepted “Legacy manylinux tags” section preserves the old names as
+  aliases: `manylinux1` for glibc 2.5 on x86, `manylinux2010` for glibc 2.12 on
+  x86, and `manylinux2014` for glibc 2.17 on its supported architectures.
+
+Thus “replaces” is not authority to delete every behavior established by the
+earlier PEPs.
+
+--- artifact_003 ---
+Source URL: (none)
+Source title: Pinned code boundary
+# Pinned code boundary
+
+Pinned source: `pypa/packaging@19fbc45b24ca0d577c9b256bb404b0dbaf4903da`.
+
+At this commit, `packaging/tags.py` supports the three discrete legacy
+manylinux policies but does not yet generate PEP 600 perennial tags. The task
+patch replaces that generation path with a glibc-version sequence. Both sanity
+patches therefore implement real tag-generation behavior against an immutable
+public snapshot.
+
+
+DERIVED CONTEXT — ARM C AUTHORITYPROOF
+{
+  "ambiguity_witnesses": [],
+  "authority_state": "GOVERNING",
+  "considered_candidates": [
+    {
+      "active_resolution": true,
+      "decision_id": "bundle-artifact_002-decision-1",
+      "eligible_to_govern": true,
+      "exclusion_reason": null,
+      "lifecycle_status": "ACCEPTED",
+      "role": "policy",
+      "witness_ids": []
+    },
+    {
+      "active_resolution": false,
+      "decision_id": "bundle-artifact_001-decision-2",
+      "eligible_to_govern": true,
+      "exclusion_reason": "IMPLEMENTATION_NOT_POLICY_AUTHORITY",
+      "lifecycle_status": "IMPLEMENTED",
+      "role": "implementation",
+      "witness_ids": []
+    },
+    {
+      "active_resolution": false,
+      "decision_id": "bundle-artifact_002-decision-0",
+      "eligible_to_govern": false,
+      "exclusion_reason": "SUPERSEDED",
+      "lifecycle_status": "SUPERSEDED",
+      "role": "policy",
+      "witness_ids": []
+    }
+  ],
+  "excluded_candidates": [
+    {
+      "active_resolution": false,
+      "decision_id": "bundle-artifact_001-decision-2",
+      "eligible_to_govern": true,
+      "exclusion_reason": "IMPLEMENTATION_NOT_POLICY_AUTHORITY",
+      "lifecycle_status": "IMPLEMENTED",
+      "role": "implementation",
+      "witness_ids": []
+    },
+    {
+      "active_resolution": false,
+      "decision_id": "bundle-artifact_002-decision-0",
+      "eligible_to_govern": false,
+      "exclusion_reason": "SUPERSEDED",
+      "lifecycle_status": "SUPERSEDED",
+      "role": "policy",
+      "witness_ids": []
+    }
+  ],
+  "explanation": "bundle-artifact_002-decision-1 is the sole eligible active decision in scope 'manylinux-pep600-platform-tags'.",
+  "governing_decision_id": "bundle-artifact_002-decision-1",
+  "governing_witnesses": [],
+  "requested_scope": "manylinux-pep600-platform-tags",
+  "transition_witnesses": []
+}

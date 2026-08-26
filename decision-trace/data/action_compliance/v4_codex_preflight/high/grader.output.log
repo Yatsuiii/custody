@@ -1,0 +1,4 @@
+PATCH_APPLY_FAILED: error: No valid patches in input (allow with "--allow-empty")
+TASK_COMPLETED=False
+TESTS_PASS=False
+AUTHORITY_COMPLIANT=False

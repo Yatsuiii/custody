@@ -1,0 +1,114 @@
+{
+  "disk_after_capture": {
+    "filesystem": {
+      "free_bytes": 103330029568,
+      "free_inodes": 25227058,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 334436814848
+    },
+    "host_root_filesystem": {
+      "free_bytes": 11311173632,
+      "free_inodes": 2761517,
+      "total_bytes": 63090503680,
+      "total_inodes": 15402955,
+      "used_bytes": 48541327360
+    },
+    "sizes_bytes": {
+      "codex_sqlite": 0,
+      "root": 2015201760,
+      "shared": 1858577802,
+      "slot": 24169090,
+      "slot_tmp": 0,
+      "tmp": 0
+    }
+  },
+  "disk_after_setup": {
+    "filesystem": {
+      "free_bytes": 103330091008,
+      "free_inodes": 25227073,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 334436753408
+    },
+    "host_root_filesystem": {
+      "free_bytes": 11312091136,
+      "free_inodes": 2761741,
+      "total_bytes": 63090503680,
+      "total_inodes": 15402955,
+      "used_bytes": 48540409856
+    },
+    "sizes_bytes": {
+      "codex_sqlite": 0,
+      "root": 2015204222,
+      "shared": 1858577802,
+      "slot": 24171961,
+      "slot_tmp": 0,
+      "tmp": 0
+    }
+  },
+  "disk_after_test": {
+    "filesystem": {
+      "free_bytes": 103242137600,
+      "free_inodes": 25205600,
+      "total_bytes": 437766844416,
+      "total_inodes": 106876671,
+      "used_bytes": 334524706816
+    },
+    "host_root_filesystem": {
+      "free_bytes": 11311849472,
+      "free_inodes": 2761682,
+      "total_bytes": 63090503680,
+      "total_inodes": 15402955,
+      "used_bytes": 48540651520
+    },
+    "sizes_bytes": {
+      "codex_sqlite": 0,
+      "root": 2040797839,
+      "shared": 1858577802,
+      "slot": 24174322,
+      "slot_tmp": 0,
+      "tmp": 4775
+    }
+  },
+  "full_worktree": true,
+  "index": 9,
+  "model_calls": 0,
+  "new_file": "decisiontrace_v4_storage_new_009.txt",
+  "patch_capture": {
+    "capture_command": "git add -A && git diff --cached --binary --no-ext-diff",
+    "patch_bytes": 735,
+    "patch_has_new_file": true,
+    "patch_sha256": "8d2bd4a68f37263873d0f4344e980277d6c0ff269643364054fd256b1490dc10"
+  },
+  "pinned_sha": "b35182d8f7245f046eed2975275c57b54ce3ba56",
+  "run_id": "stress-009-task-03-pip-inline-script-metadata",
+  "setup_output_tail": "{\"contract_version\": \"test-command-v1\", \"full_worktree\": true, \"grader_interpreter\": \"/usr/bin/python3.14\", \"interpreter\": \"/usr/bin/python3.14\", \"interpreter_kind\": \"setup_host_python\", \"pinned_sha\": \"b35182d8f7245f046eed2975275c57b54ce3ba56\", \"setup_interpreter\": \"/usr/bin/python3.14\", \"setup_python_argument\": \"/home/Yatsuiii/.pyenv/versions/3.12.13/bin/python\", \"sparse_checkout\": false, \"status_porcelain\": \"?? .decisiontrace_setup_metadata.json\\n\", \"task\": \"task-03-pip-inline-script-metadata\", \"test_command\": [\"/usr/bin/python3.14\", \"-m\", \"unittest\", \"discover\", \"-s\", \"tests/unit\", \"-p\", \"test_script_metadata.py\"], \"test_cwd\": \".\", \"test_env\": {\"PYTHONPATH\": \"/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-01/task-03-pip-inline-script-metadata/worktree/src\"}}\n",
+  "setup_returncode": 0,
+  "slot": 1,
+  "sparse_checkout": false,
+  "status": "PASS",
+  "status_after": "",
+  "status_before": "",
+  "task": "task-03-pip-inline-script-metadata",
+  "test_command": [
+    "/usr/bin/python3.14",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests/unit",
+    "-p",
+    "test_script_metadata.py"
+  ],
+  "test_cwd": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-01/task-03-pip-inline-script-metadata/worktree",
+  "test_env": {
+    "PYTHONPATH": "/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-01/task-03-pip-inline-script-metadata/worktree/src"
+  },
+  "test_execution_status": "executed_with_tests",
+  "test_output_tail": ".\n----------------------------------------------------------------------\nRan 1 test in 0.001s\n\nOK\n",
+  "test_returncode": 0,
+  "tests_executed": true,
+  "tracked_edit": ".github/CONTRIBUTING.md",
+  "wall_seconds": 62.187
+}

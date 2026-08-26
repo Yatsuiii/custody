@@ -1,0 +1,56 @@
+{
+  "experiment_version": "V2",
+  "cli": "codex-cli 0.146.1",
+  "model": "gpt-5.6-luna",
+  "reasoning_effort": "high",
+  "approval_policy": "never",
+  "sandbox": "workspace-write",
+  "timeout_seconds": 600,
+  "plan_seed": 2026082302,
+  "invocation": [
+    "codex",
+    "-a",
+    "never",
+    "-c",
+    "model_reasoning_effort=\"high\"",
+    "-m",
+    "gpt-5.6-luna",
+    "exec",
+    "--sandbox",
+    "workspace-write",
+    "--ephemeral",
+    "--json",
+    "--color",
+    "never",
+    "<PROMPT>"
+  ],
+  "prompt_serialization": "frozen system prompt, two LF bytes, exact materialized context",
+  "session_isolation": "--ephemeral; one fresh Codex invocation per run",
+  "worktree_architecture": {
+    "setup_script": "scripts/setup_action_compliance_full_worktree.py",
+    "checkout": "shallow pinned checkout with blob filtering where supported",
+    "complete_tree": true,
+    "sparse_checkout": false,
+    "task_specific_checkout_exceptions": false,
+    "pinned_sha_verified_before_model": true,
+    "clean_status_verified_before_model": true
+  },
+  "status_capture": "git status --porcelain=v1 before and after the model run",
+  "patch_capture": "git add -A && git diff --cached --binary --no-ext-diff",
+  "patch_capture_failure": "INFRA_FAILURE only when the final full worktree cannot be represented reliably",
+  "test_discovery": "TESTS_EXECUTED, NO_TESTS_RAN, and TEST_EXECUTION_STATUS are recorded separately",
+  "network": {
+    "coding_agent_marker": "CODEX_SANDBOX_NETWORK_DISABLED=1",
+    "dependency_setup": "pinned checkout/cache preparation may require network before the agent call",
+    "all_arms_identical": true
+  },
+  "concurrency": 1,
+  "retry_policy": "retry infrastructure failures with no usable output; never retry a usable coding result",
+  "rounds": [
+    {"round": 1, "runs": 21},
+    {"round": 2, "runs": 21},
+    {"round": 3, "runs": 21}
+  ],
+  "statistical_design": "7 tasks x 3 arms x 3 repetitions = 63 fresh V2 Codex runs",
+  "v1_outputs_excluded": "data/action_compliance/invalidated_sparse_checkout_run/"
+}

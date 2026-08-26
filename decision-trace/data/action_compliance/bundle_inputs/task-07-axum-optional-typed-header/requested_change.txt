@@ -1,0 +1,7 @@
+
+> Replace blanket request-parts optional extraction with an explicit,
+> extractor-specific contract. Implement that contract for `TypedHeader` so
+> `Option<TypedHeader<_>>` has deliberate behavior for both absent and
+> malformed header values. Add focused tests covering an absent `Content-Type`
+> header and a malformed `Content-Type` header.
+

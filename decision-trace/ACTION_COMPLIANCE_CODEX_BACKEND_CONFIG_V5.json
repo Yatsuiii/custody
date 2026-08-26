@@ -1,0 +1,91 @@
+{
+  "experiment_version": "V5",
+  "cli": "codex-cli 0.149.0 (host freeze must verify exact output before preflight)",
+  "model": "gpt-5.6-luna",
+  "reasoning_effort": "high",
+  "approval_policy": "never",
+  "sandbox": "workspace-write",
+  "timeout_seconds": 600,
+  "plan_seed": 2026082601,
+  "invocation": [
+    "codex",
+    "-a",
+    "never",
+    "-c",
+    "model_reasoning_effort=\"high\"",
+    "-m",
+    "gpt-5.6-luna",
+    "exec",
+    "--sandbox",
+    "workspace-write",
+    "--ephemeral",
+    "--json",
+    "--color",
+    "never",
+    "<PROMPT>"
+  ],
+  "prompt_serialization": "frozen system prompt, two LF bytes, exact materialized context",
+  "host_runner": "scripts/run_action_compliance_codex_v5.py",
+  "session_isolation": "--ephemeral; one fresh Codex invocation and one fresh full pinned worktree per run",
+  "worktree_architecture": {
+    "setup_script": "scripts/setup_action_compliance_full_worktree.py",
+    "checkout": "shallow pinned local source mirror checkout with complete tree",
+    "complete_tree": true,
+    "sparse_checkout": false,
+    "task_specific_checkout_exceptions": false,
+    "pinned_sha_verified_before_model": true,
+    "clean_status_verified_before_model": true,
+    "worker_slots": 2,
+    "persistent_worktrees": 0
+  },
+  "normalized_test_contract": {
+    "metadata_file": ".decisiontrace_setup_metadata.json",
+    "contract_version": "test-command-v2",
+    "fields": ["interpreter", "test_command", "test_cwd", "test_env", "test_runner"],
+    "command_consumed_verbatim": true,
+    "outcome_statuses": [
+      "executed_with_tests",
+      "executed_zero_tests",
+      "test_build_failed",
+      "test_collection_failed",
+      "test_command_error",
+      "test_timeout",
+      "unknown"
+    ],
+    "unknown_or_unparseable_policy": "row is INVALID and V5 stops; no repair-and-resume"
+  },
+  "status_capture": "git status --porcelain=v1 before and after the model run",
+  "patch_capture": "git add -A && git diff --cached --binary --no-ext-diff",
+  "network": {
+    "coding_agent_provider": "inherits the normal host shell network environment",
+    "provider_precheck": "DNS and TCP reachability to chatgpt.com:443 before preflight and before every statistical batch",
+    "dependency_setup": "pinned source and shared dependency caches are prepared before model calls; task commands use frozen offline policy",
+    "all_arms_identical": true
+  },
+  "storage": {
+    "policy_module": "scripts/action_compliance_v4_storage.py",
+    "storage_root": "data/action_compliance/v5_execution_storage",
+    "shared_caches": "immutable source/dependency caches shared across arms; no source modifications or result data",
+    "per_slot_outputs": "full worktree, temporary files, Go build cache, and Cargo target removed in lifecycle finally",
+    "hard_guard": {
+      "execution_filesystem_min_free_bytes": 21474836480,
+      "host_root_min_free_bytes": 5368709120,
+      "min_free_inodes": 100000
+    }
+  },
+  "concurrency": 2,
+  "retry_policy": "retry only objective infrastructure failures with no usable model output; never retry a usable coding result",
+  "rounds": [
+    {"round": 1, "runs": 21},
+    {"round": 2, "runs": 21},
+    {"round": 3, "runs": 21}
+  ],
+  "statistical_design": "7 tasks x 3 arms x 3 repetitions = 63 fresh V5 Codex runs",
+  "excluded_outputs": [
+    "data/action_compliance/invalidated_sparse_checkout_run/",
+    "data/action_compliance/invalidated_v2_test_discovery_run/",
+    "data/action_compliance/codex_runs_v3/",
+    "data/action_compliance/codex_runs_v4_host/",
+    "data/action_compliance/summaries_claude/"
+  ]
+}

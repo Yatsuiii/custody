@@ -1,0 +1,21 @@
+{
+  "ambiguity_witnesses": [],
+  "authority_state": "GOVERNING",
+  "considered_candidates": [
+    {
+      "active_resolution": true,
+      "decision_id": "bundle-artifact_002-decision-0",
+      "eligible_to_govern": true,
+      "exclusion_reason": null,
+      "lifecycle_status": "ACCEPTED",
+      "role": "policy",
+      "witness_ids": []
+    }
+  ],
+  "excluded_candidates": [],
+  "explanation": "bundle-artifact_002-decision-0 is the sole eligible active decision in scope 'maps-keys-values-slice-api'.",
+  "governing_decision_id": "bundle-artifact_002-decision-0",
+  "governing_witnesses": [],
+  "requested_scope": "maps-keys-values-slice-api",
+  "transition_witnesses": []
+}

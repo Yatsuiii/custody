@@ -1,0 +1,15 @@
+{
+  "error": "RuntimeError(\"command failed (128): git status --porcelain=v1\\nfatal: detected dubious ownership in repository at '/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-01/task-04-cpython-locale-encoding-scope/worktree'\\nTo add an exception for this directory, call:\\n\\n\\tgit config --global --add safe.directory /run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-01/task-04-cpython-locale-encoding-scope/worktree\")",
+  "full_worktree": true,
+  "index": 21,
+  "model_calls": 0,
+  "pinned_sha": "261a452a1300eeeae1428ffd6e6623329c085e2c",
+  "run_id": "stress-021-task-04-cpython-locale-encoding-scope",
+  "setup_output_tail": "{\"contract_version\": \"test-command-v1\", \"full_worktree\": true, \"grader_interpreter\": \"/usr/bin/python3.14\", \"interpreter\": \"/home/Yatsuiii/.pyenv/versions/3.12.13/bin/python\", \"interpreter_kind\": \"pinned_host_python\", \"pinned_sha\": \"261a452a1300eeeae1428ffd6e6623329c085e2c\", \"setup_interpreter\": \"/usr/bin/python3.14\", \"setup_python_argument\": \"/home/Yatsuiii/.pyenv/versions/3.12.13/bin/python\", \"sparse_checkout\": false, \"status_porcelain\": \"?? .decisiontrace_setup_metadata.json\\n\", \"task\": \"task-04-cpython-locale-encoding-scope\", \"test_command\": [\"/home/Yatsuiii/.pyenv/versions/3.12.13/bin/python\", \"Lib/test/test__pyio_locale.py\"], \"test_cwd\": \".\", \"test_env\": {}}\n",
+  "setup_returncode": 0,
+  "slot": 1,
+  "sparse_checkout": false,
+  "status": "FAIL",
+  "task": "task-04-cpython-locale-encoding-scope",
+  "wall_seconds": 32.467
+}

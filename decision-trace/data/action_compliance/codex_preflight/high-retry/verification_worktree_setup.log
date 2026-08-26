@@ -1,0 +1,23 @@
+Worktree ready at /tmp/action-compliance-codex-preflight-verify-q6v3e4ll/task-01-k8s-postfilter-victims/worktree (pinned 9874e76ac44442ebfa33c824e2c57bcb9f0d2e5e).
+Verify with:
+  cd /tmp/action-compliance-codex-preflight-verify-q6v3e4ll/task-01-k8s-postfilter-victims/worktree && GOWORK=off go test ./pkg/scheduler/framework/preemption/... ./pkg/scheduler/framework/plugins/defaultpreemption/...
+From https://github.com/kubernetes/kubernetes
+ * branch            9874e76ac44442ebfa33c824e2c57bcb9f0d2e5e -> FETCH_HEAD
+Note: switching to 'FETCH_HEAD'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+HEAD is now at 9874e76 Merge pull request #137662 from tosi3k/revert-136254-extend-postfilter

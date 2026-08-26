@@ -1,0 +1,96 @@
+You are an autonomous coding agent working in a pinned isolated repository.
+Implement the requested change using the raw engineering context supplied
+below. Inspect the repository, make the smallest correct code change, and run
+the task's available focused tests. Do not ask for organizational labels that
+are not present in the supplied evidence. Do not modify files outside the
+isolated worktree. Finish with the implementation and tests, or clearly report
+why the request cannot be completed.
+
+
+
+> Prepare module-call parsing for init-time static evaluation by retaining the
+> module `source` attribute's unevaluated `hcl.Expression` on `ModuleCall`, even
+> when eager address decoding reports diagnostics. Preserve that expression
+> when an override replaces a module source. Add a focused parser test proving
+> that a `source = local.module_source` traversal survives decoding. Do not
+> implement the evaluator itself in this task.
+
+
+
+RAW SOURCE ARTIFACTS:
+
+--- artifact_001 ---
+Source URL: https://github.com/opentofu/opentofu/issues/1042
+Source title: Issue #1042 scope transition
+# Issue #1042 scope transition
+
+Primary source: https://github.com/opentofu/opentofu/issues/1042
+
+The issue proposed init-time evaluation of constant locals and variables for
+configuration attributes. Its initial draft also discussed interpolating block
+labels. A maintainer requested that label interpolation be left out because of
+rename/identity complexity; the author agreed and edited the issue to mark the
+section out of scope. The issue's resolved questions explicitly answer label
+interpolation with “No.”
+
+Relevant comments:
+
+- https://github.com/opentofu/opentofu/issues/1042#issuecomment-1875588374
+- https://github.com/opentofu/opentofu/issues/1042#issuecomment-1875655905
+
+--- artifact_002 ---
+Source URL: https://github.com/opentofu/opentofu/pull/1649
+Source title: Accepted RFC and implementation
+# Accepted RFC and implementation
+
+Primary sources:
+
+- https://github.com/opentofu/opentofu/pull/1649
+- https://github.com/opentofu/opentofu/blob/8f8e0aa4aa92980882c2df3209c75466629bce4c/rfc/20240513-static-evaluation.md
+- https://github.com/opentofu/opentofu/pull/1718
+
+The merged implementation RFC defines a static evaluation context for HCL
+expressions used in init-time attributes such as module sources and backend
+configuration. It describes retaining the module source expression and
+evaluating it in module scope. It does not authorize block-label evaluation.
+
+PR #1718 then merged the static-evaluation base, module-source support, and
+backend configuration support for OpenTofu 1.8.
+
+--- artifact_003 ---
+Source URL: (none)
+Source title: Pinned code boundary
+# Pinned code boundary
+
+Pinned source: `opentofu/opentofu@3fdc8090501234c55093078255969ecbc46f2fe2`.
+
+At the pin, `internal/configs/module_call.go` eagerly decodes the module source
+attribute into a string and address, discarding the expression as a first-class
+field. `internal/configs/module_merge.go` propagates source address fields when
+an override replaces the source. Module block labels are fixed parser identity
+strings.
+
+The requested patch introduces only the expression retention needed by the
+accepted source-attribute work.
+
+
+DERIVED CONTEXT — ARM B SUMMARY
+## Current
+
+The applicable design retains the module `source` attribute's unevaluated `hcl.Expression` on `ModuleCall` to support static evaluation of module sources and backend configuration attributes at init time (artifact_002: RFC in PR #1649, implementation in PR #1718 for OpenTofu 1.8). At the pinned commit `3fdc8090501234c55093078255969ecbc46f2fe2`, `internal/configs/module_call.go` eagerly decodes the source into a string and address, discarding the expression; `internal/configs/module_merge.go` propagates only address fields during override merges (artifact_003).
+
+## History
+
+Issue #1042 initially proposed both constant attribute evaluation and block-label interpolation (artifact_001). A maintainer requested label interpolation be removed due to rename/identity complexity; the author agreed and marked it out of scope (artifact_001: comments #1875588374, #1875655905). The accepted RFC explicitly does not authorize block-label evaluation (artifact_002). PR #1718 merged the static-evaluation base, module-source support, and backend configuration support (artifact_002).
+
+## Scope
+
+**In scope:** Retain the unevaluated source expression even when eager decoding reports diagnostics; preserve the expression through override merges; add a parser test proving `source = local.module_source` traversal survives decoding (task prompt). Module block labels remain fixed parser identity strings (artifact_003).
+
+**Out of scope:** Block-label interpolation (artifact_001, artifact_002); implementing the evaluator itself (task prompt).
+
+**Neighboring:** Backend configuration attributes also use static evaluation (artifact_002: PR #1718).
+
+## Uncertainty
+
+The sources do not specify how diagnostics from eager address decoding should coexist with retained expressions, the exact API changes required in `module_call.go` or `module_merge.go`, or test coverage requirements beyond the single traversal test mentioned in the task prompt.

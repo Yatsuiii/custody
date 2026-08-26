@@ -1,0 +1,16 @@
+Current
+- The accepted design replaces blanket optional extraction with explicit, extractor-specific traits: `OptionalFromRequest` and `OptionalFromRequestParts` (Source: https://github.com/tokio-rs/axum/issues/2298, https://github.com/tokio-rs/axum/pull/2475).
+- Under this contract, `Option<TypedHeader<_>>` returns `Ok(None)` only when the header is absent; if the header is present but malformed/fails to decode, it yields a `TypedHeaderRejection` (Source: https://github.com/tokio-rs/axum/pull/2475, Raw Task Prompt).
+
+History
+- Baseline implementation (pinned SHA `fd11d8efde4895a2159a29dcd586a7db99917057`) used a blanket `FromRequestParts` implementation for `Option<T>` in `axum-core/src/extract/mod.rs` that called `.await.ok()`, collapsing every rejection into `None` (Source: Pinned code snapshot).
+- Issue #2298 identified issues with blanket optional extraction swallowing errors and proposed dedicated traits, which was accepted by maintainer David Pedersen (Source: https://github.com/tokio-rs/axum/issues/2298).
+- PR #2475 merged on 2024-12-10 (commit `ec75ee38274ed5423ece5f3ae0b6e947a7e6ec43`), adding the two optional-extractor traits, deprecating blanket optional wrappers, and updating extractors like `Option<Path<T>>` and `Option<Query<T>>` to stop swallowing all error conditions (Source: https://github.com/tokio-rs/axum/pull/2475).
+
+Scope
+- Core scope: Implement the explicit optional contract for `TypedHeader` so absent headers produce `None` and malformed values produce rejections, and add focused tests covering absent vs. malformed `Content-Type` headers (Source: Raw Task Prompt, https://github.com/tokio-rs/axum/pull/2475).
+- Neighboring scope and modified components: Three modified source files (`axum-core/src/extract/mod.rs`, `axum-extra/src/typed_header.rs`, `axum/src/extract/mod.rs`), one new source module, and associated changelog/documentation updates (Source: Pinned code snapshot, https://github.com/tokio-rs/axum/pull/2475).
+
+Uncertainty
+- The specific filename and path for the new source module mentioned in the snapshot are not stated (Source: Pinned code snapshot).
+- The exact test file names and harness setup for the absent and malformed `Content-Type` tests are not specified in the sources (Source: Raw Task Prompt, Pinned code snapshot).

@@ -1,0 +1,17 @@
+diff --git a/.gitattributes b/.gitattributes
+index cabbb17..43a0adc 100644
+--- a/.gitattributes
++++ b/.gitattributes
+@@ -14,3 +14,5 @@
+ # See golang.org/issue/9281.
+ 
+ * -text
++
++# V4 dry-run tracked modification.
+diff --git a/decisiontrace_v4_dry_run_new_ac69a180b4eca9c4131102ccba91399b.txt b/decisiontrace_v4_dry_run_new_ac69a180b4eca9c4131102ccba91399b.txt
+new file mode 100644
+index 0000000..73222ba
+--- /dev/null
++++ b/decisiontrace_v4_dry_run_new_ac69a180b4eca9c4131102ccba91399b.txt
+@@ -0,0 +1 @@
++ac69a180b4eca9c4131102ccba91399b

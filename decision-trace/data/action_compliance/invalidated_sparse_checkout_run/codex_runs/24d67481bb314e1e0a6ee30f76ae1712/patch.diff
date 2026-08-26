@@ -1,0 +1,126 @@
+diff --git a/src/pip/_internal/req/script_metadata.py b/src/pip/_internal/req/script_metadata.py
+new file mode 100644
+index 0000000..a143c0e
+--- /dev/null
++++ b/src/pip/_internal/req/script_metadata.py
+@@ -0,0 +1,49 @@
++from __future__ import annotations
++
++import re
++
++from pip._internal.utils.compat import tomllib
++from pip._vendor.packaging.requirements import InvalidRequirement, Requirement
++
++
++_SCRIPT_METADATA_RE = re.compile(
++    r"(?m)^# /// (?P<type>[a-zA-Z0-9-]+)$\s"
++    r"(?P<content>(^#(| .*)$\s)+)^# ///$"
++)
++
++
++def read_script_dependencies(scriptfile: str) -> list[str]:
++    """Read PEP 723 dependencies from a single-file Python script."""
++    with open(scriptfile, encoding="utf-8") as fp:
++        script = fp.read()
++
++    matches = [
++        match
++        for match in _SCRIPT_METADATA_RE.finditer(script)
++        if match.group("type") == "script"
++    ]
++    if len(matches) != 1:
++        raise ValueError("Expected exactly one PEP 723 script metadata block")
++
++    content = "".join(
++        line[2:] if line.startswith("# ") else line[1:]
++        for line in matches[0].group("content").splitlines(keepends=True)
++    )
++    try:
++        metadata = tomllib.loads(content)
++    except tomllib.TOMLDecodeError as e:
++        raise ValueError("Malformed PEP 723 script metadata") from e
++
++    dependencies = metadata.get("dependencies")
++    if not isinstance(dependencies, list) or not all(
++        isinstance(dependency, str) for dependency in dependencies
++    ):
++        raise ValueError("PEP 723 dependencies must be a list of strings")
++
++    for dependency in dependencies:
++        try:
++            Requirement(dependency)
++        except InvalidRequirement as e:
++            raise ValueError(f"Invalid PEP 508 dependency: {dependency}") from e
++
++    return dependencies
+diff --git a/tests/unit/test_script_metadata.py b/tests/unit/test_script_metadata.py
+new file mode 100644
+index 0000000..1d6df25
+--- /dev/null
++++ b/tests/unit/test_script_metadata.py
+@@ -0,0 +1,65 @@
++from pathlib import Path
++
++import pytest
++
++from pip._internal.req.script_metadata import read_script_dependencies
++
++
++def test_read_script_dependencies(tmp_path: Path) -> None:
++    script = tmp_path / "script.py"
++    script.write_text(
++        """\
++# /// script
++# requires-python = ">=3.9"
++# dependencies = [
++#   "requests<3",
++#   "rich",
++# ]
++# [tool.example]
++# enabled = true
++# ///
++print("hello")
++"""
++    )
++
++    assert read_script_dependencies(str(script)) == ["requests<3", "rich"]
++
++
++@pytest.mark.parametrize(
++    "metadata",
++    [
++        "# Script Dependencies:\n# requests\n",
++        "# /// other\n# dependencies = [\"requests\"]\n# ///\n",
++        "# /// script\n# dependencies = [\n#   \"requests\"\n",
++        "# /// script\n# dependencies = [\"requests\"\n# ///\n",
++        "# /// script\n# dependencies = \"requests\"\n# ///\n",
++        "# /// script\n# dependencies = [\"not a requirement !!!\"]\n# ///\n",
++    ],
++)
++def test_read_script_dependencies_rejects_malformed_or_unsupported_metadata(
++    tmp_path: Path, metadata: str
++) -> None:
++    script = tmp_path / "script.py"
++    script.write_text(metadata)
++
++    with pytest.raises(ValueError):
++        read_script_dependencies(str(script))
++
++
++def test_read_script_dependencies_rejects_multiple_script_blocks(
++    tmp_path: Path,
++) -> None:
++    script = tmp_path / "script.py"
++    script.write_text(
++        """\
++# /// script
++# dependencies = ["requests"]
++# ///
++# /// script
++# dependencies = ["rich"]
++# ///
++"""
++    )
++
++    with pytest.raises(ValueError):
++        read_script_dependencies(str(script))
