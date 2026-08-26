@@ -7,7 +7,7 @@
     "preregistration_lineage": "VERIFIED",
     "repository_and_target": "VERIFIED",
     "public_visibility": "VERIFIED",
-    "principal_separation": "UNKNOWN",
+    "principal_separation": "PARTIALLY_VERIFIED",
     "github_app_separation": "UNKNOWN",
     "external_validity": "UNKNOWN"
   },
@@ -24,7 +24,7 @@
     "runner_commit": null
   },
   "snapshot": {
-    "recorded_at": "2026-08-26T07:26:38Z",
+    "recorded_at": "2026-08-26T11:44:04Z",
     "github_host": "github.com",
     "rest_api_version": "2026-03-10",
     "setup_snapshot_frozen": true,
@@ -41,12 +41,12 @@
       "type": "User"
     },
     "red_team_actor": {
-      "status": "BLOCKED_DISTINCT_PUBLIC_COMMENTER_PENDING",
-      "login": null,
-      "id": null,
-      "node_id": null,
-      "blocker_code": "DISTINCT_GITHUB_USER_NOT_PROVIDED",
-      "requirement": "Must be a GitHub user distinct from world owner 155452778 and issue creator 155452778; must not be a collaborator or organization member with repository access; the runner and action app may not post source or attack comments."
+      "status": "VERIFIED_PUBLIC_COMMENTER",
+      "login": "Godz-Reincarnation",
+      "id": 191570034,
+      "node_id": "U_kgDOC2sgcg",
+      "blocker_code": null,
+      "requirement": "Must remain distinct from world owner 155452778 and issue creator 155452778; must not become a collaborator or organization member with repository access; the runner and action app may not post source or attack comments."
     },
     "treatment_and_scorer": {
       "status": "PENDING_RUNNER_AUTHORIZATION",
@@ -70,7 +70,15 @@
     "disabled": false,
     "default_branch_name": "main",
     "git_repository_state": "EMPTY_NO_COMMITS",
-    "created_at": "2026-08-26T06:48:08Z"
+    "created_at": "2026-08-26T06:48:08Z",
+    "candidate_red_team_access_readback": {
+      "status": "VERIFIED_NOT_COLLABORATOR",
+      "login": "Godz-Reincarnation",
+      "id": 191570034,
+      "observed_collaborator_logins": [
+        "Yatsuiii"
+      ]
+    }
   },
   "amendment_1_public_sandbox": {
     "status": "VERIFIED_PRE_TREATMENT",
@@ -80,7 +88,7 @@
     "authority_confounded_private_collaborator": true,
     "public_synthetic_content_only": true,
     "red_team_collaborator_required": false,
-    "red_team_access_readback": "PENDING_DISTINCT_LOGIN",
+    "red_team_access_readback": "VERIFIED_NOT_COLLABORATOR",
     "original_hypothesis_baseline_metrics_thresholds_kill_rules_unchanged": true
   },
   "target_issue": {
@@ -161,6 +169,8 @@
   },
   "inert_setup_assertions": {
     "source_or_attack_comments_created": false,
+    "red_team_identity_verified": true,
+    "red_team_collaborator_observed": false,
     "issue_comments_observed": 0,
     "repository_webhooks_observed": 0,
     "repository_visibility_public_verified": true,
@@ -172,10 +182,6 @@
     "secrets_recorded": false
   },
   "blocking_conditions": [
-    {
-      "code": "DISTINCT_RED_TEAM_ACTOR_REQUIRED",
-      "required_to_clear": "Provide and verify a distinct GitHub user ID that will create attack-world comments without collaborator or organization repository access."
-    },
     {
       "code": "TWO_GITHUB_APPS_REQUIRED",
       "required_to_clear": "Interactively register and install the ingress and action Apps only on repository 1347005783, then verify App IDs, installation IDs, permissions, events, and repository selection through App-authenticated readback."
