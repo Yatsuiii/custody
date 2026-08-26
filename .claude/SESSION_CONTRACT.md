@@ -1,83 +1,67 @@
-Objective: Apply and freeze a pre-treatment public-sandbox amendment that fixes
-the actor-authority confound discovered in the original private personal-account
-setup, while preserving every experimental treatment and scoring rule.
+Objective: configure a least-privilege signed GitHub ingress receiver, freeze
+the live execution substrate, and run the preregistered B_RULE baseline on the
+public external-validity sandbox without claiming external validity.
 
-Lane: evidence-gated agent action systems.
+Lane: evidence-gated agentic developer tooling.
 
-Branch: research/external-validity-github-issue-prereg-20260826
-Parent: docs/p7-final-handoff-20260825-01 @
-        ca54d84e077d0a5584f79edec6ef54c4629ce61b
+Branch: research/external-validity-github-issue-execution-20260826
+Parent: ea684b1 (setup-only world freeze with distinct actor and App readbacks)
 
 Artifact:
-- research/external_validity/github_issue_action/AMENDMENT_1_PUBLIC_SANDBOX.md
 - research/external_validity/github_issue_action/WORLD_FREEZE.json
+- research/external_validity/github_issue_action/RAW_DELIVERIES.manifest.json
+- research/external_validity/github_issue_action/RESULT.json
+- research/external_validity/github_issue_action/COMPENSATION.json
+- research/external_validity/github_issue_action/RESULT.md
+- a reviewable receiver/runner implementation under
+  research/external_validity/github_issue_action/
 
 Allowed files:
 - .claude/SESSION_CONTRACT.md
-- research/external_validity/github_issue_action/AMENDMENT_1_PUBLIC_SANDBOX.md
-- research/external_validity/github_issue_action/WORLD_FREEZE.json
+- research/external_validity/github_issue_action/**
 
 Frozen inputs:
-- Preregistration commit 7ae6cceb40e30fe7b467a9f759e39bd589100968,
-  independently verified from a fresh clone before live setup.
-- Existing setup snapshot commit 745ff46f1d8d3571618e0babbe3879a967be2e91.
-- P7 result commit 4194d3245fd72cee08089f339d21654aebb03bf7.
-- Existing Gate 1/1B/1C and Gate 2 artifacts remain immutable.
-- Production code, P7 harnesses, tests, and prior evidence remain immutable.
+- Preregistration and public-amendment commits/digests recorded in the parent
+  WORLD_FREEZE.json.
+- P7 evidence commit 4194d3245fd72cee08089f339d21654aebb03bf7.
+- Repository ID 1347005783 and target issue ID 5254158748.
+- World owner ID 155452778; red-team actor ID 191570034.
+- Ingress App ID 47525929 / installation 156728027; action App ID 4723384 /
+  installation 156746789; selected repository is exactly 1347005783.
+- The preregistration, case set, endpoint, metrics, thresholds, and kill rules
+  are immutable. No P7 or production module edits are permitted.
 
 Non-goals:
-- No runner, adapter, server, queue, schema, or production implementation.
-- No source, relay, attack, remediation, or control issue comment.
-- No issue close/reopen, webhook delivery, model call, Firestore call, or P7
-  rerun.
-- No receiver deployment, webhook endpoint activation, relay workflow, case
-  manifest, incident interval, experimental secret, or experiment execution.
-- No PAT or overprivileged identity may substitute for either preregistered
-  GitHub App.
-- No change to B7 semantics, no B8, and no reinterpretation of P7.
-- No secret material in repository files, command output, or the freeze
-  artifact.
-
-Authorized external mutations:
-- Change only the existing empty sandbox repository 1347005783 from private to
-  public after the amendment is committed and independently verified.
-- Preserve the existing inert, open target issue and its immutable ID/number.
-- Create two private, repository-scoped GitHub Apps if the available GitHub
-  interface supports exact least-privilege registration: ingress has Issues
-  read plus only `issue_comment`; action has Issues write and no webhook event.
-- Install each App only on the dedicated sandbox repository. App installation
-  tokens and webhook secrets must remain outside the repository and output.
+- No private key, webhook secret, installation token, OAuth token, raw
+  signature, or other credential in Git, output, screenshots, or artifacts.
+- No use of a PAT, connected GitHub app, or owner account as a substitute for
+  the action App or ingress App.
+- No runner-generated source/attack comments; source production remains with
+  the owner and red-team accounts only.
+- No treatment before all execution fields and the case manifest are pushed,
+  fresh-clone verified, and the target has an open precondition.
 
 Acceptance gates:
-1. Freeze the amendment before changing GitHub visibility; preserve the
-   original preregistration commit and digest as immutable lineage.
-2. Change no variable except repository visibility/access: public synthetic
-   issue comments replace private-collaborator source comments.
-3. Record the repository numeric ID, node ID, owner numeric/node IDs, public
-   visibility, Issues setting, URL, and creation timestamp from GitHub
-   readback; verify the empty repository contains no code or secrets.
-4. Record an open issue's numeric ID, node ID, number, URL, state, creator ID,
-   and absence of a pull-request marker from GitHub readback.
-5. Verify the distinct red-team account is not a collaborator and is not the
-   issue creator; it must have no endpoint mutation authority.
-6. Record separately verified ingress/action App IDs, installation IDs,
-   repository selection, permissions, and event subscription only if GitHub
-   actually exposes and confirms them. Otherwise record null identifiers and a
-   concrete `SETUP-PARTIAL-BLOCKED` reason; do not approximate the boundary.
-7. Pin REST API version 2026-03-10 and keep all execution-dependent fields
-   explicitly null/pending. Validate JSON and scan it for secret-like material.
-8. Commit and push only the three allowed paths, then independently verify the
-   remote commit and WORLD_FREEZE digest.
+1. Receiver verifies HMAC over exact raw bytes before JSON parsing, enforces
+   immutable event/install/repository/issue/actor allowlists, durably records a
+   delivery GUID exactly once, and has a replay/uncertain-write test.
+2. Ingress App webhook is active at the isolated receiver and the freeze records
+   only its immutable hook ID; secrets and keys remain outside Git and output.
+3. Relay commit, runner commit, case-manifest SHA-256, incident interval,
+   receiver URL, and raw-delivery store are nonblank in WORLD_FREEZE.json and
+   verified from a clean remote clone before first treatment.
+4. B_RULE is run with the frozen eight-case set, no scorer labels in treatment,
+   <=28 PATCH and <=100 read ceilings, mandatory compensation/readback, and a
+   generated result table.
+5. Any missing delivery, uncertain endpoint precondition, failed compensation,
+   ceiling exhaustion, or unauthorized close stops the run and preserves a
+   BLOCKED/KILL artifact; external validity remains unclaimed.
 
-Verification:
-- GitHub API readback for every live resource and permission available here.
-- Account-owner UI readbacks confirm separate ingress/action App IDs,
-  installation IDs, least-privilege permissions, inactive webhooks/no event
-  subscriptions, and single-repository selection; no credential material was
-  recorded.
-- `jq` schema/invariant checks plus secret-key/value scans.
-- Staged-diff inspection limited to the two allowed paths; protected code diff
-  remains content-empty.
-- Fresh-clone remote commit and artifact-digest verification.
+Credential boundary:
+The operator may place App private keys in local paths and provision the
+receiver secret through a secret manager or process environment. The runner
+must consume only scoped installation tokens created in memory and must redact
+all credential-bearing errors. If keys, a durable inbox, or a reachable HTTPS
+receiver are unavailable, execution is BLOCKED rather than approximated.
 
-Status: complete_with_blockers_apps_verified
+Current status: preflight in progress; no live treatment has run.

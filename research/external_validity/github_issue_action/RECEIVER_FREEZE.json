@@ -1,0 +1,44 @@
+{
+  "format": "custody.external-validity.github-receiver-freeze",
+  "schema_version": 1,
+  "status": "DEPLOYED_HOOK_UNCONFIGURED",
+  "experiment_id": "EXTERNAL_VALIDITY_GITHUB_ISSUE_ACTION_V1",
+  "receiver": {
+    "project": "cave2/custody-external-validity-receiver",
+    "production_url": "https://custody-external-validity-receiver.vercel.app",
+    "webhook_path": "/api/webhook",
+    "health_path": "/api/health",
+    "delivery_read_path": "/api/delivery?guid=<guid>",
+    "latest_deployment_id": "dpl_6wAbvuQBcBjLAhGjqejq7eTseWv8",
+    "latest_deployment_url": "https://custody-external-validity-receiver-p3kcmp5vb-cave2.vercel.app",
+    "health_readback": "READY"
+  },
+  "durable_store": {
+    "provider": "vercel_blob",
+    "store_id": "store_YS7aYijvI7VwBrvI",
+    "store_name": "custody-external-validity-inbox-20260826",
+    "access": "private",
+    "region": "iad1",
+    "retention_policy": "operator deletes encrypted raw bodies within 30 days; no raw bodies enter Git"
+  },
+  "credential_boundary": {
+    "webhook_secret": "OUTSIDE_GIT_SENSITIVE_VERCEL_ENV",
+    "receiver_read_token": "OUTSIDE_GIT_SENSITIVE_VERCEL_ENV",
+    "blob_read_write_token": "OUTSIDE_GIT_SENSITIVE_VERCEL_ENV",
+    "private_keys": "NOT_PROVIDED_TO_RECEIVER_OR_REPOSITORY"
+  },
+  "verification": {
+    "unit_command": "node --test receiver/test/verify.test.mjs",
+    "unit_result": "PASS",
+    "syntax_command": "node --check receiver/api/webhook.js && node --check receiver/api/delivery.js && node --check receiver/api/health.js",
+    "invalid_signature_probe": "HTTP 401 / invalid_signature",
+    "valid_live_delivery": "NOT RUN",
+    "hook_id": null
+  },
+  "blockers": [
+    "Ingress App private key must be generated/downloaded locally before GitHub App hook configuration.",
+    "Action App private key must be generated/downloaded locally before installation-token/API readback.",
+    "Separate red-team API authentication is not configured on this machine; only Yatsuiii SSH identity is present.",
+    "No treatment or case-manifest freeze has occurred."
+  ]
+}
