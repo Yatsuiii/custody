@@ -1,6 +1,6 @@
-Objective: Write one standalone, docs-only external-validity preregistration
-that tests frozen B7 against a real independently operated source producer and
-a real reversible consequential endpoint before any runner is built.
+Objective: Materialize only the inert GitHub-side setup precommitted by the
+external-validity preregistration, and record its immutable identifiers before
+any receiver, runner, relay, source delivery, or consequential action exists.
 
 Lane: evidence-gated agent action systems.
 
@@ -9,44 +9,63 @@ Parent: docs/p7-final-handoff-20260825-01 @
         ca54d84e077d0a5584f79edec6ef54c4629ce61b
 
 Artifact:
-- research/external_validity/github_issue_action/PREREGISTRATION.md
+- research/external_validity/github_issue_action/WORLD_FREEZE.json
 
 Allowed files:
 - .claude/SESSION_CONTRACT.md
-- research/external_validity/github_issue_action/PREREGISTRATION.md
+- research/external_validity/github_issue_action/WORLD_FREEZE.json
 
 Frozen inputs:
+- Preregistration commit 7ae6cceb40e30fe7b467a9f759e39bd589100968,
+  independently verified from a fresh clone before live setup.
 - P7 result commit 4194d3245fd72cee08089f339d21654aebb03bf7.
 - Existing Gate 1/1B/1C and Gate 2 artifacts remain immutable.
 - Production code, P7 harnesses, tests, and prior evidence remain immutable.
 
 Non-goals:
 - No runner, adapter, server, queue, schema, or production implementation.
-- No GitHub repository, GitHub App, webhook, issue, token, or secret creation.
-- No external write, API mutation, model call, Firestore call, or P7 rerun.
+- No source, relay, attack, remediation, or control issue comment.
+- No issue close/reopen, webhook delivery, model call, Firestore call, or P7
+  rerun.
+- No receiver deployment, webhook endpoint activation, relay workflow, case
+  manifest, incident interval, experimental secret, or experiment execution.
+- No PAT or overprivileged identity may substitute for either preregistered
+  GitHub App.
 - No change to B7 semantics, no B8, and no reinterpretation of P7.
-- No claim that a preregistration itself establishes external validity.
+- No secret material in repository files, command output, or the freeze
+  artifact.
+
+Authorized external mutations:
+- Create one dedicated private GitHub repository owned by Yatsuiii, with Issues
+  enabled and unnecessary collaboration surfaces disabled.
+- Create one inert, open target issue whose body identifies it as setup-only.
+- Create two private, repository-scoped GitHub Apps if the available GitHub
+  interface supports exact least-privilege registration: ingress has Issues
+  read plus only `issue_comment`; action has Issues write and no webhook event.
+- Install each App only on the dedicated sandbox repository. App installation
+  tokens and webhook secrets must remain outside the repository and output.
 
 Acceptance gates:
-1. Freeze GitHub.com signed issue-comment webhooks as the real producer and an
-   open-to-closed issue transition in a dedicated sandbox repository as the
-   sole consequential endpoint, with reopening as mandatory compensation.
-2. Compare only the security layer while holding the exact webhook deliveries,
-   action request, endpoint, issue pre-state, order, and timing schedule fixed.
-3. Include the strongest simple baseline: signature verification plus an exact
-   repository/sender/action allowlist and delivery-id replay ledger.
-4. Precommit safety, benign utility, replay/idempotency, recovery, and privacy
-   gates plus explicit KILL/CAUTION/INVALID/BLOCKED rules.
-5. Define artifact lineage, scorer separation, external identifiers that must
-   be pinned before execution, and the exact additional authorization required
-   to build or run anything.
-6. Verify the new document contains no placeholder success claim and that the
-   only content diffs are the two allowed documentation files.
+1. Verify the preregistration remote commit and content digest before the first
+   live mutation.
+2. Record the repository numeric ID, node ID, owner numeric/node IDs, privacy,
+   Issues setting, URL, and creation timestamp from GitHub readback.
+3. Record an open issue's numeric ID, node ID, number, URL, state, creator ID,
+   and absence of a pull-request marker from GitHub readback.
+4. Record separately verified ingress/action App IDs, installation IDs,
+   repository selection, permissions, and event subscription only if GitHub
+   actually exposes and confirms them. Otherwise record null identifiers and a
+   concrete `SETUP-PARTIAL-BLOCKED` reason; do not approximate the boundary.
+5. Pin REST API version 2026-03-10 and keep all execution-dependent fields
+   explicitly null/pending. Validate JSON and scan it for secret-like material.
+6. Commit and push only the two allowed paths, then independently verify the
+   remote commit and WORLD_FREEZE digest.
 
 Verification:
-- Read-through against current official GitHub webhook and REST API docs.
-- `rg` checks for required sections, metrics, baselines, and authorization.
-- `git diff --numstat` limited to the two allowed paths; protected code diff
+- GitHub API readback for every live resource and permission available here.
+- `jq` schema/invariant checks plus secret-key/value scans.
+- Staged-diff inspection limited to the two allowed paths; protected code diff
   remains content-empty.
+- Fresh-clone remote commit and artifact-digest verification.
 
-Status: complete
+Status: complete_with_blockers

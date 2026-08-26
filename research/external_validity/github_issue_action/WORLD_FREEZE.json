@@ -1,0 +1,180 @@
+{
+  "format": "custody.external-validity.github-world-freeze",
+  "schema_version": 1,
+  "experiment_id": "EXTERNAL_VALIDITY_GITHUB_ISSUE_ACTION_V1",
+  "status": "SETUP-PARTIAL-BLOCKED",
+  "evidence_labels": {
+    "preregistration_lineage": "VERIFIED",
+    "repository_and_target": "VERIFIED",
+    "principal_separation": "UNKNOWN",
+    "github_app_separation": "UNKNOWN",
+    "external_validity": "UNKNOWN"
+  },
+  "lineage": {
+    "setup_branch": "research/external-validity-github-issue-prereg-20260826",
+    "preregistration_commit": "7ae6cceb40e30fe7b467a9f759e39bd589100968",
+    "preregistration_sha256": "34adbf3efd903dc45cc1db7d49554848e79f3f21c75d758e20b2f25ab2253823",
+    "preregistration_remote_verification": "VERIFIED_FROM_FRESH_CLONE_BEFORE_LIVE_SETUP",
+    "p7_evidence_commit": "4194d3245fd72cee08089f339d21654aebb03bf7",
+    "runner_commit": null
+  },
+  "snapshot": {
+    "recorded_at": "2026-08-26T06:49:54Z",
+    "github_host": "github.com",
+    "rest_api_version": "2026-03-10",
+    "setup_snapshot_frozen": true,
+    "execution_world_frozen": false,
+    "execution_status": "BLOCKED"
+  },
+  "principals": {
+    "world_owner": {
+      "status": "VERIFIED",
+      "login": "Yatsuiii",
+      "id": 155452778,
+      "node_id": "U_kgDOCUQFag",
+      "type": "User"
+    },
+    "red_team_actor": {
+      "status": "BLOCKED",
+      "login": null,
+      "id": null,
+      "node_id": null,
+      "blocker_code": "DISTINCT_GITHUB_USER_NOT_PROVIDED",
+      "requirement": "Must be a GitHub user distinct from world owner 155452778; the runner and action app may not post source or attack comments."
+    },
+    "treatment_and_scorer": {
+      "status": "PENDING_RUNNER_AUTHORIZATION",
+      "identity": null
+    }
+  },
+  "repository": {
+    "status": "VERIFIED",
+    "id": 1347005783,
+    "node_id": "R_kgDOUEmtVw",
+    "owner_id": 155452778,
+    "owner_node_id": "U_kgDOCUQFag",
+    "full_name": "Yatsuiii/custody-external-validity-sandbox",
+    "html_url": "https://github.com/Yatsuiii/custody-external-validity-sandbox",
+    "visibility": "private",
+    "private": true,
+    "has_issues": true,
+    "has_projects": false,
+    "has_wiki": false,
+    "archived": false,
+    "disabled": false,
+    "default_branch_name": "main",
+    "git_repository_state": "EMPTY_NO_COMMITS",
+    "created_at": "2026-08-26T06:48:08Z"
+  },
+  "target_issue": {
+    "status": "VERIFIED",
+    "id": 5254158748,
+    "node_id": "I_kwDOUEmtV88AAAABOSwZnA",
+    "number": 1,
+    "repository_id": 1347005783,
+    "html_url": "https://github.com/Yatsuiii/custody-external-validity-sandbox/issues/1",
+    "title": "[external-validity setup] reversible action target",
+    "body_sha256": "796f96c01f810a6a9a208016b6ecdccd02d96221765fec7da16baf47dc4e1290",
+    "creator_id": 155452778,
+    "creator_node_id": "U_kgDOCUQFag",
+    "state": "open",
+    "state_reason": null,
+    "locked": false,
+    "is_pull_request": false,
+    "comment_count": 0,
+    "created_at": "2026-08-26T06:48:18Z",
+    "updated_at": "2026-08-26T06:48:18Z"
+  },
+  "github_apps": {
+    "separation_verified": false,
+    "registration_flow_reference": "https://docs.github.com/en/apps/sharing-github-apps/registering-a-github-app-from-a-manifest",
+    "registration_blocker": "The available authenticated interface is a GitHub CLI OAuth token, not an App JWT, and exposes no App-registration mutation. GitHub's manifest path requires an interactive account-owner POST/confirmation/redirect/code exchange. No interactive registration or callback receiver is available in this setup slice.",
+    "ingress": {
+      "status": "BLOCKED_INTERACTIVE_REGISTRATION_REQUIRED",
+      "proposed_name": "custody-ev-ingress-yatsuiii",
+      "public": false,
+      "app_id": null,
+      "app_slug": null,
+      "client_id": null,
+      "installation_id": null,
+      "repository_selection": "selected",
+      "selected_repository_ids": [
+        1347005783
+      ],
+      "expected_permissions": {
+        "issues": "read",
+        "metadata": "read_implicit_github_requirement"
+      },
+      "expected_events": [
+        "issue_comment"
+      ],
+      "webhook_hook_id": null,
+      "webhook_active": false,
+      "credential_material_recorded": false
+    },
+    "action": {
+      "status": "BLOCKED_INTERACTIVE_REGISTRATION_REQUIRED",
+      "proposed_name": "custody-ev-action-yatsuiii",
+      "public": false,
+      "app_id": null,
+      "app_slug": null,
+      "client_id": null,
+      "installation_id": null,
+      "repository_selection": "selected",
+      "selected_repository_ids": [
+        1347005783
+      ],
+      "expected_permissions": {
+        "issues": "write",
+        "metadata": "read_implicit_github_requirement"
+      },
+      "expected_events": [],
+      "webhook_hook_id": null,
+      "webhook_active": false,
+      "credential_material_recorded": false
+    }
+  },
+  "execution_dependent_freeze": {
+    "relay_workflow_commit": null,
+    "case_manifest_sha256": null,
+    "incident_interval": null,
+    "webhook_receiver": null,
+    "raw_delivery_store": null,
+    "blocker": "Runner, relay, receiver, case-manifest, incident-window, and execution setup require later artifacts and separate authorization."
+  },
+  "inert_setup_assertions": {
+    "source_or_attack_comments_created": false,
+    "issue_comments_observed": 0,
+    "repository_webhooks_observed": 0,
+    "issue_close_or_reopen_attempted": false,
+    "webhook_delivery_created": false,
+    "runner_built": false,
+    "firestore_used": false,
+    "secrets_recorded": false
+  },
+  "blocking_conditions": [
+    {
+      "code": "DISTINCT_RED_TEAM_ACTOR_REQUIRED",
+      "required_to_clear": "Provide and verify a distinct GitHub user ID that will create attack-world comments."
+    },
+    {
+      "code": "TWO_GITHUB_APPS_REQUIRED",
+      "required_to_clear": "Interactively register and install the ingress and action Apps only on repository 1347005783, then verify App IDs, installation IDs, permissions, events, and repository selection through App-authenticated readback."
+    },
+    {
+      "code": "INGRESS_HOOK_NOT_CONFIGURED",
+      "required_to_clear": "After separate receiver authorization, configure the ingress App's signed webhook and record the immutable hook ID without exposing its secret."
+    },
+    {
+      "code": "EXECUTION_FIELDS_NOT_FROZEN",
+      "required_to_clear": "Under later implementation authorization, freeze the relay commit, runner commit, case-manifest digest, and incident interval before the first treatment."
+    }
+  ],
+  "verdict": {
+    "setup": "PARTIAL",
+    "execution": "BLOCKED",
+    "external_validity_claim": "NOT_ESTABLISHED",
+    "pat_substitution_allowed": false,
+    "connected_codex_app_substitution_allowed": false
+  }
+}
