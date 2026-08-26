@@ -25,6 +25,7 @@ API_VERSION = "2026-03-10"
 EXPECTED_EVENT = "issue_comment"
 EXPECTED_URL = "https://custody-external-validity-receiver.vercel.app/api/webhook"
 API_ROOT = "https://api.github.com"
+DEFAULT_SECRET_DIR = Path("/home/Yatsuiii/.config/custody-execution-secrets")
 
 
 def _b64(value: bytes) -> str:
@@ -68,12 +69,12 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--key-path",
         type=Path,
-        default=Path("/tmp/custody-execution-secrets/ingress.pem"),
+        default=DEFAULT_SECRET_DIR / "ingress.pem",
     )
     parser.add_argument(
         "--secret-path",
         type=Path,
-        default=Path("/tmp/custody-execution-secrets/webhook.secret"),
+        default=DEFAULT_SECRET_DIR / "webhook.secret",
     )
     parser.add_argument("--receiver-url", default=EXPECTED_URL)
     return parser
