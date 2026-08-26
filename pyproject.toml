@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "custody"
 version = "0.1.0"
@@ -13,3 +17,6 @@ registry = ["fastmcp==2.13.1"]
 
 [tool.ruff]
 line-length = 88
+
+[tool.setuptools.packages.find]
+include = ["custody*"]
