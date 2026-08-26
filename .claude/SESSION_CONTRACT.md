@@ -71,9 +71,13 @@ Acceptance gates:
 
 Verification:
 - GitHub API readback for every live resource and permission available here.
+- Account-owner UI readbacks confirm separate ingress/action App IDs,
+  installation IDs, least-privilege permissions, inactive webhooks/no event
+  subscriptions, and single-repository selection; no credential material was
+  recorded.
 - `jq` schema/invariant checks plus secret-key/value scans.
 - Staged-diff inspection limited to the two allowed paths; protected code diff
   remains content-empty.
 - Fresh-clone remote commit and artifact-digest verification.
 
-Status: complete_with_blockers_public_amendment
+Status: complete_with_blockers_apps_verified

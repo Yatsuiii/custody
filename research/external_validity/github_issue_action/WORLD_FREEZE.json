@@ -8,7 +8,7 @@
     "repository_and_target": "VERIFIED",
     "public_visibility": "VERIFIED",
     "principal_separation": "PARTIALLY_VERIFIED",
-    "github_app_separation": "UNKNOWN",
+    "github_app_separation": "VERIFIED",
     "external_validity": "UNKNOWN"
   },
   "lineage": {
@@ -24,7 +24,7 @@
     "runner_commit": null
   },
   "snapshot": {
-    "recorded_at": "2026-08-26T11:44:04Z",
+    "recorded_at": "2026-08-26T13:31:20Z",
     "github_host": "github.com",
     "rest_api_version": "2026-03-10",
     "setup_snapshot_frozen": true,
@@ -111,17 +111,17 @@
     "updated_at": "2026-08-26T06:48:18Z"
   },
   "github_apps": {
-    "separation_verified": false,
+    "separation_verified": true,
     "registration_flow_reference": "https://docs.github.com/en/apps/sharing-github-apps/registering-a-github-app-from-a-manifest",
-    "registration_blocker": "The available authenticated interface is a GitHub CLI OAuth token, not an App JWT, and exposes no App-registration mutation. GitHub's manifest path requires an interactive account-owner POST/confirmation/redirect/code exchange. No interactive registration or callback receiver is available in this setup slice.",
+    "registration_blocker": "Interactive account-owner registration and installation are complete. The available GitHub CLI OAuth token cannot independently enumerate private App metadata, so immutable IDs and permission/repository-selection readbacks are recorded from the owner UI without recording credentials.",
     "ingress": {
-      "status": "BLOCKED_INTERACTIVE_REGISTRATION_REQUIRED",
+      "status": "SCREEN_READBACK_VERIFIED",
       "proposed_name": "custody-ev-ingress-yatsuiii",
       "public": false,
-      "app_id": null,
-      "app_slug": null,
+      "app_id": 47525929,
+      "app_slug": "custody-ev-ingress-yatsuiii",
       "client_id": null,
-      "installation_id": null,
+      "installation_id": 156728027,
       "repository_selection": "selected",
       "selected_repository_ids": [
         1347005783
@@ -133,18 +133,26 @@
       "expected_events": [
         "issue_comment"
       ],
+      "observed_permissions": {
+        "issues": "read",
+        "metadata": "read"
+      },
+      "observed_events": [
+        "issue_comment"
+      ],
+      "readback_source": "account_owner_ui_screenshot",
       "webhook_hook_id": null,
       "webhook_active": false,
       "credential_material_recorded": false
     },
     "action": {
-      "status": "BLOCKED_INTERACTIVE_REGISTRATION_REQUIRED",
+      "status": "SCREEN_READBACK_VERIFIED",
       "proposed_name": "custody-ev-action-yatsuiii",
       "public": false,
-      "app_id": null,
-      "app_slug": null,
+      "app_id": 4723384,
+      "app_slug": "custody-ev-action-yatsuiii",
       "client_id": null,
-      "installation_id": null,
+      "installation_id": 156746789,
       "repository_selection": "selected",
       "selected_repository_ids": [
         1347005783
@@ -154,6 +162,12 @@
         "metadata": "read_implicit_github_requirement"
       },
       "expected_events": [],
+      "observed_permissions": {
+        "issues": "write",
+        "metadata": "read"
+      },
+      "observed_events": [],
+      "readback_source": "account_owner_ui_screenshot",
       "webhook_hook_id": null,
       "webhook_active": false,
       "credential_material_recorded": false
@@ -182,10 +196,6 @@
     "secrets_recorded": false
   },
   "blocking_conditions": [
-    {
-      "code": "TWO_GITHUB_APPS_REQUIRED",
-      "required_to_clear": "Interactively register and install the ingress and action Apps only on repository 1347005783, then verify App IDs, installation IDs, permissions, events, and repository selection through App-authenticated readback."
-    },
     {
       "code": "INGRESS_HOOK_NOT_CONFIGURED",
       "required_to_clear": "After separate receiver authorization, configure the ingress App's signed webhook and record the immutable hook ID without exposing its secret."
