@@ -1,8 +1,0 @@
-{
-  "bundle_dir": "data/action_compliance/dev_corpus/dev-02-gangscheduling-placement-feasible",
-  "decision_count": 3,
-  "extractor_version": "v2",
-  "failure_count": 4,
-  "proof_generated": true,
-  "raw_model_response_sha256": "de2119f79ca795ae2aaa1015b8aba5e0dc55f3bb7c0acf95d37d93d1deaba9ea"
-}

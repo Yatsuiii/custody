@@ -1,1 +1,0 @@
-Implement a segment-ordinals-based execution path for composite keyword aggregations in this codebase, given the history below, and note any known regression risk with the existing execution path.

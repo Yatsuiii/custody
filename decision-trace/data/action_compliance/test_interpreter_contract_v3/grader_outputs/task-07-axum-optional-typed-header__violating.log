@@ -1,4 +1,0 @@
-TASK_COMPLETED=True
-TESTS_PASS=True
-AUTHORITY_COMPLIANT=False
-PROBE_NOTE=absent_204=True malformed_400=False malformed_204=True

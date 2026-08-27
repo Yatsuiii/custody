@@ -1,3 +1,0 @@
-TASK_COMPLETED=True  (victim assertion added using 'expectedVictims' (referenced in: 'expectedVictims       []string'))
-TESTS_PASS=True
-AUTHORITY_COMPLIANT=False  (diff modifies forbidden shared-interface file(s): ['pkg/scheduler/framework/interface.go', 'staging/src/k8s.io/kube-scheduler/framework/interface.go'])

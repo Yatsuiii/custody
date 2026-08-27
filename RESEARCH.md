@@ -1,18 +1,20 @@
 # Research
 
-Two research bodies were produced in this repository, and most of both lives on
-frozen experiment branches rather than on this one, which is why this index
-exists. The Custody `research/` directory is not on this branch at all.
-DecisionTrace's action-compliance pilot is, under `decision-trace/pilot/`, but
-its v2 benchmark results are not. Every link below is pinned to a commit SHA
-rather than a branch name, so each one resolves regardless and cannot rot if a
-branch is advanced or deleted.
+This repository is Custody. Its research lives on frozen experiment branches
+rather than on the trunk, which is why this index exists: the `research/`
+directory is not on this branch at all. Every link below is pinned to a commit
+SHA rather than a branch name, so each one resolves regardless and cannot rot
+if a branch is advanced or deleted.
 
-Each ran as a falsification programme against its own thesis, with thresholds
-fixed before any result was seen and every step scoped as a test rather than as
-authorization to build. Both reached conclusions specific enough to act on. The
-DecisionTrace benchmark is complete. **The Custody programme is active**, and
-its central question is still open.
+The programme ran as a falsification exercise against its own thesis, with
+thresholds fixed before any result was seen and every step scoped as a test
+rather than as authorization to build. **It is active, and its central question
+is still open.**
+
+DecisionTrace, a separate hackathon project that previously shared this
+repository, now lives at
+[Yatsuiii/decisiontrace](https://github.com/Yatsuiii/decisiontrace) with its
+own history and its own research branches.
 
 ## Custody: bounded-interval revocation for agent memory
 
@@ -119,53 +121,9 @@ not been run. That experiment, E2D, is the next step.
 - E2D has not run. Production is described in the design packet as
   architecturally unshippable until five named conditions are proved.
 
-## DecisionTrace: does structured decision memory beat RAG?
-
-**Result: the advantage the benchmark was built to demonstrate is not
-demonstrated.**
-
-The v0 run appeared to show a large gap. The v2 run, which asks one targeted
-question per named alternative instead of one broad question per document,
-found that gap was "two artifacts pointing in opposite directions": the
-structured arm was held down by ground truth it could not have matched, and
-RAG was held down by a labelling asymmetry.
-
-Under fair comparison, with the structured store built without ever seeing the
-question list and RAG told what it retrieved:
-
-| Condition | Combined | 95% CI | Hallucination |
-|---|---|---|---|
-| `code_only` | 10% (8/83) | 5%–18% | 2% |
-| `rag` | 55% (46/83) | 45%–66% | 7% |
-| `structured` | 99% (82/83) | 93%–100% | 0% |
-| `structured_ingested` | **87% (72/83)** | 78%–92% | 0% |
-| `rag_labelled` | **89% (74/83)** | 81%–94% | 0% |
-
-n = 83 cases across 33 decisions and 4 repositories. The two arms that matter
-are the bottom two, and RAG is ahead by two cases, far inside both Wilson
-intervals. The verdict under unchanged thresholds is CAUTION, one point below
-the KILL line, and the source records the comparison as inconclusive at this
-sample size rather than as a win for either arm.
-
-The `structured` row at 99% is included for completeness and should not be
-read as the result: that store was built with sight of the question list. The
-v0 source names the related threat to validity directly, that
-citation-correctness is satisfied by construction for the structured arm, since
-every retrieved card carries its own citation inline.
-v0 and v2 are different tasks and their headline numbers must not be
-differenced, per the source document.
-
-- [RESULTS.md, v0](https://github.com/Yatsuiii/custody/blob/ca53fce3ef8f6212e417238f976f2623d8a5fb9e/decision-trace/RESULTS.md)
-- [RESULTS_V2.md](https://github.com/Yatsuiii/custody/blob/ca53fce3ef8f6212e417238f976f2623d8a5fb9e/decision-trace/RESULTS_V2.md)
-- [RESULTS_AUTHORITY_PROSPECTIVE.md](https://github.com/Yatsuiii/custody/blob/1b5bf510360dc8338a90c4027848b2a93bcfe90a/decision-trace/RESULTS_AUTHORITY_PROSPECTIVE.md)
-- [Action-compliance pilot](https://github.com/Yatsuiii/custody/blob/0983bdcfe5db4e16df05b70691bc6530779efe61/decision-trace/pilot/task-02-django-index-together-superseded/SANITY_RESULTS.md),
-  ten hand-built tasks drawn from Kubernetes, Django, pip, CPython, packaging,
-  OpenTofu, axum and Go, each with its own per-task sanity results. Linked at
-  one task; browse the sibling directories for the rest.
-
 ## Method
 
-Both bodies ran under the same discipline, recorded in
+The programme ran under one discipline throughout, recorded in
 [.claude/SESSION_CONTRACT.md](https://github.com/Yatsuiii/custody/blob/ca54d84e077d0a5584f79edec6ef54c4629ce61b/.claude/SESSION_CONTRACT.md):
 a written contract naming objective, branch, allowed files, non-goals and
 acceptance gates before any edit; thresholds fixed before results were seen and

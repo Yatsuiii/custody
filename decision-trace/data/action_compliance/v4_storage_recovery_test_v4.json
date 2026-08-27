@@ -1,8 +1,0 @@
-{
-  "crash_exception_observed": true,
-  "crash_slot_removed": true,
-  "live_marker_not_recovered": true,
-  "model_calls": 0,
-  "pass": true,
-  "stale_marker_recovered": true
-}

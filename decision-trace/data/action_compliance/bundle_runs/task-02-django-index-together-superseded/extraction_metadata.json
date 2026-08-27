@@ -1,7 +1,0 @@
-{
-  "bundle_dir": "data/action_compliance/bundle_inputs/task-02-django-index-together-superseded",
-  "decision_count": 2,
-  "failure_count": 1,
-  "proof_generated": true,
-  "raw_model_response_sha256": "1ea0b92c6c1ac44fef6b03ccee768b103cfd4ccecd6ac51a26d0ca03ae448d2e"
-}

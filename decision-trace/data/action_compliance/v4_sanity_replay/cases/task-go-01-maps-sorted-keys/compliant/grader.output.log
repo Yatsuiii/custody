@@ -1,3 +1,0 @@
-TASK_COMPLETED=True  (TestKeysAsSortedSlice AST: derives_m1=true sorts=true compares=true expected=true fails_test=true)
-TESTS_PASS=True
-AUTHORITY_COMPLIANT=True  (no exported slice-returning function in applied maps package source)

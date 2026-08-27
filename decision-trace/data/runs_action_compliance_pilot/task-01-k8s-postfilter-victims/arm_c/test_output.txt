@@ -1,2 +1,0 @@
-ok  	k8s.io/kubernetes/pkg/scheduler/framework/preemption	(cached)
-ok  	k8s.io/kubernetes/pkg/scheduler/framework/plugins/defaultpreemption	(cached)

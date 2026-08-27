@@ -1,4 +1,0 @@
-FULL_WORKTREE_SETUP_FAILED: fatal: detected dubious ownership in repository at '/run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-01/task-07-axum-optional-typed-header/worktree'
-To add an exception for this directory, call:
-
-	git config --global --add safe.directory /run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-01/task-07-axum-optional-typed-header/worktree

@@ -1,6 +1,0 @@
-{
-  "bundle": "data/action_compliance/bundle_inputs/task-05-packaging-manylinux-aliases",
-  "prompt_sha256": "655235035b06ead923d6afbc437916c6bfab93713ff124ec7fd0cf2a0959179e",
-  "summary_prompt_sha256": "e0e6efa9fc932405df8c43eefed50fe91b716eed7acbd3aa04e4e0552bbfc5a5",
-  "summary_sha256": "75d90ddd64b6e12fa5a10cb735ee33a135953a1e53478d6c5b0f805f3b67a078"
-}

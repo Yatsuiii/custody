@@ -1,8 +1,0 @@
-Worktree ready at /tmp/action-compliance-d0fa57fc47fde90e59665cf6f89bbc4d-6p4t3fb6/task-02-django-index-together-superseded/worktree (pinned 879e5d587b84e6fc961829611999431778eb9f6a).
-Verify with:
-  cd /tmp/action-compliance-d0fa57fc47fde90e59665cf6f89bbc4d-6p4t3fb6/task-02-django-index-together-superseded/worktree && source .venv/bin/activate && cd tests && python runtests.py model_indexes -v1
-From https://github.com/django/django
- * branch            879e5d587b84e6fc961829611999431778eb9f6a -> FETCH_HEAD
-
-[notice] A new release of pip is available: 25.0.1 -> 26.2.1
-[notice] To update, run: pip install --upgrade pip

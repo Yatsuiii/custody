@@ -1,1 +1,0 @@
-The e2e test harness JUnit reporter currently does not include stdout of failed commands in the generated JUnit XML. Implement inclusion of failed-command stdout in JUnit output for this test harness, given the history below, and note any known compatibility risk with existing report consumers.

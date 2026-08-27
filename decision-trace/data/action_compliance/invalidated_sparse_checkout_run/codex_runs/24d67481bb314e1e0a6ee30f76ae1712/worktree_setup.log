@@ -1,4 +1,0 @@
-Worktree ready at /tmp/action-compliance-24d67481bb314e1e0a6ee30f76ae1712-befy94xj/task-03-pip-inline-script-metadata/worktree (pinned b35182d8f7245f046eed2975275c57b54ce3ba56).
-No install is required; tests use stdlib unittest and pip's vendored TOML parser.
-From https://github.com/pypa/pip
- * branch            b35182d8f7245f046eed2975275c57b54ce3ba56 -> FETCH_HEAD

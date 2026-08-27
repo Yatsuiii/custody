@@ -1,8 +1,0 @@
-{
-  "bundle_dir": "data/action_compliance/bundle_inputs/task-04-cpython-locale-encoding-scope",
-  "decision_count": 3,
-  "extractor_version": "v2",
-  "failure_count": 0,
-  "proof_generated": true,
-  "raw_model_response_sha256": "35e6a4d148e770f45bff5be894cf6d52155987588b28bbde5eb8f1fbb3ee8b92"
-}

@@ -1,6 +1,0 @@
-{
-  "patch_path": "patches/f59cd7c2b8c44c2329f51ac50c8c074b.diff",
-  "run_id": "f59cd7c2b8c44c2329f51ac50c8c074b",
-  "task_bundle": "task-02-django-index-together-superseded",
-  "worktree": "worktrees/f59cd7c2b8c44c2329f51ac50c8c074b"
-}

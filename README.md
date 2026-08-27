@@ -99,12 +99,11 @@ entered memory in the second. **What changed is the memory path, not the model.*
 
 ## Research
 
-Two research bodies were produced here. A falsification programme against this
-system's own thesis, which confirmed the gap it targets is independently
-unexplored, fixed a real bug in its own foundation, traced one whole class of
-failure to a single line, and produced a mechanism design with preregistered
-gates. And a benchmark that asked whether structured decision memory beats RAG,
-and reported that it does not.
+A falsification programme was run against this system's own thesis. It
+confirmed the gap it targets is independently unexplored, found and fixed a real
+bug in its own foundation, traced one whole class of failure to a single line,
+and produced a mechanism design with preregistered gates. It is still active,
+and the question it exists to answer is still open.
 
 See **[RESEARCH.md](RESEARCH.md)** for the index, the verdicts, and the
 limitations, with commit-pinned links to every source document.

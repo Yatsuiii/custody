@@ -1,2 +1,0 @@
- M tests/model_indexes/models.py
- M tests/model_indexes/tests.py

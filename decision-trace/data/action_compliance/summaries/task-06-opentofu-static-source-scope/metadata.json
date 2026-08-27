@@ -1,6 +1,0 @@
-{
-  "bundle": "data/action_compliance/bundle_inputs/task-06-opentofu-static-source-scope",
-  "prompt_sha256": "2d92cb5066a95e2f2dad18fa6c35651b49d7cce49a27de567407cf14bd9bd9e5",
-  "summary_prompt_sha256": "e0e6efa9fc932405df8c43eefed50fe91b716eed7acbd3aa04e4e0552bbfc5a5",
-  "summary_sha256": "c8bc1102b9f47b81966cca8ae615263f9497052231149ed383aaba7f37b42bfb"
-}

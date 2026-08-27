@@ -470,3 +470,60 @@ Expected: two tracked files changed plus one new file, and every permalink
 resolves.
 
 Status: active
+
+## Extract DecisionTrace into its own repository (opened 2026-08-27)
+
+Objective: DecisionTrace and Custody are two separate hackathon projects that
+share one repository by accident. Move DecisionTrace to Yatsuiii/decisiontrace
+with its history intact, remove it from this repository's trunk, and correct
+RESEARCH.md, which currently describes both as one project's output.
+
+Branch: main (extraction is a trunk operation; splits are cut to temporary
+local branches and pushed to the new remote, never merged back here)
+
+Parent: origin/main at e0b5397
+
+Allowed files:
+- RESEARCH.md (rewrite: keep Custody, remove DecisionTrace)
+- README.md (pointer section wording only)
+- .claude/SESSION_CONTRACT.md (this entry)
+- deletion of decision-trace/ from this repository's main
+
+Non-goals:
+- Do not delete or rewrite any branch in this repository. The
+  research/decisiontrace-* branches stay exactly as they are, which is what
+  keeps the existing commit-pinned permalinks resolving after decision-trace/
+  leaves main.
+- Do not squash or flatten history in the extraction. If subtree split cannot
+  preserve the real commits, stop and report rather than pushing a single
+  synthetic commit.
+- Do not touch custody/ source, tests, or the E1 fix question.
+- Do not make the new repository private or public without the user having
+  said which. Said: public, on the grounds that this content is already
+  public inside this repository, so extraction is not a new disclosure.
+
+Baseline:
+```
+git ls-tree -r --name-only origin/main | grep -c '^decision-trace/'
+```
+Expected: 4010 files present before extraction, 0 after.
+
+Acceptance gates:
+1. Yatsuiii/decisiontrace exists, is public, and its main carries real
+   multi-commit history, not one synthetic commit.
+2. Content unique to the diverged research lines is carried across as its own
+   branches, not silently dropped. Verified per branch by file count.
+3. After removal, every commit-pinned permalink in this repository's
+   RESEARCH.md still resolves.
+4. RESEARCH.md no longer presents DecisionTrace as this project's research.
+5. custody/ is untouched, verified by git diff.
+
+Verification:
+```
+gh api repos/Yatsuiii/decisiontrace --jq '.visibility'
+git ls-tree -r --name-only origin/main | grep -c '^decision-trace/'
+git diff --stat e0b5397 -- custody/
+```
+Expected: public, 0, and an empty diff for custody/.
+
+Status: active

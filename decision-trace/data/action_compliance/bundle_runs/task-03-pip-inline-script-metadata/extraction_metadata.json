@@ -1,7 +1,0 @@
-{
-  "bundle_dir": "data/action_compliance/bundle_inputs/task-03-pip-inline-script-metadata",
-  "decision_count": 3,
-  "failure_count": 0,
-  "proof_generated": true,
-  "raw_model_response_sha256": "9e419337694df034e9be32afaeb64ff08ba37a3e5341317ae7c0efc085f8f6ff"
-}

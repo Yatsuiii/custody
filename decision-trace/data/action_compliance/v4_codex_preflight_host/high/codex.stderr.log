@@ -1,2 +1,0 @@
-2026-08-24T20:07:40.592766Z ERROR codex_core::tools::router: error=apply_patch verification failed: Failed to find expected lines in /run/media/Yatsuiii/Windows-SSD/custody-search-2/decision-trace/data/action_compliance/v4_execution_storage/slots/slot-00/task-01-k8s-postfilter-victims/worktree/pkg/scheduler/framework/plugins/defaultpreemption/default_preemption_test.go:
-			want:           framework.NewPostFilterResult("node2", nil),
