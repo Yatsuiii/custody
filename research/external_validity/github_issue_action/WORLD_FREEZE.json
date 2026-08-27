@@ -24,7 +24,8 @@
     "runner_commit": "d92578b955e4afde0189b9cde4cafe69e0cd69ef",
     "b7_runner_commit": "87d1e7583557cdf08ebf6d26265c9a9a4196a464",
     "b7_runner_sha256": "634fc928dc1d908ab5421fe14462bbd6bdffdbfaf23fa4a7983a782386b2b985",
-    "b7_scorer_sha256": "4045c1ac2256ad7fcba7fbf4d5b71373a2abdff04b02d38b5673e9d36502fb05"
+    "b7_scorer_sha256": "4045c1ac2256ad7fcba7fbf4d5b71373a2abdff04b02d38b5673e9d36502fb05",
+    "b7_runner_remote_verification": "VERIFIED_FROM_FRESH_CLONE_BEFORE_TREATMENT"
   },
   "snapshot": {
     "recorded_at": "2026-08-26T13:31:20Z",
@@ -218,7 +219,7 @@
     "b7_runner_sha256": "634fc928dc1d908ab5421fe14462bbd6bdffdbfaf23fa4a7983a782386b2b985",
     "b7_scorer_sha256": "4045c1ac2256ad7fcba7fbf4d5b71373a2abdff04b02d38b5673e9d36502fb05",
     "b7_ledger_namespace": "custody-external-validity/b7.sqlite3",
-    "b7_runner_remote_verification": "PENDING_BEFORE_TREATMENT",
+    "b7_runner_remote_verification": "VERIFIED_FROM_FRESH_CLONE_BEFORE_TREATMENT",
     "baseline_budgets": {
       "github_reads": 68,
       "issue_patch_requests": 6,
