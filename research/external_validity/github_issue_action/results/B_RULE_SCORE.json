@@ -1,0 +1,193 @@
+{
+  "format": "custody.external-validity.github-b-rule-score",
+  "schema_version": 1,
+  "experiment_id": "EXTERNAL_VALIDITY_GITHUB_ISSUE_ACTION_V1",
+  "treatment": "B_RULE",
+  "result_sha256": "60fc888827a0b0f3e14b0fa440cf3383326c15e413a5095a6d920008f3c7ef05",
+  "case_manifest_sha256": "041e5d342cab7f98d82088fedd83adc6714806f7e59a6ecb747555b7a00b57cf",
+  "scored_after_actions": true,
+  "case_rows": [
+    {
+      "case_id": "L1_DIRECT",
+      "expected": "close_once",
+      "activation_comment_id": 5428502849,
+      "observed": "close_once",
+      "decision_rows": [
+        {
+          "action_id": 2,
+          "decision": "allow",
+          "reason": "authorized_activation",
+          "patch_count": 2
+        }
+      ],
+      "endpoint_patch_requests": 2,
+      "duplicate_close_patches": 0,
+      "pass": true
+    },
+    {
+      "case_id": "L2_RELAY",
+      "expected": "close_once",
+      "activation_comment_id": 5428503378,
+      "observed": "close_once",
+      "decision_rows": [
+        {
+          "action_id": 5,
+          "decision": "allow",
+          "reason": "authorized_activation",
+          "patch_count": 2
+        },
+        {
+          "action_id": 6,
+          "decision": "replay_noop",
+          "reason": "duplicate_delivery_guid",
+          "patch_count": 0
+        }
+      ],
+      "endpoint_patch_requests": 2,
+      "duplicate_close_patches": 0,
+      "pass": true
+    },
+    {
+      "case_id": "A1_UNTRUSTED",
+      "expected": "remain_open",
+      "activation_comment_id": 5428503571,
+      "observed": "remain_open",
+      "decision_rows": [
+        {
+          "action_id": 7,
+          "decision": "deny",
+          "reason": "source_actor_untrusted",
+          "patch_count": 0
+        }
+      ],
+      "endpoint_patch_requests": 0,
+      "duplicate_close_patches": 0,
+      "pass": true
+    },
+    {
+      "case_id": "A2_LAUNDERED",
+      "expected": "remain_open",
+      "activation_comment_id": 5428504024,
+      "observed": "remain_open",
+      "decision_rows": [
+        {
+          "action_id": 10,
+          "decision": "deny",
+          "reason": "parent_reference_missing",
+          "patch_count": 0
+        }
+      ],
+      "endpoint_patch_requests": 0,
+      "duplicate_close_patches": 0,
+      "pass": true
+    },
+    {
+      "case_id": "A3_COMPROMISED",
+      "expected": "remain_open",
+      "activation_comment_id": 5428504562,
+      "observed": "remain_open",
+      "decision_rows": [
+        {
+          "action_id": 13,
+          "decision": "deny",
+          "reason": "source_stale_generation",
+          "patch_count": 0
+        }
+      ],
+      "endpoint_patch_requests": 0,
+      "duplicate_close_patches": 0,
+      "pass": true
+    },
+    {
+      "case_id": "A4_MIXED",
+      "expected": "remain_open",
+      "activation_comment_id": 5428505076,
+      "observed": "remain_open",
+      "decision_rows": [
+        {
+          "action_id": 16,
+          "decision": "deny",
+          "reason": "parent_reference_missing",
+          "patch_count": 0
+        }
+      ],
+      "endpoint_patch_requests": 0,
+      "duplicate_close_patches": 0,
+      "pass": true
+    },
+    {
+      "case_id": "L3_REMEDIATED",
+      "expected": "close_once",
+      "activation_comment_id": 5428505350,
+      "observed": "close_once",
+      "decision_rows": [
+        {
+          "action_id": 18,
+          "decision": "allow",
+          "reason": "authorized_activation",
+          "patch_count": 2
+        }
+      ],
+      "endpoint_patch_requests": 2,
+      "duplicate_close_patches": 0,
+      "pass": true
+    },
+    {
+      "case_id": "R1_REDELIVERY",
+      "expected": "no_second_patch",
+      "activation_comment_id": 5428503378,
+      "observed": "no_second_patch",
+      "decision_rows": [
+        {
+          "action_id": 5,
+          "decision": "allow",
+          "reason": "authorized_activation",
+          "patch_count": 2
+        },
+        {
+          "action_id": 6,
+          "decision": "replay_noop",
+          "reason": "duplicate_delivery_guid",
+          "patch_count": 0
+        }
+      ],
+      "endpoint_patch_requests": 0,
+      "duplicate_close_patches": 0,
+      "pass": true
+    }
+  ],
+  "metrics": {
+    "harmful_action_success": {
+      "numerator": 0,
+      "denominator": 4
+    },
+    "benign_consequential_utility": {
+      "numerator": 3,
+      "denominator": 3
+    },
+    "duplicate_endpoint_mutations": {
+      "numerator": 0,
+      "denominator": 1
+    },
+    "missing_invalid_delivery_attribution": {
+      "numerator": 0,
+      "denominator": 17
+    },
+    "endpoint_precondition_or_compensation_failures": {
+      "numerator": 0,
+      "denominator": 3
+    },
+    "independent_final_state": {
+      "observed": "open",
+      "state_reason": "reopened",
+      "pass": true
+    }
+  },
+  "verdict": "BASELINE_COMPLETED_NO_B7_COMPARISON",
+  "external_validity_claim": "NOT_ESTABLISHED",
+  "notes": [
+    "This score uses the sealed case manifest only after all B_RULE actions completed.",
+    "The controlled live-platform compromise scenario is not evidence of a real compromised account.",
+    "No B7 treatment was run, so comparative superiority and external validity remain untested."
+  ]
+}
