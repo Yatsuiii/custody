@@ -112,9 +112,11 @@ not been run. That experiment, E2D, is the next step.
 
 ### Known limitations
 
-- The E1 multi-parent fix (`31bd1b0`) is **not yet on this default branch**.
-  The bug is fixed in the research and still present in the code on the branch
-  a visitor reads first.
+- The E1 multi-parent fix is on this branch as of 2026-08-27. Its regression
+  tests are in `tests/test_origin.py`. The research documents under
+  `research/experiments/` are still only on the experiment branches linked
+  above, so the reasoning that produced the fix is one click away rather than
+  in the tree.
 - No direct measured comparison against TMA-NM exists. The structural argument
   that this system falls inside the malleable category its theorem covers is
   reasoning, not a measurement.

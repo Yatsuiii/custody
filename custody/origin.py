@@ -233,11 +233,15 @@ def take_custody(
     #: (record id, tool name) of the arrival that caused it. Model turns later
     #: in the same invocation are derived from that record.
     tainted: dict[str, tuple[str, str, str | None]] = {}
-    #: The most recent record and its source revision in each invocation. A
-    #: model turn following a trusted tool remains bound to that tool version:
-    #: if it is demoted tomorrow, the graph and the record both explain why the
-    #: restatement is in scope.
-    lineage: dict[str, tuple[str, str | None, str | None]] = {}
+    #: Every distinct trusted arrival seen so far in each invocation, as
+    #: (record id, source tool, source revision) triples. A model turn
+    #: following one or more trusted tool responses remains bound to every
+    #: one of them: if any is demoted tomorrow, the graph and the record
+    #: both explain why the restatement is in scope. A tuple of triples
+    #: rather than one triple, so a synthesis of multiple distinct trusted
+    #: sources in one invocation keeps an edge to each of them instead of
+    #: silently retaining only the most recently seen one.
+    lineage: dict[str, tuple[tuple[str, str | None, str | None], ...]] = {}
 
     for index, event in enumerate(events):
         content = getattr(event, "content", None)
@@ -298,7 +302,7 @@ def _attribute(
     response: FunctionResponse | None,
     trust: ToolTrust,
     tainted: dict[str, tuple[str, str, str | None]],
-    lineage: dict[str, tuple[str, str | None, str | None]],
+    lineage: dict[str, tuple[tuple[str, str | None, str | None], ...]],
     resolver: RecordResolver | None,
     retrieval_tools: frozenset[str],
 ) -> CustodyRecord:
@@ -332,7 +336,9 @@ def _attribute(
             tainted.setdefault(
                 invocation, (record_id, source_tool or "unnamed-tool", source_revision)
             )
-        lineage[invocation] = (record_id, source_tool, source_revision)
+        lineage[invocation] = lineage.get(invocation, ()) + (
+            (record_id, source_tool, source_revision),
+        )
         return CustodyRecord(
             origin=Origin.TOOL,
             trust=verdict,
@@ -348,14 +354,15 @@ def _attribute(
     source = tainted.get(invocation)
     if source is not None:
         source_id, source_tool, source_revision = source
-        # Chained to the most recent link, not always the original tool
-        # response, so a restatement of a restatement is two hops on the
-        # graph rather than two parallel edges into the same root.
-        predecessor_id, _, _ = lineage.get(
-            invocation, (source_id, source_tool, source_revision)
+        # Chained to every link accumulated so far, not just the original
+        # tool response, so a restatement of a restatement is two hops on
+        # the graph rather than a shortcut, and a synthesis of multiple
+        # distinct trusted-or-tainted arrivals keeps an edge to each.
+        predecessors = lineage.get(
+            invocation, ((source_id, source_tool, source_revision),)
         )
-        derived_from = (predecessor_id,)
-        lineage[invocation] = (record_id, source_tool, source_revision)
+        derived_from = tuple(p[0] for p in predecessors)
+        lineage[invocation] = ((record_id, source_tool, source_revision),)
         return CustodyRecord(
             origin=Origin.DERIVED,
             trust=Trust.UNTRUSTED,
@@ -364,15 +371,16 @@ def _attribute(
             derived_from=derived_from,
             **common,
         )
-    predecessor = lineage.get(invocation)
-    derived_from = (predecessor[0],) if predecessor is not None else ()
+    predecessors = lineage.get(invocation)
+    derived_from = tuple(p[0] for p in predecessors) if predecessors else ()
+    last = predecessors[-1] if predecessors else None
     if derived_from:
-        lineage[invocation] = (record_id, predecessor[1], predecessor[2])
+        lineage[invocation] = ((record_id, last[1], last[2]),)
     return CustodyRecord(
         origin=Origin.MODEL,
         trust=Trust.TRUSTED,
-        source_tool=predecessor[1] if predecessor is not None else None,
-        source_revision=predecessor[2] if predecessor is not None else None,
+        source_tool=last[1] if last is not None else None,
+        source_revision=last[2] if last is not None else None,
         derived_from=derived_from,
         **common,
     )

@@ -527,3 +527,54 @@ git diff --stat e0b5397 -- custody/
 Expected: public, 0, and an empty diff for custody/.
 
 Status: active
+
+## Land the E1 multi-parent lineage fix on the trunk (opened 2026-08-27)
+
+Objective: custody/origin.py on main still carries the multi-parent lineage bug
+that E0 reproduced and E1 fixed on 2026-08-22. The fix exists at 31bd1b0 and has
+never reached a trunk, so the code a visitor reads is the buggy version while
+RESEARCH.md documents the bug as fixed. Land the code fix and its regression
+tests only.
+
+Branch: fix/e1-multiparent-lineage
+
+Parent: origin/main at 79ee757
+
+Allowed files:
+- custody/origin.py
+- tests/test_origin.py
+- RESEARCH.md (remove the now-stale Known Limitations bullet)
+- .claude/SESSION_CONTRACT.md (this entry)
+
+Non-goals:
+- Do not cherry-pick 31bd1b0 whole. It also carries the research/ directory,
+  which is a separate concern with its own reasoning. One capability per commit.
+- Do not add trust epochs, hypergraph support, or semantic matching. E1 was
+  scoped as the minimal fix the E0 diagnosis implied and that scope holds here.
+- Do not touch CustodyGraph traversal. E0 established graph.py was already
+  multi-parent correct; only what populated derived_from was wrong.
+- Do not run or start E2D.
+
+Baseline:
+```
+cd /home/Yatsuiii/custody && python3 -m pytest -q
+```
+Expected: the suite passes on main before any change, and the count is recorded
+so the delta after the fix is attributable.
+
+Acceptance gates:
+1. Baseline recorded before the patch is applied.
+2. After the patch, the full suite passes with no regressions and the test count
+   rises by the regression tests E1 added.
+3. The applied diff is byte-identical to 31bd1b0's custody/ and tests/ portion,
+   verified by diff rather than by inspection.
+4. RESEARCH.md no longer claims the fix is absent from the trunk.
+5. No file outside the allowed list is modified.
+
+Verification:
+```
+python3 -m pytest -q
+git diff --stat origin/main
+```
+
+Status: active
