@@ -97,6 +97,18 @@ $ make demo
 The instruction reached instruction-eligible context in the first run and never
 entered memory in the second. **What changed is the memory path, not the model.**
 
+## Research
+
+Two research bodies were produced here. A falsification programme against this
+system's own thesis, which confirmed the gap it targets is independently
+unexplored, fixed a real bug in its own foundation, traced one whole class of
+failure to a single line, and produced a mechanism design with preregistered
+gates. And a benchmark that asked whether structured decision memory beats RAG,
+and reported that it does not.
+
+See **[RESEARCH.md](RESEARCH.md)** for the index, the verdicts, and the
+limitations, with commit-pinned links to every source document.
+
 ## The gap this fills
 
 ADK gives every memory an author. From `memory/memory_entry.py`, a `MemoryEntry`

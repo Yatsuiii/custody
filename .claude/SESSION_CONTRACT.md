@@ -423,3 +423,50 @@ Confirm via `gcloud services api-keys list` that no `decisiontrace-*` key
 remains active in the project.
 
 Status: active
+
+## Surface the research bodies on the trunk (opened 2026-08-27, supersedes the
+## feat/memory-provenance version of this entry)
+
+Objective: unchanged. Make the Custody and DecisionTrace research discoverable
+from the repository landing page.
+
+Correction to the earlier entry: that entry took feat/memory-provenance as the
+base because it is the branch GitHub currently serves as default. The commit
+graph says otherwise. feat/memory-provenance is a frozen hackathon submission
+artifact whose last ten commits are judge-evidence and freeze work, ending
+2026-08-21. main carries 28 commits the default branch does not, ending
+2026-08-26, including the DecisionTrace build and the action-compliance
+research freeze. main is the trunk; the default-branch setting is a leftover
+from judging.
+
+Branch: docs/surface-research-main-20260827
+
+Parent: origin/main (9a86bde)
+
+Allowed files:
+- RESEARCH.md (new, at repository root)
+- README.md (one pointer section only)
+- .claude/SESSION_CONTRACT.md (this entry)
+
+Non-goals: unchanged from the earlier entry, plus:
+- Do not change the GitHub default-branch setting. That is a public repository
+  setting and belongs to the user, not to this entry.
+- Do not merge, rebase, or reconcile main against feat/memory-provenance. The
+  two have diverged 28/10 across a 2026-08-15 merge base and reconciling them
+  is its own piece of work.
+
+Acceptance gates: unchanged, plus:
+6. RESEARCH.md's opening states accurately what is and is not reachable from
+   this branch, verified by counting files rather than by assumption.
+
+Verification:
+```
+cd /home/Yatsuiii/custody
+git diff --stat origin/main
+grep -oE 'blob/[0-9a-f]{40}/[^)]+' RESEARCH.md | while IFS=/ read -r _ sha rest; do
+  git cat-file -e "$sha:$rest" || echo "BROKEN $rest"; done
+```
+Expected: two tracked files changed plus one new file, and every permalink
+resolves.
+
+Status: active
