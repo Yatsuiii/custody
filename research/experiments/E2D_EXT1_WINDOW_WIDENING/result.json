@@ -1,0 +1,28 @@
+{
+  "checks": {
+    "superset": true,
+    "vendor_3_newly_affected": true,
+    "gen1_outcomes_preserved_unchanged": true,
+    "gen1_record_superseded_not_erased": true,
+    "gen2_record_active": true,
+    "outside_sibling_still_unaffected": true,
+    "no_narrowing_side_effect": true,
+    "vendor_3_para_support_correct": true
+  },
+  "gen1_affected": [
+    "E-SYN-ACT-ACT",
+    "E-VENDOR-2"
+  ],
+  "gen2_affected": [
+    "E-SYN-ACT-ACT",
+    "E-VENDOR-2",
+    "E-VENDOR-3",
+    "E-VENDOR-3-PARA"
+  ],
+  "newly_affected_by_widening": [
+    "E-VENDOR-3",
+    "E-VENDOR-3-PARA"
+  ],
+  "verdict": "PASS",
+  "verdict_reason": "all checks passed"
+}

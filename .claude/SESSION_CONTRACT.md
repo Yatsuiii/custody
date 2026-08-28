@@ -26,6 +26,10 @@ Allowed files:
 - research/experiments/E2D_DESIGN_FALSIFIER/RESULT.md
 - research/experiments/E2D_DESIGN_FALSIFIER/result.json
 - RESEARCH.md (update the verdict to reflect E2D's real result, once run)
+- research/experiments/E2D_EXT1_WINDOW_WIDENING/PLAN.md
+- research/experiments/E2D_EXT1_WINDOW_WIDENING/run.py
+- research/experiments/E2D_EXT1_WINDOW_WIDENING/RESULT.md
+- research/experiments/E2D_EXT1_WINDOW_WIDENING/result.json
 - .claude/SESSION_CONTRACT.md (this file)
 
 Non-goals:
