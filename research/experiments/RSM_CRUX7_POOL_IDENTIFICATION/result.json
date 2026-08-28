@@ -1,0 +1,99 @@
+{
+  "model": "gemini-3.5-flash",
+  "project": "project-988bc9fe-092c-4b32-90c",
+  "raw_response": "1",
+  "flagged": [
+    1
+  ],
+  "true_positive_nums": [
+    1,
+    2
+  ],
+  "metrics": {
+    "recall": 0.5,
+    "precision": 1.0,
+    "true_positives_found": [
+      1
+    ],
+    "false_negatives": [
+      2
+    ],
+    "false_positives": [],
+    "adversarial_false_positives": [],
+    "adversarial_false_positive_rate": 0.0
+  },
+  "pool": [
+    {
+      "num": 1,
+      "text": "Sarah Chen may access the server room unescorted.",
+      "label": "true_positive",
+      "note": "crux5 server_access M1, verbatim"
+    },
+    {
+      "num": 2,
+      "text": "The Security desk recorded the activation of an unescorted access credential issued to Sarah Chen for the server room.",
+      "label": "true_positive",
+      "note": "crux6 server_access M2, verbatim, 2-hop dependent"
+    },
+    {
+      "num": 3,
+      "text": "The purchase from Vendor X requires CFO approval before payment.",
+      "label": "true_negative",
+      "note": "crux5 cfo_approval M1, unrelated domain"
+    },
+    {
+      "num": 4,
+      "text": "Vendor Z is approved for onboarding.",
+      "label": "true_negative",
+      "note": "crux5 vendor_onboarding M1, unrelated domain"
+    },
+    {
+      "num": 5,
+      "text": "This order qualifies for a 10% loyalty discount.",
+      "label": "true_negative",
+      "note": "crux5 order_discount M1, unrelated domain"
+    },
+    {
+      "num": 6,
+      "text": "This customer has an account tenure of at least five years and receives loyalty pricing.",
+      "label": "true_negative",
+      "note": "crux5 tenure_pricing M1, unrelated domain"
+    },
+    {
+      "num": 7,
+      "text": "This flight is eligible for passenger compensation.",
+      "label": "true_negative",
+      "note": "crux5 flight_compensation M1, unrelated domain"
+    },
+    {
+      "num": 8,
+      "text": "The Finance team placed a payment hold on the Vendor X purchase in their system pending the required approval from the CFO.",
+      "label": "true_negative",
+      "note": "crux6 cfo_approval M2, unrelated domain, downstream-shaped"
+    },
+    {
+      "num": 9,
+      "text": "The Procurement team recorded that they initiated the vendor profile setup and sent the formal onboarding paperwork to Vendor Z.",
+      "label": "true_negative",
+      "note": "crux6 vendor_onboarding M2, unrelated domain, downstream-shaped"
+    },
+    {
+      "num": 10,
+      "text": "Sarah Chen has Level 2 clearance and may access the break room during business hours.",
+      "label": "adversarial_true_negative",
+      "note": "hand-written: same person, different clearance level and different fact, not derived from the revoked record"
+    },
+    {
+      "num": 11,
+      "text": "James Park has Level 3 clearance and may access the server room unescorted.",
+      "label": "adversarial_true_negative",
+      "note": "hand-written: same structure/topic/wording as memory #1, different person, unrelated to the revoked record"
+    },
+    {
+      "num": 12,
+      "text": "The server room's posted access hours are 6am-10pm on weekdays.",
+      "label": "adversarial_true_negative",
+      "note": "hand-written: mentions server room, no connection to clearance or the revoked record"
+    }
+  ]
+}

@@ -51,6 +51,11 @@ Allowed files:
 - research/experiments/RSM_CRUX6_CASCADING_REPAIR/run.py
 - research/experiments/RSM_CRUX6_CASCADING_REPAIR/RESULT.md
 - research/experiments/RSM_CRUX6_CASCADING_REPAIR/result.json
+- research/experiments/RSM_CRUX7_POOL_IDENTIFICATION/PLAN.md
+- research/experiments/RSM_CRUX7_POOL_IDENTIFICATION/fixture.json
+- research/experiments/RSM_CRUX7_POOL_IDENTIFICATION/run.py
+- research/experiments/RSM_CRUX7_POOL_IDENTIFICATION/RESULT.md
+- research/experiments/RSM_CRUX7_POOL_IDENTIFICATION/result.json
 - .claude/SESSION_CONTRACT.md (this file)
 
 Non-goals:
