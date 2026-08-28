@@ -1,0 +1,47 @@
+[
+  {
+    "id": "cfo_approval",
+    "rule": "Company policy: purchases over $10,000 require CFO approval before payment.",
+    "value_at_write_time": "Vendor X's invoice states the purchase amount is $12,000.",
+    "revocation_notice": "The invoice stating the purchase amount as $12,000 has just been found to be from an unreliable, unverified source.",
+    "conclusion_phrase": "requires CFO approval",
+    "downstream_role": "the Finance team",
+    "downstream_prompt": "Given this fact recorded by another department: \"{m1}\" Write one sentence stating what the Finance team would record in memory as a direct result of this fact (e.g. an action they took or scheduled because of it). Output only that one sentence."
+  },
+  {
+    "id": "server_access",
+    "rule": "Policy: employees with Level 3 security clearance may access the server room unescorted.",
+    "value_at_write_time": "A personnel record update states Sarah Chen has Level 3 clearance.",
+    "revocation_notice": "The personnel record update stating Sarah Chen has Level 3 clearance has just been found to be from a compromised source.",
+    "conclusion_phrase": "may access the server room",
+    "downstream_role": "the Security desk",
+    "downstream_prompt": "Given this fact recorded by another department: \"{m1}\" Write one sentence stating what the Security desk would record in memory as a direct result of this fact (e.g. an access badge or credential they issued because of it). Output only that one sentence."
+  },
+  {
+    "id": "vendor_onboarding",
+    "rule": "Policy: vendors that have passed a security audit are approved for onboarding.",
+    "value_at_write_time": "An automated compliance report states Vendor Z passed its security audit.",
+    "revocation_notice": "The automated compliance report stating Vendor Z passed its security audit has just been found to be spoofed.",
+    "conclusion_phrase": "approved for onboarding",
+    "downstream_role": "the Procurement team",
+    "downstream_prompt": "Given this fact recorded by another department: \"{m1}\" Write one sentence stating what the Procurement team would record in memory as a direct result of this fact (e.g. paperwork or a process they began because of it). Output only that one sentence."
+  },
+  {
+    "id": "order_discount",
+    "rule": "Store policy: orders over $500 qualify for a 10% loyalty discount.",
+    "value_at_write_time": "The checkout log records this order's total as $650.",
+    "revocation_notice": "The checkout log recording this order's total as $650 has just been found to have been manipulated.",
+    "conclusion_phrase": "qualifies for the loyalty discount",
+    "downstream_role": "the Billing team",
+    "downstream_prompt": "Given this fact recorded by another department: \"{m1}\" Write one sentence stating what the Billing team would record in memory as a direct result of this fact (e.g. a discount they applied because of it). Output only that one sentence."
+  },
+  {
+    "id": "flight_compensation",
+    "rule": "Regulation: flights delayed more than 3 hours are eligible for passenger compensation.",
+    "value_at_write_time": "The delay-tracking system recorded a 4-hour delay for this flight.",
+    "revocation_notice": "The delay-tracking system's 4-hour delay reading for this flight has just been found to be caused by a logging bug.",
+    "conclusion_phrase": "eligible for compensation",
+    "downstream_role": "Customer Service",
+    "downstream_prompt": "Given this fact recorded by another department: \"{m1}\" Write one sentence stating what Customer Service would record in memory as a direct result of this fact (e.g. an offer or communication they sent because of it). Output only that one sentence."
+  }
+]

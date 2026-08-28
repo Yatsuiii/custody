@@ -46,6 +46,11 @@ Allowed files:
 - research/experiments/RSM_CRUX5_ENTANGLED_INFERENCE/run.py
 - research/experiments/RSM_CRUX5_ENTANGLED_INFERENCE/RESULT.md
 - research/experiments/RSM_CRUX5_ENTANGLED_INFERENCE/result.json
+- research/experiments/RSM_CRUX6_CASCADING_REPAIR/PLAN.md
+- research/experiments/RSM_CRUX6_CASCADING_REPAIR/fixture.json
+- research/experiments/RSM_CRUX6_CASCADING_REPAIR/run.py
+- research/experiments/RSM_CRUX6_CASCADING_REPAIR/RESULT.md
+- research/experiments/RSM_CRUX6_CASCADING_REPAIR/result.json
 - .claude/SESSION_CONTRACT.md (this file)
 
 Non-goals:
