@@ -41,6 +41,11 @@ Allowed files:
 - research/experiments/RSM_CRUX4_FUSED_GENERATION/run.py
 - research/experiments/RSM_CRUX4_FUSED_GENERATION/RESULT.md
 - research/experiments/RSM_CRUX4_FUSED_GENERATION/result.json
+- research/experiments/RSM_CRUX5_ENTANGLED_INFERENCE/PLAN.md
+- research/experiments/RSM_CRUX5_ENTANGLED_INFERENCE/fixture.json
+- research/experiments/RSM_CRUX5_ENTANGLED_INFERENCE/run.py
+- research/experiments/RSM_CRUX5_ENTANGLED_INFERENCE/RESULT.md
+- research/experiments/RSM_CRUX5_ENTANGLED_INFERENCE/result.json
 - .claude/SESSION_CONTRACT.md (this file)
 
 Non-goals:
