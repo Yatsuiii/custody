@@ -1,3 +1,76 @@
+# Custody: execute E2D, the preregistered structural-envelope falsifier
+
+Opened 2026-08-28.
+
+Objective: Execute E2D exactly as preregistered in
+`research/design/DESIGN_FALSIFIER.md` (pulled from commit `ca54d84` for
+reference). Build Architecture A (the structural-envelope authority
+mechanism: NONE < INFORM < ACT lattice, meet over parents, structural
+receipts captured at transform time, no semantic/ML inference) as
+isolated experimental code, run it against the frozen 6-element scenario,
+and report whichever preregistered verdict it actually hits — PASS,
+CAUTION, or KILL. Do not alter the frozen scenario, metrics, or gates to
+make it pass; changing a fixture creates a new experiment number per the
+design doc's own rule.
+
+Branch: research/e2d-structural-envelope-execution
+Parent: HEAD of merge/feat-into-main at the time this branch was cut
+(includes the E1 multi-parent fix; 381 passing tests, matching the
+falsifier's stated baseline characteristics).
+
+Allowed files:
+- research/design/*.md (reference copies pulled from ca54d84, read-only —
+  do not edit these; they are the frozen preregistration)
+- research/experiments/E2D_DESIGN_FALSIFIER/PLAN.md
+- research/experiments/E2D_DESIGN_FALSIFIER/run.py
+- research/experiments/E2D_DESIGN_FALSIFIER/RESULT.md
+- research/experiments/E2D_DESIGN_FALSIFIER/result.json
+- .claude/SESSION_CONTRACT.md (this file)
+
+Non-goals:
+- No production implementation. `custody/*.py` is not touched by this
+  branch, per the design doc's explicit authorization boundary ("No
+  production implementation is authorized by this design").
+- No changes to the frozen scenario, metrics, or PASS/CAUTION/KILL gates
+  to improve the result. A failed metric is reported, not massaged.
+- No semantic inference, embeddings, fuzzy matching, or LLM participation
+  in the mechanism itself — explicitly a KILL condition if required.
+- No merge back into main/feat-into-main without an explicit, separate
+  decision after the verdict is known.
+- No push to remote until explicitly authorized.
+
+Baseline: `git log --oneline -1` on this branch's parent is the tip of
+merge/feat-into-main as pushed to origin/main; `make check` is 381/381 on
+that parent before any experimental code is added.
+
+Acceptance gates:
+1. `research/experiments/E2D_DESIGN_FALSIFIER/PLAN.md` exists and mirrors
+   the frozen scenario's fixed record ids/timestamps as literals (no
+   invented substitutes).
+2. `run.py` implements Architecture A only — the lattice, meet, receipts,
+   root binding (ORIGIN/RELAY), RepairPlan with the 4 crash/replay fault
+   points — with no LLM/network/embedding call anywhere in the mechanism.
+3. All 8 metrics (`direct_parent_recall`, `affected_recall`,
+   `false_act_permits`, `same_record_authority_increases`,
+   `benign_inform_retained`, `outside_sibling_preserved`,
+   `replay_digest_stable`, `unsafe_fault_windows`) are computed as exact
+   counts/booleans on the frozen fixture, not estimated.
+4. `result.json` contains every field the design doc's "Planned proof
+   artifact" section requires; `RESULT.md` states the verdict honestly
+   against the fixed PASS/CAUTION/KILL gates, quoting whichever condition
+   was hit.
+5. `make check` still 381/381 (no production file touched, confirmed by
+   `git diff --stat` showing only `research/` and `.claude/` paths).
+
+Verification: run `python3
+research/experiments/E2D_DESIGN_FALSIFIER/run.py`, inspect
+`result.json`/`RESULT.md` against the gate table, and re-run once for
+`replay_digest_stable`.
+
+Status: active
+
+---
+
 # Custody: reconcile main for hackathon submission
 
 Opened 2026-08-28.
@@ -11,7 +84,7 @@ unrelated DecisionTrace-split history. This session merges all three
 into `main`, refreshes live evidence, redeploys, and fills the Devpost
 draft. Does not touch DecisionTrace.
 
-Branch: main (via merge/feat-into-main, fast-forward target)
+Branch: merge/feat-into-main
 Parent: 1ea8b1511dd18909e19d3c8ab60665c4c27ab969 (feat/memory-provenance
 tip) merged with 4a624558b781280c7033c69204dccfedff20b376 (main tip)
 and origin/hardening/fleet-track-pre-submission tip fba047f.
