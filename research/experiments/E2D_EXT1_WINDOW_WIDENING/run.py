@@ -34,7 +34,9 @@ OUT_DIR = Path(__file__).parent
 @dataclass
 class RepairPlanG:
     """Generation-aware repair plan: same shape as E2D's RepairPlan, plus a
-    `generation` field and `superseded_from` for audit."""
+    `generation` field. Superseded prior windows/plans are tracked
+    separately in WideningController.window_history/plan_history, not on
+    this dataclass."""
 
     window_id: str
     generation: int
