@@ -435,6 +435,7 @@ class DedicatedIapPolicy:
 
     def _write_policy(self, requested: dict[str, Any], *, phase: str) -> None:
         path = OUT.parent / f"gateway-iap-{phase}-{self.proof_id}.json"
+        path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(requested, indent=2, sort_keys=True) + "\n")
         try:
             self.cloud.run(

@@ -419,6 +419,19 @@ def _all_live_gates_pass(evidence: dict | None, judge) -> bool:
     return bool(gates) and all(gates.values())
 
 
+def still_outstanding(missing: list[str]) -> str:
+    """Name what G5 is waiting on, including when it is only elapsed time.
+
+    Every capability group can be demonstrable while G5 is still BLOCKED,
+    because the Cloud Scheduler record is a separate requirement. That case
+    is the expected end state, so it has to read as a sentence rather than
+    print an empty list into a line a judge reads.
+    """
+    if not missing:
+        return "missing only a Cloud Scheduler record"
+    return f"missing {', '.join(missing)} and a Cloud Scheduler record"
+
+
 def judge_g5(e: dict) -> Verdict:
     groups = {
         "discovery/lifecycle": _all_live_gates_pass(
@@ -441,13 +454,14 @@ def judge_g5(e: dict) -> Verdict:
     }
     passed = [name for name, complete in groups.items() if complete]
     missing = [name for name, complete in groups.items() if not complete]
+    outstanding = still_outstanding(missing)
     return Verdict(
         "G5",
         "four capability groups, with real elapsed time",
         "BLOCKED",
         f"{len(passed)} of 4 groups independently demonstrable "
-        f"({', '.join(passed) or 'none'}); missing {', '.join(missing)} and "
-        "a Cloud Scheduler record proving real elapsed time. Model Armor "
+        f"({', '.join(passed) or 'none'}); {outstanding} "
+        "proving real elapsed time. Model Armor "
         "(`make model-armor-gates`) is live-proven and folds into "
         "security/governance; it is not itself a required G5 group.",
     )

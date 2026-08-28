@@ -11,7 +11,7 @@ from __future__ import annotations
 import unittest
 from datetime import UTC, datetime, timedelta
 
-from google.api_core.exceptions import AlreadyExists
+from google.api_core.exceptions import AlreadyExists, DeadlineExceeded, ServiceUnavailable
 
 from custody.catalog import Demotion
 from custody.firestore_store import (
@@ -422,6 +422,61 @@ class FirestoreRevisionCatalogTests(unittest.TestCase):
         self.assertEqual(
             {d.tool for d in log.all()}, {"crm_lookup", "other_tool"}
         )
+
+
+class _OutageDocument:
+    """A document read that always raises, modeling an unreachable Firestore
+    backend (Agent Registry's durable pin store)."""
+
+    def __init__(self, error: Exception) -> None:
+        self._error = error
+
+    def get(self):
+        raise self._error
+
+
+class _OutageCollection:
+    def __init__(self, error: Exception) -> None:
+        self._error = error
+
+    def document(self, doc_id: str) -> _OutageDocument:
+        return _OutageDocument(self._error)
+
+
+class _OutageFirestoreClient:
+    """Every Registry pin read times out or errors; nothing about this
+    client ever returns a snapshot a caller could mistake for "no pins"."""
+
+    def __init__(self, error: Exception) -> None:
+        self._error = error
+
+    def collection(self, name: str) -> _OutageCollection:
+        return _OutageCollection(self._error)
+
+
+class FirestoreRevisionCatalogFailsClosedOnAnUnreachableRegistry(unittest.TestCase):
+    """Gate 2: Agent Registry unreachable must block dispatch, not default
+    to trust. `FirestoreRevisionCatalog.admit` is the one place a live pin
+    read happens; if it silently degraded to "no pins" on a network error,
+    that would be indistinguishable from `test_no_pins_for_a_department_
+    denies_as_missing_not_a_crash` above -- correct for an unknown
+    department, wrong for a known one whose approval simply could not be
+    read this instant.
+    """
+
+    def test_a_timeout_reading_pins_propagates_rather_than_admitting(self) -> None:
+        client = _OutageFirestoreClient(DeadlineExceeded("agent registry timed out"))
+        catalog = FirestoreRevisionCatalog(client)
+
+        with self.assertRaises(DeadlineExceeded):
+            catalog.admit(department="sales", surface=_surface())
+
+    def test_a_service_unavailable_error_also_propagates(self) -> None:
+        client = _OutageFirestoreClient(ServiceUnavailable("agent registry unreachable"))
+        catalog = FirestoreRevisionCatalog(client)
+
+        with self.assertRaises(ServiceUnavailable):
+            catalog.admit(department="sales", surface=_surface())
 
 
 if __name__ == "__main__":

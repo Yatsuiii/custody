@@ -18,7 +18,20 @@ it is meant to stay one sentence:
 Also a candidate for the separate **Best Multimodal UX** award ($5,000, 2
 winners) — no published rubric exists for that award beyond its name and
 prize amount (checked live against the hackathon's main page and rules
-page, not assumed).
+page, not assumed). The candidacy is the live Dependency Cartography page
+(https://custody-incident-cave2.vercel.app/): a genuine second modality
+alongside the prose/data every other row of this project proves in —
+an interactive SVG node-graph diagram with animated contamination paths,
+a click-to-inspect right panel per node, and a real "Revoke exact
+descendants" interaction that redraws the graph live, all reading a
+judge's blast radius in seconds by looking, not by reading a table. A
+Reviewer-narration audio widget was built and briefly deployed for this
+award instead, then removed on 2026-08-17 (see `README.md`'s "Reviewer
+narration" section): its playback couldn't be verified reliable in every
+browser, and at 27 seconds it conveyed nothing the verdict text above it
+didn't already say instantly. The underlying live Text-to-Speech
+capability is still real and gated (`make live-narration` / `make
+narration-gates`), just not surfaced or claimed for this award.
 
 ## The real judging criteria, quoted from source, not assumed
 
@@ -59,7 +72,7 @@ to BUILT without one"). Verify, don't just read.
    - https://custody-incident-cave2.vercel.app/architecture.html —
      "Architecture & Evidence": every other live-proven capability (R1,
      R2, S1, G1/G2/G4/G5, M1, O1, D1/D2, the Provenance Auditor, the
-     Custody Reviewer, Reviewer Narration, the N=25 fleet, F1), each
+     Custody Reviewer, the N=25 fleet, F1), each
      widget showing that proof's own real captured data, not prose
      describing it.
 5. **`proof-out/*.json`** — every live proof's raw evidence artifact, one
@@ -78,7 +91,7 @@ to BUILT without one"). Verify, don't just read.
 ## How to independently verify, not just read
 
 ```sh
-make check          # 352/352 offline tests + lint, no cloud needed
+make check          # 376/376 offline tests + lint, no cloud needed
 make gates           # G1-G4 PASS, G5 correctly BLOCKED. Read its detail
                       # line: it names which of the four capability groups
                       # are demonstrable right now and which are not, and
@@ -105,6 +118,12 @@ via `GOOGLE_APPLICATION_CREDENTIALS` for the Python client calls (`make
 live-*`/`make *-gates` read `CUSTODY_PROJECT` and
 `GOOGLE_APPLICATION_CREDENTIALS` from the environment, not from `gcloud
 config`). The offline gates (`make check`, `make gates`) need neither.
+`make live-revision-binding` additionally needs `CUSTODY_FIRESTORE_PROJECT`
+set to the same project id — without it, R2's fresh-process nonce-replay
+control falls back to an in-process ledger that cannot detect a replay
+across the redeploy the proof itself performs, and the command hangs
+waiting for a denial log that will never be written rather than failing
+fast.
 
 All `proof-out/live-*.json` evidence expires after 24 hours by this
 project's own stated discipline (freshness is one of the offline gate
@@ -121,11 +140,10 @@ commit, do not push, do not redeploy — this is a read-only review. Report:
    above (40/30/30), with specific evidence citations (file:line, proof
    id, or a claim you personally verified vs. one you're taking on
    trust).
-2. Whether this reads as a credible Best Multimodal UX candidate, given
-   no published rubric exists — your own honest read of whether the
-   Reviewer Narration capability (`README.md`'s "Reviewer narration"
-   section, live proof in `proof-out/live-narration.json`) is a genuine
-   second modality or a stretch.
+2. Whether the Dependency Cartography page reads as a credible Best
+   Multimodal UX candidate, given no published rubric exists — your own
+   honest read of whether an interactive SVG graph with a live revoke
+   interaction is a genuine second modality or a stretch.
 3. The single most damaging gap you can find, if any — the thing a real
    judge would flag first. This project's own `HANDOFF.md` and
    `SESSION_CONTRACT.md` already document several known limitations

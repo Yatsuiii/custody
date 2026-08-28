@@ -14,12 +14,13 @@ PYTHON ?= $(shell \
 		command -v python3; \
 	fi)
 
-.PHONY: help lint test check serve image gates verify-deploy incident gui cost demo revoke isolate revision-spike live-memory-bank live-memory-deletion memory-deletion-gates live-auditor auditor-gates live-review review-gates live-narration narration-gates live-fleet fleet-gates live-chain chain-gates live-g1 live-registry-attack registry-gates live-revision-binding revision-binding-gates setup-gateway deploy-gateway-probe live-gateway gateway-gates live-model-armor model-armor-gates live-observability observability-gates clean
+.PHONY: help lint test check hardening-check serve image gates verify-deploy incident gui cost demo revoke isolate revision-spike live-memory-bank live-memory-deletion memory-deletion-gates live-auditor auditor-gates live-review review-gates live-narration narration-gates live-fleet fleet-gates live-chain chain-gates live-g1 live-registry-attack registry-gates live-revision-binding revision-binding-gates setup-gateway deploy-gateway-probe live-gateway gateway-gates live-model-armor model-armor-gates live-observability observability-gates clean
 
 help:
 	@echo "make lint    ruff over the tree"
 	@echo "make test    the offline suite ($(PYTHON))"
 	@echo "make check   lint + test"
+	@echo "make hardening-check  check + deterministic incident/demo preflight"
 	@echo "make serve   the control plane locally on :8080"
 	@echo "make image   build the Cloud Run container and check the pins hold"
 	@echo "make gates   PASS/FAIL per gate, judged from proof-out/"
@@ -65,6 +66,14 @@ test:
 	$(PYTHON) -m unittest discover -s tests -t . -v
 
 check: lint test
+
+hardening-check: check
+	@$(PYTHON) scripts/incident.py
+	@$(PYTHON) scripts/cost.py
+	@$(PYTHON) scripts/demo.py
+	@$(PYTHON) scripts/revoke.py
+	@$(PYTHON) scripts/isolate.py
+	@$(PYTHON) scripts/gates.py
 
 serve:
 	@$(PYTHON) -m custody.control_plane
