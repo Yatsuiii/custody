@@ -30,6 +30,10 @@ Allowed files:
 - research/experiments/E2D_EXT1_WINDOW_WIDENING/run.py
 - research/experiments/E2D_EXT1_WINDOW_WIDENING/RESULT.md
 - research/experiments/E2D_EXT1_WINDOW_WIDENING/result.json
+- research/experiments/E2D_EXT2_OVERLAPPING_WINDOWS/PLAN.md
+- research/experiments/E2D_EXT2_OVERLAPPING_WINDOWS/run.py
+- research/experiments/E2D_EXT2_OVERLAPPING_WINDOWS/RESULT.md
+- research/experiments/E2D_EXT2_OVERLAPPING_WINDOWS/result.json
 - .claude/SESSION_CONTRACT.md (this file)
 
 Non-goals:

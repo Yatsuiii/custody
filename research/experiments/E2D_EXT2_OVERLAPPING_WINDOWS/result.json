@@ -1,0 +1,29 @@
+{
+  "checks": {
+    "w1_own_closure_unchanged_by_w2": true,
+    "vendor_2_affected_via_w1": true,
+    "syn_act_act_affected_via_w1": true,
+    "vendor_w2_affected_via_w2": true,
+    "syn_both_affected_by_union": true,
+    "gap_record_unaffected": true,
+    "outside_sibling_still_unaffected": true,
+    "windows_independent_in_closure": true
+  },
+  "w1_affected": [
+    "E-SYN-ACT-ACT",
+    "E-SYN-BOTH",
+    "E-VENDOR-2"
+  ],
+  "w2_affected": [
+    "E-SYN-BOTH",
+    "E-VENDOR-W2"
+  ],
+  "union_affected": [
+    "E-SYN-ACT-ACT",
+    "E-SYN-BOTH",
+    "E-VENDOR-2",
+    "E-VENDOR-W2"
+  ],
+  "verdict": "PASS",
+  "verdict_reason": "all checks passed"
+}
