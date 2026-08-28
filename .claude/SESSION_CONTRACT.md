@@ -56,6 +56,11 @@ Allowed files:
 - research/experiments/RSM_CRUX7_POOL_IDENTIFICATION/run.py
 - research/experiments/RSM_CRUX7_POOL_IDENTIFICATION/RESULT.md
 - research/experiments/RSM_CRUX7_POOL_IDENTIFICATION/result.json
+- research/experiments/RSM_CRUX7B_STRUCTURAL_PROVENANCE/PLAN.md
+- research/experiments/RSM_CRUX7B_STRUCTURAL_PROVENANCE/fixture.json
+- research/experiments/RSM_CRUX7B_STRUCTURAL_PROVENANCE/run.py
+- research/experiments/RSM_CRUX7B_STRUCTURAL_PROVENANCE/RESULT.md
+- research/experiments/RSM_CRUX7B_STRUCTURAL_PROVENANCE/result.json
 - .claude/SESSION_CONTRACT.md (this file)
 
 Non-goals:
