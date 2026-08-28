@@ -1,3 +1,46 @@
+# Custody: reconcile main for hackathon submission
+
+Opened 2026-08-28.
+
+Objective: Reconcile the Custody submission state before the Devpost
+deadline (Sep 1 2026, 05:30 GMT+5:30). `feat/memory-provenance` (the
+08-21 hardening/G5 freeze) and `hardening/fleet-track-pre-submission`
+(the Fleet/Timeline judge-visualization pages) had both diverged from
+`main` without being merged back; `main` itself had drifted onto an
+unrelated DecisionTrace-split history. This session merges all three
+into `main`, refreshes live evidence, redeploys, and fills the Devpost
+draft. Does not touch DecisionTrace.
+
+Branch: main (via merge/feat-into-main, fast-forward target)
+Parent: 1ea8b1511dd18909e19d3c8ab60665c4c27ab969 (feat/memory-provenance
+tip) merged with 4a624558b781280c7033c69204dccfedff20b376 (main tip)
+and origin/hardening/fleet-track-pre-submission tip fba047f.
+
+Allowed files: everything under /run/media/Yatsuiii/Windows-SSD/custody.
+
+Non-goals:
+- No DecisionTrace code/doc changes.
+- No changes to research/ branches' own content, only reconciling what
+  main/feat/memory-provenance/hardening/fleet-track-pre-submission
+  already built.
+
+Baseline: `make check` passes on the merged tree before any push.
+
+Acceptance gates:
+1. `make check` green on the merged `main`.
+2. `make gates` shows G1-G4 PASS, G5 at 4 of 4 groups (structural
+   BLOCKED on elapsed time is expected and correct).
+3. Live site (custody-incident-cave2.vercel.app) serves fleet.html,
+   timeline.html, incident.html, architecture.html — all 200, no
+   console errors.
+4. Devpost draft's Project details / Additional info sections have
+   correct links, category, and evidence; video and final Submit are
+   explicitly left for the user.
+
+Status: active
+
+---
+
 # DecisionTrace action-compliance falsification experiment (Phase 0/1 setup)
 
 Opened 2026-08-22.
@@ -42,6 +85,262 @@ descendant produced only by this session's own doc commits);
 `sha256sum decision-trace/app/authority.py decision-trace/app/collaborate.py
 decision-trace/app/ui.py` matches the values recorded in
 ACTION_COMPLIANCE_PROTOCOL.md.
+
+---
+
+# Custody: Fleet/Timeline judge-visualization hardening
+
+Branch: hardening/fleet-track-pre-submission
+Parent: b0c7019 (repository initialized 2026-08-09)
+
+Note, 2026-08-21: `hardening/fleet-track-pre-submission` and
+`feat/memory-provenance` currently point to the same integrated commit
+(`1ea8b15`); this field is kept pointed at the branch actually checked out
+so the evidence-gate hook (which reads only this first `Branch:` line in
+the file) matches the working tree.
+
+Allowed files: everything under /run/media/Yatsuiii/Windows-SSD/custody.
+
+## The gap, quoted from source
+
+Verified 2026-08-09 in `google/adk-python`, not inferred:
+
+- `memory/memory_entry.py`. A `MemoryEntry` carries `content`, `custom_metadata`,
+  `id`, `author`, `timestamp`.
+- `events/event.py`. `Event.author` is *"'user' or the name of the agent,
+  indicating who appended the event to the session."*
+- `memory/vertex_ai_memory_bank_service.py`. Scope is `{'app_name', 'user_id'}`.
+  `metadata` is a free-form mapping nothing validates. `search_memory(app_name,
+  user_id, query)` takes **no filter parameter**.
+
+So Memory Bank answers **who appended content and for whom**. It does not answer
+**where the content came from**, **which tool version introduced it**, or **what
+it was derived from**. Custody supplies those facts, on top, through the
+existing port and without modifying anything.
+
+**Framing rule, and it is not cosmetic.** This is an extension of Memory Bank,
+never a correction of it. Memory Bank gives scope and identity; Custody adds
+origin and derivation. Any wording that reads as "Google forgot something" is
+wrong in the README, the video, and the Devpost copy.
+
+Threat standing: OWASP **ASI06** in the 2026 Agentic AI Top 10. Published attack
+success rates of 80%, 95%, 99.8%. 91,000 honeypot attack sessions Oct 2025 to
+Jan 2026. Supporting the revocation half: **97%** of actively maintained MCP
+servers changed their published tool surface between first and latest release,
+and one registry audit found **76 confirmed malicious payloads**. Trust is a
+point-in-time judgement, so a write-time control without a revocation path is
+half a product.
+
+## Revision pivot, proven live on 2026-08-13
+
+Google Agent Registry does not automatically introspect an MCP server. If a
+server changes a tool schema, its owner must manually upload a new definition.
+That creates a measurable gap between the catalogued surface and the one an
+agent can bind at runtime. The source is [Google's Agent Registry MCP management
+documentation](https://docs.cloud.google.com/agent-registry/manage-mcp-tools?hl=en).
+
+`make revision-spike` is the decision artifact. It reads a saved registry
+snapshot and a changed later `tools/list` fixture, computes canonical SHA-256
+revision digests, and proves all five required gates:
+
+1. stale Registry metadata differs from the changed surface;
+2. the baseline binds the stale snapshot;
+3. the governed path refuses before tool dispatch;
+4. revision-specific revocation removes three cross-department descendant hops
+   and preserves a sibling revision plus unrelated memory; and
+5. the breach, detection, and containment story has a 150-second demo budget.
+
+The offline proof output is `proof-out/revision-spike.json`. Its live successor,
+`make live-registry-attack`, writes `proof-out/live-registry-attack.json` and is
+judged independently by `make registry-gates`.
+
+Non-goals:
+
+- **No model decides a fact.** Origin and derivation come from event structure.
+  A model may summarise, explain and rank. It may never label, adjudicate, or
+  set trust.
+- **No agent that is not enforcing a property or changing what a human does.**
+  Two were designed and cut under this rule on 2026-08-09: a Trust Steward,
+  because a catalog needs a form and a database rather than an agent; and a Red
+  Team agent, because it is separable assurance competing for the fourteen days.
+  Both are recorded in `DECISIONS.md`. Do not reinstate either without new
+  argument.
+- **The console must never become required to use the product.** The core is a
+  one-line drop-in, `CustodyMemoryBank(downstream=your_service)`, and that is the
+  entire go-to-market. The control plane is the upsell and the demo.
+- No new memory store. Memory Bank and ADK's services are the substrate.
+- No content classification. Custody governs origin and derivation, not intent.
+  Screening content is Model Armor's job and is not being rebuilt.
+- No auth, billing, or user management.
+- No second submission; no Startup Excellence attempt (needs an incorporated
+  organization and corporate email, neither exists).
+- No commit and no push without explicit authorization in the session.
+
+## Architecture
+
+**1. Revision admission. Deterministic, no model.** Built and verified live.
+`custody/revision.py` canonicalizes a live `tools/list` response, compares every
+server-qualified tool digest with the department's approved pin, and refuses a
+mismatch before dispatch. Its successful admission yields the trust and exact
+revision that the existing origin boundary consumes. The approved snapshot is
+read back from a real Agent Registry Service. The application-side catalog is
+still in-memory; durable approval storage remains future work.
+
+**2. Origin labelling. Deterministic, no model.** Built and verified.
+Every content part is USER, MODEL, TOOL or DERIVED, read off the event graph.
+`Event.get_function_responses()` makes tool origin structural. Taint propagates:
+a model turn following an untrusted tool response inside the same invocation is
+DERIVED and inherits the distrust, because an agent that summarises a hostile
+page produces a laundered copy while the raw response is discarded.
+
+**3. The derivation graph. The differentiator, and the hardest part.**
+A custody record carries `derived_from[]`, turning a per-item label into a graph
+that can be traversed. Tool roots carry a server-qualified tool id plus revision
+digest, so revocation can select one definition without deleting a later clean
+revision. This is what makes retroactive revocation possible, and it
+answers a question nothing else on the market can answer.
+
+**3. Enforcement at the write.** Built and verified.
+Sessions are split before the write; untrusted content never reaches the memory
+service. Retrieval therefore needs no filter, which matters because Memory Bank
+does not offer one.
+
+**4. Revocation.** Demote a tool grant, traverse descendants in the graph, remove
+them from Memory Bank, append revocation and audit records.
+
+**Consequence flagged in advance rather than discovered later:** revocation
+reintroduces a read-side concern that the write-side split had removed, because a
+previously admitted memory can become untrusted after the fact. Deletion from
+Memory Bank is the preferred resolution and doubles as the right-to-be-forgotten
+path an enterprise will ask for. **Whether the Memory Bank API supports deletion
+is unverified and is a day-one check.** If it does not, revocation post-filters
+retrieval instead, and G3 is proved that way.
+
+**5. The export gateway.** Built. An external action must cite the remembered
+content authorizing it, and every citation must be instruction-eligible.
+
+**6. Judgement.** Gemini explains a quarantined memory and drafts a verdict for a
+human. Structurally barred from labelling.
+
+### The fleet
+
+The fleet is the **governed population**, not a pipeline of specialists. The
+predecessor died of five invented roles in a pipeline; that shape is banned here.
+
+| Agent | Why it is not ceremony |
+| --- | --- |
+| **N department worker agents** | The governed population is the fleet. Real ADK agents doing departmental work. They are the subject of governance, not scaffolding, and they make "scalable network of institutional agents" literally true. |
+| **Provenance Auditor** | Re-examines trust and drives revocation across the graph, deterministically, on the deployed Cloud Scheduler's own daily clock rather than the demoter's request. **Real, live-proven 2026-08-14**: `/demote` withdraws a grant durably; `/auditor`'s sweep is the only thing that ever calls `CustodyGraph.revoke` on a demotion's behalf. `make live-auditor` / `make auditor-gates`, 9/9 PASS. See the sub-build section below. |
+| **Custody Reviewer** | Explains what a quarantined memory attempted and drafts a verdict. Changes what a human reads: a summary rather than raw traces. **Real, live-proven 2026-08-14**: `custody/review.py`'s `draft_verdict` takes one `Quarantined` item and a real Gemini call through Vertex AI, returns a `Verdict` with no trust/origin field. `make live-review` / `make review-gates`, 9/9 PASS. See the sub-build section below. |
+
+### Data model
+
+Firestore. One storage primitive: a create that fails when the document exists.
+
+```
+departments/{dept}                            tenant boundary
+departments/{dept}/agents/{agent_id}          registration, allowed tools
+departments/{dept}/grants/{tool}              trust, vouched_by, vouched_at, evidence
+custody/{record_id}                           origin, trust, author, invocation,
+                                              content_sha256, source_tool,
+                                              derived_from[]        <- the graph edge
+memories/{memory_ref}                         downstream id -> custody record
+quarantine/{item_id}                          withheld content, awaiting review
+revocations/{revocation_id}                   tool demoted at T, descendants pulled
+audit/{record_id}                             append-only, every decision
+```
+
+Writes are idempotent on `(session_id, content_sha256)`. Revocation is idempotent
+on the revocation id, so a replayed revocation cannot double-delete.
+
+### Google product mapping
+
+The track scores four capability groups. Every row must be demonstrable by a
+command or an artifact. **No row moves to BUILT without one**, because a
+predecessor shipped a GEAP table describing an integration that did not exist.
+
+| Capability group | Product | Role in Custody | Status |
+| --- | --- | --- | --- |
+| Discovery and lifecycle | **Agent Registry** | department agents and approved MCP revision pins | **LIVE**, stale v1 snapshot vs live v2 proof |
+| Execution and state | **Memory Bank** | the governed substrate | **LIVE**, `make live-g1` |
+| Execution and state | **Agent Runtime** | identity-bound deterministic Gateway probe | **LIVE**, `make live-gateway` |
+| Security and governance | **Agent Identity** | exact principal authorized for the registered MCP tool | **LIVE**, `make live-gateway` |
+| Security and governance | **Agent Gateway** | IAP-enforced allow/deny boundary before owned MCP dispatch | **LIVE**, `make live-gateway` |
+| Security and governance | **Model Armor** | screens content; complements origin, does not replace it | **LIVE**, `make live-model-armor` |
+| Telemetry | **Agent Observability** | traces carrying the custody digest, so a quarantine is reproducible | **LIVE**, `make live-observability` |
+| mandatory | **Gemini 3.5+ via Vertex** | explains quarantined memories; never labels | **LIVE**, `make live-review`, real verdict on a quarantined item (`scripts/live_review.py`), not the earlier connectivity echo |
+| mandatory | **ADK** | the seam; `BaseMemoryService` is the port | **LIVE**, real Runner callback in G1 |
+| mandatory | **Cloud Run** | control plane and reviewer | **LIVE**, control plane revision `00001-hz6` |
+| supporting | **Firestore** | the graph, quarantine, audit | PARTIAL: `custody`/`revocations`/`auditor` collections LIVE behind `FirestoreCustodyGraph`/`FirestoreAuditorLog` (G5); `quarantine`/`departments`/`grants` remain in-memory, PLANNED |
+| supporting | **Cloud Scheduler** | daily auditor run, which makes elapsed time real | PLANNED |
+| bonus | **Gemma** | cheap first-pass triage of the quarantine queue | OPTIONAL |
+
+Every PLANNED row has an in-memory implementation behind the same port, so an
+unreachable component degrades rather than blocks.
+
+**Reachability established 2026-08-09, from the shipped SDKs rather than docs.**
+There is no separate GEAP product to find, and no GEAP SDK. **GEAP is Vertex AI
+renamed**; Google's own product page is titled "Gemini Enterprise Agent Platform
+(formerly Vertex AI)", it absorbed Agentspace at Next '26 in April 2026, and
+existing projects need no migration because the services underneath are
+identical. Anyone hunting for a distinct product will find only documentation,
+which is the correct outcome and not a sign of vapourware.
+
+What that means concretely for each row:
+
+- **Memory Bank** ships in `google-cloud-aiplatform[agent-engines]==1.163.0`,
+  which is the Vertex AI SDK. Reported GA. This is the `gcp` extra of ADK.
+- **Agent Identity** is a real ADK extra, `agent-identity`, requiring
+  `google-cloud-agentidentitycredentials` and `google-cloud-iamconnectorcredentials`,
+  with a shipped module at `google/adk/integrations/agent_identity/`. Reachable
+  as code today.
+- **Agent Observability** is the `otel-gcp` extra: OpenTelemetry instrumentation
+  for google-genai, grpc and httpx.
+- **Agent Gateway and Model Armor have no ADK module and no client library**,
+  because they are platform and networking services rather than SDK surfaces.
+  Demonstrating them is configuration and a routed call, not an import. Plan the
+  proof accordingly; do not wait for a package that will never exist.
+- Also present and unplanned: `a2a` and `antigravity` extras, if either becomes
+  useful.
+
+Baseline:
+
+- Built and green on 2026-08-09: 52 tests, lint clean, entirely offline.
+  `custody/origin.py`, `custody/service.py`, `custody/action.py`,
+  `custody/adapters/adk.py`, `scripts/demo.py`.
+- Verified against real **google-adk 2.6.3** in a project venv, not the system
+  interpreter. `VertexAiMemoryBankService` is a `BaseMemoryService`, and the port
+  has exactly two abstract methods, so governing one governs the other.
+- Pinned by test: `InMemoryMemoryService.search_memory` matches on `part.text`
+  only, so a raw `function_response` is stored and never retrieved. The laundered
+  restatement is the dangerous form because it is the retrievable one.
+- **Two of the three day-one checks settled 2026-08-10 without credentials**,
+  by reading `google-cloud-aiplatform` 1.163.0 rather than waiting for an
+  account. Both were questions about a client library's surface.
+
+  **Deletion is supported.** `agent_engines.memories.delete(name=...)` exists,
+  keyed on the memory's resource name
+  (`projects/{p}/locations/{l}/reasoningEngines/{r}/memories/{m}`). So G3's
+  preferred revocation path is available and the post-filter fallback is not
+  needed. Consequence: a custody record must map to that resource name, which
+  is what `memories/{memory_ref}` in the data model is for. **Unresolved:** ADK's
+  `add_session_to_memory` returns `None`, so the names of memories it created
+  are not handed back. Obtaining the mapping needs either the raw client or a
+  list call, and that is a real design decision, not a detail.
+
+  **Scope is an arbitrary, enforced isolation primitive**, and this is the more
+  useful finding. `Memory.scope` is `dict[str, str]`, documented as *"Required.
+  Immutable. Represents the scope of the Memory. Memories are isolated within
+  their scope."* ADK merely happens to pass `{app_name, user_id}`. So
+  department, and potentially trust, can be carried in scope and Memory Bank
+  enforces the isolation itself rather than Custody enforcing it alone. That
+  strengthens G4 and gives back a read-side filter if one is ever needed.
+  **Inferred, not yet run:** that arbitrary scope keys are accepted and that
+  retrieval matches on them exactly. The docstring says so; the account will
+  settle it.
+
+  **Still needs the account:** whether GEAP components are reachable on a fresh
+  trial project at all. A 200 on any other account is not evidence.
 
 Acceptance gates:
 1. research/decisiontrace-action-compliance exists, branched exactly
@@ -469,7 +768,7 @@ grep -oE 'blob/[0-9a-f]{40}/[^)]+' RESEARCH.md | while IFS=/ read -r _ sha rest;
 Expected: two tracked files changed plus one new file, and every permalink
 resolves.
 
-Status: active
+Status: complete (informational disclosure note, no further action pending)
 
 ## Extract DecisionTrace into its own repository (opened 2026-08-27)
 
@@ -526,7 +825,7 @@ git diff --stat e0b5397 -- custody/
 ```
 Expected: public, 0, and an empty diff for custody/.
 
-Status: active
+Status: complete (superseded by later second-project-search sessions below)
 
 ## Land the E1 multi-parent lineage fix on the trunk (opened 2026-08-27)
 
@@ -1735,3 +2034,187 @@ implying a uniform result regardless of clone state. Cleanup:
 inspect it further; safe to delete any time, it's outside the repo.
 
 Nothing committed or pushed.
+
+## Independent release-readiness audit (opened 2026-08-21)
+
+Objective: Independently verify, as a fresh release engineer/judge, whether
+`hardening/fleet-track-pre-submission` (HEAD `1ea8b15`, same commit as
+`feat/memory-provenance`) is actually ready to record. Re-check `make
+verify-deploy`, `make gates`, and `HACKATHON_VALIDATION.md`'s claims, then do
+the one declared remaining gap: a manual public-browser/console/UI smoke test
+of the deployed pages and the incident revoke interaction. Only fix
+demonstrated P0/P1 release defects; no feature work, no redesign, no polish.
+
+Branch: hardening/fleet-track-pre-submission
+Parent: 1ea8b15
+
+Allowed files: none expected. If a P0/P1 defect is found, the smallest fix
+only, scoped to the specific broken file(s), plus `HACKATHON_VALIDATION.md`
+if new verified facts must be recorded.
+
+Non-goals: no new features, agents, Google services, redesign, or
+presentation changes absent a concrete judge-facing defect. Do not touch
+unrelated dirty working-tree files (web/architecture.html, web/incident.html,
+contribution-gate/, research-access/, research-impact/, failure-mining/,
+second-project-search/, web/fleet.html, web/timeline.html, docs/*) unless a
+found defect requires it. Do not fake or fast-forward G5.
+
+Baseline: reported — `make check` PASS (377 tests), `make verify-deploy`
+4/4 PASS, `make gates` 4 PASS/0 FAIL/1 BLOCKED (G5). To be independently
+re-run this session.
+
+Acceptance gates:
+1. `make verify-deploy` independently re-run and confirmed against
+   `https://custody-incident-cave2.vercel.app`.
+2. Every judge-facing public page (root/incident, architecture, fleet,
+   timeline) opened in a real browser; console checked for exceptions/failed
+   requests.
+3. Incident page's revoke-descendants interaction actually exercised in the
+   browser, before/after state verified visually.
+4. Fleet page's claim boundary (static visualization vs. live proof)
+   recorded accurately.
+5. Final verdict delivered: READY TO RECORD yes/no, with P0/P1/P2 findings.
+
+Verification: `make check`, `make verify-deploy`, `make gates`, manual
+browser smoke test via claude-in-chrome tools.
+
+**Closed 2026-08-21.** All five acceptance gates passed. `make check`
+377/377, `make verify-deploy` 4/4 PASS, `make gates` 4 PASS/1 BLOCKED (G5,
+correctly). Browser smoke test of all four public pages (root/incident,
+`/fleet.html`, `/architecture.html`, `/timeline.html`) found zero console
+errors, zero failed requests, no auth wall, no stale build. The incident
+page's revoke interaction was clicked live and verified correct
+before/after with internally consistent counts. `fleet.html`'s claim
+boundary recorded accurately (static visualization of a captured live
+proof, not a continuously-live surface). No P0/P1 defects found; zero
+product code changed. `HACKATHON_VALIDATION.md` updated with this finding;
+READY TO RECORD flipped from NO to YES.
+
+Status: complete
+
+## Video-support UI enhancement: Fleet Overview toggle + Incident replay stepper (opened 2026-08-21)
+
+Objective: The 4-minute demo video repeatedly cuts back to the same
+Dependency Cartography screenshot because it was the only page with a
+before/after state change. Add two small, judge-facing, evidence-backed
+interactions to two already-existing, already-untracked static pages
+(`web/fleet.html`, `web/timeline.html`) so the video has more visually
+distinct beats, without building any new page, new backend logic, or new
+data. Both pages already embed real proof data (fleet.html's
+DEPARTMENT_TOOLS/SHARED_DEPTS map matches `proof-out/live-fleet.json`'s
+25-department fixture; timeline.html already shows the same
+vouched/compromised/blast-radius numbers `incident.html` computes from
+`scripts/incident.py`). This is a presentation-layer change only.
+
+Branch: hardening/fleet-track-pre-submission
+Parent: 42d1efd
+
+Allowed files: `web/fleet.html`, `web/timeline.html`,
+`submission-video/*` (rebuilding the video with new shots),
+`.claude/SESSION_CONTRACT.md`.
+
+Non-goals:
+
+- No new backend logic, no new Python data-generation script, no new
+  proof/gate. Both pages keep using exactly the data already embedded in
+  them (fleet.html's DEPARTMENT_TOOLS/SHARED_DEPTS; timeline.html's
+  existing vouched/compromised/blast-radius/cost numbers, plus the same
+  four-hop lineage array already embedded verbatim in `incident.html`'s
+  `#incident-data` JSON — copied in, not recomputed or invented).
+- No new page. `fleet.html` and `timeline.html` already exist
+  (untracked, pre-existing this session); enhance them in place.
+- No change to `incident.html`, `architecture.html`, or any `scripts/*.py`
+  generator — this is JS/CSS added to two static files, not a rerun of a
+  generator.
+- No fabricated counts. Every number shown in either new state must
+  already appear in the page's existing embedded data.
+- Do not touch `contribution-gate/`, `docs/`, `failure-mining/`,
+  `research-access/`, `research-impact/`, `second-project-search/` or any
+  other pre-existing unrelated dirty/untracked file.
+
+Baseline: `web/fleet.html` (122 lines) renders a flat 5-column grid of 25
+department/tool cards from a hardcoded `DEPARTMENT_TOOLS`/`SHARED_DEPTS`
+map, statically already in the post-revocation (sales/finance red) state.
+`web/timeline.html` (182 lines) renders a static vouched-to-compromised
+bar plus a cost-comparison table and sensitivity table, all numbers
+already final/revealed with no interactivity. Neither page has a
+before/after toggle or a step-through.
+
+Acceptance gates:
+
+1. `fleet.html` gains a two-state toggle ("25 trusted" all-green ->
+   "simulate compromise" -> sales/finance turn red, counts update to
+   2 pulled / 23 confirmed untouched) driven entirely by data already in
+   the file. No page reload, no new JSON fetch.
+2. `timeline.html` gains a step-through control that reveals, in order:
+   Day 1 vouched -> propagation hops (sales -> support -> finance, using
+   the same lineage ids/labels `incident.html` already shows) -> Day 16
+   compromise discovered -> blast radius computed (32/3-5/575, already
+   the page's own stat-strip numbers) -> revoke (existing cost-comparison
+   panel). Each step highlights/reveals rather than replacing content
+   wholesale, so a viewer can see state accumulate.
+3. Both pages still render correctly with JS could-be-absent-safe markup
+   (initial state is a sensible static state, not a blank page) and both
+   still pass a manual open-in-browser + console check (no errors).
+4. The submission video is rebuilt using these two new interactive beats
+   in place of some of the repeated Dependency Cartography cuts, per the
+   user's requested structure. `custody_demo.mp4` regenerated, not hand
+   patched.
+5. No files outside "Allowed files" change; `git status` confirms only
+   `web/fleet.html`, `web/timeline.html`, and `submission-video/*` differ
+   from before this session, plus this contract.
+
+Verification: manual browser open of both pages (before/after states),
+console check via claude-in-chrome, then re-run the screenshot capture +
+`ffmpeg` assembly for the video, then re-run `make check` to confirm zero
+impact on the Python test suite (these are static HTML/JS files outside
+`custody/` and `tests/`).
+
+**Closed 2026-08-21.** All five acceptance gates passed. `fleet.html`
+gained a Simulate compromise / Restore toggle driven entirely by the
+existing DEPARTMENT_TOOLS/SHARED_DEPTS map (35/35 make fleet-gates data
+unchanged). `timeline.html` gained a 6-step replay stepper (Day 1 -> sales
+-> support -> Day 16 discovered -> blast radius computed -> revoked) using
+the same four lineage hops incident.html already embeds verbatim from
+scripts/incident.py's compute(). Both tested locally (python3 -m
+http.server) in a real browser via claude-in-chrome: zero console errors,
+correct default/JS-off state, all toggle/step transitions verified by
+screenshot. submission-video/custody_demo.mp4 rebuilt (225s, 1920x1080,
+30fps, frame count verified exact) using the new Fleet/Timeline states in
+place of repeated Dependency Cartography cuts, per the user's requested
+structure; Dependency Cartography kept as the one-time climax shot for the
+live revoke click. `make check` still 377/377 (no Python touched). git
+status confirms only web/fleet.html, web/timeline.html,
+.claude/SESSION_CONTRACT.md, and submission-video/* changed.
+
+Status: complete
+
+## Freeze pass: commit, push, deploy, public smoke (opened 2026-08-21, same session)
+
+Objective: carry the completed Fleet/Timeline UI work (previous section)
+through commit -> push -> deploy -> public verification -> freeze, per
+explicit user instruction this turn. Extends the prior section's Allowed
+files to include `HACKATHON_VALIDATION.md` (the freeze artifact) and the
+deploy action itself (`cd web && vercel deploy --prod --yes`, the
+project's own documented path, `SUBMISSION_HANDOFF.md`'s "ask before
+running it" satisfied by this turn's explicit instruction).
+
+Branch: hardening/fleet-track-pre-submission
+Parent: e6968ef
+
+Non-goals: identical to the prior section — no new features, no backend/
+proof/gate changes, no G5 change.
+
+**Closed 2026-08-21.** Committed `e6968ef` (web/fleet.html,
+web/timeline.html, the pre-existing nav-link diffs in
+web/architecture.html and web/incident.html, .claude/SESSION_CONTRACT.md).
+Pushed to origin. Deployed via `vercel deploy --prod --yes`
+(`dpl_5bX9ewoXimbCHvw3HEnAREX5E5dW`); both public aliases
+(custody-incident.vercel.app, custody-incident-cave2.vercel.app) updated.
+`make verify-deploy` 4/4 PASS; fleet.html/timeline.html independently
+confirmed byte-identical live vs local via curl+cmp (not covered by that
+script's fixed route list). Full public browser smoke test passed with
+zero console errors on every page; G5 still correctly BLOCKED.
+HACKATHON_VALIDATION.md updated with this pass's evidence.
+
+Status: complete
