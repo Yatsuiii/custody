@@ -23,16 +23,24 @@ independently named as unexplored by a field survey rather than asserted here; a
 multi-parent lineage bug in its own foundation, found and fixed; three
 external-validity experiments run against a competing system's released code,
 plus a mechanistic falsifier that isolated the root cause of one whole failure
-class to a single line; and a
-complete mechanism design with preregistered falsification gates.
+class to a single line; a
+complete mechanism design with preregistered falsification gates; and, as of
+2026-08-28, that design's own preregistered falsifier (E2D) run and PASSED.
 
 **Current verdict: RESEARCH-ONLY**, which is not BUILD and explicitly not KILL.
 The programme is ongoing and this verdict is where the evidence stands today,
 not a closing position.
-The thesis survives in narrowed form. The programme declined to authorize an
-implementation until its own preregistered gate is met. That is the result, not
-a shortfall against it. The research also says plainly that calling this
-paper-grade today would overclaim.
+E2D's PASS narrows the open question further without closing it: the
+candidate mechanism satisfies every preregistered safety and selectivity
+gate on its frozen fixture, including under four simulated crash points, and
+two mutation tests confirmed the falsifier actually catches the specific
+failure modes it was built to catch, rather than passing vacuously. It does
+not establish production readiness — the fixture's receipts are
+fixture-constructed, not routed through the real paths (`load_memory`'s
+text-hash reconnection, Memory Bank's server-side summarization) that
+`TRUSTED_COMPUTING_BASE.md` names as concrete blockers, and no production
+code was touched to produce this result. The research also says plainly that
+calling this paper-grade today would overclaim.
 
 The adopted question, after the flattering version was rejected for being
 "re-marketing an existing hackathon result":
@@ -70,6 +78,7 @@ build further. Verdict strings are quoted from the source.
 | E2B | `EXTERNAL-PASS-ACCIDENTAL` | Exact-hash matching cannot distinguish malicious from benign transformation. |
 | E2C | `EXACT-MATCH-DEPENDENCY-CONFIRMED` | One line is the entire load-bearing mechanism. A trusted fact retrieved byte-identical is fully preserved; the same fact with a single trailing period removed produces a total loss, byte-for-byte identical in every measured field to a full paraphrase and to an unrelated proposition. A hard cliff, not graded fragility. |
 | Design | `DESIGN-CAUTION` | Six primitives derived, three architectures compared, PASS/CAUTION/KILL gates preregistered for E2D. Carry into one isolated falsifier; do not authorize production. |
+| E2D | `PASS` | The structural-envelope mechanism (deterministic tier lattice, no LLM/embedding/fuzzy-match component) satisfied all nine preregistered gates on the frozen six-element fixture, including four simulated crash/replay points. A real fail-open bug was found and fixed during adversarial review of the first PASS, and two mutation tests confirmed the falsifier catches the specific failure modes it targets. Does not touch `custody/*.py`; does not establish production readiness. Result at `research/experiments/E2D_DESIGN_FALSIFIER/RESULT.md` on branch `research/e2d-structural-envelope-execution`, not yet pushed to origin. |
 
 On the E2 comparison specifically: TMA-NM's data model carries no
 derivation field at all, so it cannot represent a multi-parent synthesized
@@ -82,11 +91,12 @@ than local fakes, returned `LOCAL-EQUIVALENCE-SUPPORTED` with two honestly
 reported ceiling misses:
 [P7 handoff](https://github.com/Yatsuiii/custody/blob/ca54d84e077d0a5584f79edec6ef54c4629ce61b/research/production_b7/P7_CODEX_HANDOFF.md).
 
-### Open problem, currently unsolved
+### Open problem, narrowed but not closed
 
-The question the programme exists to answer is still open: how to remove exactly
-the poisoned artifacts and nothing else. Two halves, each established by its own
-experiment rather than assumed.
+The question the programme exists to answer is still open in production terms,
+though E2D narrowed it: how to remove exactly the poisoned artifacts and
+nothing else. Two halves, each established by its own experiment rather than
+assumed.
 
 **Identification.** `CustodyGraph.resolve` matches on SHA-256 equality, so a
 laundered descendant is invisible to revocation. E2C established this is a hard
@@ -106,9 +116,16 @@ record id. Deleting only the poisoned artifact therefore still costs every
 downstream record that touched it, until each one is re-derived.
 
 The candidate answer is the structural-envelope architecture in
-[research/design/](https://github.com/Yatsuiii/custody/blob/ca54d84e077d0a5584f79edec6ef54c4629ce61b/research/design/REPAIR_SEMANTICS.md),
-sitting at `DESIGN-CAUTION` with preregistered PASS/CAUTION/KILL gates. It has
-not been run. That experiment, E2D, is the next step.
+[research/design/](https://github.com/Yatsuiii/custody/blob/ca54d84e077d0a5584f79edec6ef54c4629ce61b/research/design/REPAIR_SEMANTICS.md).
+E2D has now run against it and PASSED every preregistered gate — identification
+via structural receipts captured at transform time (not post-hoc content
+matching, which is exactly what E2B/E2C ruled out) correctly separated the
+malicious paraphrase, benign paraphrase, and unaffected sibling in the frozen
+scenario, and repair correctly blocked every affected descendant without
+elevating unchanged content or opening a window during four simulated crash
+points. What remains open is production integration: the receipt-collection
+guarantee E2D assumes does not yet exist on every real Custody write path,
+named concretely in `TRUSTED_COMPUTING_BASE.md`.
 
 ### Known limitations
 
@@ -120,8 +137,14 @@ not been run. That experiment, E2D, is the next step.
 - No direct measured comparison against TMA-NM exists. The structural argument
   that this system falls inside the malleable category its theorem covers is
   reasoning, not a measurement.
-- E2D has not run. Production is described in the design packet as
-  architecturally unshippable until five named conditions are proved.
+- E2D has run and PASSED on its frozen fixture, as of 2026-08-28. Production
+  is still described in the design packet as architecturally unshippable
+  until its named conditions are proved — `TRUSTED_COMPUTING_BASE.md` lists
+  nine in-boundary components a real implementation would need, several
+  marked "design only" or "unproven," most centrally the context/receipt
+  collector's guarantee across current retrieval and server-side Memory Bank
+  transformations. E2D's fixture constructs receipts directly; it does not
+  exercise or prove that collector guarantee on a real write path.
 
 ## Method
 
