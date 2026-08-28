@@ -1,3 +1,49 @@
+# Custody: cite the RSM crux findings in future-directions copy
+
+Opened 2026-08-29.
+
+Objective: Add a small, correctly-hedged pointer to the RSM crux
+falsifier findings (branch `research/rsm-crux-falsifier`, pushed to
+origin, not merged) in RESEARCH.md's and the Devpost story's existing
+forward-looking sections. Cites real preliminary evidence for a future
+research direction; does not claim the direction is solved, validated at
+scale, or novel (no literature search has been run on it).
+
+Branch: main
+Parent: b9601fb (E2D + EXT1-4, already on origin/main)
+
+Allowed files:
+- RESEARCH.md
+- .claude/SESSION_CONTRACT.md (this file)
+- (Devpost's live story text, edited directly via browser, not a repo
+  file -- same discipline: correctly hedged, no overclaim)
+
+Non-goals:
+- No claim that RSM/claim-carrying-memory is solved, novel, or ready to
+  build. Every reference must carry the same hedges RESULT.md files
+  already state (narrow synthetic test, no fused-text decomposition
+  tested, no adversarial robustness testing, no literature search run).
+- No merge of research/rsm-crux-falsifier into main. It stays a cited,
+  linked, separate branch.
+- No changes to any custody/*.py or E2D's own artifacts.
+
+Baseline: `make check` 381/381 before and after (docs-only change).
+
+Acceptance gates:
+1. RESEARCH.md gains a forward-looking pointer to the RSM crux findings,
+   correctly scoped (cites the 0/8 vs 4/8 result and the explicit
+   caveat that fused-text decomposition remains untested).
+2. The live Devpost story's "What's next" section gets the same
+   treatment, verified via the public preview page after saving.
+3. `make check` still 381/381.
+
+Verification: `make check`; re-fetch the Devpost public preview page and
+confirm the new text reads as intended, not truncated or malformed.
+
+Status: active
+
+---
+
 # Custody: execute E2D, the preregistered structural-envelope falsifier
 
 Opened 2026-08-28.

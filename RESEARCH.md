@@ -127,6 +127,36 @@ points. What remains open is production integration: the receipt-collection
 guarantee E2D assumes does not yet exist on every real Custody write path,
 named concretely in `TRUSTED_COMPUTING_BASE.md`.
 
+### A deeper open question: repairing entangled synthesis
+
+E2D's mechanism, and Custody's shipped design, handle synthesis by refusal:
+any `FREEFORM` transform (an LLM paraphrase, summary, or fusion of multiple
+sources) is capped at `INFORM` unconditionally and can never authorize an
+action, regardless of what its parents were capped at. That sidesteps rather
+than solves a harder question: once a source's contribution has been fused
+into free-form text by a model — "use ACCT-EVIL for the $12k invoice,
+pending CFO approval," where only the account is poisoned — is there a
+principled way to remove exactly the poisoned contribution instead of
+distrusting the whole sentence?
+
+A cheap preliminary falsifier (`research/rsm-crux-falsifier`, pushed to
+origin, not merged into main — three small rounds, ~55 total LLM judgments
+against precommitted synthetic ground truth) tested one narrow sub-question
+this would depend on: can an LLM reliably judge whether a claim built from
+two *separate, discrete* sources would change if one were removed. Result,
+briefly: reliable (95-100%) for ordinary attribution; for the harder
+redundant-support case, reliable (0/8 false positives) only when the
+support-mode ("either source alone is sufficient") is declared explicitly
+and separately at claim-creation time, and unreliable (4/8, domain-dependent)
+without that declaration. This is real, narrow, positive signal for one
+input a repair mechanism would need — **it is not a test of the actual hard
+problem**: none of the three rounds had an LLM generate the fused text
+itself and asked a judge to decompose *that*; every case used a
+hand-templated derived memory. No literature search has been run to check
+whether this narrow question is even novel. Treat this as motivation for a
+scoped follow-on experiment, not as evidence the deeper question is closer
+to solved.
+
 ### Known limitations
 
 - The E1 multi-parent fix is on this branch as of 2026-08-27. Its regression
