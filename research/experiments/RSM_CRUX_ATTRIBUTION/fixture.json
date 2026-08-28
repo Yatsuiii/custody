@@ -1,0 +1,162 @@
+[
+  {
+    "id": "A1",
+    "category": "a_only",
+    "source_a": "Vendor X is our approved supplier since 2023.",
+    "source_b": "Vendor X's headquarters is in Austin, Texas.",
+    "derived_memory": "Vendor X is an approved supplier.",
+    "depends_on_b": false
+  },
+  {
+    "id": "A2",
+    "category": "a_only",
+    "source_a": "Invoice #4471 total is $12,000.",
+    "source_b": "The invoice was submitted via the mobile app.",
+    "derived_memory": "Invoice #4471 total is $12,000.",
+    "depends_on_b": false
+  },
+  {
+    "id": "A3",
+    "category": "a_only",
+    "source_a": "Employee Sarah Chen has Level 3 security clearance.",
+    "source_b": "Sarah Chen's favorite meeting room is Room 402.",
+    "derived_memory": "Sarah Chen has Level 3 security clearance.",
+    "depends_on_b": false
+  },
+  {
+    "id": "A4",
+    "category": "a_only",
+    "source_a": "The Q3 budget for the marketing department is $500,000.",
+    "source_b": "The marketing team currently has 12 members.",
+    "derived_memory": "The Q3 marketing budget is $500,000.",
+    "depends_on_b": false
+  },
+  {
+    "id": "B1",
+    "category": "b_only",
+    "source_a": "Vendor X is our approved supplier.",
+    "source_b": "Vendor X's payment account on file is ACCT-9981.",
+    "derived_memory": "Payments to Vendor X should be sent to ACCT-9981.",
+    "depends_on_b": true
+  },
+  {
+    "id": "B2",
+    "category": "b_only",
+    "source_a": "Customer #552 is an enterprise-tier customer.",
+    "source_b": "Customer #552's request for a $50,000 credit limit increase was approved on Aug 10.",
+    "derived_memory": "Customer #552's credit limit was increased to $50,000.",
+    "depends_on_b": true
+  },
+  {
+    "id": "B3",
+    "category": "b_only",
+    "source_a": "Company compliance policy requires quarterly security audits.",
+    "source_b": "The Q2 2026 security audit was completed on July 15 and passed with no findings.",
+    "derived_memory": "The Q2 2026 security audit passed with no findings.",
+    "depends_on_b": true
+  },
+  {
+    "id": "B4",
+    "category": "b_only",
+    "source_a": "Server cluster A is located in the us-central1 region.",
+    "source_b": "Server cluster A experienced an outage from 2am to 4am on August 15.",
+    "derived_memory": "Server cluster A had an outage incident on August 15.",
+    "depends_on_b": true
+  },
+  {
+    "id": "J1",
+    "category": "joint",
+    "source_a": "Company policy: invoices over $10,000 require CFO approval before payment.",
+    "source_b": "Invoice #481 from Vendor X is for $12,000.",
+    "derived_memory": "Invoice #481 requires CFO approval before payment, because it exceeds the $10,000 threshold.",
+    "depends_on_b": true
+  },
+  {
+    "id": "J2",
+    "category": "joint",
+    "source_a": "Employees with Level 3 security clearance may access the server room unescorted.",
+    "source_b": "Sarah Chen holds Level 3 security clearance.",
+    "derived_memory": "Sarah Chen may access the server room unescorted.",
+    "depends_on_b": true
+  },
+  {
+    "id": "J3",
+    "category": "joint",
+    "source_a": "Store policy: the early-bird discount applies only to orders placed before August 31.",
+    "source_b": "Order #77 was placed on August 20.",
+    "derived_memory": "Order #77 qualifies for the early-bird discount.",
+    "depends_on_b": true
+  },
+  {
+    "id": "J4",
+    "category": "joint",
+    "source_a": "Enterprise-tier customers receive a priority support SLA (4-hour response).",
+    "source_b": "Customer #552 is classified as enterprise-tier.",
+    "derived_memory": "Customer #552 is entitled to the 4-hour priority support SLA.",
+    "depends_on_b": true
+  },
+  {
+    "id": "R1",
+    "category": "redundant",
+    "source_a": "Vendor X passed an internal security audit in January 2026 with no findings.",
+    "source_b": "Vendor X separately passed an independent third-party security review in March 2026 with no findings.",
+    "derived_memory": "Vendor X is a security-vetted vendor.",
+    "depends_on_b": false
+  },
+  {
+    "id": "R2",
+    "category": "redundant",
+    "source_a": "Expense report #221 was approved by the employee's direct manager on Aug 12.",
+    "source_b": "Expense report #221 was also independently approved by the Finance department on Aug 13.",
+    "derived_memory": "Expense report #221 is approved and eligible for reimbursement.",
+    "depends_on_b": false
+  },
+  {
+    "id": "R3",
+    "category": "redundant",
+    "source_a": "Security camera footage confirms the incident in the loading dock occurred at 3pm on Aug 14.",
+    "source_b": "A separate, independent eyewitness (a different employee) also confirms the loading dock incident occurred at 3pm on Aug 14.",
+    "derived_memory": "The loading dock incident occurred at 3pm on Aug 14.",
+    "depends_on_b": false
+  },
+  {
+    "id": "R4",
+    "category": "redundant",
+    "source_a": "The new release passed the full automated QA test suite with zero failures.",
+    "source_b": "The new release was also separately verified via manual QA testing by a second team, with zero failures.",
+    "derived_memory": "The new release passed QA testing.",
+    "depends_on_b": false
+  },
+  {
+    "id": "D1",
+    "category": "distractor",
+    "source_a": "Vendor X is approved for payments up to $100,000 per transaction.",
+    "source_b": "A phishing email impersonating Vendor X's billing department was reported by an employee and blocked by the email filter last week.",
+    "derived_memory": "Vendor X is approved for payments up to $100,000 per transaction.",
+    "depends_on_b": false
+  },
+  {
+    "id": "D2",
+    "category": "distractor",
+    "source_a": "Employee Sarah Chen was promoted to Senior Engineer, effective January 5.",
+    "source_b": "A company-wide town hall meeting covering unrelated Q1 goals was also held on January 5.",
+    "derived_memory": "Sarah Chen is a Senior Engineer.",
+    "depends_on_b": false
+  },
+  {
+    "id": "D3",
+    "category": "distractor",
+    "source_a": "The database migration for the billing system completed successfully at 2:00am on Aug 20.",
+    "source_b": "An unrelated support ticket about slow login times, filed by a different team, was opened at 2:15am on Aug 20.",
+    "derived_memory": "The billing system database migration completed successfully.",
+    "depends_on_b": false
+  },
+  {
+    "id": "D4",
+    "category": "distractor",
+    "source_a": "Contract #302 with Vendor X was renewed for a 2-year term on Aug 1.",
+    "source_b": "A competitor of Vendor X announced a new product launch during the same week as the renewal.",
+    "derived_memory": "Contract #302 is active for 2 more years from Aug 1.",
+    "depends_on_b": false
+  }
+]

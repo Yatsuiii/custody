@@ -1,3 +1,69 @@
+# Custody: RSM crux falsifier — can an LLM judge counterfactual claim dependence
+
+Opened 2026-08-28.
+
+Objective: Test the single load-bearing assumption under a brainstormed
+"Repairable Semantic Memory" (claim-carrying memory, ATMS-style support
+formulas, counterfactual repair) proposal, before any design or build
+work on it: can an LLM reliably judge, for a claim derived from two
+sources A and B, whether that claim would change if B were removed —
+against known synthetic ground truth? If this fails, the entire proposal
+is moot regardless of the rest of its architecture, so this is checked
+first and cheaply.
+
+This EXPLICITLY uses semantic inference (an LLM judge) via live Gemini/
+Vertex AI calls. That is a deliberate departure from E2D's discipline
+(E2D's own preregistered KILL condition is requiring semantic inference)
+and must not be conflated with or merged into E2D's result -- this is a
+different, unvalidated, exploratory question, kept on its own branch.
+
+Branch: research/rsm-crux-falsifier
+Parent: main @ b9601fb (tip after E2D + EXT1-4, already pushed to origin)
+
+Allowed files:
+- research/experiments/RSM_CRUX_ATTRIBUTION/PLAN.md
+- research/experiments/RSM_CRUX_ATTRIBUTION/fixture.json
+- research/experiments/RSM_CRUX_ATTRIBUTION/run.py
+- research/experiments/RSM_CRUX_ATTRIBUTION/RESULT.md
+- research/experiments/RSM_CRUX_ATTRIBUTION/result.json
+- .claude/SESSION_CONTRACT.md (this file)
+
+Non-goals:
+- No production implementation. `custody/*.py` is not touched.
+- No claim-carrying memory architecture, support-formula engine, or
+  repair operator built here -- this is a single precommitted
+  falsification check on one assumption, not the system.
+- Ground truth fixed before any model call is made; the fixture is not
+  edited after seeing results.
+- No push to remote until explicitly authorized. No merge into main.
+
+Baseline: 20 synthetic (A, B, M, ground_truth) triples, hand-constructed
+with unambiguous, adversarially varied ground truth (A-only dependence,
+B-only, joint/entangled, redundant support, topical-but-irrelevant
+distractor), written before any model call.
+
+Acceptance gates:
+1. Fixture has exactly 20 cases, each with a fixed ground-truth label for
+   "does the claim in M depend on B" (yes/no), written before any Gemini
+   call.
+2. `run.py` calls live Gemini (gemini-3.5-flash via Vertex AI,
+   project-988bc9fe-092c-4b32-90c) once per case, records the raw
+   response, and scores it against ground truth without any
+   post-hoc relabeling.
+3. Precision, recall, and accuracy on the "does removing B change the
+   claim" judgment are reported as exact fractions, not rounded up in
+   prose.
+4. `RESULT.md` states plainly whether this clears a bar worth building on
+   or not -- no moving the goalpost after seeing the numbers.
+
+Verification: `python3 research/experiments/RSM_CRUX_ATTRIBUTION/run.py`,
+inspect `result.json` against the fixture's ground truth by hand for at
+least 3 cases.
+
+Status: active
+
+---
+
 # Custody: execute E2D, the preregistered structural-envelope falsifier
 
 Opened 2026-08-28.
