@@ -1,0 +1,192 @@
+{
+  "model": "gemini-3.5-flash",
+  "project": "project-988bc9fe-092c-4b32-90c",
+  "results": {
+    "naive": [
+      {
+        "domain": "server_access",
+        "spoofed": true,
+        "raw_response": "1: RETRACT - This memory is derived solely from the revoked HR personnel record (Source B).\n2: RETRACT - This memory is derived solely from Memory 1, which has been retracted.\n3: SURVIVE - The conclusion that her clearance is valid still holds due to independent confirmation from the central badge-provisioning system (Source C).",
+        "verdicts": {
+          "1": "RETRACT",
+          "2": "RETRACT",
+          "3": "SURVIVE"
+        },
+        "expected": {
+          "1": "RETRACT",
+          "2": "RETRACT",
+          "3": "RETRACT"
+        },
+        "correct": {
+          "1": true,
+          "2": true,
+          "3": false
+        },
+        "all_correct": false
+      },
+      {
+        "domain": "cfo_approval",
+        "spoofed": false,
+        "raw_response": "1: RETRACT - This memory is derived solely from the revoked source B.\n2: RETRACT - This memory relies entirely on Memory 1, which has been retracted.\n3: SURVIVE - The conclusion that CFO sign-off is required remains valid because it is independently supported by fact C, which confirms a purchase amount of $13,800 that still exceeds the $10,000 threshold.",
+        "verdicts": {
+          "1": "RETRACT",
+          "2": "RETRACT",
+          "3": "SURVIVE"
+        },
+        "expected": {
+          "1": "RETRACT",
+          "2": "RETRACT",
+          "3": "SURVIVE"
+        },
+        "correct": {
+          "1": true,
+          "2": true,
+          "3": true
+        },
+        "all_correct": true
+      },
+      {
+        "domain": "vendor_onboarding",
+        "spoofed": false,
+        "raw_response": "1: RETRACT - It is derived solely from the revoked source B.\n2: RETRACT - It is derived solely from Memory 1, which has been retracted.\n3: RETRACT - It is partially derived from Memory 1, which has been retracted, meaning its joint basis is no longer valid.",
+        "verdicts": {
+          "1": "RETRACT",
+          "2": "RETRACT",
+          "3": "RETRACT"
+        },
+        "expected": {
+          "1": "RETRACT",
+          "2": "RETRACT",
+          "3": "SURVIVE"
+        },
+        "correct": {
+          "1": true,
+          "2": true,
+          "3": false
+        },
+        "all_correct": false
+      },
+      {
+        "domain": "flight_compensation",
+        "spoofed": false,
+        "raw_response": "1: RETRACT - This memory is derived solely from the revoked internal delay log (B).\n2: RETRACT - This memory relies entirely on M1, which has been retracted.\n3: SURVIVE - The conclusion that compensation was approved remains valid because the independent passenger evidence (C) still proves a delay exceeding 4 hours.",
+        "verdicts": {
+          "1": "RETRACT",
+          "2": "RETRACT",
+          "3": "SURVIVE"
+        },
+        "expected": {
+          "1": "RETRACT",
+          "2": "RETRACT",
+          "3": "SURVIVE"
+        },
+        "correct": {
+          "1": true,
+          "2": true,
+          "3": true
+        },
+        "all_correct": true
+      }
+    ],
+    "skeptical": [
+      {
+        "domain": "server_access",
+        "spoofed": true,
+        "raw_response": "1: RETRACT - This memory is derived solely from the HR clearance record, which has been revoked due to tampering.\n2: RETRACT - This memory is derived entirely from Memory 1, which has been retracted.\n3: RETRACT - The central badge-provisioning system is likely populated from the compromised HR system, meaning the verification is not genuinely independent of the revoked source.",
+        "verdicts": {
+          "1": "RETRACT",
+          "2": "RETRACT",
+          "3": "RETRACT"
+        },
+        "expected": {
+          "1": "RETRACT",
+          "2": "RETRACT",
+          "3": "RETRACT"
+        },
+        "correct": {
+          "1": true,
+          "2": true,
+          "3": true
+        },
+        "all_correct": true
+      },
+      {
+        "domain": "cfo_approval",
+        "spoofed": false,
+        "raw_response": "1: RETRACT - This memory is derived solely from the revoked source B regarding the $14,200 invoice.\n2: RETRACT - This memory is derived solely from the now-retracted memory 1.\n3: SURVIVE - The conclusion that CFO sign-off is required remains valid because the independent purchase order (Source C) is genuine and still places the amount ($13,800) above the $10,000 threshold.",
+        "verdicts": {
+          "1": "RETRACT",
+          "2": "RETRACT",
+          "3": "SURVIVE"
+        },
+        "expected": {
+          "1": "RETRACT",
+          "2": "RETRACT",
+          "3": "SURVIVE"
+        },
+        "correct": {
+          "1": true,
+          "2": true,
+          "3": true
+        },
+        "all_correct": true
+      },
+      {
+        "domain": "vendor_onboarding",
+        "spoofed": false,
+        "raw_response": "1: RETRACT - This memory relies entirely on the revoked self-attestation from Northgate Logistics.\n2: RETRACT - This memory is derived from Memory 1, which is now retracted due to its reliance on the revoked source.\n3: SURVIVE - The conclusion that Northgate meets security requirements remains supported by the genuinely independent client reference confirming they passed a third-party SOC 2 audit.",
+        "verdicts": {
+          "1": "RETRACT",
+          "2": "RETRACT",
+          "3": "SURVIVE"
+        },
+        "expected": {
+          "1": "RETRACT",
+          "2": "RETRACT",
+          "3": "SURVIVE"
+        },
+        "correct": {
+          "1": true,
+          "2": true,
+          "3": true
+        },
+        "all_correct": true
+      },
+      {
+        "domain": "flight_compensation",
+        "spoofed": false,
+        "raw_response": "1: RETRACT - This memory relies entirely on the airline's internal delay log, which has been revoked due to a clock-sync bug.\n2: RETRACT - This memory is derived from Memory 1 and depends specifically on the now-revoked internal log determination.\n3: SURVIVE - The approval of compensation remains supported by the passenger's genuinely independent boarding-pass and departure-board evidence, which shows a delay exceeding the 4-hour threshold.",
+        "verdicts": {
+          "1": "RETRACT",
+          "2": "RETRACT",
+          "3": "SURVIVE"
+        },
+        "expected": {
+          "1": "RETRACT",
+          "2": "RETRACT",
+          "3": "SURVIVE"
+        },
+        "correct": {
+          "1": true,
+          "2": true,
+          "3": true
+        },
+        "all_correct": true
+      }
+    ]
+  },
+  "summary": {
+    "naive": {
+      "accuracy": "10/12",
+      "accuracy_frac": 0.8333333333333334,
+      "spoofed_m2b_caught": false,
+      "honest_domains_all_correct": false
+    },
+    "skeptical": {
+      "accuracy": "12/12",
+      "accuracy_frac": 1.0,
+      "spoofed_m2b_caught": true,
+      "honest_domains_all_correct": true
+    }
+  }
+}

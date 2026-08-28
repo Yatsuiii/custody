@@ -71,6 +71,12 @@ Allowed files:
 - research/experiments/RSM_CRUX9_REDUNDANT_CASCADE/run.py
 - research/experiments/RSM_CRUX9_REDUNDANT_CASCADE/RESULT.md
 - research/experiments/RSM_CRUX9_REDUNDANT_CASCADE/result.json
+- research/experiments/RSM_CRUX_SERIES_SUMMARY.md
+- research/experiments/RSM_CRUX10_SPOOFED_INDEPENDENCE/PLAN.md
+- research/experiments/RSM_CRUX10_SPOOFED_INDEPENDENCE/fixture.json
+- research/experiments/RSM_CRUX10_SPOOFED_INDEPENDENCE/run.py
+- research/experiments/RSM_CRUX10_SPOOFED_INDEPENDENCE/RESULT.md
+- research/experiments/RSM_CRUX10_SPOOFED_INDEPENDENCE/result.json
 - .claude/SESSION_CONTRACT.md (this file)
 
 Non-goals:
