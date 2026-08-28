@@ -61,6 +61,11 @@ Allowed files:
 - research/experiments/RSM_CRUX7B_STRUCTURAL_PROVENANCE/run.py
 - research/experiments/RSM_CRUX7B_STRUCTURAL_PROVENANCE/RESULT.md
 - research/experiments/RSM_CRUX7B_STRUCTURAL_PROVENANCE/result.json
+- research/experiments/RSM_CRUX8_SPOOFED_PROVENANCE/PLAN.md
+- research/experiments/RSM_CRUX8_SPOOFED_PROVENANCE/fixture.json
+- research/experiments/RSM_CRUX8_SPOOFED_PROVENANCE/run.py
+- research/experiments/RSM_CRUX8_SPOOFED_PROVENANCE/RESULT.md
+- research/experiments/RSM_CRUX8_SPOOFED_PROVENANCE/result.json
 - .claude/SESSION_CONTRACT.md (this file)
 
 Non-goals:
