@@ -1,0 +1,93 @@
+{
+  "model": "gemini-3.5-flash",
+  "project": "project-988bc9fe-092c-4b32-90c",
+  "domains": [
+    {
+      "domain": "cfo_approval",
+      "raw_response": "1: RETRACT - This memory is derived solely from the revoked source B.\n2: RETRACT - This memory relies entirely on Memory 1, which has been retracted.\n3: SURVIVE - The conclusion that CFO sign-off is required remains valid because the independent source C confirms the amount of $13,800 still exceeds the $10,000 threshold.",
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "all_correct": true
+    },
+    {
+      "domain": "server_access",
+      "raw_response": "1: RETRACT - This memory is derived solely from the revoked HR personnel record (Source B).\n2: RETRACT - This memory depends entirely on Memory 1, which has been retracted.\n3: SURVIVE - The conclusion that security confirmed her access is valid still holds due to the independent biometric badge audit (Source C).",
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "all_correct": true
+    },
+    {
+      "domain": "vendor_onboarding",
+      "raw_response": "1: RETRACT - It is derived solely from the revoked source B.\n2: RETRACT - It is derived solely from Memory 1, which has been retracted.\n3: SURVIVE - The conclusion that Northgate meets SOC 2 requirements remains supported by the independent reference check in source C.",
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "all_correct": true
+    },
+    {
+      "domain": "flight_compensation",
+      "raw_response": "1: RETRACT - This memory is derived solely from the revoked source B.\n2: RETRACT - This memory is derived solely from M1, which has been retracted due to its reliance on the revoked source.\n3: SURVIVE - The conclusion remains supported by the independent passenger evidence C showing a delay of over 4 hours.",
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "all_correct": true
+    }
+  ],
+  "summary": {
+    "total_judgments": 12,
+    "total_correct": 12,
+    "accuracy": 1.0,
+    "domains_fully_correct": 4,
+    "domains_total": 4
+  }
+}

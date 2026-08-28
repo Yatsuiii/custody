@@ -66,6 +66,11 @@ Allowed files:
 - research/experiments/RSM_CRUX8_SPOOFED_PROVENANCE/run.py
 - research/experiments/RSM_CRUX8_SPOOFED_PROVENANCE/RESULT.md
 - research/experiments/RSM_CRUX8_SPOOFED_PROVENANCE/result.json
+- research/experiments/RSM_CRUX9_REDUNDANT_CASCADE/PLAN.md
+- research/experiments/RSM_CRUX9_REDUNDANT_CASCADE/fixture.json
+- research/experiments/RSM_CRUX9_REDUNDANT_CASCADE/run.py
+- research/experiments/RSM_CRUX9_REDUNDANT_CASCADE/RESULT.md
+- research/experiments/RSM_CRUX9_REDUNDANT_CASCADE/result.json
 - .claude/SESSION_CONTRACT.md (this file)
 
 Non-goals:
