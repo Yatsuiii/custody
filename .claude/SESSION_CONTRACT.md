@@ -36,6 +36,11 @@ Allowed files:
 - research/experiments/RSM_CRUX3_REDUNDANT_ISOLATED/run.py
 - research/experiments/RSM_CRUX3_REDUNDANT_ISOLATED/RESULT.md
 - research/experiments/RSM_CRUX3_REDUNDANT_ISOLATED/result.json
+- research/experiments/RSM_CRUX4_FUSED_GENERATION/PLAN.md
+- research/experiments/RSM_CRUX4_FUSED_GENERATION/fixture.json
+- research/experiments/RSM_CRUX4_FUSED_GENERATION/run.py
+- research/experiments/RSM_CRUX4_FUSED_GENERATION/RESULT.md
+- research/experiments/RSM_CRUX4_FUSED_GENERATION/result.json
 - .claude/SESSION_CONTRACT.md (this file)
 
 Non-goals:
