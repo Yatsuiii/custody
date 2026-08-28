@@ -38,6 +38,10 @@ Allowed files:
 - research/experiments/E2D_EXT3_LEGACY_UNKNOWN_TIMESTAMP/run.py
 - research/experiments/E2D_EXT3_LEGACY_UNKNOWN_TIMESTAMP/RESULT.md
 - research/experiments/E2D_EXT3_LEGACY_UNKNOWN_TIMESTAMP/result.json
+- research/experiments/E2D_EXT4_MANIFEST_PARENTS/PLAN.md
+- research/experiments/E2D_EXT4_MANIFEST_PARENTS/run.py
+- research/experiments/E2D_EXT4_MANIFEST_PARENTS/RESULT.md
+- research/experiments/E2D_EXT4_MANIFEST_PARENTS/result.json
 - .claude/SESSION_CONTRACT.md (this file)
 
 Non-goals:
