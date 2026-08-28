@@ -1,0 +1,203 @@
+{
+  "model": "gemini-3.5-flash",
+  "project": "project-988bc9fe-092c-4b32-90c",
+  "metrics": {
+    "explicit_false_positive_rate": 0.0,
+    "explicit_false_positives": 0,
+    "explicit_n": 8,
+    "ambiguous_false_positive_rate": 0.5,
+    "ambiguous_false_positives": 4,
+    "ambiguous_n": 8,
+    "overall_accuracy": 0.75,
+    "domains_matching_hypothesis": 4,
+    "domains_total": 8
+  },
+  "by_domain": {
+    "background_check": {
+      "explicit_correct": true,
+      "ambiguous_correct": false,
+      "agree_with_hypothesis": true
+    },
+    "expense_approval": {
+      "explicit_correct": true,
+      "ambiguous_correct": false,
+      "agree_with_hypothesis": true
+    },
+    "incident_witness": {
+      "explicit_correct": true,
+      "ambiguous_correct": true,
+      "agree_with_hypothesis": false
+    },
+    "insurance_claim": {
+      "explicit_correct": true,
+      "ambiguous_correct": false,
+      "agree_with_hypothesis": true
+    },
+    "kyc_identity": {
+      "explicit_correct": true,
+      "ambiguous_correct": false,
+      "agree_with_hypothesis": true
+    },
+    "license_compliance": {
+      "explicit_correct": true,
+      "ambiguous_correct": true,
+      "agree_with_hypothesis": false
+    },
+    "qa_testing": {
+      "explicit_correct": true,
+      "ambiguous_correct": true,
+      "agree_with_hypothesis": false
+    },
+    "vendor_cert": {
+      "explicit_correct": true,
+      "ambiguous_correct": true,
+      "agree_with_hypothesis": false
+    }
+  },
+  "per_case": [
+    {
+      "id": "vendor_cert_explicit",
+      "domain": "vendor_cert",
+      "variant": "explicit",
+      "ground_truth_depends_on_b": false,
+      "judged_depends_on_b": false,
+      "correct": true,
+      "raw_response": "ANSWER: NO\nREASON: Since Source A remains valid, Vendor X's SOC 2 audit alone is sufficient under the policy to keep the vendor marked as security-vetted."
+    },
+    {
+      "id": "vendor_cert_ambiguous",
+      "domain": "vendor_cert",
+      "variant": "ambiguous",
+      "ground_truth_depends_on_b": false,
+      "judged_depends_on_b": false,
+      "correct": true,
+      "raw_response": "ANSWER: NO\nREASON: Source A remains true, and passing a SOC 2 audit is independently sufficient to justify marking the vendor as security-vetted."
+    },
+    {
+      "id": "expense_approval_explicit",
+      "domain": "expense_approval",
+      "variant": "explicit",
+      "ground_truth_depends_on_b": false,
+      "judged_depends_on_b": false,
+      "correct": true,
+      "raw_response": "ANSWER: NO\nREASON: Since the expense report is under $5,000, the manager's approval in Source A is independently sufficient to justify the reimbursement approval under the policy."
+    },
+    {
+      "id": "expense_approval_ambiguous",
+      "domain": "expense_approval",
+      "variant": "ambiguous",
+      "ground_truth_depends_on_b": false,
+      "judged_depends_on_b": true,
+      "correct": false,
+      "raw_response": "ANSWER: YES\nREASON: Without the Finance department's separate approval, the expense report lacks the complete authorization necessary to be fully cleared for reimbursement."
+    },
+    {
+      "id": "incident_witness_explicit",
+      "domain": "incident_witness",
+      "variant": "explicit",
+      "ground_truth_depends_on_b": false,
+      "judged_depends_on_b": false,
+      "correct": true,
+      "raw_response": "ANSWER: NO\nREASON: According to the policy, the security camera footage in Source A is sufficient on its own to confirm the incident's time, meaning the derived memory remains valid even if Source B is removed."
+    },
+    {
+      "id": "incident_witness_ambiguous",
+      "domain": "incident_witness",
+      "variant": "ambiguous",
+      "ground_truth_depends_on_b": false,
+      "judged_depends_on_b": false,
+      "correct": true,
+      "raw_response": "ANSWER: NO\nREASON: The derived memory remains fully supported by the independent security camera footage in Source A, so the claim itself does not need to be changed or withdrawn."
+    },
+    {
+      "id": "qa_testing_explicit",
+      "domain": "qa_testing",
+      "variant": "explicit",
+      "ground_truth_depends_on_b": false,
+      "judged_depends_on_b": false,
+      "correct": true,
+      "raw_response": "ANSWER: NO\nREASON: According to the policy, passing the automated suite alone (Source A) is sufficient to qualify the release as QA-passed, so the derived memory remains valid even if Source B is removed."
+    },
+    {
+      "id": "qa_testing_ambiguous",
+      "domain": "qa_testing",
+      "variant": "ambiguous",
+      "ground_truth_depends_on_b": false,
+      "judged_depends_on_b": false,
+      "correct": true,
+      "raw_response": "ANSWER: NO\nREASON: The derived memory remains valid because Source A independently supports the claim that the release passed QA testing."
+    },
+    {
+      "id": "kyc_identity_explicit",
+      "domain": "kyc_identity",
+      "variant": "explicit",
+      "ground_truth_depends_on_b": false,
+      "judged_depends_on_b": false,
+      "correct": true,
+      "raw_response": "ANSWER: NO\nREASON: Because the KYC policy accepts either document alone, the valid government-issued photo ID in Source A remains sufficient on its own to satisfy the identity verification requirement."
+    },
+    {
+      "id": "kyc_identity_ambiguous",
+      "domain": "kyc_identity",
+      "variant": "ambiguous",
+      "ground_truth_depends_on_b": false,
+      "judged_depends_on_b": true,
+      "correct": false,
+      "raw_response": "ANSWER: YES\nREASON: Full KYC compliance typically requires both proof of identity and proof of address, meaning the loss of the utility bill invalidates the verified status."
+    },
+    {
+      "id": "license_compliance_explicit",
+      "domain": "license_compliance",
+      "variant": "explicit",
+      "ground_truth_depends_on_b": false,
+      "judged_depends_on_b": false,
+      "correct": true,
+      "raw_response": "ANSWER: NO\nREASON: Under the policy, the remaining valid internal audit (Source A) is independently sufficient to certify that the deployment is compliant, so the derived memory does not need to change."
+    },
+    {
+      "id": "license_compliance_ambiguous",
+      "domain": "license_compliance",
+      "variant": "ambiguous",
+      "ground_truth_depends_on_b": false,
+      "judged_depends_on_b": false,
+      "correct": true,
+      "raw_response": "ANSWER: NO\nREASON: The derived memory remains fully supported by the independent and valid Source A, which still confirms the software deployment is compliant."
+    },
+    {
+      "id": "background_check_explicit",
+      "domain": "background_check",
+      "variant": "explicit",
+      "ground_truth_depends_on_b": false,
+      "judged_depends_on_b": false,
+      "correct": true,
+      "raw_response": "ANSWER: NO\nREASON: Since the hiring policy requires only one of the two conditions to be met and Source A remains valid, the candidate still satisfies the background requirement."
+    },
+    {
+      "id": "background_check_ambiguous",
+      "domain": "background_check",
+      "variant": "ambiguous",
+      "ground_truth_depends_on_b": false,
+      "judged_depends_on_b": true,
+      "correct": false,
+      "raw_response": "ANSWER: YES\nREASON: If the positive professional reference check is removed or false, the candidate can no longer be confirmed to meet the complete background requirements for the role."
+    },
+    {
+      "id": "insurance_claim_explicit",
+      "domain": "insurance_claim",
+      "variant": "explicit",
+      "ground_truth_depends_on_b": false,
+      "judged_depends_on_b": false,
+      "correct": true,
+      "raw_response": "ANSWER: NO\nREASON: Since source A (photo evidence) remains valid and is independently sufficient under the policy for the claim to proceed, the derived memory's conclusion remains correct."
+    },
+    {
+      "id": "insurance_claim_ambiguous",
+      "domain": "insurance_claim",
+      "variant": "ambiguous",
+      "ground_truth_depends_on_b": false,
+      "judged_depends_on_b": true,
+      "correct": false,
+      "raw_response": "ANSWER: YES\nREASON: Without the written damage estimate, photo evidence alone is typically insufficient to satisfy the documentation requirements for an insurance claim to proceed."
+    }
+  ]
+}

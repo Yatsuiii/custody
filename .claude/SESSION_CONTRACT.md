@@ -31,6 +31,11 @@ Allowed files:
 - research/experiments/RSM_CRUX2_SUBCLAIM_ATTRIBUTION/run.py
 - research/experiments/RSM_CRUX2_SUBCLAIM_ATTRIBUTION/RESULT.md
 - research/experiments/RSM_CRUX2_SUBCLAIM_ATTRIBUTION/result.json
+- research/experiments/RSM_CRUX3_REDUNDANT_ISOLATED/PLAN.md
+- research/experiments/RSM_CRUX3_REDUNDANT_ISOLATED/fixture.json
+- research/experiments/RSM_CRUX3_REDUNDANT_ISOLATED/run.py
+- research/experiments/RSM_CRUX3_REDUNDANT_ISOLATED/RESULT.md
+- research/experiments/RSM_CRUX3_REDUNDANT_ISOLATED/result.json
 - .claude/SESSION_CONTRACT.md (this file)
 
 Non-goals:

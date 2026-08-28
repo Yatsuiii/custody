@@ -1,0 +1,162 @@
+[
+  {
+    "id": "vendor_cert_explicit",
+    "domain": "vendor_cert",
+    "variant": "explicit",
+    "source_a": "Vendor X passed a SOC 2 audit in January 2026.",
+    "source_b": "Vendor X passed a separate ISO 27001 certification audit in March 2026.",
+    "policy_context": "Vendor risk policy: either a SOC 2 audit alone or an ISO 27001 certification alone is sufficient to mark a vendor as security-vetted.",
+    "derived_memory": "Vendor X is marked as security-vetted.",
+    "depends_on_b": false
+  },
+  {
+    "id": "vendor_cert_ambiguous",
+    "domain": "vendor_cert",
+    "variant": "ambiguous",
+    "source_a": "Vendor X passed a SOC 2 audit in January 2026.",
+    "source_b": "Vendor X passed a separate ISO 27001 certification audit in March 2026.",
+    "policy_context": null,
+    "derived_memory": "Vendor X is marked as security-vetted.",
+    "depends_on_b": false
+  },
+  {
+    "id": "expense_approval_explicit",
+    "domain": "expense_approval",
+    "variant": "explicit",
+    "source_a": "Expense report #221 ($1,200) was approved by the employee's direct manager.",
+    "source_b": "Expense report #221 was separately approved by the Finance department.",
+    "policy_context": "Expense policy: for reports under $5,000, manager approval alone or Finance approval alone is sufficient for reimbursement.",
+    "derived_memory": "Expense report #221 is approved for reimbursement.",
+    "depends_on_b": false
+  },
+  {
+    "id": "expense_approval_ambiguous",
+    "domain": "expense_approval",
+    "variant": "ambiguous",
+    "source_a": "Expense report #221 ($1,200) was approved by the employee's direct manager.",
+    "source_b": "Expense report #221 was separately approved by the Finance department.",
+    "policy_context": null,
+    "derived_memory": "Expense report #221 is approved for reimbursement.",
+    "depends_on_b": false
+  },
+  {
+    "id": "incident_witness_explicit",
+    "domain": "incident_witness",
+    "variant": "explicit",
+    "source_a": "Security camera footage confirms the loading dock incident occurred at 3pm on Aug 14.",
+    "source_b": "A separate eyewitness (a different employee) also confirms the loading dock incident occurred at 3pm on Aug 14.",
+    "policy_context": "Incident verification policy: either camera footage alone or a credible eyewitness account alone is sufficient to confirm an incident's time.",
+    "derived_memory": "The loading dock incident occurred at 3pm on Aug 14.",
+    "depends_on_b": false
+  },
+  {
+    "id": "incident_witness_ambiguous",
+    "domain": "incident_witness",
+    "variant": "ambiguous",
+    "source_a": "Security camera footage confirms the loading dock incident occurred at 3pm on Aug 14.",
+    "source_b": "A separate eyewitness (a different employee) also confirms the loading dock incident occurred at 3pm on Aug 14.",
+    "policy_context": null,
+    "derived_memory": "The loading dock incident occurred at 3pm on Aug 14.",
+    "depends_on_b": false
+  },
+  {
+    "id": "qa_testing_explicit",
+    "domain": "qa_testing",
+    "variant": "explicit",
+    "source_a": "The new release passed the full automated QA test suite with zero failures.",
+    "source_b": "The new release was separately verified via manual QA testing by a second team, with zero failures.",
+    "policy_context": "QA policy: passing either the automated suite alone or manual QA alone is sufficient to mark a release as QA-passed.",
+    "derived_memory": "The new release passed QA testing.",
+    "depends_on_b": false
+  },
+  {
+    "id": "qa_testing_ambiguous",
+    "domain": "qa_testing",
+    "variant": "ambiguous",
+    "source_a": "The new release passed the full automated QA test suite with zero failures.",
+    "source_b": "The new release was separately verified via manual QA testing by a second team, with zero failures.",
+    "policy_context": null,
+    "derived_memory": "The new release passed QA testing.",
+    "depends_on_b": false
+  },
+  {
+    "id": "kyc_identity_explicit",
+    "domain": "kyc_identity",
+    "variant": "explicit",
+    "source_a": "The customer provided a valid government-issued photo ID.",
+    "source_b": "The customer separately provided a utility bill matching their stated address.",
+    "policy_context": "KYC policy: either the photo ID alone or the utility bill alone satisfies identity verification requirements.",
+    "derived_memory": "The customer's identity is verified for KYC purposes.",
+    "depends_on_b": false
+  },
+  {
+    "id": "kyc_identity_ambiguous",
+    "domain": "kyc_identity",
+    "variant": "ambiguous",
+    "source_a": "The customer provided a valid government-issued photo ID.",
+    "source_b": "The customer separately provided a utility bill matching their stated address.",
+    "policy_context": null,
+    "derived_memory": "The customer's identity is verified for KYC purposes.",
+    "depends_on_b": false
+  },
+  {
+    "id": "license_compliance_explicit",
+    "domain": "license_compliance",
+    "variant": "explicit",
+    "source_a": "An internal license audit found the software deployment fully compliant with license terms.",
+    "source_b": "An external third-party license audit separately found the deployment fully compliant.",
+    "policy_context": "License compliance policy: either the internal audit alone or the external audit alone is sufficient to certify compliance.",
+    "derived_memory": "The software deployment is license-compliant.",
+    "depends_on_b": false
+  },
+  {
+    "id": "license_compliance_ambiguous",
+    "domain": "license_compliance",
+    "variant": "ambiguous",
+    "source_a": "An internal license audit found the software deployment fully compliant with license terms.",
+    "source_b": "An external third-party license audit separately found the deployment fully compliant.",
+    "policy_context": null,
+    "derived_memory": "The software deployment is license-compliant.",
+    "depends_on_b": false
+  },
+  {
+    "id": "background_check_explicit",
+    "domain": "background_check",
+    "variant": "explicit",
+    "source_a": "The candidate's criminal background check came back clear.",
+    "source_b": "The candidate's professional reference check came back positive.",
+    "policy_context": "Hiring policy: for basic-tier roles, either a clear criminal background check alone or a positive reference check alone satisfies the background requirement.",
+    "derived_memory": "The candidate meets the background requirements for a basic-tier role.",
+    "depends_on_b": false
+  },
+  {
+    "id": "background_check_ambiguous",
+    "domain": "background_check",
+    "variant": "ambiguous",
+    "source_a": "The candidate's criminal background check came back clear.",
+    "source_b": "The candidate's professional reference check came back positive.",
+    "policy_context": null,
+    "derived_memory": "The candidate meets the background requirements for a basic-tier role.",
+    "depends_on_b": false
+  },
+  {
+    "id": "insurance_claim_explicit",
+    "domain": "insurance_claim",
+    "variant": "explicit",
+    "source_a": "The claimant submitted photo evidence of the vehicle damage.",
+    "source_b": "The claimant separately submitted a repair shop's written damage estimate.",
+    "policy_context": "Claims policy: either photo evidence alone or a repair shop estimate alone is sufficient documentation for a claim to proceed.",
+    "derived_memory": "The insurance claim has sufficient documentation to proceed.",
+    "depends_on_b": false
+  },
+  {
+    "id": "insurance_claim_ambiguous",
+    "domain": "insurance_claim",
+    "variant": "ambiguous",
+    "source_a": "The claimant submitted photo evidence of the vehicle damage.",
+    "source_b": "The claimant separately submitted a repair shop's written damage estimate.",
+    "policy_context": null,
+    "derived_memory": "The insurance claim has sufficient documentation to proceed.",
+    "depends_on_b": false
+  }
+]
