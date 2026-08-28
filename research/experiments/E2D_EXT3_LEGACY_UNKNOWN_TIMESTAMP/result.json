@@ -1,0 +1,24 @@
+{
+  "baseline_crash_detail": "TypeError: '<=' not supported between instances of 'str' and 'NoneType'",
+  "checks": {
+    "baseline_crashes_rather_than_silently_passes": true,
+    "legacy_record_affected": true,
+    "escalation_cost_visible_benign_root": true,
+    "escalation_cost_visible_benign_identity": true,
+    "no_leak_to_unvouched_source": true,
+    "no_leak_to_relay_source": true,
+    "vendor_2_still_affected": true,
+    "no_crash_with_fallback": true
+  },
+  "affected_under_escalation": [
+    "E-BENIGN-1",
+    "E-BENIGN-IDENTITY-1",
+    "E-BENIGN-PARA-1",
+    "E-LEGACY-1",
+    "E-SYN-ACT-ACT",
+    "E-SYN-ACT-NONE",
+    "E-VENDOR-2"
+  ],
+  "verdict": "PASS",
+  "verdict_reason": "all checks passed"
+}

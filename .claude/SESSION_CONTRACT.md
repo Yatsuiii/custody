@@ -34,6 +34,10 @@ Allowed files:
 - research/experiments/E2D_EXT2_OVERLAPPING_WINDOWS/run.py
 - research/experiments/E2D_EXT2_OVERLAPPING_WINDOWS/RESULT.md
 - research/experiments/E2D_EXT2_OVERLAPPING_WINDOWS/result.json
+- research/experiments/E2D_EXT3_LEGACY_UNKNOWN_TIMESTAMP/PLAN.md
+- research/experiments/E2D_EXT3_LEGACY_UNKNOWN_TIMESTAMP/run.py
+- research/experiments/E2D_EXT3_LEGACY_UNKNOWN_TIMESTAMP/RESULT.md
+- research/experiments/E2D_EXT3_LEGACY_UNKNOWN_TIMESTAMP/result.json
 - .claude/SESSION_CONTRACT.md (this file)
 
 Non-goals:
