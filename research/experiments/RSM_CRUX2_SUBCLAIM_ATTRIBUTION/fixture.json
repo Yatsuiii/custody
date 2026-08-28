@@ -1,0 +1,121 @@
+[
+  {
+    "id": "C1",
+    "category": "composite_partial",
+    "source_a": "Invoice #481 from Vendor X is for $12,000.",
+    "source_b": "Vendor X's payment account on file is ACCT-9981.",
+    "policy_context": "Company policy: invoices over $10,000 require CFO approval before payment. Payments are sent to the vendor's account on file.",
+    "derived_memory": "Invoice #481 for $12,000 from Vendor X requires CFO approval and should be paid to ACCT-9981.",
+    "sub_claims": [
+      {"text": "The invoice amount is $12,000", "depends_on_b": false},
+      {"text": "The invoice is from Vendor X", "depends_on_b": false},
+      {"text": "CFO approval is required for this invoice", "depends_on_b": false},
+      {"text": "Payment should be sent to ACCT-9981", "depends_on_b": true}
+    ]
+  },
+  {
+    "id": "C2",
+    "category": "composite_partial",
+    "source_a": "Sarah Chen has Level 3 security clearance.",
+    "source_b": "The server room's posted access hours are 6am-10pm on weekdays.",
+    "policy_context": "Policy: Level 3 clearance allows server room access during posted access hours.",
+    "derived_memory": "Sarah Chen may access the server room, limited to 6am-10pm on weekdays.",
+    "sub_claims": [
+      {"text": "Sarah Chen may access the server room", "depends_on_b": false},
+      {"text": "Access is limited to 6am-10pm on weekdays", "depends_on_b": true}
+    ]
+  },
+  {
+    "id": "C3",
+    "category": "composite_partial",
+    "source_a": "Customer #552 is an enterprise-tier customer.",
+    "source_b": "Customer #552 reported a critical outage affecting their production system.",
+    "policy_context": "Policy: enterprise customers get a 4-hour response SLA. Any critical outage report is escalated to on-call engineering regardless of customer tier.",
+    "derived_memory": "Customer #552's ticket carries a 4-hour SLA and has been escalated to on-call engineering due to a critical production outage.",
+    "sub_claims": [
+      {"text": "The ticket carries a 4-hour SLA", "depends_on_b": false},
+      {"text": "The ticket was escalated to on-call engineering", "depends_on_b": true},
+      {"text": "This ticket concerns customer #552", "depends_on_b": false}
+    ]
+  },
+  {
+    "id": "C4",
+    "category": "composite_partial",
+    "source_a": "Contract #302 with Vendor X was renewed for a 2-year term starting Aug 1.",
+    "source_b": "The renewed contract includes a 5% price increase clause.",
+    "policy_context": null,
+    "derived_memory": "Contract #302 with Vendor X runs for 2 years from Aug 1, and includes a 5% price increase.",
+    "sub_claims": [
+      {"text": "The contract runs for 2 years from Aug 1", "depends_on_b": false},
+      {"text": "The contract includes a 5% price increase", "depends_on_b": true}
+    ]
+  },
+  {
+    "id": "C5",
+    "category": "composite_partial",
+    "source_a": "A phishing email was reported by an employee on Aug 14.",
+    "source_b": "The phishing email originated from IP address 203.0.113.7, which appears on a known threat-intelligence blocklist.",
+    "policy_context": null,
+    "derived_memory": "A phishing email was reported on Aug 14; it originated from a known malicious IP (203.0.113.7) per threat intelligence.",
+    "sub_claims": [
+      {"text": "A phishing email was reported on Aug 14", "depends_on_b": false},
+      {"text": "The email originated from a known malicious IP per threat intelligence", "depends_on_b": true}
+    ]
+  },
+  {
+    "id": "C6",
+    "category": "redundant_explicit",
+    "source_a": "Vendor X independently passed a SOC 2 audit in January 2026.",
+    "source_b": "Vendor X also independently passed a separate ISO 27001 certification audit in March 2026. Per vendor risk policy, either certification alone is sufficient to mark a vendor as security-vetted.",
+    "policy_context": null,
+    "derived_memory": "Vendor X is marked as security-vetted.",
+    "sub_claims": [
+      {"text": "Vendor X is security-vetted", "depends_on_b": false}
+    ]
+  },
+  {
+    "id": "C7",
+    "category": "redundant_ambiguous",
+    "source_a": "Vendor X independently passed a SOC 2 audit in January 2026.",
+    "source_b": "Vendor X also passed a separate ISO 27001 certification audit in March 2026.",
+    "policy_context": null,
+    "derived_memory": "Vendor X is marked as security-vetted.",
+    "sub_claims": [
+      {"text": "Vendor X is security-vetted", "depends_on_b": false}
+    ]
+  },
+  {
+    "id": "C8",
+    "category": "redundant_explicit",
+    "source_a": "Expense report #221 ($1,200) was approved by the employee's direct manager.",
+    "source_b": "Expense report #221 was also independently approved by Finance. Company policy states either approval alone is sufficient for reports under $5,000.",
+    "policy_context": null,
+    "derived_memory": "Expense report #221 is approved for reimbursement.",
+    "sub_claims": [
+      {"text": "The expense report is approved for reimbursement", "depends_on_b": false}
+    ]
+  },
+  {
+    "id": "C9",
+    "category": "redundant_ambiguous",
+    "source_a": "Expense report #221 ($1,200) was approved by the employee's direct manager.",
+    "source_b": "Expense report #221 was also independently approved by Finance.",
+    "policy_context": null,
+    "derived_memory": "Expense report #221 is approved for reimbursement.",
+    "sub_claims": [
+      {"text": "The expense report is approved for reimbursement", "depends_on_b": false}
+    ]
+  },
+  {
+    "id": "C10",
+    "category": "transitive",
+    "source_a": "Vendor X is an approved supplier.",
+    "source_b": "Vendor X's payment account changed to ACCT-5521 on Aug 20, per an email request that was not verified through the standard callback procedure.",
+    "policy_context": "Policy: invoices from any approved supplier are auto-processed without manual review. Payments go to the vendor's account on file.",
+    "derived_memory": "Vendor X's invoices can be auto-processed without manual review, and payment should go to ACCT-5521.",
+    "sub_claims": [
+      {"text": "Vendor X's invoices can be auto-processed without manual review", "depends_on_b": false},
+      {"text": "Payment should be sent to ACCT-5521", "depends_on_b": true}
+    ]
+  }
+]

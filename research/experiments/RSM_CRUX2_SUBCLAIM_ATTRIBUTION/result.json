@@ -1,0 +1,253 @@
+{
+  "model": "gemini-3.5-flash",
+  "project": "project-988bc9fe-092c-4b32-90c",
+  "metrics": {
+    "subclaim_accuracy": 0.8421052631578947,
+    "correct": 16,
+    "total": 19,
+    "unparsed": 0,
+    "precision_on_depends_true": 0.6666666666666666,
+    "recall_on_depends_true": 1.0,
+    "false_positives": 3,
+    "false_negatives": 0
+  },
+  "explicit_vs_ambiguous_pairs": {
+    "vendor_cert_pair": {
+      "explicit_C6": {
+        "text": "Vendor X is security-vetted",
+        "ground_truth_depends_on_b": false,
+        "judged_depends_on_b": true,
+        "correct": false,
+        "unparsed": false
+      },
+      "ambiguous_C7": {
+        "text": "Vendor X is security-vetted",
+        "ground_truth_depends_on_b": false,
+        "judged_depends_on_b": false,
+        "correct": true,
+        "unparsed": false
+      }
+    },
+    "expense_approval_pair": {
+      "explicit_C8": {
+        "text": "The expense report is approved for reimbursement",
+        "ground_truth_depends_on_b": false,
+        "judged_depends_on_b": false,
+        "correct": true,
+        "unparsed": false
+      },
+      "ambiguous_C9": {
+        "text": "The expense report is approved for reimbursement",
+        "ground_truth_depends_on_b": false,
+        "judged_depends_on_b": true,
+        "correct": false,
+        "unparsed": false
+      }
+    }
+  },
+  "per_case": [
+    {
+      "id": "C1",
+      "category": "composite_partial",
+      "sub_claims": [
+        {
+          "text": "The invoice amount is $12,000",
+          "ground_truth_depends_on_b": false,
+          "judged_depends_on_b": false,
+          "correct": true,
+          "unparsed": false
+        },
+        {
+          "text": "The invoice is from Vendor X",
+          "ground_truth_depends_on_b": false,
+          "judged_depends_on_b": false,
+          "correct": true,
+          "unparsed": false
+        },
+        {
+          "text": "CFO approval is required for this invoice",
+          "ground_truth_depends_on_b": false,
+          "judged_depends_on_b": false,
+          "correct": true,
+          "unparsed": false
+        },
+        {
+          "text": "Payment should be sent to ACCT-9981",
+          "ground_truth_depends_on_b": true,
+          "judged_depends_on_b": true,
+          "correct": true,
+          "unparsed": false
+        }
+      ],
+      "raw_response": "1: NO\n2: NO\n3: NO\n4: YES"
+    },
+    {
+      "id": "C2",
+      "category": "composite_partial",
+      "sub_claims": [
+        {
+          "text": "Sarah Chen may access the server room",
+          "ground_truth_depends_on_b": false,
+          "judged_depends_on_b": false,
+          "correct": true,
+          "unparsed": false
+        },
+        {
+          "text": "Access is limited to 6am-10pm on weekdays",
+          "ground_truth_depends_on_b": true,
+          "judged_depends_on_b": true,
+          "correct": true,
+          "unparsed": false
+        }
+      ],
+      "raw_response": "1: NO\n2: YES"
+    },
+    {
+      "id": "C3",
+      "category": "composite_partial",
+      "sub_claims": [
+        {
+          "text": "The ticket carries a 4-hour SLA",
+          "ground_truth_depends_on_b": false,
+          "judged_depends_on_b": false,
+          "correct": true,
+          "unparsed": false
+        },
+        {
+          "text": "The ticket was escalated to on-call engineering",
+          "ground_truth_depends_on_b": true,
+          "judged_depends_on_b": true,
+          "correct": true,
+          "unparsed": false
+        },
+        {
+          "text": "This ticket concerns customer #552",
+          "ground_truth_depends_on_b": false,
+          "judged_depends_on_b": true,
+          "correct": false,
+          "unparsed": false
+        }
+      ],
+      "raw_response": "1: NO\n2: YES\n3: YES"
+    },
+    {
+      "id": "C4",
+      "category": "composite_partial",
+      "sub_claims": [
+        {
+          "text": "The contract runs for 2 years from Aug 1",
+          "ground_truth_depends_on_b": false,
+          "judged_depends_on_b": false,
+          "correct": true,
+          "unparsed": false
+        },
+        {
+          "text": "The contract includes a 5% price increase",
+          "ground_truth_depends_on_b": true,
+          "judged_depends_on_b": true,
+          "correct": true,
+          "unparsed": false
+        }
+      ],
+      "raw_response": "1: NO\n2: YES"
+    },
+    {
+      "id": "C5",
+      "category": "composite_partial",
+      "sub_claims": [
+        {
+          "text": "A phishing email was reported on Aug 14",
+          "ground_truth_depends_on_b": false,
+          "judged_depends_on_b": false,
+          "correct": true,
+          "unparsed": false
+        },
+        {
+          "text": "The email originated from a known malicious IP per threat intelligence",
+          "ground_truth_depends_on_b": true,
+          "judged_depends_on_b": true,
+          "correct": true,
+          "unparsed": false
+        }
+      ],
+      "raw_response": "1: NO\n2: YES"
+    },
+    {
+      "id": "C6",
+      "category": "redundant_explicit",
+      "sub_claims": [
+        {
+          "text": "Vendor X is security-vetted",
+          "ground_truth_depends_on_b": false,
+          "judged_depends_on_b": true,
+          "correct": false,
+          "unparsed": false
+        }
+      ],
+      "raw_response": "1: YES"
+    },
+    {
+      "id": "C7",
+      "category": "redundant_ambiguous",
+      "sub_claims": [
+        {
+          "text": "Vendor X is security-vetted",
+          "ground_truth_depends_on_b": false,
+          "judged_depends_on_b": false,
+          "correct": true,
+          "unparsed": false
+        }
+      ],
+      "raw_response": "1: NO"
+    },
+    {
+      "id": "C8",
+      "category": "redundant_explicit",
+      "sub_claims": [
+        {
+          "text": "The expense report is approved for reimbursement",
+          "ground_truth_depends_on_b": false,
+          "judged_depends_on_b": false,
+          "correct": true,
+          "unparsed": false
+        }
+      ],
+      "raw_response": "1: NO"
+    },
+    {
+      "id": "C9",
+      "category": "redundant_ambiguous",
+      "sub_claims": [
+        {
+          "text": "The expense report is approved for reimbursement",
+          "ground_truth_depends_on_b": false,
+          "judged_depends_on_b": true,
+          "correct": false,
+          "unparsed": false
+        }
+      ],
+      "raw_response": "1: YES"
+    },
+    {
+      "id": "C10",
+      "category": "transitive",
+      "sub_claims": [
+        {
+          "text": "Vendor X's invoices can be auto-processed without manual review",
+          "ground_truth_depends_on_b": false,
+          "judged_depends_on_b": false,
+          "correct": true,
+          "unparsed": false
+        },
+        {
+          "text": "Payment should be sent to ACCT-5521",
+          "ground_truth_depends_on_b": true,
+          "judged_depends_on_b": true,
+          "correct": true,
+          "unparsed": false
+        }
+      ],
+      "raw_response": "1: NO\n2: YES"
+    }
+  ]
+}
