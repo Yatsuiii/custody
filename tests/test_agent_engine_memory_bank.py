@@ -147,5 +147,100 @@ class RevokeFailsClosedOnAnUnreachableMemoryBank(unittest.IsolatedAsyncioTestCas
             await revoking.revoke(tool="crm_lookup", revocation_id="rev-1")
 
 
+@dataclass
+class _FakeMetadataValue:
+    string_value: str
+
+
+@dataclass
+class _FakeMemory:
+    fact: str
+    metadata: dict | None = None
+
+
+@dataclass
+class _FakeRetrievedMemory:
+    memory: _FakeMemory
+
+
+class _FakePager:
+    """Stands in for the SDK's async pager: iterates a fixed list."""
+
+    def __init__(self, items: list[_FakeRetrievedMemory]) -> None:
+        self._items = items
+
+    def __aiter__(self):
+        return self._aiter()
+
+    async def _aiter(self):
+        for item in self._items:
+            yield item
+
+
+@dataclass
+class _RetrievingMemoriesClient:
+    items: list[_FakeRetrievedMemory]
+
+    async def create(self, *, name, fact, scope, config):
+        raise NotImplementedError
+
+    async def retrieve(self, *, name, scope, similarity_search_params):
+        return _FakePager(self.items)
+
+    async def delete(self, *, name):
+        raise NotImplementedError
+
+
+class SearchMemoryReadsBackTheRecordIdItWrote(unittest.IsolatedAsyncioTestCase):
+    """`AgentEngineMemoryBank.write_record` embeds `custody_record_id` in
+    Memory Bank's own metadata at admission time
+    (`research/experiments/RECEIPT_COLLECTOR_PARAPHRASE_FALSIFIER` found
+    this was already true, but never read back). This is the read side."""
+
+    async def test_a_result_carrying_the_metadata_returns_its_record_id(self):
+        client = _RetrievingMemoriesClient(
+            items=[
+                _FakeRetrievedMemory(
+                    _FakeMemory(
+                        fact="the account renews in March",
+                        metadata={"custody_record_id": _FakeMetadataValue("inv-1:0:0")},
+                    )
+                )
+            ]
+        )
+        bank = AgentEngineMemoryBank(memories=client, engine_name="engines/1")
+
+        results = await bank.search_memory(app_name="app", user_id="u1", query="renewal")
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].text, "the account renews in March")
+        self.assertEqual(results[0].record_id, "inv-1:0:0")
+
+    async def test_a_result_with_no_metadata_carries_no_record_id(self):
+        """A memory written before this field existed, or by something
+        other than `write_record`. Absence must stay absence -- the caller
+        (`custody.origin`'s resolver) falls back to digest matching, never
+        treats a missing id as license to invent one."""
+        client = _RetrievingMemoriesClient(
+            items=[_FakeRetrievedMemory(_FakeMemory(fact="unrelated fact", metadata=None))]
+        )
+        bank = AgentEngineMemoryBank(memories=client, engine_name="engines/1")
+
+        results = await bank.search_memory(app_name="app", user_id="u1", query="q")
+
+        self.assertEqual(len(results), 1)
+        self.assertIsNone(results[0].record_id)
+
+    async def test_a_factless_result_is_skipped_same_as_before(self):
+        client = _RetrievingMemoriesClient(
+            items=[_FakeRetrievedMemory(_FakeMemory(fact="", metadata=None))]
+        )
+        bank = AgentEngineMemoryBank(memories=client, engine_name="engines/1")
+
+        results = await bank.search_memory(app_name="app", user_id="u1", query="q")
+
+        self.assertEqual(results, [])
+
+
 if __name__ == "__main__":
     unittest.main()

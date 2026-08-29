@@ -268,5 +268,137 @@ class RetrievalIsAttributedAsACitation(unittest.TestCase):
         self.assertEqual(result.record.derived_from, ())
 
 
+def multi_retrieval(
+    items: list[tuple[str, str | None]], invocation: str = "inv-2"
+) -> FakeEvent:
+    """A `load_memory` call returning several memories, each carrying the
+    text and (when Custody's own search_memory supplied one) the exact
+    custody record id it was written under -- the shape
+    `custody.origin._retrieved_items` reads."""
+    memories = [{"text": text, "id": record_id} for text, record_id in items]
+    part = FakePart(function_response=FakeResponse(name="load_memory", response={"memories": memories}))
+    return FakeEvent("assistant", invocation, FakeContent([part]))
+
+
+class MultiItemRetrievalResolvesByIdBeforeDigest(unittest.TestCase):
+    """`research/experiments/RECEIPT_COLLECTOR_PARAPHRASE_FALSIFIER` found
+    digest matching alone fails closed (safely, but uselessly) once Memory
+    Bank paraphrases retrieved text. These tests are the fix: id-based
+    resolution closes that gap, and stays conservative when it can't."""
+
+    def test_paraphrased_text_with_a_real_id_resolves_where_digest_alone_would_not(self):
+        graph = CustodyGraph()
+        graph.add(record("original-1", source_tool="crm_lookup", content="balance: 500"))
+
+        # Not byte-identical to "balance: 500" -- digest matching alone
+        # would miss this, exactly the paraphrase pattern g1.json's real
+        # Memory Bank output shows.
+        paraphrased = "Your account balance is currently 500 dollars."
+        custody = take_custody(
+            [multi_retrieval([(paraphrased, "original-1")])], resolver=graph
+        )
+        (result,) = custody.admitted
+        self.assertIs(result.record.trust, Trust.TRUSTED)
+        self.assertEqual(result.record.derived_from, ("original-1",))
+
+    def test_citing_two_records_keeps_an_edge_to_both(self):
+        graph = CustodyGraph()
+        graph.add(record("parent-a", source_tool="crm_lookup", content="a"))
+        graph.add(record("parent-b", source_tool="billing_lookup", content="b"))
+
+        custody = take_custody(
+            [multi_retrieval([("fact a", "parent-a"), ("fact b", "parent-b")])],
+            resolver=graph,
+        )
+        (result,) = custody.admitted
+        self.assertIs(result.record.trust, Trust.TRUSTED)
+        self.assertEqual(set(result.record.derived_from), {"parent-a", "parent-b"})
+        self.assertEqual(len(result.record.derived_from), 2)
+
+    def test_a_repeated_id_across_items_is_not_duplicated_in_derived_from(self):
+        graph = CustodyGraph()
+        graph.add(record("parent-a", source_tool="crm_lookup", content="a"))
+
+        custody = take_custody(
+            [multi_retrieval([("fact a", "parent-a"), ("fact a restated", "parent-a")])],
+            resolver=graph,
+        )
+        (result,) = custody.admitted
+        self.assertEqual(result.record.derived_from, ("parent-a",))
+
+    def test_one_unresolvable_item_taints_the_whole_citation(self):
+        """The conservative rule: a citation this code cannot fully verify
+        is treated as no citation at all, not a partial one -- matching
+        the project's existing "conservative direction is deliberate" rule
+        for mixed trusted/untrusted content within one event."""
+        graph = CustodyGraph()
+        graph.add(record("parent-a", source_tool="crm_lookup", content="a"))
+
+        custody = take_custody(
+            [multi_retrieval([("fact a", "parent-a"), ("never written before", None)])],
+            resolver=graph,
+        )
+        (result,) = custody.admitted
+        self.assertIs(result.record.trust, Trust.UNTRUSTED)
+        self.assertEqual(result.record.derived_from, ())
+
+    def test_a_wrong_or_unknown_id_falls_back_to_digest_matching_that_item(self):
+        graph = CustodyGraph()
+        graph.add(record("original-1", source_tool="crm_lookup", content="balance: 500"))
+
+        # id points at nothing the graph knows, but the text is byte-
+        # identical to a real record -- digest matching still finds it.
+        custody = take_custody(
+            [multi_retrieval([("balance: 500", "no-such-id")])], resolver=graph
+        )
+        (result,) = custody.admitted
+        self.assertIs(result.record.trust, Trust.TRUSTED)
+        self.assertEqual(result.record.derived_from, ("original-1",))
+
+    def test_citing_an_already_untrusted_record_stays_untrusted(self):
+        graph = CustodyGraph()
+        graph.add(
+            record("untrusted-1", source_tool="payroll_lookup", trust=Trust.UNTRUSTED, content="x")
+        )
+
+        custody = take_custody(
+            [multi_retrieval([("x", "untrusted-1")])], resolver=graph
+        )
+        (result,) = custody.admitted
+        self.assertIs(result.record.trust, Trust.UNTRUSTED)
+        # Cited, even though untrusted -- matches the single-citation
+        # convention: derived_from records what was cited, independent of
+        # whether the citation turned out to be trustworthy.
+        self.assertEqual(result.record.derived_from, ("untrusted-1",))
+
+    def test_a_bare_string_load_memory_response_is_unaffected(self):
+        """Backward compatibility: the old single-item shape every existing
+        test and every currently-deployed caller sends must resolve exactly
+        as before -- id-based multi-item resolution is additive."""
+        graph = CustodyGraph()
+        graph.add(record("original-1", source_tool="crm_lookup", content="balance: 500"))
+        custody = take_custody([retrieval("balance: 500")], resolver=graph)
+        (result,) = custody.admitted
+        self.assertIs(result.record.trust, Trust.TRUSTED)
+        self.assertEqual(result.record.derived_from, ("original-1",))
+
+    def test_revoking_either_cited_parent_reaches_a_multi_item_citation(self):
+        """Closes the loop: a multi-item citation's derived_from is not
+        just correctly shaped, it is what real revocation actually walks."""
+        graph = CustodyGraph()
+        graph.add(record("parent-a", source_tool="crm_lookup", content="a"))
+        graph.add(record("parent-b", source_tool="billing_lookup", content="b"))
+
+        custody = take_custody(
+            [multi_retrieval([("fact a", "parent-a"), ("fact b", "parent-b")])],
+            resolver=graph,
+        )
+        (citation,) = custody.admitted
+        graph.add(citation.record)
+
+        revocation = graph.revoke(tool="crm_lookup", revocation_id="r1")
+        self.assertIn(citation.record.id, revocation.removed)
+
+
 if __name__ == "__main__":
     unittest.main()
