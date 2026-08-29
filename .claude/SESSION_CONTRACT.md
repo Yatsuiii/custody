@@ -92,6 +92,11 @@ Allowed files:
 - research/experiments/RSM_CRUX13_ROUND10_SPOOF_REPEAT/run.py
 - research/experiments/RSM_CRUX13_ROUND10_SPOOF_REPEAT/RESULT.md
 - research/experiments/RSM_CRUX13_ROUND10_SPOOF_REPEAT/result.json
+- research/experiments/RSM_CRUX14_ROUND10_NAIVE_BATCH_REPEAT/PLAN.md
+- research/experiments/RSM_CRUX14_ROUND10_NAIVE_BATCH_REPEAT/fixture.json
+- research/experiments/RSM_CRUX14_ROUND10_NAIVE_BATCH_REPEAT/run.py
+- research/experiments/RSM_CRUX14_ROUND10_NAIVE_BATCH_REPEAT/RESULT.md
+- research/experiments/RSM_CRUX14_ROUND10_NAIVE_BATCH_REPEAT/result.json
 - RSM_HANDOFF.md
 - .claude/SESSION_CONTRACT.md (this file)
 

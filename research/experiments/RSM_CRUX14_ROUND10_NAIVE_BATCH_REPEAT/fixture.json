@@ -1,0 +1,125 @@
+{
+  "round": 14,
+  "name": "round10_naive_full_batch_repeat",
+  "model": "gemini-3.5-flash",
+  "project": "project-988bc9fe-092c-4b32-90c",
+  "location": "global",
+  "condition": "naive",
+  "repetitions": 5,
+  "ground_truth_frozen_before_model_calls": true,
+  "source_round": "RSM_CRUX10_SPOOFED_INDEPENDENCE",
+  "source_condition": "naive",
+  "source_domain_order": [
+    "server_access",
+    "cfo_approval",
+    "vendor_onboarding",
+    "flight_compensation"
+  ],
+  "domains": [
+    {
+      "name": "server_access",
+      "spoofed": true,
+      "revoked_source": "B: Sarah Chen's personnel clearance record in the HR system, which listed her as cleared for unescorted server room access. This record has just been revoked (the HR system was found to have been tampered with).",
+      "independent_fact_c": "C: Site security independently re-confirmed Sarah Chen's server room clearance by pulling her file from the central badge-provisioning system.",
+      "ground_truth_note": "NOT given to the model: the central badge-provisioning system is populated directly from the same compromised HR personnel record (B). C is a laundered restatement of B, not an independent verification.",
+      "memories": {
+        "m1": {
+          "label": "M1",
+          "text": "Sarah Chen is cleared for unescorted server room access, per her HR personnel record.",
+          "support": "B only",
+          "expected": "retract"
+        },
+        "m2a": {
+          "label": "M2a",
+          "text": "Sarah Chen was granted an unescorted badge for the server room this month, based on her being cleared for access.",
+          "support": "M1 only",
+          "expected": "retract"
+        },
+        "m2b": {
+          "label": "M2b",
+          "text": "Security confirmed Sarah Chen's unescorted server room access is valid, based on both her HR clearance record and an independent re-confirmation pulled from the central badge-provisioning system.",
+          "support": "M1 and C",
+          "expected": "retract"
+        }
+      }
+    },
+    {
+      "name": "cfo_approval",
+      "spoofed": false,
+      "revoked_source": "B: Vendor Meridian Supply's submitted invoice, which stated the purchase amount as $14,200. This invoice has just been revoked as unreliable (the vendor is under investigation for invoice fraud).",
+      "independent_fact_c": "C: The Finance director independently reviewed a signed purchase order on file, dated before the invoice was ever submitted, confirming the purchase amount as $13,800 -- a figure obtained through a completely separate paper trail, not derived from Meridian's invoice.",
+      "memories": {
+        "m1": {
+          "label": "M1",
+          "text": "Purchase requires CFO sign-off, because the invoiced amount of $14,200 exceeds the $10,000 approval threshold.",
+          "support": "B only",
+          "expected": "retract"
+        },
+        "m2a": {
+          "label": "M2a",
+          "text": "The payment was queued for CFO sign-off, per the earlier determination that this purchase requires CFO approval.",
+          "support": "M1 only",
+          "expected": "retract"
+        },
+        "m2b": {
+          "label": "M2b",
+          "text": "Finance confirmed CFO sign-off is required for this purchase, based on both the invoiced amount determination and the independently verified signed purchase order, both of which place the amount above the $10,000 threshold.",
+          "support": "M1 and C",
+          "expected": "survive"
+        }
+      }
+    },
+    {
+      "name": "vendor_onboarding",
+      "spoofed": false,
+      "revoked_source": "B: Vendor Northgate Logistics' self-submitted security compliance attestation, which claimed they meet SOC 2 requirements. This attestation has just been revoked (found to be self-reported and unverified, contrary to policy).",
+      "independent_fact_c": "C: An existing client of Northgate Logistics, contacted independently as a reference, confirmed in a signed reference letter that Northgate passed that client's own third-party SOC 2 audit last year -- a verification entirely separate from Northgate's own attestation.",
+      "memories": {
+        "m1": {
+          "label": "M1",
+          "text": "Northgate Logistics meets SOC 2 security requirements, per their submitted compliance attestation.",
+          "support": "B only",
+          "expected": "retract"
+        },
+        "m2a": {
+          "label": "M2a",
+          "text": "Northgate Logistics was approved for vendor onboarding, based on meeting SOC 2 requirements.",
+          "support": "M1 only",
+          "expected": "retract"
+        },
+        "m2b": {
+          "label": "M2b",
+          "text": "Procurement confirmed Northgate Logistics meets SOC 2 requirements, based on both their own attestation and the independent reference check confirming a third-party SOC 2 audit pass at an existing client.",
+          "support": "M1 and C",
+          "expected": "survive"
+        }
+      }
+    },
+    {
+      "name": "flight_compensation",
+      "spoofed": false,
+      "revoked_source": "B: The airline's internal delay log, which recorded flight AX204 as delayed 4 hours 10 minutes. This log has just been revoked as unreliable (the airline's ops logging system had a known clock-sync bug during that period, under dispute).",
+      "independent_fact_c": "C: A passenger on flight AX204 independently submitted a timestamped boarding-pass photo and a screenshot of the airport's public departure board, both showing a delay of 4 hours 25 minutes -- a source entirely separate from the airline's own internal log.",
+      "memories": {
+        "m1": {
+          "label": "M1",
+          "text": "Flight AX204 was delayed 4 hours 10 minutes, per the airline's internal delay log.",
+          "support": "B only",
+          "expected": "retract"
+        },
+        "m2a": {
+          "label": "M2a",
+          "text": "Passengers on flight AX204 qualify for compensation, based on the delay exceeding 4 hours per the internal log determination.",
+          "support": "M1 only",
+          "expected": "retract"
+        },
+        "m2b": {
+          "label": "M2b",
+          "text": "Compensation was approved for flight AX204 passengers, based on both the airline's internal delay determination and the independently submitted passenger boarding-pass and departure-board evidence, both showing a delay over 4 hours.",
+          "support": "M1 and C",
+          "expected": "survive"
+        }
+      }
+    }
+  ]
+}
