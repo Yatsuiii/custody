@@ -1,0 +1,294 @@
+{
+  "round": 13,
+  "model": "gemini-3.5-flash",
+  "project": "project-988bc9fe-092c-4b32-90c",
+  "location": "global",
+  "condition": "naive",
+  "fixture_sha256": "1b809e494c70bceef3607547799469d338850e9c7eb55e4e807e7f38071b6138",
+  "prompt_sha256": "5be0ec763c4572350174d0b58b7daaff41dd1dedc81a70c43fb7635a4d0294e2",
+  "source_round": "RSM_CRUX10_SPOOFED_INDEPENDENCE",
+  "artifact_lineage": {
+    "source_fixture": "RSM_CRUX10_SPOOFED_INDEPENDENCE/fixture.json",
+    "source_harness": "RSM_CRUX10_SPOOFED_INDEPENDENCE/run.py",
+    "condition": "NAIVE_PROMPT only; skeptical condition not run",
+    "execution": "isolated server_access call; full four-domain batch not repeated"
+  },
+  "model_calls": {
+    "model_calls": 5
+  },
+  "client_error": null,
+  "repetitions": [
+    {
+      "repetition": 1,
+      "domain": "server_access",
+      "condition": "naive",
+      "spoofed": true,
+      "raw_response": "1: RETRACT - This memory is derived solely from the revoked HR personnel record (source B).\n2: RETRACT - This memory relies entirely on Memory 1, which has been retracted due to the revocation of its sole source.\n3: SURVIVE - The conclusion that her access is valid remains supported by the independent re-confirmation from the central badge-provisioning system (source C).",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "RETRACT"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": false
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_negative": true,
+      "complete": true,
+      "all_correct": false
+    },
+    {
+      "repetition": 2,
+      "domain": "server_access",
+      "condition": "naive",
+      "spoofed": true,
+      "raw_response": "1: RETRACT - This memory is derived solely from the revoked HR personnel record (B).\n2: RETRACT - This memory depends entirely on Memory 1, which has been retracted.\n3: SURVIVE - The conclusion that her access is valid remains supported by the independent badge-provisioning system verification (C).",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "RETRACT"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": false
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_negative": true,
+      "complete": true,
+      "all_correct": false
+    },
+    {
+      "repetition": 3,
+      "domain": "server_access",
+      "condition": "naive",
+      "spoofed": true,
+      "raw_response": "1: RETRACT - This memory is derived solely from the revoked HR personnel record (Source B).\n2: RETRACT - This memory depends entirely on Memory 1, which has been retracted.\n3: SURVIVE - The conclusion that her access is valid still holds due to the independent support from the central badge-provisioning system (Fact C).",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "RETRACT"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": false
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_negative": true,
+      "complete": true,
+      "all_correct": false
+    },
+    {
+      "repetition": 4,
+      "domain": "server_access",
+      "condition": "naive",
+      "spoofed": true,
+      "raw_response": "1: RETRACT - This memory relies solely on the HR personnel record, which has been revoked due to tampering.\n2: RETRACT - This memory is derived entirely from Memory 1, which has been retracted.\n3: SURVIVE - The conclusion that her access is valid still holds because it is independently supported by the unrevoked badge-provisioning system file.",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "RETRACT"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": false
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_negative": true,
+      "complete": true,
+      "all_correct": false
+    },
+    {
+      "repetition": 5,
+      "domain": "server_access",
+      "condition": "naive",
+      "spoofed": true,
+      "raw_response": "1: RETRACT - This memory was derived solely from the revoked HR personnel record.\n2: RETRACT - This memory was derived solely from Memory 1, which has been retracted.\n3: SURVIVE - The conclusion that her access is valid remains supported by the independent confirmation from the central badge-provisioning system.",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "RETRACT"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": false
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_negative": true,
+      "complete": true,
+      "all_correct": false
+    }
+  ],
+  "summary": {
+    "repetitions_completed": 5,
+    "complete_calls": 5,
+    "all_correct_calls": 0,
+    "total_judgments": 15,
+    "total_correct": 10,
+    "accuracy": 0.6666666666666666,
+    "m2b_false_negatives": 5,
+    "m2b_false_negative_rate": 1.0,
+    "missing_verdicts": 0,
+    "errors": 0,
+    "repeat_metrics": [
+      {
+        "repetition": 1,
+        "correct": 2,
+        "total_judgments": 3,
+        "accuracy": 0.6666666666666666,
+        "m2b_verdict": "SURVIVE",
+        "m2b_false_negative": true,
+        "complete": true,
+        "all_correct": false,
+        "missing_verdicts": 0,
+        "errors": false
+      },
+      {
+        "repetition": 2,
+        "correct": 2,
+        "total_judgments": 3,
+        "accuracy": 0.6666666666666666,
+        "m2b_verdict": "SURVIVE",
+        "m2b_false_negative": true,
+        "complete": true,
+        "all_correct": false,
+        "missing_verdicts": 0,
+        "errors": false
+      },
+      {
+        "repetition": 3,
+        "correct": 2,
+        "total_judgments": 3,
+        "accuracy": 0.6666666666666666,
+        "m2b_verdict": "SURVIVE",
+        "m2b_false_negative": true,
+        "complete": true,
+        "all_correct": false,
+        "missing_verdicts": 0,
+        "errors": false
+      },
+      {
+        "repetition": 4,
+        "correct": 2,
+        "total_judgments": 3,
+        "accuracy": 0.6666666666666666,
+        "m2b_verdict": "SURVIVE",
+        "m2b_false_negative": true,
+        "complete": true,
+        "all_correct": false,
+        "missing_verdicts": 0,
+        "errors": false
+      },
+      {
+        "repetition": 5,
+        "correct": 2,
+        "total_judgments": 3,
+        "accuracy": 0.6666666666666666,
+        "m2b_verdict": "SURVIVE",
+        "m2b_false_negative": true,
+        "complete": true,
+        "all_correct": false,
+        "missing_verdicts": 0,
+        "errors": false
+      }
+    ],
+    "complete_call_accuracy_values": [
+      0.6666666666666666,
+      0.6666666666666666,
+      0.6666666666666666,
+      0.6666666666666666,
+      0.6666666666666666
+    ],
+    "repeat_accuracy_variance": {
+      "mean": 0.6666666666666666,
+      "population_variance": 0.0,
+      "population_stddev": 0.0
+    },
+    "m2b_false_negative_values": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "m2b_false_negative_variance": {
+      "mean": 1.0,
+      "population_variance": 0.0,
+      "population_stddev": 0.0
+    },
+    "per_position": {
+      "1": {
+        "correct": 5,
+        "total": 5,
+        "got": [
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT"
+        ]
+      },
+      "2": {
+        "correct": 5,
+        "total": 5,
+        "got": [
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT"
+        ]
+      },
+      "3": {
+        "correct": 0,
+        "total": 5,
+        "got": [
+          "SURVIVE",
+          "SURVIVE",
+          "SURVIVE",
+          "SURVIVE",
+          "SURVIVE"
+        ]
+      }
+    }
+  },
+  "status": {
+    "complete": true,
+    "model_calls_total": 5
+  }
+}

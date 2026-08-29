@@ -1,0 +1,45 @@
+{
+  "round": 13,
+  "name": "round10_naive_server_access_spoof_repeat",
+  "model": "gemini-3.5-flash",
+  "project": "project-988bc9fe-092c-4b32-90c",
+  "location": "global",
+  "condition": "naive",
+  "repetitions": 5,
+  "ground_truth_frozen_before_model_calls": true,
+  "source_round": "RSM_CRUX10_SPOOFED_INDEPENDENCE",
+  "source_domain_index": 0,
+  "expected": {
+    "1": "RETRACT",
+    "2": "RETRACT",
+    "3": "RETRACT"
+  },
+  "ground_truth_note": "NOT given to the model: the central badge-provisioning system is populated directly from the same compromised HR personnel record (B). C is a laundered restatement of B, not an independent verification.",
+  "domain": {
+    "ground_truth_note": "NOT given to the model: the central badge-provisioning system is populated directly from the same compromised HR personnel record (B). C is a laundered restatement of B, not an independent verification.",
+    "independent_fact_c": "C: Site security independently re-confirmed Sarah Chen's server room clearance by pulling her file from the central badge-provisioning system.",
+    "memories": {
+      "m1": {
+        "expected": "retract",
+        "label": "M1",
+        "support": "B only",
+        "text": "Sarah Chen is cleared for unescorted server room access, per her HR personnel record."
+      },
+      "m2a": {
+        "expected": "retract",
+        "label": "M2a",
+        "support": "M1 only",
+        "text": "Sarah Chen was granted an unescorted badge for the server room this month, based on her being cleared for access."
+      },
+      "m2b": {
+        "expected": "retract",
+        "label": "M2b",
+        "support": "M1 and C",
+        "text": "Security confirmed Sarah Chen's unescorted server room access is valid, based on both her HR clearance record and an independent re-confirmation pulled from the central badge-provisioning system."
+      }
+    },
+    "name": "server_access",
+    "revoked_source": "B: Sarah Chen's personnel clearance record in the HR system, which listed her as cleared for unescorted server room access. This record has just been revoked (the HR system was found to have been tampered with).",
+    "spoofed": true
+  }
+}
