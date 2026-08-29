@@ -1,0 +1,52 @@
+{
+  "drift": [],
+  "llm_used": false,
+  "network_used": false,
+  "observations": [
+    {
+      "channel": "C1_same_invocation_data",
+      "evidence": "origin=derived trust=untrusted derived_from=('inv-A:1:0',)",
+      "question": "A tool response and the model turn that restates it, one invocation.",
+      "verdict": "CAPTURED"
+    },
+    {
+      "channel": "C2_cross_invocation_data",
+      "evidence": "origin=model trust=trusted derived_from=() reached_downstream_memory=True survived_tool_revocation=True",
+      "question": "The same exchange, split by a user follow-up that opens a second invocation of the same session.",
+      "verdict": "NOT_CAPTURED"
+    },
+    {
+      "channel": "C3_retrieval_byte_identical",
+      "evidence": "trust=trusted derived_from=('inv-1:1:0',)",
+      "question": "A retrieval response whose bytes match an admitted record.",
+      "verdict": "CAPTURED"
+    },
+    {
+      "channel": "C4_retrieval_paraphrased",
+      "evidence": "trust=untrusted derived_from=(); withheld from memory, so the cost is recall rather than safety",
+      "question": "A retrieval response restating an admitted record in other words.",
+      "verdict": "FAIL_CLOSED"
+    },
+    {
+      "channel": "C5_payload_flattening",
+      "evidence": "content_sha256 collision=True digest=1a989ea86150171c...; content-addressed `CustodyGraph.resolve` cannot tell them apart",
+      "question": "Two structurally different tool payloads, flattened by `_response_text` to the same string.",
+      "verdict": "NOT_CAPTURED"
+    },
+    {
+      "channel": "C6_control_influence",
+      "evidence": "CustodyRecord fields=['origin', 'trust', 'author', 'invocation_id', 'content_sha256', 'source_tool', 'source_revision', 'id', 'derived_from', 'admitted_at']; `derived_from` is populated only from data exposure in `custody/origin.py::_attribute`, and no field records a scheduling, selection, or budget decision",
+      "question": "A record that changed whether or how an invocation happened, without its text entering the prompt.",
+      "verdict": "ABSENT"
+    }
+  ],
+  "python_version": "3.14.7",
+  "schema_id": "cssr-ev1-coverage-v1",
+  "subject": "custody/origin.py take_custody, via custody/service.py",
+  "verdict_vocabulary": {
+    "ABSENT": "the record type has nowhere to record the influence",
+    "CAPTURED": "the influence became a derived_from edge",
+    "FAIL_CLOSED": "no edge, but the content was withheld from memory",
+    "NOT_CAPTURED": "no edge and no withholding"
+  }
+}

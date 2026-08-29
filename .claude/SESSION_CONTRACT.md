@@ -1,3 +1,93 @@
+# Custody: CSSR external validity, production collector coverage
+
+Opened 2026-08-29.
+
+Objective: Test the premise CSSR-S1's own harness cannot reach. CSSR-S1 records
+"PARTIALLY VERIFIED: Custody can capture actual stored-record inputs in a
+trusted admission envelope. Coverage of every production retrieval, server-side
+transform, ambient input, and dynamic control path is not proven." Enumerate
+the channels by which content or control can influence a model turn in the
+shipped `custody/*.py` collector, determine for each whether it becomes a
+`derived_from` edge, and produce a reproducible counterexample for any channel
+that does not. A demonstrated production leak is worth more than a synthetic
+harness PASS, because the harness result is determined by its own frozen
+fixture.
+
+Branch: research/rsm-crux-falsifier
+Parent: 4b245d70
+
+Allowed files:
+- research/experiments/CSSR_EV1_COLLECTOR_COVERAGE/PLAN.md
+- research/experiments/CSSR_EV1_COLLECTOR_COVERAGE/run.py
+- research/experiments/CSSR_EV1_COLLECTOR_COVERAGE/result.json
+- research/experiments/CSSR_EV1_COLLECTOR_COVERAGE/RESULT.md
+- .claude/SESSION_CONTRACT.md (this file)
+
+Non-goals:
+- No `custody/*.py` change. This measures the shipped collector; it does not
+  repair it. A fix is a separate authorization after the measurement is
+  believed.
+- No change to `DECISIONS.md`, `RESEARCH.md`, `docs/architecture.md`, or any
+  CSSR-S1 file. If the finding contradicts a recorded decision, that is
+  reported, not silently edited.
+- No `fixture.json` or CSSR-S1 execution. That stage stays unauthorized.
+- No LLM call, no cloud call, no dependency install. `google-adk` is not
+  installed here and must not be installed under this contract; ADK behavior is
+  established by reading its published source, and the limitation is recorded.
+- No claim that a channel is safe merely because no counterexample was written
+  for it. Unprobed channels are reported as UNKNOWN.
+
+Baseline: `custody/origin.py`'s `take_custody` keys its `tainted` and `lineage`
+dictionaries by `invocation_id`. `DECISIONS.md` #4 records invocation-scoped
+taint as deliberate, justified as "Without that scope every session ends
+untrusted and the system is an outage." That is an availability argument. No
+recorded evidence establishes whether the resulting cross-invocation path is
+reachable.
+
+Acceptance gates:
+1. Every channel is listed with a verdict of CAPTURED, FAIL-CLOSED, NOT
+   CAPTURED, or UNKNOWN, each carrying a `file:line` citation or a probe.
+2. Any NOT CAPTURED verdict is backed by a deterministic counterexample that
+   runs against the shipped `custody/*.py` through its real enforcement point,
+   `CustodyMemoryService.add_session_to_memory`, not only through the pure
+   function.
+3. The reachability premise is verified against ADK's published source rather
+   than assumed, and the exact filter conditions are quoted.
+4. `run.py` is offline, deterministic, imports no LLM or network client, and
+   exits nonzero if the recorded coverage table stops matching observed
+   behavior, so the artifact keeps working as a regression detector.
+5. `RESULT.md` labels every claim VERIFIED, PARTIALLY VERIFIED, ASSUMPTION, or
+   UNKNOWN, states plainly what the finding does to CSSR-S1's premise, and does
+   not overclaim from a single counterexample.
+
+Verification: `python3 research/experiments/CSSR_EV1_COLLECTOR_COVERAGE/run.py`,
+`make check` to confirm the shipped suite is untouched, and
+`git status --porcelain` to confirm no file changed outside Allowed files.
+
+**Closed 2026-08-29.** All five gates passed. Six channels enumerated, each
+with a verdict and a probe or citation. Headline finding: `C2`, a model turn
+restating a hostile tool response is `origin=derived, trust=untrusted,
+derived_from=('inv-A:1:0',)` inside one invocation, but `origin=model,
+trust=trusted, derived_from=()` when a user follow-up opens a second invocation
+of the same session. Demonstrated end to end through
+`CustodyMemoryService.add_session_to_memory`: the restatement is written
+downstream as trusted and revoking the tool removes nothing. Reachability
+verified against ADK's `contents.py`, which builds request contents from
+`invocation_context.session.events` and does not filter on `invocation_id`;
+PARTIALLY VERIFIED on version, since `google-adk` is not installed here and the
+reading is of `main` rather than the pinned `>=2.6.3,<3`. Two further findings:
+`_response_text` drops dict keys so distinct payloads collide on
+`content_sha256`, and `CustodyRecord` has no field for control influence at
+all, which is the substrate CSSR-S1's `C07`/`C08` assume. `make check` 381/381
+with no `custody/*.py` change. Drift detection confirmed by forcing a mismatch:
+`run.py` exits `1`. Recommendation recorded in `RESULT.md`: CAUTION on CSSR-S1
+execution, because the collector is the higher-information target and a harness
+PASS would not transfer.
+
+Status: complete
+
+---
+
 # Custody: CSSR-S1 execution-plan review gate
 
 Opened 2026-08-29.
