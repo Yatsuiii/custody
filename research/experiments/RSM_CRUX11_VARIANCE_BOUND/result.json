@@ -1,0 +1,1405 @@
+{
+  "round": 11,
+  "model": "gemini-3.5-flash",
+  "project": "project-988bc9fe-092c-4b32-90c",
+  "location": "global",
+  "fixture_sha256": "d9472875d95195330fe1450817854fe389706c427a33bdd69f6927b5b3957da8",
+  "repetitions_requested": 5,
+  "artifact_lineage": {
+    "round5_fixture": "RSM_CRUX5_ENTANGLED_INFERENCE/fixture.json",
+    "round5_harness": "RSM_CRUX5_ENTANGLED_INFERENCE/run.py",
+    "round9_fixture": "RSM_CRUX9_REDUNDANT_CASCADE/fixture.json",
+    "round9_harness": "RSM_CRUX9_REDUNDANT_CASCADE/run.py",
+    "round5_prompt_sha256": {
+      "generate": "65e869892830a6590b7e6d7c23b7634a479e7b7ab39947a3c3a7a0c828f6140e",
+      "repair": "fe6c97b3083d0a84d3b25a4c8b591d5ceff373dfc56cd1e15127a881c9f73c51",
+      "classify": "a44f97278014648d04b7d45b2d8ab8f5164ab165bc1fac8dff0dacebec717821"
+    },
+    "round9_prompt_sha256": "5be0ec763c4572350174d0b58b7daaff41dd1dedc81a70c43fb7635a4d0294e2"
+  },
+  "model_calls": {
+    "model_calls": 140
+  },
+  "round5": {
+    "repetitions": [
+      {
+        "repetition": 1,
+        "cases": [
+          {
+            "repetition": 1,
+            "id": "cfo_approval",
+            "rule": "Company policy: purchases over $10,000 require CFO approval before payment.",
+            "value_at_write_time": "Vendor X's invoice states the purchase amount is $12,000.",
+            "revocation_notice": "The invoice stating the purchase amount as $12,000 has just been found to be from an unreliable, unverified source.",
+            "conclusion_phrase": "requires CFO approval",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "Vendor X's purchase of $12,000 requires CFO approval before payment.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text directly states that the purchase requires CFO approval without any qualification, hedging, or uncertainty.",
+            "fused_classification_error": null,
+            "repaired_memory": "The invoice alleging a $12,000 purchase from Vendor X is from an unreliable, unverified source and is no longer trusted; therefore, the conclusion that this purchase requires CFO approval can no longer be confidently asserted.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that the conclusion requiring CFO approval can no longer be confidently asserted because the source is unreliable and unverified.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          },
+          {
+            "repetition": 1,
+            "id": "server_access",
+            "rule": "Policy: employees with Level 3 security clearance may access the server room unescorted.",
+            "value_at_write_time": "A personnel record update states Sarah Chen has Level 3 clearance.",
+            "revocation_notice": "The personnel record update stating Sarah Chen has Level 3 clearance has just been found to be from a compromised source.",
+            "conclusion_phrase": "may access the server room",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "Sarah Chen may access the server room unescorted.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text confidently asserts as a fact that Sarah Chen has permission to (\"may\") access the server room, without any hedging or uncertainty.",
+            "fused_classification_error": null,
+            "repaired_memory": "The conclusion that Sarah Chen may access the server room unescorted can no longer be confidently asserted, as the record of her Level 3 clearance is from a compromised source and is no longer trusted.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that the conclusion allowing Sarah Chen to access the server room can no longer be confidently asserted due to a compromised and untrusted clearance record.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          },
+          {
+            "repetition": 1,
+            "id": "vendor_onboarding",
+            "rule": "Policy: vendors that have passed a security audit are approved for onboarding.",
+            "value_at_write_time": "An automated compliance report states Vendor Z passed its security audit.",
+            "revocation_notice": "The automated compliance report stating Vendor Z passed its security audit has just been found to be spoofed.",
+            "conclusion_phrase": "approved for onboarding",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "Vendor Z is approved for onboarding.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text confidently and directly states that Vendor Z is approved for onboarding without any hedging, qualification, or uncertainty.",
+            "fused_classification_error": null,
+            "repaired_memory": "Vendor Z's approval for onboarding can no longer be confidently asserted because the automated compliance report stating they passed their security audit has been found to be spoofed and is no longer trusted.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that Vendor Z's approval for onboarding can no longer be confidently asserted because the supporting compliance report is no longer trusted.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          },
+          {
+            "repetition": 1,
+            "id": "order_discount",
+            "rule": "Store policy: orders over $500 qualify for a 10% loyalty discount.",
+            "value_at_write_time": "The checkout log records this order's total as $650.",
+            "revocation_notice": "The checkout log recording this order's total as $650 has just been found to have been manipulated.",
+            "conclusion_phrase": "qualifies for the loyalty discount",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "This order qualifies for a 10% loyalty discount.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text directly and confidently asserts that the order qualifies for a 10% loyalty discount without any hedging, qualification, or uncertainty.",
+            "fused_classification_error": null,
+            "repaired_memory": "The conclusion that this order qualifies for a 10% loyalty discount can no longer be confidently asserted, as the checkout log recording the order total as $650 has been found to be manipulated and is no longer trusted.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that the conclusion that the order qualifies for the discount can no longer be confidently asserted due to manipulated checkout logs.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          },
+          {
+            "repetition": 1,
+            "id": "tenure_pricing",
+            "rule": "Policy: customers with 5 or more years of account tenure receive loyalty pricing.",
+            "value_at_write_time": "Account records show this customer has been active since 2019.",
+            "revocation_notice": "The account records showing this customer active since 2019 have just been found to have been altered.",
+            "conclusion_phrase": "qualifies for loyalty pricing",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "The customer receives loyalty pricing because their account tenure has reached five years.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text confidently states that the customer receives loyalty pricing due to their five-year account tenure, which directly asserts as a settled fact that they qualify for it.",
+            "fused_classification_error": null,
+            "repaired_memory": "The conclusion that the customer receives loyalty pricing can no longer be confidently asserted, as the records indicating a five-year account tenure (showing activity since 2019) have been found to be altered and are no longer trusted.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that the conclusion that the customer receives loyalty pricing can no longer be confidently asserted because the underlying account records are no longer trusted.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          },
+          {
+            "repetition": 1,
+            "id": "flight_compensation",
+            "rule": "Regulation: flights delayed more than 3 hours are eligible for passenger compensation.",
+            "value_at_write_time": "The delay-tracking system recorded a 4-hour delay for this flight.",
+            "revocation_notice": "The delay-tracking system's 4-hour delay reading for this flight has just been found to be caused by a logging bug.",
+            "conclusion_phrase": "eligible for compensation",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "This flight is eligible for passenger compensation.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text directly and confidently states that the flight is eligible for compensation without any hedging, qualification, or uncertainty.",
+            "fused_classification_error": null,
+            "repaired_memory": "The conclusion that this flight is eligible for passenger compensation can no longer be confidently asserted because the 4-hour delay reading is now known to have been caused by a logging bug and is no longer trusted.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that the flight's eligibility for compensation can no longer be confidently asserted due to an untrusted delay reading.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          }
+        ]
+      },
+      {
+        "repetition": 2,
+        "cases": [
+          {
+            "repetition": 2,
+            "id": "cfo_approval",
+            "rule": "Company policy: purchases over $10,000 require CFO approval before payment.",
+            "value_at_write_time": "Vendor X's invoice states the purchase amount is $12,000.",
+            "revocation_notice": "The invoice stating the purchase amount as $12,000 has just been found to be from an unreliable, unverified source.",
+            "conclusion_phrase": "requires CFO approval",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "The purchase of $12,000 from Vendor X requires CFO approval before payment.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text directly and confidently states that the purchase \"requires CFO approval\" as a definitive rule, without any hedging, qualification, or uncertainty.",
+            "fused_classification_error": null,
+            "repaired_memory": "The reported purchase of $12,000 from Vendor X originates from an unreliable, unverified source; therefore, the conclusion that this purchase requires CFO approval can no longer be confidently asserted.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that the conclusion that the purchase requires CFO approval can no longer be confidently asserted, making it uncertain rather than an established fact.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          },
+          {
+            "repetition": 2,
+            "id": "server_access",
+            "rule": "Policy: employees with Level 3 security clearance may access the server room unescorted.",
+            "value_at_write_time": "A personnel record update states Sarah Chen has Level 3 clearance.",
+            "revocation_notice": "The personnel record update stating Sarah Chen has Level 3 clearance has just been found to be from a compromised source.",
+            "conclusion_phrase": "may access the server room",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "Sarah Chen may access the server room unescorted.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text confidently and directly states that Sarah Chen has permission to access the server room without any hedging, qualification, or uncertainty.",
+            "fused_classification_error": null,
+            "repaired_memory": "It can no longer be confidently asserted that Sarah Chen may access the server room unescorted, as the record of her Level 3 clearance is from a compromised source and is no longer trusted.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that it can no longer be confidently asserted that Sarah Chen may access the server room because her clearance record is no longer trusted.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          },
+          {
+            "repetition": 2,
+            "id": "vendor_onboarding",
+            "rule": "Policy: vendors that have passed a security audit are approved for onboarding.",
+            "value_at_write_time": "An automated compliance report states Vendor Z passed its security audit.",
+            "revocation_notice": "The automated compliance report stating Vendor Z passed its security audit has just been found to be spoofed.",
+            "conclusion_phrase": "approved for onboarding",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "Vendor Z is approved for onboarding.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text directly and confidently states that Vendor Z is approved for onboarding as a settled fact, without any hedging, qualification, or uncertainty.",
+            "fused_classification_error": null,
+            "repaired_memory": "The approval of Vendor Z for onboarding can no longer be confidently asserted, as the automated compliance report stating they passed their security audit has been found to be spoofed and is no longer trusted.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that the approval of Vendor Z \"can no longer be confidently asserted,\" thereby marking it as uncertain and no longer confirmed.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          },
+          {
+            "repetition": 2,
+            "id": "order_discount",
+            "rule": "Store policy: orders over $500 qualify for a 10% loyalty discount.",
+            "value_at_write_time": "The checkout log records this order's total as $650.",
+            "revocation_notice": "The checkout log recording this order's total as $650 has just been found to have been manipulated.",
+            "conclusion_phrase": "qualifies for the loyalty discount",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "This order qualifies for a 10% loyalty discount.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text confidently and directly states that the order qualifies for the loyalty discount as an established fact, without any hedging or uncertainty.",
+            "fused_classification_error": null,
+            "repaired_memory": "Because the checkout log recording the order's total has been manipulated, the conclusion that this order qualifies for a 10% loyalty discount can no longer be confidently asserted.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that the conclusion that the order qualifies for the discount \"can no longer be confidently asserted\" due to a manipulated checkout log, marking it as uncertain rather than an established fact.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          },
+          {
+            "repetition": 2,
+            "id": "tenure_pricing",
+            "rule": "Policy: customers with 5 or more years of account tenure receive loyalty pricing.",
+            "value_at_write_time": "Account records show this customer has been active since 2019.",
+            "revocation_notice": "The account records showing this customer active since 2019 have just been found to have been altered.",
+            "conclusion_phrase": "qualifies for loyalty pricing",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "The customer receives loyalty pricing.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text confidently states that the customer receives loyalty pricing, which directly asserts as fact that they qualify for it without any hedging or uncertainty.",
+            "fused_classification_error": null,
+            "repaired_memory": "The conclusion that the customer receives loyalty pricing can no longer be confidently asserted because the account records showing them active since 2019 have been found to be altered and are no longer trusted.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that the customer receiving loyalty pricing can no longer be confidently asserted because the supporting records are no longer trusted.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          },
+          {
+            "repetition": 2,
+            "id": "flight_compensation",
+            "rule": "Regulation: flights delayed more than 3 hours are eligible for passenger compensation.",
+            "value_at_write_time": "The delay-tracking system recorded a 4-hour delay for this flight.",
+            "revocation_notice": "The delay-tracking system's 4-hour delay reading for this flight has just been found to be caused by a logging bug.",
+            "conclusion_phrase": "eligible for compensation",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "This flight is eligible for passenger compensation.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text directly and confidently states that the flight \"is eligible\" for compensation without any hedging, qualification, or uncertainty.",
+            "fused_classification_error": null,
+            "repaired_memory": "The conclusion that this flight is eligible for passenger compensation can no longer be confidently asserted, as the 4-hour delay reading is no longer trusted due to a logging bug.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that the flight's eligibility for compensation can no longer be confidently asserted due to an untrusted delay reading.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          }
+        ]
+      },
+      {
+        "repetition": 3,
+        "cases": [
+          {
+            "repetition": 3,
+            "id": "cfo_approval",
+            "rule": "Company policy: purchases over $10,000 require CFO approval before payment.",
+            "value_at_write_time": "Vendor X's invoice states the purchase amount is $12,000.",
+            "revocation_notice": "The invoice stating the purchase amount as $12,000 has just been found to be from an unreliable, unverified source.",
+            "conclusion_phrase": "requires CFO approval",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "The purchase from Vendor X requires CFO approval before payment.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text directly and confidently states that the purchase requires CFO approval without any qualification, hedging, or uncertainty.",
+            "fused_classification_error": null,
+            "repaired_memory": "The conclusion that the purchase from Vendor X requires CFO approval can no longer be confidently asserted, as the $12,000 invoice indicating this purchase has been found to originate from an unreliable, unverified source.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that the conclusion requiring CFO approval can no longer be confidently asserted because the source of the information is unreliable and unverified.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          },
+          {
+            "repetition": 3,
+            "id": "server_access",
+            "rule": "Policy: employees with Level 3 security clearance may access the server room unescorted.",
+            "value_at_write_time": "A personnel record update states Sarah Chen has Level 3 clearance.",
+            "revocation_notice": "The personnel record update stating Sarah Chen has Level 3 clearance has just been found to be from a compromised source.",
+            "conclusion_phrase": "may access the server room",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "Sarah Chen may access the server room unescorted.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text directly and confidently states as an established fact that Sarah Chen has permission to (\"may\") access the server room.",
+            "fused_classification_error": null,
+            "repaired_memory": "The conclusion that Sarah Chen may access the server room unescorted can no longer be confidently asserted, as the personnel record indicating she has Level 3 clearance is from a compromised source and is no longer trusted.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that the conclusion allowing Sarah Chen to access the server room can no longer be confidently asserted because the underlying source is no longer trusted.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          },
+          {
+            "repetition": 3,
+            "id": "vendor_onboarding",
+            "rule": "Policy: vendors that have passed a security audit are approved for onboarding.",
+            "value_at_write_time": "An automated compliance report states Vendor Z passed its security audit.",
+            "revocation_notice": "The automated compliance report stating Vendor Z passed its security audit has just been found to be spoofed.",
+            "conclusion_phrase": "approved for onboarding",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "Vendor Z is approved for onboarding.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text states directly and without any qualification or uncertainty that Vendor Z is approved for onboarding.",
+            "fused_classification_error": null,
+            "repaired_memory": "The approval of Vendor Z for onboarding can no longer be confidently asserted because the compliance report stating they passed their security audit has been found to be spoofed and is no longer trusted.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that the approval of Vendor Z \"can no longer be confidently asserted\" due to a spoofed compliance report, meaning it is no longer treated as an established fact.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          },
+          {
+            "repetition": 3,
+            "id": "order_discount",
+            "rule": "Store policy: orders over $500 qualify for a 10% loyalty discount.",
+            "value_at_write_time": "The checkout log records this order's total as $650.",
+            "revocation_notice": "The checkout log recording this order's total as $650 has just been found to have been manipulated.",
+            "conclusion_phrase": "qualifies for the loyalty discount",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "This order qualifies for a 10% loyalty discount.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text directly and confidently states that the order qualifies for a 10% loyalty discount without any hedging, uncertainty, or qualification.",
+            "fused_classification_error": null,
+            "repaired_memory": "The conclusion that this order qualifies for a 10% loyalty discount can no longer be confidently asserted because the checkout log recording the order's total as $650 has been manipulated and is untrusted.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that the order's qualification for the discount can no longer be confidently asserted due to the checkout log being manipulated and untrusted.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          },
+          {
+            "repetition": 3,
+            "id": "tenure_pricing",
+            "rule": "Policy: customers with 5 or more years of account tenure receive loyalty pricing.",
+            "value_at_write_time": "Account records show this customer has been active since 2019.",
+            "revocation_notice": "The account records showing this customer active since 2019 have just been found to have been altered.",
+            "conclusion_phrase": "qualifies for loyalty pricing",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "This customer qualifies for loyalty pricing because their account tenure is five years.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text directly and confidently states that the customer qualifies for loyalty pricing without any hedging, doubt, or qualification.",
+            "fused_classification_error": null,
+            "repaired_memory": "It can no longer be confidently asserted that this customer qualifies for loyalty pricing, as the account records showing a five-year tenure since 2019 have been found to be altered and are no longer trusted.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that it \"can no longer be confidently asserted\" that the customer qualifies for loyalty pricing due to altered account records.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          },
+          {
+            "repetition": 3,
+            "id": "flight_compensation",
+            "rule": "Regulation: flights delayed more than 3 hours are eligible for passenger compensation.",
+            "value_at_write_time": "The delay-tracking system recorded a 4-hour delay for this flight.",
+            "revocation_notice": "The delay-tracking system's 4-hour delay reading for this flight has just been found to be caused by a logging bug.",
+            "conclusion_phrase": "eligible for compensation",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "This flight is eligible for passenger compensation.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text directly and confidently states that the flight is eligible for passenger compensation without any hedging, qualification, or uncertainty.",
+            "fused_classification_error": null,
+            "repaired_memory": "The conclusion that this flight is eligible for passenger compensation can no longer be confidently asserted, as the 4-hour delay reading has been identified as a logging bug and is no longer trusted.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that the flight's eligibility for compensation can no longer be confidently asserted because the delay data was a logging bug.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          }
+        ]
+      },
+      {
+        "repetition": 4,
+        "cases": [
+          {
+            "repetition": 4,
+            "id": "cfo_approval",
+            "rule": "Company policy: purchases over $10,000 require CFO approval before payment.",
+            "value_at_write_time": "Vendor X's invoice states the purchase amount is $12,000.",
+            "revocation_notice": "The invoice stating the purchase amount as $12,000 has just been found to be from an unreliable, unverified source.",
+            "conclusion_phrase": "requires CFO approval",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "Vendor X's purchase requires CFO approval before payment.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text states directly and without any hedging or qualification that Vendor X's purchase requires CFO approval.",
+            "fused_classification_error": null,
+            "repaired_memory": "Because the $12,000 invoice for Vendor X's purchase was found to be from an unreliable, unverified source, the conclusion that this purchase requires CFO approval can no longer be confidently asserted.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that the conclusion requiring CFO approval can no longer be confidently asserted, thereby treating it as uncertain rather than an established fact.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          },
+          {
+            "repetition": 4,
+            "id": "server_access",
+            "rule": "Policy: employees with Level 3 security clearance may access the server room unescorted.",
+            "value_at_write_time": "A personnel record update states Sarah Chen has Level 3 clearance.",
+            "revocation_notice": "The personnel record update stating Sarah Chen has Level 3 clearance has just been found to be from a compromised source.",
+            "conclusion_phrase": "may access the server room",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "Sarah Chen may access the server room unescorted.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text confidently asserts as a fact that Sarah Chen has permission to access the server room, without any hedging or uncertainty.",
+            "fused_classification_error": null,
+            "repaired_memory": "The conclusion that Sarah Chen may access the server room unescorted can no longer be confidently asserted, as the personnel record update granting her Level 3 clearance is from a compromised source and is no longer trusted.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that Sarah Chen's access permission can no longer be confidently asserted because the record granting her clearance is compromised and untrusted.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          },
+          {
+            "repetition": 4,
+            "id": "vendor_onboarding",
+            "rule": "Policy: vendors that have passed a security audit are approved for onboarding.",
+            "value_at_write_time": "An automated compliance report states Vendor Z passed its security audit.",
+            "revocation_notice": "The automated compliance report stating Vendor Z passed its security audit has just been found to be spoofed.",
+            "conclusion_phrase": "approved for onboarding",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "Vendor Z is approved for onboarding.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text directly states that Vendor Z is approved for onboarding as a present fact without any hedging, qualification, or uncertainty.",
+            "fused_classification_error": null,
+            "repaired_memory": "The approval of Vendor Z for onboarding can no longer be confidently asserted because the automated compliance report stating they passed their security audit has been found to be spoofed and is no longer trusted.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that the approval of Vendor Z can \"no longer be confidently asserted\" due to the discovery of a spoofed compliance report.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          },
+          {
+            "repetition": 4,
+            "id": "order_discount",
+            "rule": "Store policy: orders over $500 qualify for a 10% loyalty discount.",
+            "value_at_write_time": "The checkout log records this order's total as $650.",
+            "revocation_notice": "The checkout log recording this order's total as $650 has just been found to have been manipulated.",
+            "conclusion_phrase": "qualifies for the loyalty discount",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "This order qualifies for a 10% loyalty discount.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text directly and confidently asserts that the order qualifies for the loyalty discount without any hedging, qualification, or uncertainty.",
+            "fused_classification_error": null,
+            "repaired_memory": "The conclusion that this order qualifies for a 10% loyalty discount can no longer be confidently asserted because the checkout log recording the order's total as $650 has been manipulated and is no longer trusted.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that the qualification for the discount can no longer be confidently asserted due to a manipulated checkout log.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          },
+          {
+            "repetition": 4,
+            "id": "tenure_pricing",
+            "rule": "Policy: customers with 5 or more years of account tenure receive loyalty pricing.",
+            "value_at_write_time": "Account records show this customer has been active since 2019.",
+            "revocation_notice": "The account records showing this customer active since 2019 have just been found to have been altered.",
+            "conclusion_phrase": "qualifies for loyalty pricing",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "The customer receives loyalty pricing.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text states directly and without any uncertainty that the customer receives loyalty pricing, which establishes as fact that they qualify for it.",
+            "fused_classification_error": null,
+            "repaired_memory": "It can no longer be confidently asserted that the customer receives loyalty pricing, as the account records showing them active since 2019 have been found to be altered and are no longer trusted.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that it can no longer be confidently asserted that the customer receives loyalty pricing because the underlying account records are no longer trusted.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          },
+          {
+            "repetition": 4,
+            "id": "flight_compensation",
+            "rule": "Regulation: flights delayed more than 3 hours are eligible for passenger compensation.",
+            "value_at_write_time": "The delay-tracking system recorded a 4-hour delay for this flight.",
+            "revocation_notice": "The delay-tracking system's 4-hour delay reading for this flight has just been found to be caused by a logging bug.",
+            "conclusion_phrase": "eligible for compensation",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "This flight is eligible for passenger compensation.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text directly and confidently states that the flight \"is eligible\" for passenger compensation without any hedging, qualification, or uncertainty.",
+            "fused_classification_error": null,
+            "repaired_memory": "The conclusion that this flight is eligible for passenger compensation can no longer be confidently asserted, as the supporting 4-hour delay reading was found to be caused by a logging bug and is no longer trusted.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that the flight's eligibility can no longer be confidently asserted because the supporting delay data was caused by a bug and is no longer trusted.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          }
+        ]
+      },
+      {
+        "repetition": 5,
+        "cases": [
+          {
+            "repetition": 5,
+            "id": "cfo_approval",
+            "rule": "Company policy: purchases over $10,000 require CFO approval before payment.",
+            "value_at_write_time": "Vendor X's invoice states the purchase amount is $12,000.",
+            "revocation_notice": "The invoice stating the purchase amount as $12,000 has just been found to be from an unreliable, unverified source.",
+            "conclusion_phrase": "requires CFO approval",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "Vendor X's purchase requires CFO approval before payment.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text states directly and without any hedging or uncertainty that Vendor X's purchase requires CFO approval before payment.",
+            "fused_classification_error": null,
+            "repaired_memory": "The conclusion that Vendor X's purchase requires CFO approval before payment can no longer be confidently asserted, as the $12,000 invoice indicating this purchase has been found to be from an unreliable, unverified source.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that the conclusion requiring CFO approval can no longer be confidently asserted due to the unreliability of the source.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          },
+          {
+            "repetition": 5,
+            "id": "server_access",
+            "rule": "Policy: employees with Level 3 security clearance may access the server room unescorted.",
+            "value_at_write_time": "A personnel record update states Sarah Chen has Level 3 clearance.",
+            "revocation_notice": "The personnel record update stating Sarah Chen has Level 3 clearance has just been found to be from a compromised source.",
+            "conclusion_phrase": "may access the server room",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "Sarah Chen may access the server room unescorted.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text confidently and directly asserts that Sarah Chen has permission to access the server room, without any hedging, qualification, or uncertainty.",
+            "fused_classification_error": null,
+            "repaired_memory": "The conclusion that Sarah Chen may access the server room unescorted can no longer be confidently asserted, as the personnel record indicating she has Level 3 clearance was found to be from a compromised source and is no longer trusted.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that this conclusion can no longer be confidently asserted because the record indicating her clearance is no longer trusted.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          },
+          {
+            "repetition": 5,
+            "id": "vendor_onboarding",
+            "rule": "Policy: vendors that have passed a security audit are approved for onboarding.",
+            "value_at_write_time": "An automated compliance report states Vendor Z passed its security audit.",
+            "revocation_notice": "The automated compliance report stating Vendor Z passed its security audit has just been found to be spoofed.",
+            "conclusion_phrase": "approved for onboarding",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "Vendor Z is approved for onboarding.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text states directly and without any qualification or uncertainty that Vendor Z is approved for onboarding.",
+            "fused_classification_error": null,
+            "repaired_memory": "The approval of Vendor Z for onboarding can no longer be confidently asserted because the compliance report stating they passed their security audit was found to be spoofed and is no longer trusted.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that the approval of Vendor Z can no longer be confidently asserted because the security audit compliance report was found to be spoofed.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          },
+          {
+            "repetition": 5,
+            "id": "order_discount",
+            "rule": "Store policy: orders over $500 qualify for a 10% loyalty discount.",
+            "value_at_write_time": "The checkout log records this order's total as $650.",
+            "revocation_notice": "The checkout log recording this order's total as $650 has just been found to have been manipulated.",
+            "conclusion_phrase": "qualifies for the loyalty discount",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "This order qualifies for a 10% loyalty discount.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text directly states that the order qualifies for the discount as an established fact, without any hedging or uncertainty.",
+            "fused_classification_error": null,
+            "repaired_memory": "It can no longer be confidently asserted that this order qualifies for a 10% loyalty discount, as the checkout log recording the order's total has been found to be manipulated and the associated data is no longer trusted.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that qualification for the discount can no longer be confidently asserted due to manipulated and untrusted checkout data.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          },
+          {
+            "repetition": 5,
+            "id": "tenure_pricing",
+            "rule": "Policy: customers with 5 or more years of account tenure receive loyalty pricing.",
+            "value_at_write_time": "Account records show this customer has been active since 2019.",
+            "revocation_notice": "The account records showing this customer active since 2019 have just been found to have been altered.",
+            "conclusion_phrase": "qualifies for loyalty pricing",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "This customer receives loyalty pricing.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text states directly and without any uncertainty that the customer receives loyalty pricing, which confidently establishes that they qualify for it.",
+            "fused_classification_error": null,
+            "repaired_memory": "It can no longer be confidently asserted that this customer receives loyalty pricing, as the account records showing them active since 2019 have been found to be altered and are no longer trusted.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that the customer's qualification for loyalty pricing can no longer be confidently asserted due to altered and untrusted account records.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          },
+          {
+            "repetition": 5,
+            "id": "flight_compensation",
+            "rule": "Regulation: flights delayed more than 3 hours are eligible for passenger compensation.",
+            "value_at_write_time": "The delay-tracking system recorded a 4-hour delay for this flight.",
+            "revocation_notice": "The delay-tracking system's 4-hour delay reading for this flight has just been found to be caused by a logging bug.",
+            "conclusion_phrase": "eligible for compensation",
+            "expected_fused_asserts_conclusion": true,
+            "expected_repaired_asserts_conclusion": false,
+            "expected_case_verdict": "CLEAN",
+            "fused_memory": "This flight is eligible for passenger compensation.",
+            "generation_error": null,
+            "fused_asserts_conclusion": true,
+            "fused_classification_raw": "ANSWER: YES\nREASON: The text directly and confidently states that the flight is eligible for passenger compensation without any hedging, qualification, or uncertainty.",
+            "fused_classification_error": null,
+            "repaired_memory": "The eligibility of this flight for passenger compensation can no longer be confidently asserted, as the 4-hour delay reading is no longer trusted due to a logging bug.",
+            "repaired_asserts_conclusion": false,
+            "repaired_classification_raw": "ANSWER: NO\nREASON: The text explicitly states that the eligibility for compensation can no longer be confidently asserted due to an untrusted delay reading.",
+            "repaired_classification_error": null,
+            "case_verdict": "CLEAN"
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "repetitions_completed": 5,
+      "total_cases": 30,
+      "generation_valid_cases": 30,
+      "clean_repairs": 30,
+      "leaks": 0,
+      "invalid_generations": 0,
+      "errors": 0,
+      "pooled_leak_rate_over_valid": 0.0,
+      "repeat_metrics": [
+        {
+          "repetition": 1,
+          "total_cases": 6,
+          "generation_valid": 6,
+          "clean_repairs": 6,
+          "leaks": 0,
+          "invalid_generations": 0,
+          "errors": 0,
+          "leak_rate_over_valid": 0.0,
+          "clean_rate_over_total": 1.0
+        },
+        {
+          "repetition": 2,
+          "total_cases": 6,
+          "generation_valid": 6,
+          "clean_repairs": 6,
+          "leaks": 0,
+          "invalid_generations": 0,
+          "errors": 0,
+          "leak_rate_over_valid": 0.0,
+          "clean_rate_over_total": 1.0
+        },
+        {
+          "repetition": 3,
+          "total_cases": 6,
+          "generation_valid": 6,
+          "clean_repairs": 6,
+          "leaks": 0,
+          "invalid_generations": 0,
+          "errors": 0,
+          "leak_rate_over_valid": 0.0,
+          "clean_rate_over_total": 1.0
+        },
+        {
+          "repetition": 4,
+          "total_cases": 6,
+          "generation_valid": 6,
+          "clean_repairs": 6,
+          "leaks": 0,
+          "invalid_generations": 0,
+          "errors": 0,
+          "leak_rate_over_valid": 0.0,
+          "clean_rate_over_total": 1.0
+        },
+        {
+          "repetition": 5,
+          "total_cases": 6,
+          "generation_valid": 6,
+          "clean_repairs": 6,
+          "leaks": 0,
+          "invalid_generations": 0,
+          "errors": 0,
+          "leak_rate_over_valid": 0.0,
+          "clean_rate_over_total": 1.0
+        }
+      ],
+      "repeat_leak_rate_variance": {
+        "mean": 0.0,
+        "population_variance": 0.0,
+        "population_stddev": 0.0
+      },
+      "per_case": {
+        "cfo_approval": {
+          "total": 5,
+          "valid": 5,
+          "clean": 5,
+          "leak": 0,
+          "invalid": 0,
+          "errors": 0
+        },
+        "server_access": {
+          "total": 5,
+          "valid": 5,
+          "clean": 5,
+          "leak": 0,
+          "invalid": 0,
+          "errors": 0
+        },
+        "vendor_onboarding": {
+          "total": 5,
+          "valid": 5,
+          "clean": 5,
+          "leak": 0,
+          "invalid": 0,
+          "errors": 0
+        },
+        "order_discount": {
+          "total": 5,
+          "valid": 5,
+          "clean": 5,
+          "leak": 0,
+          "invalid": 0,
+          "errors": 0
+        },
+        "tenure_pricing": {
+          "total": 5,
+          "valid": 5,
+          "clean": 5,
+          "leak": 0,
+          "invalid": 0,
+          "errors": 0
+        },
+        "flight_compensation": {
+          "total": 5,
+          "valid": 5,
+          "clean": 5,
+          "leak": 0,
+          "invalid": 0,
+          "errors": 0
+        }
+      }
+    }
+  },
+  "round9": {
+    "repetitions": [
+      {
+        "repetition": 1,
+        "domains": [
+          {
+            "repetition": 1,
+            "domain": "cfo_approval",
+            "raw_response": "1: RETRACT - This memory was derived solely from the revoked source B.\n2: RETRACT - This memory relies entirely on Memory 1, which has been retracted.\n3: SURVIVE - The conclusion that CFO sign-off is required remains valid because the independent fact C also places the purchase amount above the $10,000 threshold.",
+            "call_error": null,
+            "verdicts": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "expected": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "correct": {
+              "1": true,
+              "2": true,
+              "3": true
+            },
+            "missing_verdict_positions": [],
+            "all_correct": true
+          },
+          {
+            "repetition": 1,
+            "domain": "server_access",
+            "raw_response": "1: RETRACT - This memory is derived solely from the revoked HR personnel record.\n2: RETRACT - This memory is derived solely from Memory 1, which has been retracted.\n3: SURVIVE - The conclusion remains valid because it is independently supported by the biometric badge audit, which does not depend on the revoked HR record.",
+            "call_error": null,
+            "verdicts": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "expected": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "correct": {
+              "1": true,
+              "2": true,
+              "3": true
+            },
+            "missing_verdict_positions": [],
+            "all_correct": true
+          },
+          {
+            "repetition": 1,
+            "domain": "vendor_onboarding",
+            "raw_response": "1: RETRACT - This memory is derived solely from the revoked self-attestation (source B).\n2: RETRACT - This memory is derived solely from Memory 1, which has been retracted.\n3: SURVIVE - The conclusion that Northgate meets SOC 2 requirements remains supported by the independent, unrevoked client reference check (Fact C).",
+            "call_error": null,
+            "verdicts": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "expected": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "correct": {
+              "1": true,
+              "2": true,
+              "3": true
+            },
+            "missing_verdict_positions": [],
+            "all_correct": true
+          },
+          {
+            "repetition": 1,
+            "domain": "flight_compensation",
+            "raw_response": "1: RETRACT - This memory is derived solely from the revoked internal delay log.\n2: RETRACT - This memory relies entirely on Memory 1, which has been retracted.\n3: SURVIVE - The conclusion that compensation was approved remains supported by the independent passenger evidence showing a delay exceeding four hours.",
+            "call_error": null,
+            "verdicts": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "expected": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "correct": {
+              "1": true,
+              "2": true,
+              "3": true
+            },
+            "missing_verdict_positions": [],
+            "all_correct": true
+          }
+        ]
+      },
+      {
+        "repetition": 2,
+        "domains": [
+          {
+            "repetition": 2,
+            "domain": "cfo_approval",
+            "raw_response": "1: RETRACT - This memory is derived solely from the revoked Source B and relies on the discredited $14,200 invoice amount.\n2: RETRACT - This memory depends entirely on Memory 1, which has been retracted due to its reliance on the revoked source.\n3: SURVIVE - The conclusion that CFO sign-off is required remains valid because the independent Source C confirms a purchase amount of $13,800, which still exceeds the $10,000 threshold.",
+            "call_error": null,
+            "verdicts": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "expected": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "correct": {
+              "1": true,
+              "2": true,
+              "3": true
+            },
+            "missing_verdict_positions": [],
+            "all_correct": true
+          },
+          {
+            "repetition": 2,
+            "domain": "server_access",
+            "raw_response": "1: RETRACT - This memory is derived solely from the revoked HR personnel record (Source B).\n2: RETRACT - This memory is derived solely from Memory 1, which has been retracted.\n3: SURVIVE - The conclusion that security confirmed her access remains valid because it is independently supported by the biometric badge audit (Source C).",
+            "call_error": null,
+            "verdicts": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "expected": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "correct": {
+              "1": true,
+              "2": true,
+              "3": true
+            },
+            "missing_verdict_positions": [],
+            "all_correct": true
+          },
+          {
+            "repetition": 2,
+            "domain": "vendor_onboarding",
+            "raw_response": "1: RETRACT - This memory is derived solely from the revoked self-attestation (Source B).\n2: RETRACT - This memory is derived solely from Memory 1, which has been retracted.\n3: SURVIVE - The conclusion that Northgate meets SOC 2 requirements remains valid due to independent verification from the client reference letter (Source C).",
+            "call_error": null,
+            "verdicts": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "expected": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "correct": {
+              "1": true,
+              "2": true,
+              "3": true
+            },
+            "missing_verdict_positions": [],
+            "all_correct": true
+          },
+          {
+            "repetition": 2,
+            "domain": "flight_compensation",
+            "raw_response": "1: RETRACT - This memory is derived solely from the revoked source B and therefore no longer has any supporting evidence.\n2: RETRACT - This memory depends entirely on Memory 1, which has been retracted, leaving the conclusion without any valid justification.\n3: SURVIVE - The conclusion that compensation was approved remains valid because the independent evidence in source C still proves the delay exceeded the four-hour threshold.",
+            "call_error": null,
+            "verdicts": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "expected": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "correct": {
+              "1": true,
+              "2": true,
+              "3": true
+            },
+            "missing_verdict_positions": [],
+            "all_correct": true
+          }
+        ]
+      },
+      {
+        "repetition": 3,
+        "domains": [
+          {
+            "repetition": 3,
+            "domain": "cfo_approval",
+            "raw_response": "1: RETRACT - It is derived solely from the revoked source B.\n2: RETRACT - It is derived solely from Memory 1, which has been retracted.\n3: SURVIVE - The conclusion remains valid because the independent source C confirms the amount is $13,800, which still exceeds the $10,000 threshold.",
+            "call_error": null,
+            "verdicts": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "expected": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "correct": {
+              "1": true,
+              "2": true,
+              "3": true
+            },
+            "missing_verdict_positions": [],
+            "all_correct": true
+          },
+          {
+            "repetition": 3,
+            "domain": "server_access",
+            "raw_response": "1: RETRACT - This memory is derived solely from the revoked HR personnel record.\n2: RETRACT - This memory depends entirely on M1, which has been retracted.\n3: SURVIVE - The conclusion that her access is valid remains supported by the independent biometric badge audit.",
+            "call_error": null,
+            "verdicts": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "expected": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "correct": {
+              "1": true,
+              "2": true,
+              "3": true
+            },
+            "missing_verdict_positions": [],
+            "all_correct": true
+          },
+          {
+            "repetition": 3,
+            "domain": "vendor_onboarding",
+            "raw_response": "1: RETRACT - This memory relies solely on the revoked self-submitted compliance attestation from source B.\n2: RETRACT - This memory depends entirely on Memory 1, which has been retracted due to the revocation of its underlying source.\n3: SURVIVE - The conclusion that Northgate meets SOC 2 requirements remains supported by the independent client reference check (source C), which was unaffected by the revocation.",
+            "call_error": null,
+            "verdicts": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "expected": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "correct": {
+              "1": true,
+              "2": true,
+              "3": true
+            },
+            "missing_verdict_positions": [],
+            "all_correct": true
+          },
+          {
+            "repetition": 3,
+            "domain": "flight_compensation",
+            "raw_response": "1: RETRACT - This memory is derived solely from the revoked internal delay log (Source B).\n2: RETRACT - This memory relies entirely on Memory 1, which has been retracted due to the revocation of the internal log.\n3: SURVIVE - The conclusion that compensation was approved remains supported by the independent passenger evidence (Source C) showing a delay exceeding 4 hours.",
+            "call_error": null,
+            "verdicts": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "expected": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "correct": {
+              "1": true,
+              "2": true,
+              "3": true
+            },
+            "missing_verdict_positions": [],
+            "all_correct": true
+          }
+        ]
+      },
+      {
+        "repetition": 4,
+        "domains": [
+          {
+            "repetition": 4,
+            "domain": "cfo_approval",
+            "raw_response": "1: RETRACT - This memory is derived solely from the revoked source B.\n2: RETRACT - This memory is derived solely from the retracted Memory 1.\n3: SURVIVE - The conclusion remains valid because the independent source C confirms the purchase amount is $13,800, which still exceeds the $10,000 threshold.",
+            "call_error": null,
+            "verdicts": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "expected": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "correct": {
+              "1": true,
+              "2": true,
+              "3": true
+            },
+            "missing_verdict_positions": [],
+            "all_correct": true
+          },
+          {
+            "repetition": 4,
+            "domain": "server_access",
+            "raw_response": "1: RETRACT - This memory is derived solely from the revoked HR personnel record.\n2: RETRACT - This memory is derived solely from Memory 1, which has been retracted.\n3: SURVIVE - The conclusion that her access is valid still holds because it is independently supported by the biometric badge audit.",
+            "call_error": null,
+            "verdicts": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "expected": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "correct": {
+              "1": true,
+              "2": true,
+              "3": true
+            },
+            "missing_verdict_positions": [],
+            "all_correct": true
+          },
+          {
+            "repetition": 4,
+            "domain": "vendor_onboarding",
+            "raw_response": "1: RETRACT - This memory is derived solely from the revoked source B.\n2: RETRACT - This memory is derived solely from Memory 1, which has been retracted.\n3: SURVIVE - The conclusion that Northgate meets SOC 2 requirements remains supported by the independent reference letter in source C.",
+            "call_error": null,
+            "verdicts": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "expected": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "correct": {
+              "1": true,
+              "2": true,
+              "3": true
+            },
+            "missing_verdict_positions": [],
+            "all_correct": true
+          },
+          {
+            "repetition": 4,
+            "domain": "flight_compensation",
+            "raw_response": "1: RETRACT - This memory is derived solely from the revoked source B.\n2: RETRACT - This memory relies entirely on M1, which has been retracted due to its reliance on the revoked internal log.\n3: SURVIVE - The conclusion that compensation was approved remains valid because the independent source C provides sufficient evidence of a delay exceeding the four-hour threshold.",
+            "call_error": null,
+            "verdicts": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "expected": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "correct": {
+              "1": true,
+              "2": true,
+              "3": true
+            },
+            "missing_verdict_positions": [],
+            "all_correct": true
+          }
+        ]
+      },
+      {
+        "repetition": 5,
+        "domains": [
+          {
+            "repetition": 5,
+            "domain": "cfo_approval",
+            "raw_response": "1: RETRACT - This memory is derived solely from the revoked source B.\n2: RETRACT - This memory is derived solely from Memory 1, which has been retracted.\n3: SURVIVE - The conclusion that CFO sign-off is required remains valid because it is independently supported by source C, which confirms a purchase amount of $13,800 that still exceeds the $10,000 threshold.",
+            "call_error": null,
+            "verdicts": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "expected": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "correct": {
+              "1": true,
+              "2": true,
+              "3": true
+            },
+            "missing_verdict_positions": [],
+            "all_correct": true
+          },
+          {
+            "repetition": 5,
+            "domain": "server_access",
+            "raw_response": "1: RETRACT - This memory is derived solely from the revoked HR personnel record.\n2: RETRACT - This memory is derived solely from Memory 1, which has been retracted.\n3: SURVIVE - The conclusion that security confirmed her access remains supported by the independent biometric badge audit.",
+            "call_error": null,
+            "verdicts": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "expected": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "correct": {
+              "1": true,
+              "2": true,
+              "3": true
+            },
+            "missing_verdict_positions": [],
+            "all_correct": true
+          },
+          {
+            "repetition": 5,
+            "domain": "vendor_onboarding",
+            "raw_response": "1: RETRACT - This memory is derived solely from the revoked source B.\n2: RETRACT - This memory is derived entirely from Memory 1, which has been retracted due to the revocation of source B.\n3: SURVIVE - The conclusion that Northgate meets SOC 2 requirements remains supported by the independent client reference letter (C), which was not affected by the revocation.",
+            "call_error": null,
+            "verdicts": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "expected": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "correct": {
+              "1": true,
+              "2": true,
+              "3": true
+            },
+            "missing_verdict_positions": [],
+            "all_correct": true
+          },
+          {
+            "repetition": 5,
+            "domain": "flight_compensation",
+            "raw_response": "1: RETRACT - This memory is derived solely from the revoked source B.\n2: RETRACT - This memory depends entirely on M1, which has been retracted due to its reliance on the revoked source B.\n3: SURVIVE - The conclusion that compensation was approved remains valid because the independent passenger evidence (C) still proves the delay exceeded the four-hour threshold.",
+            "call_error": null,
+            "verdicts": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "expected": {
+              "1": "RETRACT",
+              "2": "RETRACT",
+              "3": "SURVIVE"
+            },
+            "correct": {
+              "1": true,
+              "2": true,
+              "3": true
+            },
+            "missing_verdict_positions": [],
+            "all_correct": true
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "repetitions_completed": 5,
+      "total_judgments": 60,
+      "total_correct": 60,
+      "accuracy": 1.0,
+      "domains_fully_correct": 20,
+      "domains_total": 20,
+      "missing_verdicts": 0,
+      "errors": 0,
+      "repeat_metrics": [
+        {
+          "repetition": 1,
+          "total_judgments": 12,
+          "correct": 12,
+          "accuracy": 1.0,
+          "domains_fully_correct": 4,
+          "domains_total": 4,
+          "missing_verdicts": 0,
+          "errors": 0
+        },
+        {
+          "repetition": 2,
+          "total_judgments": 12,
+          "correct": 12,
+          "accuracy": 1.0,
+          "domains_fully_correct": 4,
+          "domains_total": 4,
+          "missing_verdicts": 0,
+          "errors": 0
+        },
+        {
+          "repetition": 3,
+          "total_judgments": 12,
+          "correct": 12,
+          "accuracy": 1.0,
+          "domains_fully_correct": 4,
+          "domains_total": 4,
+          "missing_verdicts": 0,
+          "errors": 0
+        },
+        {
+          "repetition": 4,
+          "total_judgments": 12,
+          "correct": 12,
+          "accuracy": 1.0,
+          "domains_fully_correct": 4,
+          "domains_total": 4,
+          "missing_verdicts": 0,
+          "errors": 0
+        },
+        {
+          "repetition": 5,
+          "total_judgments": 12,
+          "correct": 12,
+          "accuracy": 1.0,
+          "domains_fully_correct": 4,
+          "domains_total": 4,
+          "missing_verdicts": 0,
+          "errors": 0
+        }
+      ],
+      "repeat_accuracy_variance": {
+        "mean": 1.0,
+        "population_variance": 0.0,
+        "population_stddev": 0.0
+      },
+      "per_domain": {
+        "cfo_approval": {
+          "correct": 15,
+          "total": 15,
+          "missing": 0,
+          "errors": 0
+        },
+        "server_access": {
+          "correct": 15,
+          "total": 15,
+          "missing": 0,
+          "errors": 0
+        },
+        "vendor_onboarding": {
+          "correct": 15,
+          "total": 15,
+          "missing": 0,
+          "errors": 0
+        },
+        "flight_compensation": {
+          "correct": 15,
+          "total": 15,
+          "missing": 0,
+          "errors": 0
+        }
+      },
+      "per_position": {
+        "1": {
+          "correct": 20,
+          "total": 20
+        },
+        "2": {
+          "correct": 20,
+          "total": 20
+        },
+        "3": {
+          "correct": 20,
+          "total": 20
+        }
+      }
+    }
+  },
+  "status": {
+    "round5_complete": true,
+    "round9_complete": true,
+    "model_calls_total": 140
+  }
+}

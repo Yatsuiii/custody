@@ -77,6 +77,11 @@ Allowed files:
 - research/experiments/RSM_CRUX10_SPOOFED_INDEPENDENCE/run.py
 - research/experiments/RSM_CRUX10_SPOOFED_INDEPENDENCE/RESULT.md
 - research/experiments/RSM_CRUX10_SPOOFED_INDEPENDENCE/result.json
+- research/experiments/RSM_CRUX11_VARIANCE_BOUND/PLAN.md
+- research/experiments/RSM_CRUX11_VARIANCE_BOUND/fixture.json
+- research/experiments/RSM_CRUX11_VARIANCE_BOUND/run.py
+- research/experiments/RSM_CRUX11_VARIANCE_BOUND/RESULT.md
+- research/experiments/RSM_CRUX11_VARIANCE_BOUND/result.json
 - RSM_HANDOFF.md
 - .claude/SESSION_CONTRACT.md (this file)
 

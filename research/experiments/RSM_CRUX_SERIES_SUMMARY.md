@@ -1,4 +1,4 @@
-# RSM Crux Series — Consolidated Summary (10 rounds)
+# RSM Crux Series — Consolidated Summary (11 rounds)
 
 ## What this series is, and what it is not
 
@@ -12,14 +12,15 @@ specifically, once clean and poisoned content have been fused by an LLM
 into new text, can the poisoned contribution be identified and stripped
 without also destroying the clean contribution?
 
-This series (`RSM_CRUX_ATTRIBUTION` through `RSM_CRUX10_SPOOFED_INDEPENDENCE`)
-is ten falsification rounds against pieces of that question, prompted by
+This series (`RSM_CRUX_ATTRIBUTION` through `RSM_CRUX11_VARIANCE_BOUND`)
+is eleven falsification rounds against pieces of that question, prompted by
 a ChatGPT brainstorm ("Repairable Semantic Memory" — claim decomposition,
 ATMS-style support formulas, counterfactual repair) that was never
 designed or built here. **No claim-carrying memory system, support-formula
-engine, or repair operator exists.** Every round is a narrow, single-call
-or few-call probe against live `gemini-3.5-flash`, scored against a
-precommitted synthetic fixture. `custody/*.py` was not touched in any
+engine, or repair operator exists.** Every round is a narrow probe against
+live `gemini-3.5-flash`, scored against a precommitted synthetic fixture;
+round 11 repeats two earlier probes to measure their observed variance.
+`custody/*.py` was not touched in any
 round (`git diff --stat main -- custody/` confirmed empty after every
 commit). Nothing here has been merged into `main`, and this document does
 not authorize that — a merge or citation-rewrite decision is separate and
@@ -40,6 +41,7 @@ undecided.
 | 8 | `RSM_CRUX8_SPOOFED_PROVENANCE` | Adversarial: what if the provenance field itself lies about independence (the threat model `TRUSTED_COMPUTING_BASE.md` predicts)? | Naive prompt: recall 0.67, missed the spoofed item — confirms the predicted vulnerability. Skeptical prompt: recall 1.0, caught it, still 0 false positives — but explicitly not treated as "solved," since it's still semantic judgment, not the structural TCB-verified provenance the design actually calls for. |
 | 9 | `RSM_CRUX9_REDUNDANT_CASCADE` | Does cascading repair correctly distinguish a pure-cascade dependent (should retract) from a sibling with independent support (should survive), in the same pass? | 12/12 (100%), 4/4 domains. Combines round 3's and round 6's findings into one branch point the model had to get both sides of. |
 | 10 | `RSM_CRUX10_SPOOFED_INDEPENDENCE` | Adversarial: what if round 9's "independent" support is itself a laundered restatement of the revoked chain? | Naive: 10/12, missed the spoof, plus one unplanned honest-case false positive (sampling variance, not a fixture change). Skeptical: 12/12 — caught the spoof, all three honest domains still correct, no over-correction. |
+| 11 | `RSM_CRUX11_VARIANCE_BOUND` | Do repeated calls on clean round-5 and round-9 controls vary under the same fixture, prompt, model, and parser? | Five repeats: round 5 was 30/30 valid and clean (0/30 leak); round 9 was 60/60 correct (20/20 domains). Zero observed variance in both per-repeat binary metrics; this does not bound the distinct round-10 naive condition. |
 
 ## What is now reasonably well-supported
 
@@ -55,6 +57,10 @@ undecided.
 - Structural provenance (a recorded parent pointer, not inferred from
   prose) is what actually fixes search/recall, not better prompting of
   the search step itself (rounds 7 → 7b).
+- Repeating two clean controls five times found no label variation in this
+  sample: 30/30 valid, clean round-5 repairs and 60/60 round-9 judgments
+  were correct (round 11). This is a narrow observed result, not a general
+  robustness bound.
 
 ## What remains open, unresolved, or actively concerning
 
@@ -66,17 +72,18 @@ undecided.
   prompt is a real, twice-replicated mitigation that still isn't the
   structural fix — provenance only from Custody's own in-boundary
   receipt collector, never self-declared, remains unbuilt.
-- **Round 10's naive run also surfaced an unplanned finding: single-call
-  results carry real sampling variance.** The same domain and prompt
-  that scored correctly in round 9 produced a false positive in round
-  10's naive condition on a rerun. No round in this series has been
-  repeated enough times to separate a genuine mechanism limit from
-  one unlucky sample — this is a real, now-demonstrated gap, not a
-  hypothetical one.
-- **n is small everywhere.** Largest round is 20 cases (round 1); most
-  are 4-16. No round uses more than one model. Harder or more numerous
-  spoofs, and combining the skeptical mitigation with multi-hop cascades
-  in the same test, remain untested past round 10's single spoof shape.
+- **Sampling variance is only partly bounded.** Round 10's naive run
+  surfaced an honest-case false positive even though round 9's clean
+  condition got the same domain/prompt right. Round 11 repeated rounds 5
+  and 9 five times with zero label variation (30 round-5 cases and 60
+  round-9 judgments), but did not repeat round 10's exact naive/adversarial
+  condition. The flip therefore remains real evidence, not something
+  round 11 can explain away.
+- **n is still small and model coverage is one.** Round 11 adds repeated
+  observations, but only five repetitions of two hand-built fixtures and
+  one model. Harder or more numerous spoofs, and combining the skeptical
+  mitigation with multi-hop cascades in the same test, remain untested
+  past round 10's single spoof shape.
 - **Circularity risk in the classifier-scored rounds (5-9):** a second
   Gemini call judges "confident assertion vs. hedged/retracted." This was
   mitigated by manual spot-checks of stated reasoning each round, not
@@ -91,7 +98,7 @@ undecided.
 
 ## Bottom line
 
-Ten rounds, each precommitted before running, most with an honestly
+Eleven rounds, each precommitted before running, most with an honestly
 reported miss, confound, or caveat rather than a clean pass — the series
 did not manufacture a smooth success story. The central hypothesis this
 whole line of testing was checking — that fused content is not
@@ -105,9 +112,10 @@ an explicit skepticism instruction. What holds it back from being
 "solved" is narrower and sharper than the original framing: independence
 and provenance claims have to be trustworthy at the source, nothing
 tested here addresses that except by asking an LLM to be suspicious
-(a mitigation, twice-replicated, not a structural fix), and round 10's
-own naive rerun is a live reminder that single-call results carry
-variance this series has not yet bounded. That is the honest state of
-the open question as of this series, not a claim that repairable
+(a mitigation, twice-replicated, not a structural fix). Round 11 found
+zero label variance in five repeats of two clean controls, but did not
+repeat the exact round-10 naive condition; the series therefore still has
+not bounded variance in general. That is the honest state of the open
+question as of this series, not a claim that repairable
 semantic memory has been built, validated at scale, or is ready for any
 production decision.
