@@ -77,6 +77,7 @@ Allowed files:
 - research/experiments/RSM_CRUX10_SPOOFED_INDEPENDENCE/run.py
 - research/experiments/RSM_CRUX10_SPOOFED_INDEPENDENCE/RESULT.md
 - research/experiments/RSM_CRUX10_SPOOFED_INDEPENDENCE/result.json
+- RSM_HANDOFF.md
 - .claude/SESSION_CONTRACT.md (this file)
 
 Non-goals:
