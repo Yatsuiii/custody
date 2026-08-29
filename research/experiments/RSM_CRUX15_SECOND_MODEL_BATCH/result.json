@@ -1,0 +1,1304 @@
+{
+  "round": 15,
+  "model": "gemini-3.7-flash",
+  "source_model": "gemini-3.5-flash",
+  "project": "project-988bc9fe-092c-4b32-90c",
+  "location": "global",
+  "condition": "naive",
+  "fixture_sha256": "49d72bbc17850c1582d00cb87aee13e0ec3ee04ac6d0eae1f044727faa7b569e",
+  "prompt_sha256": "5be0ec763c4572350174d0b58b7daaff41dd1dedc81a70c43fb7635a4d0294e2",
+  "source_round": "RSM_CRUX10_SPOOFED_INDEPENDENCE",
+  "source_domain_order": [
+    "server_access",
+    "cfo_approval",
+    "vendor_onboarding",
+    "flight_compensation"
+  ],
+  "model_availability_probe": {
+    "resource_name": "publishers/google/models/gemini-3.7-flash",
+    "generation_calls": 0,
+    "verified_before_fixture_freeze": true
+  },
+  "artifact_lineage": {
+    "source_fixture": "RSM_CRUX10_SPOOFED_INDEPENDENCE/fixture.json",
+    "source_harness": "RSM_CRUX10_SPOOFED_INDEPENDENCE/run.py",
+    "condition": "NAIVE_PROMPT only; skeptical condition not run",
+    "execution": "four domains in source order, repeated five times",
+    "changed_variable": "model only: gemini-3.7-flash vs gemini-3.5-flash"
+  },
+  "model_calls": {
+    "model_calls": 20
+  },
+  "client_error": null,
+  "repetitions": [
+    {
+      "call_index": 1,
+      "repetition": 1,
+      "batch_position": 1,
+      "domain": "server_access",
+      "spoofed": true,
+      "raw_response": "1: RETRACT - This memory is derived solely from the revoked HR personnel record.\n2: RETRACT - This memory was derived solely from Memory 1, which entirely depends on the revoked source.\n3: SURVIVE - The conclusion that her access is valid remains supported by the independent central badge-provisioning confirmation.",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "RETRACT"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": false
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_negative": true,
+      "m2b_false_positive": false,
+      "complete": true,
+      "all_correct": false
+    },
+    {
+      "call_index": 2,
+      "repetition": 1,
+      "batch_position": 2,
+      "domain": "cfo_approval",
+      "spoofed": false,
+      "raw_response": "1: RETRACT - This memory relies entirely on the revoked invoice amount from Source B to justify the requirement.\n2: RETRACT - This memory derives solely from Memory 1, which has been retracted due to its dependency on the revoked source.\n3: SURVIVE - The conclusion that CFO sign-off is required remains independently supported by Source C's verified $13,800 purchase order exceeding the $10,000 threshold.",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_negative": false,
+      "m2b_false_positive": false,
+      "complete": true,
+      "all_correct": true
+    },
+    {
+      "call_index": 3,
+      "repetition": 1,
+      "batch_position": 3,
+      "domain": "vendor_onboarding",
+      "spoofed": false,
+      "raw_response": "1: RETRACT - This memory was derived solely from the revoked self-submitted attestation.\n2: RETRACT - This onboarding approval was derived solely from Memory 1, which has been invalidated.\n3: SURVIVE - The conclusion remains independently supported by the separate, valid reference letter confirming Northgate passed a third-party SOC 2 audit (Fact C).",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_negative": false,
+      "m2b_false_positive": false,
+      "complete": true,
+      "all_correct": true
+    },
+    {
+      "call_index": 4,
+      "repetition": 1,
+      "batch_position": 4,
+      "domain": "flight_compensation",
+      "spoofed": false,
+      "raw_response": "1: RETRACT - This memory is derived solely from the revoked internal delay log source B.\n2: RETRACT - This memory depends entirely on M1, which has been invalidated with no direct link to independent evidence.\n3: SURVIVE - The conclusion that the delay exceeded 4 hours remains supported by the independent passenger and departure-board evidence in source C.",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_negative": false,
+      "m2b_false_positive": false,
+      "complete": true,
+      "all_correct": true
+    },
+    {
+      "call_index": 5,
+      "repetition": 2,
+      "batch_position": 1,
+      "domain": "server_access",
+      "spoofed": true,
+      "raw_response": "1: RETRACT - This memory relies exclusively on the revoked HR system record (Source B).\n2: RETRACT - This memory was derived solely from Memory 1, which has been invalidated by the revocation of Source B.\n3: SURVIVE - The conclusion remains supported by independent confirmation from the central badge-provisioning system (Fact C), which was unaffected by the revocation.",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "RETRACT"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": false
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_negative": true,
+      "m2b_false_positive": false,
+      "complete": true,
+      "all_correct": false
+    },
+    {
+      "call_index": 6,
+      "repetition": 2,
+      "batch_position": 2,
+      "domain": "cfo_approval",
+      "spoofed": false,
+      "raw_response": "1: RETRACT - This memory relies entirely on the revoked invoice amount from Source B to justify the CFO approval requirement.\n2: RETRACT - This memory is derived solely from Memory 1, which has been invalidated due to the revocation of Source B.\n3: SURVIVE - The conclusion remains valid because it is independently supported by Source C, which confirms the $13,800 amount exceeds the $10,000 threshold without relying on the revoked source.",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_negative": false,
+      "m2b_false_positive": false,
+      "complete": true,
+      "all_correct": true
+    },
+    {
+      "call_index": 7,
+      "repetition": 2,
+      "batch_position": 3,
+      "domain": "vendor_onboarding",
+      "spoofed": false,
+      "raw_response": "1: RETRACT - This memory depends entirely on the revoked self-submitted attestation (Source B) and has no other supporting basis.\n2: RETRACT - This memory was derived solely from Memory 1, which has been retracted following the revocation of Source B.\n3: SURVIVE - Although partially based on the revoked attestation, the conclusion that Northgate meets SOC 2 requirements remains independently supported by the unrevoked client reference check (Source C).",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_negative": false,
+      "m2b_false_positive": false,
+      "complete": true,
+      "all_correct": true
+    },
+    {
+      "call_index": 8,
+      "repetition": 2,
+      "batch_position": 4,
+      "domain": "flight_compensation",
+      "spoofed": false,
+      "raw_response": "1: RETRACT - This memory relies solely on revoked source B and states a specific delay time that has been invalidated.\n2: RETRACT - This conclusion depends exclusively on M1, having no independent evidence to maintain its claim.\n3: SURVIVE - The conclusion that passengers qualify for compensation remains supported by independent source C, which confirms a delay exceeding 4 hours.",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_negative": false,
+      "m2b_false_positive": false,
+      "complete": true,
+      "all_correct": true
+    },
+    {
+      "call_index": 9,
+      "repetition": 3,
+      "batch_position": 1,
+      "domain": "server_access",
+      "spoofed": true,
+      "raw_response": "1: RETRACT - This memory relies entirely on the revoked HR personnel record.\n2: RETRACT - This memory is derived solely from Memory 1, which has been invalidated by the revocation of source B.\n3: SURVIVE - The conclusion that security confirmed her access remains supported by independent verification from the central badge-provisioning system.",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "RETRACT"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": false
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_negative": true,
+      "m2b_false_positive": false,
+      "complete": true,
+      "all_correct": false
+    },
+    {
+      "call_index": 10,
+      "repetition": 3,
+      "batch_position": 2,
+      "domain": "cfo_approval",
+      "spoofed": false,
+      "raw_response": "1: RETRACT - This conclusion relies exclusively on the revoked invoice amount from source B.\n2: RETRACT - This record is derived solely from Memory 1, which has been invalidated by the revocation of source B.\n3: SURVIVE - The conclusion remains independently supported by fact C, as the verified purchase order of $13,800 still exceeds the $10,000 threshold.",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_negative": false,
+      "m2b_false_positive": false,
+      "complete": true,
+      "all_correct": true
+    },
+    {
+      "call_index": 11,
+      "repetition": 3,
+      "batch_position": 3,
+      "domain": "vendor_onboarding",
+      "spoofed": false,
+      "raw_response": "1: RETRACT - This memory was derived solely from the revoked compliance attestation.\n2: RETRACT - This memory depends entirely on Memory 1, which has been invalidated by the revocation.\n3: SURVIVE - The conclusion that Northgate meets SOC 2 requirements is independently supported by the valid reference check (Source C).",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_negative": false,
+      "m2b_false_positive": false,
+      "complete": true,
+      "all_correct": true
+    },
+    {
+      "call_index": 12,
+      "repetition": 3,
+      "batch_position": 4,
+      "domain": "flight_compensation",
+      "spoofed": false,
+      "raw_response": "1: RETRACT - It is derived solely from the revoked internal delay log.\n2: RETRACT - It relies entirely on the revoked internal log determination to establish qualification for compensation.\n3: SURVIVE - The conclusion that passengers qualify for approved compensation is independently supported by the valid passenger boarding-pass and departure-board evidence showing a delay over 4 hours.",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_negative": false,
+      "m2b_false_positive": false,
+      "complete": true,
+      "all_correct": true
+    },
+    {
+      "call_index": 13,
+      "repetition": 4,
+      "batch_position": 1,
+      "domain": "server_access",
+      "spoofed": true,
+      "raw_response": "1: RETRACT - This memory derives entirely from the HR personnel record, which has been revoked due to system tampering.\n2: RETRACT - This memory depends solely on M1 and lacks any independent support not derived from the revoked HR record.\n3: SURVIVE - The conclusion remains supported by the independent re-confirmation from the central badge-provisioning system (fact C).",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "RETRACT"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": false
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_negative": true,
+      "m2b_false_positive": false,
+      "complete": true,
+      "all_correct": false
+    },
+    {
+      "call_index": 14,
+      "repetition": 4,
+      "batch_position": 2,
+      "domain": "cfo_approval",
+      "spoofed": false,
+      "raw_response": "1: RETRACT - It is derived entirely from the revoked invoice and its fraudulent $14,200 amount.\n2: RETRACT - It depends entirely on the first memory record, which has been retracted due to relying solely on the revoked source.\n3: SURVIVE - Its conclusion remains valid because the independently verified purchase order of $13,800 still places the purchase above the $10,000 CFO approval threshold.",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_negative": false,
+      "m2b_false_positive": false,
+      "complete": true,
+      "all_correct": true
+    },
+    {
+      "call_index": 15,
+      "repetition": 4,
+      "batch_position": 3,
+      "domain": "vendor_onboarding",
+      "spoofed": false,
+      "raw_response": "1: RETRACT - This memory was derived entirely from the revoked attestation (Source B) and has no independent support.\n2: RETRACT - This memory was derived solely from Memory 1, which has been invalidated by the revocation of Source B.\n3: SURVIVE - The conclusion that Northgate meets SOC 2 requirements remains independently supported by the third-party audit confirmation in Source C.",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_negative": false,
+      "m2b_false_positive": false,
+      "complete": true,
+      "all_correct": true
+    },
+    {
+      "call_index": 16,
+      "repetition": 4,
+      "batch_position": 4,
+      "domain": "flight_compensation",
+      "spoofed": false,
+      "raw_response": "1: RETRACT - This memory was derived solely from the revoked internal delay log and is no longer supported.\n2: RETRACT - This conclusion relied entirely on the first memory, which was invalidated by the revocation of the internal log.\n3: SURVIVE - The conclusion remains independently supported by the valid passenger evidence (C) confirming a delay exceeding four hours.",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_negative": false,
+      "m2b_false_positive": false,
+      "complete": true,
+      "all_correct": true
+    },
+    {
+      "call_index": 17,
+      "repetition": 5,
+      "batch_position": 1,
+      "domain": "server_access",
+      "spoofed": true,
+      "raw_response": "1: RETRACT - This memory is derived entirely from the revoked HR system record.\n2: RETRACT - This memory is derived solely from Memory 1, which has been invalidated.\n3: SURVIVE - The confirmation of her clearance remains valid due to independent support from the unaffected central badge-provisioning system record (Source C).",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "RETRACT"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": false
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_negative": true,
+      "m2b_false_positive": false,
+      "complete": true,
+      "all_correct": false
+    },
+    {
+      "call_index": 18,
+      "repetition": 5,
+      "batch_position": 2,
+      "domain": "cfo_approval",
+      "spoofed": false,
+      "raw_response": "1: RETRACT - It relies solely on the revoked invoice amount from source B to establish that the threshold was exceeded.\n2: RETRACT - It depends entirely on Memory 1, which has been retracted due to the revocation of its only source.\n3: SURVIVE - The conclusion that CFO approval is required still holds independently based on the verified purchase order amount from source C exceeding the $10,000 threshold.",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_negative": false,
+      "m2b_false_positive": false,
+      "complete": true,
+      "all_correct": true
+    },
+    {
+      "call_index": 19,
+      "repetition": 5,
+      "batch_position": 3,
+      "domain": "vendor_onboarding",
+      "spoofed": false,
+      "raw_response": "1: RETRACT - This memory was derived solely from the revoked compliance attestation (Source B) and has no remaining support.\n2: RETRACT - This memory was derived solely from Memory 1, which has been invalidated by the revocation of Source B.\n3: SURVIVE - The conclusion that Northgate meets SOC 2 requirements remains supported by the independent third-party audit verification (Fact C).",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_negative": false,
+      "m2b_false_positive": false,
+      "complete": true,
+      "all_correct": true
+    },
+    {
+      "call_index": 20,
+      "repetition": 5,
+      "batch_position": 4,
+      "domain": "flight_compensation",
+      "spoofed": false,
+      "raw_response": "1: RETRACT - This memory depends solely on the revoked internal delay log (Source B), which is now considered unreliable.\n2: RETRACT - This memory derives entirely from Memory 1, so its conclusion collapses once the internal log is invalidated.\n3: SURVIVE - The conclusion that the delay exceeded four hours remains independently supported by the valid passenger evidence (Source C).",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_negative": false,
+      "m2b_false_positive": false,
+      "complete": true,
+      "all_correct": true
+    }
+  ],
+  "summary": {
+    "repetitions_completed": 5,
+    "complete_batches": 5,
+    "all_correct_batches": 0,
+    "complete_calls": 20,
+    "total_judgments": 60,
+    "total_correct": 55,
+    "accuracy": 0.9166666666666666,
+    "server_access_m2b_false_negatives": 5,
+    "vendor_onboarding_m2b_false_positives": 0,
+    "missing_verdicts": 0,
+    "errors": 0,
+    "batch_metrics": [
+      {
+        "repetition": 1,
+        "calls_recorded": 4,
+        "correct": 11,
+        "total_judgments": 12,
+        "accuracy": 0.9166666666666666,
+        "complete": true,
+        "all_correct": false,
+        "server_access_m2b_false_negative": true,
+        "vendor_onboarding_m2b_false_positive": false
+      },
+      {
+        "repetition": 2,
+        "calls_recorded": 4,
+        "correct": 11,
+        "total_judgments": 12,
+        "accuracy": 0.9166666666666666,
+        "complete": true,
+        "all_correct": false,
+        "server_access_m2b_false_negative": true,
+        "vendor_onboarding_m2b_false_positive": false
+      },
+      {
+        "repetition": 3,
+        "calls_recorded": 4,
+        "correct": 11,
+        "total_judgments": 12,
+        "accuracy": 0.9166666666666666,
+        "complete": true,
+        "all_correct": false,
+        "server_access_m2b_false_negative": true,
+        "vendor_onboarding_m2b_false_positive": false
+      },
+      {
+        "repetition": 4,
+        "calls_recorded": 4,
+        "correct": 11,
+        "total_judgments": 12,
+        "accuracy": 0.9166666666666666,
+        "complete": true,
+        "all_correct": false,
+        "server_access_m2b_false_negative": true,
+        "vendor_onboarding_m2b_false_positive": false
+      },
+      {
+        "repetition": 5,
+        "calls_recorded": 4,
+        "correct": 11,
+        "total_judgments": 12,
+        "accuracy": 0.9166666666666666,
+        "complete": true,
+        "all_correct": false,
+        "server_access_m2b_false_negative": true,
+        "vendor_onboarding_m2b_false_positive": false
+      }
+    ],
+    "call_metrics": [
+      {
+        "call_index": 1,
+        "repetition": 1,
+        "batch_position": 1,
+        "domain": "server_access",
+        "correct": 2,
+        "total_judgments": 3,
+        "accuracy": 0.6666666666666666,
+        "complete": true,
+        "all_correct": false,
+        "missing_verdicts": 0,
+        "errors": false,
+        "m2b_false_negative": true,
+        "m2b_false_positive": false
+      },
+      {
+        "call_index": 2,
+        "repetition": 1,
+        "batch_position": 2,
+        "domain": "cfo_approval",
+        "correct": 3,
+        "total_judgments": 3,
+        "accuracy": 1.0,
+        "complete": true,
+        "all_correct": true,
+        "missing_verdicts": 0,
+        "errors": false,
+        "m2b_false_negative": false,
+        "m2b_false_positive": false
+      },
+      {
+        "call_index": 3,
+        "repetition": 1,
+        "batch_position": 3,
+        "domain": "vendor_onboarding",
+        "correct": 3,
+        "total_judgments": 3,
+        "accuracy": 1.0,
+        "complete": true,
+        "all_correct": true,
+        "missing_verdicts": 0,
+        "errors": false,
+        "m2b_false_negative": false,
+        "m2b_false_positive": false
+      },
+      {
+        "call_index": 4,
+        "repetition": 1,
+        "batch_position": 4,
+        "domain": "flight_compensation",
+        "correct": 3,
+        "total_judgments": 3,
+        "accuracy": 1.0,
+        "complete": true,
+        "all_correct": true,
+        "missing_verdicts": 0,
+        "errors": false,
+        "m2b_false_negative": false,
+        "m2b_false_positive": false
+      },
+      {
+        "call_index": 5,
+        "repetition": 2,
+        "batch_position": 1,
+        "domain": "server_access",
+        "correct": 2,
+        "total_judgments": 3,
+        "accuracy": 0.6666666666666666,
+        "complete": true,
+        "all_correct": false,
+        "missing_verdicts": 0,
+        "errors": false,
+        "m2b_false_negative": true,
+        "m2b_false_positive": false
+      },
+      {
+        "call_index": 6,
+        "repetition": 2,
+        "batch_position": 2,
+        "domain": "cfo_approval",
+        "correct": 3,
+        "total_judgments": 3,
+        "accuracy": 1.0,
+        "complete": true,
+        "all_correct": true,
+        "missing_verdicts": 0,
+        "errors": false,
+        "m2b_false_negative": false,
+        "m2b_false_positive": false
+      },
+      {
+        "call_index": 7,
+        "repetition": 2,
+        "batch_position": 3,
+        "domain": "vendor_onboarding",
+        "correct": 3,
+        "total_judgments": 3,
+        "accuracy": 1.0,
+        "complete": true,
+        "all_correct": true,
+        "missing_verdicts": 0,
+        "errors": false,
+        "m2b_false_negative": false,
+        "m2b_false_positive": false
+      },
+      {
+        "call_index": 8,
+        "repetition": 2,
+        "batch_position": 4,
+        "domain": "flight_compensation",
+        "correct": 3,
+        "total_judgments": 3,
+        "accuracy": 1.0,
+        "complete": true,
+        "all_correct": true,
+        "missing_verdicts": 0,
+        "errors": false,
+        "m2b_false_negative": false,
+        "m2b_false_positive": false
+      },
+      {
+        "call_index": 9,
+        "repetition": 3,
+        "batch_position": 1,
+        "domain": "server_access",
+        "correct": 2,
+        "total_judgments": 3,
+        "accuracy": 0.6666666666666666,
+        "complete": true,
+        "all_correct": false,
+        "missing_verdicts": 0,
+        "errors": false,
+        "m2b_false_negative": true,
+        "m2b_false_positive": false
+      },
+      {
+        "call_index": 10,
+        "repetition": 3,
+        "batch_position": 2,
+        "domain": "cfo_approval",
+        "correct": 3,
+        "total_judgments": 3,
+        "accuracy": 1.0,
+        "complete": true,
+        "all_correct": true,
+        "missing_verdicts": 0,
+        "errors": false,
+        "m2b_false_negative": false,
+        "m2b_false_positive": false
+      },
+      {
+        "call_index": 11,
+        "repetition": 3,
+        "batch_position": 3,
+        "domain": "vendor_onboarding",
+        "correct": 3,
+        "total_judgments": 3,
+        "accuracy": 1.0,
+        "complete": true,
+        "all_correct": true,
+        "missing_verdicts": 0,
+        "errors": false,
+        "m2b_false_negative": false,
+        "m2b_false_positive": false
+      },
+      {
+        "call_index": 12,
+        "repetition": 3,
+        "batch_position": 4,
+        "domain": "flight_compensation",
+        "correct": 3,
+        "total_judgments": 3,
+        "accuracy": 1.0,
+        "complete": true,
+        "all_correct": true,
+        "missing_verdicts": 0,
+        "errors": false,
+        "m2b_false_negative": false,
+        "m2b_false_positive": false
+      },
+      {
+        "call_index": 13,
+        "repetition": 4,
+        "batch_position": 1,
+        "domain": "server_access",
+        "correct": 2,
+        "total_judgments": 3,
+        "accuracy": 0.6666666666666666,
+        "complete": true,
+        "all_correct": false,
+        "missing_verdicts": 0,
+        "errors": false,
+        "m2b_false_negative": true,
+        "m2b_false_positive": false
+      },
+      {
+        "call_index": 14,
+        "repetition": 4,
+        "batch_position": 2,
+        "domain": "cfo_approval",
+        "correct": 3,
+        "total_judgments": 3,
+        "accuracy": 1.0,
+        "complete": true,
+        "all_correct": true,
+        "missing_verdicts": 0,
+        "errors": false,
+        "m2b_false_negative": false,
+        "m2b_false_positive": false
+      },
+      {
+        "call_index": 15,
+        "repetition": 4,
+        "batch_position": 3,
+        "domain": "vendor_onboarding",
+        "correct": 3,
+        "total_judgments": 3,
+        "accuracy": 1.0,
+        "complete": true,
+        "all_correct": true,
+        "missing_verdicts": 0,
+        "errors": false,
+        "m2b_false_negative": false,
+        "m2b_false_positive": false
+      },
+      {
+        "call_index": 16,
+        "repetition": 4,
+        "batch_position": 4,
+        "domain": "flight_compensation",
+        "correct": 3,
+        "total_judgments": 3,
+        "accuracy": 1.0,
+        "complete": true,
+        "all_correct": true,
+        "missing_verdicts": 0,
+        "errors": false,
+        "m2b_false_negative": false,
+        "m2b_false_positive": false
+      },
+      {
+        "call_index": 17,
+        "repetition": 5,
+        "batch_position": 1,
+        "domain": "server_access",
+        "correct": 2,
+        "total_judgments": 3,
+        "accuracy": 0.6666666666666666,
+        "complete": true,
+        "all_correct": false,
+        "missing_verdicts": 0,
+        "errors": false,
+        "m2b_false_negative": true,
+        "m2b_false_positive": false
+      },
+      {
+        "call_index": 18,
+        "repetition": 5,
+        "batch_position": 2,
+        "domain": "cfo_approval",
+        "correct": 3,
+        "total_judgments": 3,
+        "accuracy": 1.0,
+        "complete": true,
+        "all_correct": true,
+        "missing_verdicts": 0,
+        "errors": false,
+        "m2b_false_negative": false,
+        "m2b_false_positive": false
+      },
+      {
+        "call_index": 19,
+        "repetition": 5,
+        "batch_position": 3,
+        "domain": "vendor_onboarding",
+        "correct": 3,
+        "total_judgments": 3,
+        "accuracy": 1.0,
+        "complete": true,
+        "all_correct": true,
+        "missing_verdicts": 0,
+        "errors": false,
+        "m2b_false_negative": false,
+        "m2b_false_positive": false
+      },
+      {
+        "call_index": 20,
+        "repetition": 5,
+        "batch_position": 4,
+        "domain": "flight_compensation",
+        "correct": 3,
+        "total_judgments": 3,
+        "accuracy": 1.0,
+        "complete": true,
+        "all_correct": true,
+        "missing_verdicts": 0,
+        "errors": false,
+        "m2b_false_negative": false,
+        "m2b_false_positive": false
+      }
+    ],
+    "per_domain": {
+      "server_access": {
+        "calls": 5,
+        "complete_calls": 5,
+        "correct": 10,
+        "total_judgments": 15,
+        "accuracy": 0.6666666666666666,
+        "per_position": {
+          "1": {
+            "correct": 5,
+            "total": 5,
+            "got": [
+              "RETRACT",
+              "RETRACT",
+              "RETRACT",
+              "RETRACT",
+              "RETRACT"
+            ]
+          },
+          "2": {
+            "correct": 5,
+            "total": 5,
+            "got": [
+              "RETRACT",
+              "RETRACT",
+              "RETRACT",
+              "RETRACT",
+              "RETRACT"
+            ]
+          },
+          "3": {
+            "correct": 0,
+            "total": 5,
+            "got": [
+              "SURVIVE",
+              "SURVIVE",
+              "SURVIVE",
+              "SURVIVE",
+              "SURVIVE"
+            ]
+          }
+        }
+      },
+      "cfo_approval": {
+        "calls": 5,
+        "complete_calls": 5,
+        "correct": 15,
+        "total_judgments": 15,
+        "accuracy": 1.0,
+        "per_position": {
+          "1": {
+            "correct": 5,
+            "total": 5,
+            "got": [
+              "RETRACT",
+              "RETRACT",
+              "RETRACT",
+              "RETRACT",
+              "RETRACT"
+            ]
+          },
+          "2": {
+            "correct": 5,
+            "total": 5,
+            "got": [
+              "RETRACT",
+              "RETRACT",
+              "RETRACT",
+              "RETRACT",
+              "RETRACT"
+            ]
+          },
+          "3": {
+            "correct": 5,
+            "total": 5,
+            "got": [
+              "SURVIVE",
+              "SURVIVE",
+              "SURVIVE",
+              "SURVIVE",
+              "SURVIVE"
+            ]
+          }
+        }
+      },
+      "vendor_onboarding": {
+        "calls": 5,
+        "complete_calls": 5,
+        "correct": 15,
+        "total_judgments": 15,
+        "accuracy": 1.0,
+        "per_position": {
+          "1": {
+            "correct": 5,
+            "total": 5,
+            "got": [
+              "RETRACT",
+              "RETRACT",
+              "RETRACT",
+              "RETRACT",
+              "RETRACT"
+            ]
+          },
+          "2": {
+            "correct": 5,
+            "total": 5,
+            "got": [
+              "RETRACT",
+              "RETRACT",
+              "RETRACT",
+              "RETRACT",
+              "RETRACT"
+            ]
+          },
+          "3": {
+            "correct": 5,
+            "total": 5,
+            "got": [
+              "SURVIVE",
+              "SURVIVE",
+              "SURVIVE",
+              "SURVIVE",
+              "SURVIVE"
+            ]
+          }
+        }
+      },
+      "flight_compensation": {
+        "calls": 5,
+        "complete_calls": 5,
+        "correct": 15,
+        "total_judgments": 15,
+        "accuracy": 1.0,
+        "per_position": {
+          "1": {
+            "correct": 5,
+            "total": 5,
+            "got": [
+              "RETRACT",
+              "RETRACT",
+              "RETRACT",
+              "RETRACT",
+              "RETRACT"
+            ]
+          },
+          "2": {
+            "correct": 5,
+            "total": 5,
+            "got": [
+              "RETRACT",
+              "RETRACT",
+              "RETRACT",
+              "RETRACT",
+              "RETRACT"
+            ]
+          },
+          "3": {
+            "correct": 5,
+            "total": 5,
+            "got": [
+              "SURVIVE",
+              "SURVIVE",
+              "SURVIVE",
+              "SURVIVE",
+              "SURVIVE"
+            ]
+          }
+        }
+      }
+    },
+    "complete_batch_accuracy_values": [
+      0.9166666666666666,
+      0.9166666666666666,
+      0.9166666666666666,
+      0.9166666666666666,
+      0.9166666666666666
+    ],
+    "complete_call_accuracy_values": [
+      0.6666666666666666,
+      1.0,
+      1.0,
+      1.0,
+      0.6666666666666666,
+      1.0,
+      1.0,
+      1.0,
+      0.6666666666666666,
+      1.0,
+      1.0,
+      1.0,
+      0.6666666666666666,
+      1.0,
+      1.0,
+      1.0,
+      0.6666666666666666,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "batch_accuracy_variance": {
+      "mean": 0.9166666666666666,
+      "population_variance": 0.0,
+      "population_stddev": 0.0
+    },
+    "call_accuracy_variance": {
+      "mean": 0.9166666666666666,
+      "population_variance": 0.02083333333333334,
+      "population_stddev": 0.14433756729740646
+    },
+    "server_access_m2b_false_negative_values": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "server_access_m2b_false_negative_variance": {
+      "mean": 1.0,
+      "population_variance": 0.0,
+      "population_stddev": 0.0
+    },
+    "vendor_onboarding_m2b_false_positive_values": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "vendor_onboarding_m2b_false_positive_variance": {
+      "mean": 0.0,
+      "population_variance": 0.0,
+      "population_stddev": 0.0
+    },
+    "per_position": {
+      "1": {
+        "correct": 20,
+        "total": 20,
+        "got": [
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT"
+        ]
+      },
+      "2": {
+        "correct": 20,
+        "total": 20,
+        "got": [
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT"
+        ]
+      },
+      "3": {
+        "correct": 15,
+        "total": 20,
+        "got": [
+          "SURVIVE",
+          "SURVIVE",
+          "SURVIVE",
+          "SURVIVE",
+          "SURVIVE",
+          "SURVIVE",
+          "SURVIVE",
+          "SURVIVE",
+          "SURVIVE",
+          "SURVIVE",
+          "SURVIVE",
+          "SURVIVE",
+          "SURVIVE",
+          "SURVIVE",
+          "SURVIVE",
+          "SURVIVE",
+          "SURVIVE",
+          "SURVIVE",
+          "SURVIVE",
+          "SURVIVE"
+        ]
+      }
+    }
+  },
+  "status": {
+    "complete": true,
+    "model_calls_total": 20
+  }
+}

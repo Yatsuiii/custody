@@ -1,4 +1,4 @@
-# RSM Crux Series — Consolidated Summary (14 rounds)
+# RSM Crux Series — Consolidated Summary (15 rounds)
 
 ## What this series is, and what it is not
 
@@ -12,17 +12,18 @@ specifically, once clean and poisoned content have been fused by an LLM
 into new text, can the poisoned contribution be identified and stripped
 without also destroying the clean contribution?
 
-This series (`RSM_CRUX_ATTRIBUTION` through `RSM_CRUX14_ROUND10_NAIVE_BATCH_REPEAT`)
-is fourteen falsification rounds against pieces of that question, prompted by
+This series (`RSM_CRUX_ATTRIBUTION` through `RSM_CRUX15_SECOND_MODEL_BATCH`)
+is fifteen falsification rounds against pieces of that question, prompted by
 a ChatGPT brainstorm ("Repairable Semantic Memory" — claim decomposition,
 ATMS-style support formulas, counterfactual repair) that was never
 designed or built here. **No claim-carrying memory system, support-formula
 engine, or repair operator exists.** Every round is a narrow probe against
-live `gemini-3.5-flash`, scored against a precommitted synthetic fixture;
+live Gemini models, scored against a precommitted synthetic fixture
+(`gemini-3.5-flash` through round 14 and `gemini-3.7-flash` in round 15);
 round 11 repeats two earlier probes to measure their observed variance,
 round 12 repeats a specific Round 10 honest naive condition, round 13
-repeats its spoofed naive condition, and round 14 repeats the full Round 10
-naive batch.
+repeats its spoofed naive condition, round 14 repeats the full Round 10
+naive batch, and round 15 repeats that batch under a second model.
 `custody/*.py` was not touched in any
 round (`git diff --stat main -- custody/` confirmed empty after every
 commit). Nothing here has been merged into `main`, and this document does
@@ -48,6 +49,7 @@ undecided.
 | 12 | `RSM_CRUX12_ROUND10_NAIVE_REPEAT` | Does Round 10's naive `vendor_onboarding` false positive recur under the exact same prompt/domain condition? | Five repeats: 15/15 correct, M2b false positives 0/5, and zero observed variance. The original Round 10 miss was not replicated in this small isolated sample; it remains real evidence, not disproven. |
 | 13 | `RSM_CRUX13_ROUND10_SPOOF_REPEAT` | Does Round 10's naive spoofed `server_access` M2b miss recur under the exact same prompt/domain condition? | Five isolated repeats: 10/15 correct; M1 and M2a were 5/5, but spoofed M2b was SURVIVE instead of RETRACT in 5/5 calls. Per-call accuracy and M2b-false-negative variance were both 0.0. |
 | 14 | `RSM_CRUX14_ROUND10_NAIVE_BATCH_REPEAT` | Does the full Round 10 naive four-domain batch reproduce the same errors in the same order? | Five source-ordered batches: 55/60 correct, with 11/12 in every batch. The spoofed `server_access` M2b false negative recurred 5/5; the honest `vendor_onboarding` M2b false positive recurred 0/5. Batch accuracy and both error-indicator variances were 0.0. |
+| 15 | `RSM_CRUX15_SECOND_MODEL_BATCH` | Does Round 10's naive full batch reproduce under a second model? | `gemini-3.7-flash`: five source-ordered batches, 55/60 correct, with 11/12 in every batch. The spoofed `server_access` M2b false negative recurred 5/5; the honest `vendor_onboarding` M2b false positive recurred 0/5. Batch accuracy and both tracked error-indicator variances were 0.0; individual-call accuracy variance was 0.0208333. |
 
 ## What is now reasonably well-supported
 
@@ -76,6 +78,11 @@ undecided.
   `server_access` M2b miss persisted, while the honest `vendor_onboarding`
   M2b stayed correct (round 14). This is sequence-specific evidence, not a
   general robustness bound.
+- Repeating that same naive four-domain sequence five times under
+  `gemini-3.7-flash` reproduced the same 11/12 result each time, including the
+  spoofed `server_access` M2b miss and the absence of the honest
+  `vendor_onboarding` false positive (round 15). This is a clean second-model
+  recurrence for the tested fixture, not a general error-rate estimate.
 
 ## What remains open, unresolved, or actively concerning
 
@@ -98,18 +105,22 @@ undecided.
   honest-case flip remains real evidence; round 14's full source-ordered
   batch also did not reproduce it. Broader naive behavior is still
   unmeasured.
-- **n is still small and model coverage is one.** Rounds 12 and 13 add only
-  five isolated calls each, and round 14 adds five fixed-order batches, for
-  three hand-built checks. Other spoof shapes, randomized ordering, a
-  second model, and combining the skeptical mitigation with multi-hop
-  cascades in the same test remain untested.
+- **n is still small and model coverage is narrow.** Rounds 12 and 13 add
+  only five isolated calls each, and rounds 14 and 15 add five fixed-order
+  batches each. The spoof recurrence now covers two Gemini models, but only
+  one hand-built spoof shape and one fixed order. Other spoof shapes,
+  randomized ordering, and combining the skeptical mitigation with
+  multi-hop cascades in the same test remain untested.
 - **Circularity risk in the classifier-scored rounds (5-9):** a second
   Gemini call judges "confident assertion vs. hedged/retracted." This was
   mitigated by manual spot-checks of stated reasoning each round, not
   eliminated.
-- **No literature search has been run** on prior claim-decomposition or
-  ATMS-style repair work. No novelty claim is made or should be inferred
-  from any result in this series.
+- **The literature check was targeted, not systematic.** Round 15 recorded
+  primary sources on assumption-based truth maintenance, database
+  provenance, and evidence-based LLM attribution/revision. This is enough to
+  establish adjacent prior art and prevent an uninformed novelty claim, but
+  not enough to claim exhaustive prior-art coverage or novelty for the RSM
+  combination.
 - **The production mechanism does not need any of this.** Whole-tool
   revocation is already deterministic and LLM-free. Everything in this
   series is evidence about a harder, unbuilt, unshipped extension — not
@@ -117,7 +128,7 @@ undecided.
 
 ## Bottom line
 
-Fourteen rounds, each precommitted before running, most with an honestly
+Fifteen rounds, each precommitted before running, most with an honestly
 reported miss, confound, or caveat rather than a clean pass — the series
 did not manufacture a smooth success story. The central hypothesis this
 whole line of testing was checking — that fused content is not
@@ -136,11 +147,12 @@ found zero label variance in five repeats of two clean controls and in
 five repeats of the exact Round 10 naive `vendor_onboarding` condition;
 round 13 found a zero-variance repeated miss on the exact spoofed
 `server_access` condition; and round 14 reproduced that miss in the full
-source-ordered naive batch while again finding no vendor false positive.
-That narrows the interpretation of the original honest-case flip toward
-sample-specific variance in that control while confirming a repeatable
-naive failure on this spoof shape, but the series still has not estimated
-general error rates, randomized order effects, or model coverage. That is
-the honest state of the open question as of this series, not a claim that
-repairable semantic memory has been built, validated at scale, or is ready
-for any production decision.
+source-ordered naive batch while again finding no vendor false positive, and
+round 15 reproduced that same batch result under a second model. That narrows
+the interpretation of the original honest-case flip toward sample-specific
+variance in that control while confirming a repeatable naive failure on this
+spoof shape across two tested models. The series still has not estimated
+general error rates or randomized order effects, and its model coverage
+remains narrow. That is the honest state of the open question as of this
+series, not a claim that repairable semantic memory has been built, validated
+at scale, or is ready for any production decision.

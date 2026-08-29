@@ -97,6 +97,11 @@ Allowed files:
 - research/experiments/RSM_CRUX14_ROUND10_NAIVE_BATCH_REPEAT/run.py
 - research/experiments/RSM_CRUX14_ROUND10_NAIVE_BATCH_REPEAT/RESULT.md
 - research/experiments/RSM_CRUX14_ROUND10_NAIVE_BATCH_REPEAT/result.json
+- research/experiments/RSM_CRUX15_SECOND_MODEL_BATCH/PLAN.md
+- research/experiments/RSM_CRUX15_SECOND_MODEL_BATCH/fixture.json
+- research/experiments/RSM_CRUX15_SECOND_MODEL_BATCH/run.py
+- research/experiments/RSM_CRUX15_SECOND_MODEL_BATCH/RESULT.md
+- research/experiments/RSM_CRUX15_SECOND_MODEL_BATCH/result.json
 - RSM_HANDOFF.md
 - .claude/SESSION_CONTRACT.md (this file)
 
