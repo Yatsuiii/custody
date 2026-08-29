@@ -1,3 +1,76 @@
+# Custody: CSSR-S1 execution-plan review gate
+
+Opened 2026-08-29.
+
+Objective: Execute the review gate that `CSSR_S1_FREEZE.md` and
+`research/experiments/CSSR_S1_SELECTION_CHANNEL/PLAN.md` both name as the next
+action: independently verify that the drafted execution plan copies every
+frozen value from `CSSR_S1_SELECTION_CHANNEL_FALSIFIER.md` without changing an
+expected edge, state, visibility decision, denominator, or verdict, and record
+the audit plus any mechanical serialization detail the plan still needs before
+`fixture.json` can be authorized. No fixture, harness, run, or result is
+produced by this session.
+
+Branch: research/rsm-crux-falsifier
+Parent: 8ee36360dec9c41591bc69b116dadaa4f5506f02
+
+Allowed files:
+- research/experiments/CSSR_S1_SELECTION_CHANNEL/PLAN.md
+- .claude/SESSION_CONTRACT.md (this file)
+
+Non-goals:
+- No `fixture.json`, `run.py`, `result.json`, or `RESULT.md`. Each remains a
+  separately authorized stage per the frozen plan's staged sequence.
+- No experiment execution and no strategic verdict about CSSR.
+- No edit to `CSSR_S1_SELECTION_CHANNEL_FALSIFIER.md` or `CSSR_S1_FREEZE.md`.
+  Any needed change to those is `CSSR-S2`, not a plan detail.
+- No `custody/*.py` change, production integration, cloud call, or LLM call.
+- No commit or push without a separate explicit authorization.
+- No change to a frozen denominator, expected outcome, gate, or verdict. If
+  the audit finds a contradiction that cannot be resolved by serialization
+  detail alone, the plan stops and the finding is reported instead.
+
+Baseline: `PLAN.md` exists untracked at 576 lines, drafted after freeze commit
+`8ee3636` and never independently reviewed. The frozen specification digest is
+`dd18a84f08fb3330824fed01f2d144c849c6e1af24ecba081d77f224128ce007`.
+
+Acceptance gates:
+1. `sha256sum research/design/CSSR_S1_SELECTION_CHANNEL_FALSIFIER.md` equals
+   the frozen digest, recomputed this session.
+2. Every frozen table (roots, windows, jobs, producer responses, metric
+   worlds, derived graph, metric populations, cases, fault points, metrics,
+   PASS gates, verdict precedence) is compared item by item against the plan's
+   copy, and every divergence is reported rather than silently normalized.
+3. Baseline affected `2`, treatment affected `13`, aggregate `15`, and
+   eligible clean preservation `3` are recomputed independently from root
+   closure over the frozen parent table, not copied from prose.
+4. Any finding is either resolved by a strictly mechanical plan addition that
+   preserves all frozen values, or escalated as a stop condition.
+5. `git status` shows no file changed outside Allowed files.
+
+Verification: `sha256sum` on the specification, an independent closure
+recomputation of all four metric worlds run outside the repository, and a
+final `git status --porcelain` diff review.
+
+**Closed 2026-08-29.** All five gates passed. Specification digest recomputed
+as `dd18a84f...ce007`, equal to the freeze record. Every frozen table compared
+item by item; baseline `2`, treatment `13`, aggregate `15`, and eligible clean
+preservation `3` were reproduced by an independent closure recomputation run
+outside the repository rather than copied from prose. One verdict-relevant
+serialization gap was found: no numbered case admits `D-B` in `T_MAIN_WP`,
+though the frozen derived graph and the frozen clean-preservation population
+both require that instance; a fixture built from the case table alone would
+report `eligible_clean_preservation == 2/3` and a spurious CAUTION. Resolved
+mechanically by a world-setup section, an output-to-invocation mapping table,
+and the specification's descriptive aggregate denominator `15`. No frozen edge,
+state, denominator, or gate changed, so `CSSR-S2` was not triggered. Content
+changes are confined to `PLAN.md` (untracked) and this file; every other
+tracked modification remains the pre-existing filesystem mode change.
+
+Status: complete
+
+---
+
 # Custody: RSM crux falsifier — can an LLM judge counterfactual claim dependence
 
 Opened 2026-08-28.
