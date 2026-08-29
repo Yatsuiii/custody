@@ -1,3 +1,70 @@
+# Custody: falsify the context/receipt collector's cross-session lineage claim
+
+Opened 2026-08-29.
+
+Objective: `research/design/TRUSTED_COMPUTING_BASE.md`'s TCB table names
+the context/receipt collector as "Unproven across current retrieval and
+server-side Memory Bank transformations," failure mode "Hidden input can
+receive an incomplete but trusted-looking output." Determine, against
+real production code (`custody/origin.py`'s `take_custody` resolver
+path), exactly what happens when retrieved content is not byte-identical
+to what was originally admitted -- the exact situation Vertex AI Memory
+Bank's own paraphrasing produces, already visible in the live evidence at
+`proof-out/g1.json` (`retrieved_facts` differ in wording from
+`submitted_fact`). A first offline repro (this session, before this
+contract was opened) already found the fail direction is safe
+(UNTRUSTED, not falsely TRUSTED) rather than the TCB doc's feared
+"trusted-looking" direction -- this falsifier writes that up rigorously,
+with baseline/hypothesis/exact-repro/result, the same discipline E2D
+used, rather than leaving it as an informal finding in a chat transcript.
+
+This is a separate line from `research/rsm-crux-falsifier` (semantic
+LLM-judgment repair, already shelved per its own 15-round verdict). This
+falsifier tests Custody's existing, shipped, deterministic mechanism --
+zero LLM involved -- against a specific named TCB gap.
+
+Branch: research/receipt-collector-falsifier
+Parent: main @ c016a4e
+
+Allowed files:
+- research/experiments/RECEIPT_COLLECTOR_PARAPHRASE_FALSIFIER/PLAN.md
+- research/experiments/RECEIPT_COLLECTOR_PARAPHRASE_FALSIFIER/fixture.json
+- research/experiments/RECEIPT_COLLECTOR_PARAPHRASE_FALSIFIER/run.py
+- research/experiments/RECEIPT_COLLECTOR_PARAPHRASE_FALSIFIER/RESULT.md
+- research/experiments/RECEIPT_COLLECTOR_PARAPHRASE_FALSIFIER/result.json
+- .claude/SESSION_CONTRACT.md (this file)
+
+Non-goals:
+- No change to `custody/*.py`. This falsifier imports and calls the real
+  production `take_custody`/`CustodyGraph` as a black box; it does not
+  patch, mock, or modify their behavior.
+- No claim about the RSM/semantic-repair line -- unrelated question,
+  already closed on its own branch.
+- No push to remote or merge into main until explicitly authorized.
+
+Baseline: `make check` on `main` before any change, 381/381 expected
+(no production file is touched, so this is a sanity check, not a target).
+
+Acceptance gates:
+1. `run.py` reproduces the exact paraphrase-divergence pattern found in
+   `proof-out/g1.json`'s real live evidence (not a synthetic, unrelated
+   string) against the real `custody.origin.take_custody` resolver path.
+2. Reports the actual `Trust` verdict and `derived_from` tuple observed,
+   not an assumption from the design doc's prose.
+3. States plainly whether the TCB doc's named failure mode (silent
+   false-trust) occurs, or whether a different, correctly-named failure
+   mode occurs instead -- no softening a wrong initial hypothesis into a
+   vaguer, still-technically-true claim.
+4. `git diff --stat main -- custody/` stays empty after every commit.
+
+Verification: `python3 research/experiments/RECEIPT_COLLECTOR_PARAPHRASE_FALSIFIER/run.py`,
+inspect `result.json` by hand against `proof-out/g1.json`'s actual
+`retrieved_facts`/`submitted_fact` fields.
+
+Status: active
+
+---
+
 # Custody: cite the RSM crux findings in future-directions copy
 
 Opened 2026-08-29.

@@ -1,0 +1,14 @@
+{
+  "source": {
+    "note": "proof-out/ is gitignored (local generated evidence, never committed), so these exact strings are frozen here rather than read at runtime -- this experiment must be reproducible from a fresh clone without needing to have first run Custody's live G1 gate against real Google Cloud infrastructure.",
+    "proof_id": "6e5564941ed54c368ec864dc38b196fd",
+    "captured_at": "2026-08-28T06:07:14.282108+00:00",
+    "project": "project-988bc9fe-092c-4b32-90c",
+    "captured_by": "scripts/live_g1.py -> scripts/live_memory_bank.py's prove_adk_memory_bank, against real Vertex AI Memory Bank"
+  },
+  "submitted_fact": "Sales exports require a signed approval.",
+  "retrieved_facts": [
+    "I have recorded that sales exports require a signed approval under the audit identifier 6e5564941ed54c368ec864dc38b196fd.",
+    "Remember this: Sales exports require a signed approval. Audit identifier: 6e5564941ed54c368ec864dc38b196fd."
+  ]
+}
