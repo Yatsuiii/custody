@@ -1,3 +1,101 @@
+# Custody: id-based citation resolution for the receipt collector
+
+Opened 2026-08-29.
+
+Objective: `research/experiments/RECEIPT_COLLECTOR_PARAPHRASE_FALSIFIER`
+(branch `research/receipt-collector-falsifier`) found the
+context/receipt collector fails safe (UNTRUSTED) rather than falsely
+trusted when a retrieved fact is paraphrased -- but the practical
+consequence is that cross-session citation lineage likely never engages
+against real Memory Bank retrievals, since Memory Bank paraphrases nearly
+everything and matching is currently exact-digest-only. Confirmed via
+direct SDK inspection that Vertex AI Memory Bank's real `Memory` type
+(`vertexai/_genai/types/common.py`) carries a `metadata` field that
+round-trips what `AgentEngineMemoryBank.write_record` already writes
+(`custody_record_id`), and `RetrieveMemoriesResponseRetrievedMemory.memory.metadata`
+exposes it back on read -- the data needed to fix this is already being
+written, just not read back. Wires an id-based resolution path through
+`custody/origin.py`'s resolver logic as a first-class alternative to
+digest matching, alongside a multi-item retrieval extraction (a single
+`load_memory` call can cite several distinct prior records at once,
+which `_attribute`'s current one-response-one-derived_from model does
+not represent).
+
+Branch: fix/receipt-collector-id-resolution
+Parent: main @ c016a4e
+
+Allowed files:
+- custody/origin.py
+- custody/adapters/memory_bank.py
+- custody/adapters/adk.py
+- scripts/live_memory_bank.py
+- tests/test_graph.py
+- tests/test_origin.py
+- tests/test_adk_memory_bank.py
+- tests/test_agent_engine_memory_bank.py
+- .claude/SESSION_CONTRACT.md (this file)
+
+Non-goals:
+- No change to `custody/graph.py` or `custody/firestore_store.py` --
+  both already expose `.record(record_id)`, which is sufficient for the
+  new id-based lookup; no new graph API is needed.
+- No live, model-driven end-to-end verification against a real ADK
+  `Runner` with `tools=[load_memory_tool]` actually invoking `load_memory`
+  through the model. That path is not currently exercised anywhere in
+  this project's live evidence (G1's agent has no tools registered) and
+  verifying it live is out of scope here. This work is verified at the
+  structural/offline level: the exact dict shape Custody's own adapters
+  produce and consume, tested directly, documented as a contract rather
+  than reverse-engineered from ADK's internal serialization with
+  certainty this session does not have.
+- No change to what gets admitted/refused at write time (`custody/service.py`'s
+  write-time filtering is unrelated and untouched).
+- `CustodyMemoryBank.search_memory` (adk.py) keeps its current runtime
+  behavior (a passthrough returning whatever the downstream returns,
+  despite its `-> SearchMemoryResponse` type annotation already claiming
+  otherwise before this session touched it) rather than being rebuilt to
+  actually construct ADK `SearchMemoryResponse`/`MemoryEntry` objects.
+  That closes a real, separate, pre-existing type-contract gap, but doing
+  it changes the live G1 script's actual runtime data shapes for zero
+  live-evidence benefit today (G1's agent has no `tools=[load_memory_tool]`,
+  so nothing currently consumes a real `SearchMemoryResponse`). Scoped out
+  explicitly rather than silently left inconsistent: `scripts/
+  live_memory_bank.py`'s `RecordWritingMemoryBank.search_memory` is
+  adapted only to unwrap `RetrievedFact.text` back into `list[str]`,
+  preserving 100% of existing live-script behavior.
+- No merge into main or push beyond this branch until explicitly authorized.
+
+Baseline: `make check` on `main` before any change: 381/381 (verified in
+the original checkout earlier this session).
+
+Acceptance gates:
+1. `CustodyGraph.record`/`FirestoreCustodyGraph.record` used for id-based
+   lookup, not a new resolver method -- reuses the existing, already-
+   tested by-id API rather than adding a parallel one.
+2. A retrieval whose response cites multiple prior records by id resolves
+   to a single new record whose `derived_from` contains all of them,
+   deduplicated, order-preserved -- not just the first or last.
+3. If ANY cited item fails to resolve (by id or, as a fallback, by
+   digest), the whole citation stays untrusted and empty-derived_from,
+   matching the project's existing "conservative direction is deliberate"
+   rule for mixed content -- no partial-trust state introduced.
+4. All existing tests in `tests/test_graph.py` and `tests/test_origin.py`
+   keep passing unmodified where they test the old single bare-string
+   `load_memory` response shape -- full backward compatibility, not a
+   breaking change to the resolver contract.
+5. New tests cover: id-match takes priority over digest-match when both
+   would apply; id-match alone (paraphrased text, real id) now resolves
+   correctly, closing the gap the falsifier found; multi-item citation
+   with one item unresolvable stays fully untrusted.
+
+Verification: `make check` (all suites, not just the affected files),
+plus manual inspection of the new tests' event fixtures against the
+documented contract in this file.
+
+Status: active
+
+---
+
 # Custody: cite the RSM crux findings in future-directions copy
 
 Opened 2026-08-29.

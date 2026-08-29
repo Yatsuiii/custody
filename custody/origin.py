@@ -139,6 +139,8 @@ class RecordResolver(Protocol):
 
     def resolve(self, content_sha256: str) -> CustodyRecord | None: ...
 
+    def record(self, record_id: str) -> tuple[CustodyRecord, object] | None: ...
+
 
 @dataclass(frozen=True)
 class Admitted:
@@ -315,16 +317,28 @@ def _attribute(
 
     if response is not None:
         runtime_name = getattr(response, "name", None)
-        cited = (
-            resolver.resolve(common["content_sha256"])
+        cited_records = (
+            _resolve_citations(response, resolver, text)
             if resolver is not None and runtime_name in retrieval_tools
-            else None
+            else ()
         )
-        if cited is not None:
-            verdict = cited.trust
-            derived_from: tuple[str, ...] = (cited.id,)
-            source_tool = cited.source_tool
-            source_revision = cited.source_revision
+        if cited_records:
+            verdict = (
+                Trust.TRUSTED
+                if all(c.trust is Trust.TRUSTED for c in cited_records)
+                else Trust.UNTRUSTED
+            )
+            seen: set[str] = set()
+            derived_from: tuple[str, ...] = tuple(
+                c.id for c in cited_records if not (c.id in seen or seen.add(c.id))
+            )
+            # A citation of several records has no single upstream tool;
+            # the first cited record's source is kept as a representative
+            # value only (matching the single-citation case exactly when
+            # there is only one). `derived_from` above, not this field, is
+            # what a revocation actually walks -- see `custody/graph.py`.
+            source_tool = cited_records[0].source_tool
+            source_revision = cited_records[0].source_revision
         else:
             verdict = trust.of(runtime_name)
             derived_from = ()
@@ -396,3 +410,93 @@ def _response_text(response: FunctionResponse) -> str:
     if isinstance(payload, dict):
         return " ".join(str(v) for v in payload.values())
     return str(payload)
+
+
+def _retrieved_items(response: FunctionResponse) -> tuple[tuple[str, str | None], ...] | None:
+    """A multi-item retrieval's cited memories, each as (text, record_id).
+
+    The contract: `response.response["memories"]` is a list, where each entry
+    carries the retrieved text and, when it came from Custody's own governed
+    round-trip (written via `AgentEngineMemoryBank.write_record`, read back
+    via `search_memory`), the exact `custody_record_id` written at admission
+    time -- never a self-declared id from an arbitrary external tool, since
+    only `load_memory`-shaped responses reach this function at all (gated by
+    `retrieval_tools` at the call site) and only Custody's own adapters
+    populate `id` on what they hand back.
+
+    Returns `None` when the response is not shaped this way, so the caller
+    falls back to the single flattened-text digest match `_response_text`
+    already provides -- full backward compatibility with a bare-string
+    `load_memory` response, which is what every existing test fixture sends.
+    """
+    payload = getattr(response, "response", None)
+    if not isinstance(payload, dict):
+        return None
+    memories = payload.get("memories")
+    if not isinstance(memories, list) or not memories:
+        return None
+
+    items: list[tuple[str, str | None]] = []
+    for entry in memories:
+        if isinstance(entry, dict):
+            record_id = entry.get("id")
+            text = entry.get("text")
+            if text is None:
+                content = entry.get("content") or {}
+                parts = content.get("parts") if isinstance(content, dict) else None
+                if isinstance(parts, list) and parts:
+                    first_part = parts[0]
+                    text = first_part.get("text") if isinstance(first_part, dict) else None
+        else:
+            record_id = getattr(entry, "id", None)
+            text = getattr(entry, "text", None)
+        if text is None:
+            return None  # An entry this function cannot read is not a
+            # partially-trusted entry -- see the multi-item resolution
+            # comment in `_attribute` for why this falls all the way back
+            # rather than resolving the entries it could parse.
+        items.append((str(text), record_id if isinstance(record_id, str) else None))
+    return tuple(items)
+
+
+def _resolve_citations(
+    response: FunctionResponse, resolver: RecordResolver, flattened_text: str
+) -> tuple[CustodyRecord, ...]:
+    """Every prior record a `load_memory` response cites, resolved.
+
+    Prefers the id round-tripped through Custody's own write/read path over
+    a content-digest match: the id is exact regardless of paraphrasing,
+    where digest matching requires byte-identical text. Falls back to
+    digest matching per item when no id is present, and falls back to the
+    single flattened-text digest match entirely when the response is not
+    multi-item-shaped at all (a bare-string `load_memory` response, which
+    every existing test fixture sends).
+
+    Conservative by construction: any item that cannot be resolved --
+    whether by id or by digest -- means this returns `()`, the same as no
+    citation at all, rather than a partial result. `_attribute` cannot tell
+    "cites three records" from "cites one record and something unreadable"
+    apart from this return value, so a partial resolution would silently
+    under-attribute lineage, which is exactly the failure mode
+    `research/experiments/RECEIPT_COLLECTOR_PARAPHRASE_FALSIFIER` checked
+    for and did not find in the single-item case -- this keeps that
+    property true for the multi-item case too.
+    """
+    items = _retrieved_items(response)
+    if items is None:
+        single = resolver.resolve(digest(flattened_text))
+        return (single,) if single is not None else ()
+
+    resolved: list[CustodyRecord] = []
+    for text, record_id in items:
+        found: CustodyRecord | None = None
+        if record_id is not None:
+            by_id = resolver.record(record_id)
+            if by_id is not None:
+                found = by_id[0]
+        if found is None:
+            found = resolver.resolve(digest(text))
+        if found is None:
+            return ()
+        resolved.append(found)
+    return tuple(resolved)
