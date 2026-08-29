@@ -1,4 +1,4 @@
-# RSM Crux Series — Consolidated Summary (11 rounds)
+# RSM Crux Series — Consolidated Summary (12 rounds)
 
 ## What this series is, and what it is not
 
@@ -12,14 +12,15 @@ specifically, once clean and poisoned content have been fused by an LLM
 into new text, can the poisoned contribution be identified and stripped
 without also destroying the clean contribution?
 
-This series (`RSM_CRUX_ATTRIBUTION` through `RSM_CRUX11_VARIANCE_BOUND`)
-is eleven falsification rounds against pieces of that question, prompted by
+This series (`RSM_CRUX_ATTRIBUTION` through `RSM_CRUX12_ROUND10_NAIVE_REPEAT`)
+is twelve falsification rounds against pieces of that question, prompted by
 a ChatGPT brainstorm ("Repairable Semantic Memory" — claim decomposition,
 ATMS-style support formulas, counterfactual repair) that was never
 designed or built here. **No claim-carrying memory system, support-formula
 engine, or repair operator exists.** Every round is a narrow probe against
 live `gemini-3.5-flash`, scored against a precommitted synthetic fixture;
-round 11 repeats two earlier probes to measure their observed variance.
+round 11 repeats two earlier probes to measure their observed variance,
+and round 12 repeats a specific Round 10 naive condition.
 `custody/*.py` was not touched in any
 round (`git diff --stat main -- custody/` confirmed empty after every
 commit). Nothing here has been merged into `main`, and this document does
@@ -42,6 +43,7 @@ undecided.
 | 9 | `RSM_CRUX9_REDUNDANT_CASCADE` | Does cascading repair correctly distinguish a pure-cascade dependent (should retract) from a sibling with independent support (should survive), in the same pass? | 12/12 (100%), 4/4 domains. Combines round 3's and round 6's findings into one branch point the model had to get both sides of. |
 | 10 | `RSM_CRUX10_SPOOFED_INDEPENDENCE` | Adversarial: what if round 9's "independent" support is itself a laundered restatement of the revoked chain? | Naive: 10/12, missed the spoof, plus one unplanned honest-case false positive (sampling variance, not a fixture change). Skeptical: 12/12 — caught the spoof, all three honest domains still correct, no over-correction. |
 | 11 | `RSM_CRUX11_VARIANCE_BOUND` | Do repeated calls on clean round-5 and round-9 controls vary under the same fixture, prompt, model, and parser? | Five repeats: round 5 was 30/30 valid and clean (0/30 leak); round 9 was 60/60 correct (20/20 domains). Zero observed variance in both per-repeat binary metrics; this does not bound the distinct round-10 naive condition. |
+| 12 | `RSM_CRUX12_ROUND10_NAIVE_REPEAT` | Does Round 10's naive `vendor_onboarding` false positive recur under the exact same prompt/domain condition? | Five repeats: 15/15 correct, M2b false positives 0/5, and zero observed variance. The original Round 10 miss was not replicated in this small isolated sample; it remains real evidence, not disproven. |
 
 ## What is now reasonably well-supported
 
@@ -61,6 +63,10 @@ undecided.
   sample: 30/30 valid, clean round-5 repairs and 60/60 round-9 judgments
   were correct (round 11). This is a narrow observed result, not a general
   robustness bound.
+- Repeating Round 10's exact naive `vendor_onboarding` prompt/domain five
+  times produced 15/15 correct judgments and no M2b false positives (round
+  12). This strengthens the sample-variance interpretation of that honest
+  miss, without establishing a general error rate.
 
 ## What remains open, unresolved, or actively concerning
 
@@ -74,16 +80,16 @@ undecided.
   receipt collector, never self-declared, remains unbuilt.
 - **Sampling variance is only partly bounded.** Round 10's naive run
   surfaced an honest-case false positive even though round 9's clean
-  condition got the same domain/prompt right. Round 11 repeated rounds 5
-  and 9 five times with zero label variation (30 round-5 cases and 60
-  round-9 judgments), but did not repeat round 10's exact naive/adversarial
-  condition. The flip therefore remains real evidence, not something
-  round 11 can explain away.
-- **n is still small and model coverage is one.** Round 11 adds repeated
-  observations, but only five repetitions of two hand-built fixtures and
-  one model. Harder or more numerous spoofs, and combining the skeptical
-  mitigation with multi-hop cascades in the same test, remain untested
-  past round 10's single spoof shape.
+  condition got the same domain/prompt right. Round 11 found zero label
+  variation across five repeats of rounds 5 and 9, and round 12 found no
+  recurrence across five repeats of Round 10's exact naive
+  `vendor_onboarding` condition. The original flip remains real evidence;
+  the exact spoofed `server_access` condition and broader naive behavior
+  are still unmeasured.
+- **n is still small and model coverage is one.** Round 12 adds only five
+  isolated calls for one hand-built condition. Harder or more numerous
+  spoofs, and combining the skeptical mitigation with multi-hop cascades
+  in the same test, remain untested past round 10's single spoof shape.
 - **Circularity risk in the classifier-scored rounds (5-9):** a second
   Gemini call judges "confident assertion vs. hedged/retracted." This was
   mitigated by manual spot-checks of stated reasoning each round, not
@@ -98,7 +104,7 @@ undecided.
 
 ## Bottom line
 
-Eleven rounds, each precommitted before running, most with an honestly
+Twelve rounds, each precommitted before running, most with an honestly
 reported miss, confound, or caveat rather than a clean pass — the series
 did not manufacture a smooth success story. The central hypothesis this
 whole line of testing was checking — that fused content is not
@@ -112,10 +118,12 @@ an explicit skepticism instruction. What holds it back from being
 "solved" is narrower and sharper than the original framing: independence
 and provenance claims have to be trustworthy at the source, nothing
 tested here addresses that except by asking an LLM to be suspicious
-(a mitigation, twice-replicated, not a structural fix). Round 11 found
-zero label variance in five repeats of two clean controls, but did not
-repeat the exact round-10 naive condition; the series therefore still has
-not bounded variance in general. That is the honest state of the open
-question as of this series, not a claim that repairable
+(a mitigation, twice-replicated, not a structural fix). Rounds 11 and 12
+found zero label variance in five repeats of two clean controls and in
+five repeats of the exact Round 10 naive `vendor_onboarding` condition.
+That narrows the interpretation of the original honest-case flip toward
+sample-specific variance, but the series still has not bounded variance
+in general or repeated the spoofed condition. That is the honest state of
+the open question as of this series, not a claim that repairable
 semantic memory has been built, validated at scale, or is ready for any
 production decision.

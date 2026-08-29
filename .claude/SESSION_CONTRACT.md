@@ -82,6 +82,11 @@ Allowed files:
 - research/experiments/RSM_CRUX11_VARIANCE_BOUND/run.py
 - research/experiments/RSM_CRUX11_VARIANCE_BOUND/RESULT.md
 - research/experiments/RSM_CRUX11_VARIANCE_BOUND/result.json
+- research/experiments/RSM_CRUX12_ROUND10_NAIVE_REPEAT/PLAN.md
+- research/experiments/RSM_CRUX12_ROUND10_NAIVE_REPEAT/fixture.json
+- research/experiments/RSM_CRUX12_ROUND10_NAIVE_REPEAT/run.py
+- research/experiments/RSM_CRUX12_ROUND10_NAIVE_REPEAT/RESULT.md
+- research/experiments/RSM_CRUX12_ROUND10_NAIVE_REPEAT/result.json
 - RSM_HANDOFF.md
 - .claude/SESSION_CONTRACT.md (this file)
 

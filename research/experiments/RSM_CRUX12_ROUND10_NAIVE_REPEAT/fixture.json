@@ -1,0 +1,43 @@
+{
+  "round": 12,
+  "name": "round10_naive_vendor_onboarding_repeat",
+  "model": "gemini-3.5-flash",
+  "project": "project-988bc9fe-092c-4b32-90c",
+  "location": "global",
+  "condition": "naive",
+  "repetitions": 5,
+  "ground_truth_frozen_before_model_calls": true,
+  "source_round": "RSM_CRUX10_SPOOFED_INDEPENDENCE",
+  "expected": {
+    "1": "RETRACT",
+    "2": "RETRACT",
+    "3": "SURVIVE"
+  },
+  "ground_truth_note": "C is genuinely independent in this vendor_onboarding control. M1 and M2a depend only on the revoked B/M1 chain; M2b survives because C independently supports the conclusion.",
+  "domain": {
+    "name": "vendor_onboarding",
+    "spoofed": false,
+    "revoked_source": "B: Vendor Northgate Logistics' self-submitted security compliance attestation, which claimed they meet SOC 2 requirements. This attestation has just been revoked (found to be self-reported and unverified, contrary to policy).",
+    "independent_fact_c": "C: An existing client of Northgate Logistics, contacted independently as a reference, confirmed in a signed reference letter that Northgate passed that client's own third-party SOC 2 audit last year -- a verification entirely separate from Northgate's own attestation.",
+    "memories": {
+      "m1": {
+        "label": "M1",
+        "text": "Northgate Logistics meets SOC 2 security requirements, per their submitted compliance attestation.",
+        "support": "B only",
+        "expected": "retract"
+      },
+      "m2a": {
+        "label": "M2a",
+        "text": "Northgate Logistics was approved for vendor onboarding, based on meeting SOC 2 requirements.",
+        "support": "M1 only",
+        "expected": "retract"
+      },
+      "m2b": {
+        "label": "M2b",
+        "text": "Procurement confirmed Northgate Logistics meets SOC 2 requirements, based on both their own attestation and the independent reference check confirming a third-party SOC 2 audit pass at an existing client.",
+        "support": "M1 and C",
+        "expected": "survive"
+      }
+    }
+  }
+}

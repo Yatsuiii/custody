@@ -1,0 +1,279 @@
+{
+  "round": 12,
+  "model": "gemini-3.5-flash",
+  "project": "project-988bc9fe-092c-4b32-90c",
+  "location": "global",
+  "condition": "naive",
+  "fixture_sha256": "40c7259fa30fab9b7fe11ed3cc91fa228d26dadd5b20b904a8ed692cfd27de70",
+  "prompt_sha256": "5be0ec763c4572350174d0b58b7daaff41dd1dedc81a70c43fb7635a4d0294e2",
+  "source_round": "RSM_CRUX10_SPOOFED_INDEPENDENCE",
+  "repetitions_requested": 5,
+  "artifact_lineage": {
+    "source_fixture": "RSM_CRUX10_SPOOFED_INDEPENDENCE/fixture.json",
+    "source_harness": "RSM_CRUX10_SPOOFED_INDEPENDENCE/run.py",
+    "condition": "NAIVE_PROMPT only; skeptical condition not run"
+  },
+  "model_calls": {
+    "model_calls": 5
+  },
+  "repetitions": [
+    {
+      "repetition": 1,
+      "domain": "vendor_onboarding",
+      "condition": "naive",
+      "spoofed": false,
+      "raw_response": "1: RETRACT - This memory relies entirely on the revoked self-submitted attestation (Source B).\n2: RETRACT - This memory relies entirely on Memory 1, which has been retracted.\n3: SURVIVE - The conclusion that Northgate meets SOC 2 requirements remains supported by the independent client reference letter (Source C) despite the revocation of the self-attestation.",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_positive": false,
+      "complete": true,
+      "all_correct": true
+    },
+    {
+      "repetition": 2,
+      "domain": "vendor_onboarding",
+      "condition": "naive",
+      "spoofed": false,
+      "raw_response": "1: RETRACT - This memory is derived solely from the revoked self-submitted attestation (Source B).\n2: RETRACT - This memory relies entirely on Memory 1, which has been retracted.\n3: SURVIVE - The conclusion that Northgate meets SOC 2 requirements remains supported by the independent third-party audit verification (Fact C).",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_positive": false,
+      "complete": true,
+      "all_correct": true
+    },
+    {
+      "repetition": 3,
+      "domain": "vendor_onboarding",
+      "condition": "naive",
+      "spoofed": false,
+      "raw_response": "1: RETRACT - This memory is derived solely from the revoked source B.\n2: RETRACT - This memory is derived solely from Memory 1, which has been retracted, and lacks any independent support.\n3: SURVIVE - The conclusion that Northgate meets SOC 2 requirements remains supported by the independent, unrevoked client reference letter (Source C).",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_positive": false,
+      "complete": true,
+      "all_correct": true
+    },
+    {
+      "repetition": 4,
+      "domain": "vendor_onboarding",
+      "condition": "naive",
+      "spoofed": false,
+      "raw_response": "1: RETRACT - This memory relies solely on the revoked source B regarding Northgate's self-submitted attestation.\n2: RETRACT - This memory is derived solely from Memory 1, which has been retracted due to the revocation of its underlying source.\n3: SURVIVE - The conclusion that Northgate meets SOC 2 requirements remains supported by the independent, unrevoked client reference letter (C).",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_positive": false,
+      "complete": true,
+      "all_correct": true
+    },
+    {
+      "repetition": 5,
+      "domain": "vendor_onboarding",
+      "condition": "naive",
+      "spoofed": false,
+      "raw_response": "1: RETRACT - This memory is derived solely from the revoked self-attestation in source B.\n2: RETRACT - This memory is derived solely from Memory 1, which has been retracted.\n3: SURVIVE - The conclusion that Northgate meets SOC 2 requirements remains supported by the independent reference letter in source C.",
+      "call_error": null,
+      "verdicts": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "expected": {
+        "1": "RETRACT",
+        "2": "RETRACT",
+        "3": "SURVIVE"
+      },
+      "correct": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "missing_verdict_positions": [],
+      "m2b_false_positive": false,
+      "complete": true,
+      "all_correct": true
+    }
+  ],
+  "summary": {
+    "repetitions_completed": 5,
+    "total_judgments": 15,
+    "total_correct": 15,
+    "accuracy": 1.0,
+    "m2b_false_positives": 0,
+    "m2b_false_positive_rate": 0.0,
+    "complete_calls": 5,
+    "all_correct_calls": 5,
+    "missing_verdicts": 0,
+    "errors": 0,
+    "repeat_metrics": [
+      {
+        "repetition": 1,
+        "correct": 3,
+        "total_judgments": 3,
+        "accuracy": 1.0,
+        "m2b_verdict": "SURVIVE",
+        "m2b_false_positive": false,
+        "complete": true,
+        "all_correct": true,
+        "missing_verdicts": 0,
+        "errors": false
+      },
+      {
+        "repetition": 2,
+        "correct": 3,
+        "total_judgments": 3,
+        "accuracy": 1.0,
+        "m2b_verdict": "SURVIVE",
+        "m2b_false_positive": false,
+        "complete": true,
+        "all_correct": true,
+        "missing_verdicts": 0,
+        "errors": false
+      },
+      {
+        "repetition": 3,
+        "correct": 3,
+        "total_judgments": 3,
+        "accuracy": 1.0,
+        "m2b_verdict": "SURVIVE",
+        "m2b_false_positive": false,
+        "complete": true,
+        "all_correct": true,
+        "missing_verdicts": 0,
+        "errors": false
+      },
+      {
+        "repetition": 4,
+        "correct": 3,
+        "total_judgments": 3,
+        "accuracy": 1.0,
+        "m2b_verdict": "SURVIVE",
+        "m2b_false_positive": false,
+        "complete": true,
+        "all_correct": true,
+        "missing_verdicts": 0,
+        "errors": false
+      },
+      {
+        "repetition": 5,
+        "correct": 3,
+        "total_judgments": 3,
+        "accuracy": 1.0,
+        "m2b_verdict": "SURVIVE",
+        "m2b_false_positive": false,
+        "complete": true,
+        "all_correct": true,
+        "missing_verdicts": 0,
+        "errors": false
+      }
+    ],
+    "repeat_accuracy_variance": {
+      "mean": 1.0,
+      "population_variance": 0.0,
+      "population_stddev": 0.0
+    },
+    "m2b_false_positive_variance": {
+      "mean": 0.0,
+      "population_variance": 0.0,
+      "population_stddev": 0.0
+    },
+    "per_position": {
+      "1": {
+        "correct": 5,
+        "total": 5,
+        "got": [
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT"
+        ]
+      },
+      "2": {
+        "correct": 5,
+        "total": 5,
+        "got": [
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT",
+          "RETRACT"
+        ]
+      },
+      "3": {
+        "correct": 5,
+        "total": 5,
+        "got": [
+          "SURVIVE",
+          "SURVIVE",
+          "SURVIVE",
+          "SURVIVE",
+          "SURVIVE"
+        ]
+      }
+    }
+  },
+  "status": {
+    "complete": true,
+    "model_calls_total": 5
+  }
+}
