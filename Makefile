@@ -14,7 +14,7 @@ PYTHON ?= $(shell \
 		command -v python3; \
 	fi)
 
-.PHONY: help lint test check hardening-check serve image gates verify-deploy incident gui cost demo revoke isolate revision-spike live-memory-bank live-memory-deletion memory-deletion-gates live-auditor auditor-gates live-review review-gates live-narration narration-gates live-fleet fleet-gates live-chain chain-gates live-g1 live-registry-attack registry-gates live-revision-binding revision-binding-gates setup-gateway deploy-gateway-probe live-gateway gateway-gates live-model-armor model-armor-gates live-observability observability-gates clean
+.PHONY: help lint test check hardening-check serve image gates verify-deploy incident gui cost demo revoke isolate revision-spike live-memory-bank live-memory-deletion memory-deletion-gates live-auditor auditor-gates live-review review-gates live-onboarding onboarding-gates live-escalation escalation-gates live-narration narration-gates live-fleet fleet-gates live-chain chain-gates live-g1 live-registry-attack registry-gates live-revision-binding revision-binding-gates setup-gateway deploy-gateway-probe live-gateway gateway-gates live-model-armor model-armor-gates live-observability observability-gates clean
 
 help:
 	@echo "make lint    ruff over the tree"
@@ -39,6 +39,10 @@ help:
 	@echo "make auditor-gates independently judge the live Auditor artifact"
 	@echo "make live-review prove the real Custody Reviewer: Gemini reads a quarantined item, drafts a verdict"
 	@echo "make review-gates independently judge the live Reviewer artifact"
+	@echo "make live-onboarding prove Gemini drafts a vouch request without granting it"
+	@echo "make onboarding-gates independently judge the live Onboarding artifact"
+	@echo "make live-escalation prove Gemini drafts a post-revocation notice without revoking"
+	@echo "make escalation-gates independently judge the live Escalation artifact"
 	@echo "make live-narration prove a second modality: the Reviewer's verdict, spoken via Cloud Text-to-Speech"
 	@echo "make narration-gates independently judge the live Narration artifact"
 	@echo "make live-fleet prove the fleet claim at N=5: a tool shared by two departments, revoked once, pulled from both"
@@ -130,6 +134,18 @@ live-review:
 
 review-gates:
 	@$(PYTHON) scripts/review_gates.py
+
+live-onboarding:
+	@$(PYTHON) scripts/live_onboarding.py
+
+onboarding-gates:
+	@$(PYTHON) scripts/onboarding_gates.py
+
+live-escalation:
+	@$(PYTHON) scripts/live_escalation.py
+
+escalation-gates:
+	@$(PYTHON) scripts/escalation_gates.py
 
 live-narration:
 	@$(PYTHON) scripts/live_narration.py
