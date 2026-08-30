@@ -1,3 +1,79 @@
+# Active session contract: Onboarding and Escalation agents
+
+Objective: add the draft-only Onboarding and Escalation agents described in
+`CODEX_SUBAGENTS_HANDOFF.md` to the Fortified Enterprise Fleet artifact.
+
+Lane: agentic developer tooling — governed multi-agent fleet roles.
+
+Branch: `feat/memory-provenance`.
+
+Allowed files for this scoped build:
+
+- `custody/onboarding.py`
+- `custody/escalation.py`
+- `tests/test_onboarding.py`
+- `tests/test_escalation.py`
+- `scripts/live_onboarding.py`
+- `scripts/live_escalation.py`
+- `scripts/onboarding_gates.py`
+- `scripts/escalation_gates.py`
+- `Makefile`
+- `README.md`
+- `docs/architecture.md`
+- `.claude/SESSION_CONTRACT.md`
+
+Non-goals:
+
+- Neither agent may write to `TrustCatalog`, `CustodyGraph`, Firestore, or
+  any other store. The existing `/vouch` and Auditor/revocation paths remain
+  the only write/decision paths.
+- No model may decide trust, origin, revocation, or any other fact.
+- Do not touch `custody/origin.py`, `custody/graph.py`, `custody/service.py`,
+  or `custody/action.py`.
+- Do not add dependencies, endpoints, authentication, queues, dashboards, or
+  a new orchestration framework.
+- Do not claim a live proof that was not run against Vertex AI. If credentials
+  are unavailable, document each proof as BLOCKED with the concrete reason.
+
+Design decision: each new module owns one small language-drafting boundary.
+The producer takes only the content needed for its role, calls an injected
+`Explain` function, and returns a frozen output that contains no trust or
+origin field. Escalation accepts a structural demotion protocol rather than
+importing `custody.catalog`, so the draft module cannot acquire a catalog or
+graph write path through a type reference.
+
+Baseline: clean target branch verified before edits with
+`make PYTHON=/run/media/Yatsuiii/Windows-SSD/custody/.venv/bin/python check`:
+Ruff PASS; 377 tests PASS; one expected SDK-dependent skip.
+
+Acceptance gates:
+
+1. The existing check remains green and the test count increases only by the
+   tests added for these two agents.
+2. Each new module's AST-import test fails when a forbidden
+   `custody.catalog`/`custody.graph` import is deliberately introduced, then
+   passes after the import is reverted.
+3. Each live producer either writes a real marker-bound Vertex AI artifact, or
+   the README and architecture explicitly say that proof is BLOCKED and name
+   the reason.
+4. Each independent gate script reports every offline check and its
+   independently issued live check as PASS against a live artifact; absent or
+   failed live evidence is BLOCKED/FAIL, never silently PASS.
+5. The Mermaid diagram and README status/prose match the evidence actually
+   available at handoff time.
+
+Verification commands:
+
+- `make PYTHON=/run/media/Yatsuiii/Windows-SSD/custody/.venv/bin/python check`
+- deliberate forbidden-import red/green checks for both modules
+- `make live-onboarding`, `make onboarding-gates`
+- `make live-escalation`, `make escalation-gates`
+- `git diff --check`
+
+No commit or push is part of this session unless separately authorized.
+
+---
+
 # Custody, session contract
 
 Working name: Custody. Chain of custody for agent memory. Rename is cheap until
@@ -4432,6 +4508,50 @@ stat. Honesty beat (G5 BLOCKED) kept unchanged. Total still ~240s (4:00).
 No UI/code added, per the file's own standing rule.
 
 Nothing committed or pushed.
+
+## Outcome Ledger
+
+### Decision 1
+
+Decision: Add Onboarding and Escalation as bounded fleet roles that draft
+language while leaving trust, origin, vouch, and revocation decisions to
+deterministic existing paths.
+
+Lane: agentic developer tooling — governed multi-agent fleet roles.
+
+Artifact: `feat/memory-provenance` worktree at
+`/tmp/custody-fleet-agents`, with the two modules, four tests/proof scripts,
+Make targets, README claims, and Mermaid architecture. The scoped files are
+also applied to the shared dirty checkout without replacing its unrelated
+research edits.
+
+Acceptance gate: baseline 377 tests plus exactly 8 new tests; both AST import
+guards must fail under a deliberate forbidden-import mutation and pass after
+revert; both producer proofs must contain a fresh marker from a real
+gemini-3.5-flash Vertex AI call; both independent gates must pass; docs must
+match those artifacts.
+
+Result: target `make check` passed with 385 tests and one expected skip.
+Both AST guards produced the expected red result under mutation and passed
+after revert. Onboarding proof
+`aa5c4f9307bc42b29e6ff4ec7ee0dcfb` passed its independent 10/10 gate.
+Escalation proof `068bd99a3d7c46138faac17fae519efd` passed its independent
+12/12 gate; its Auditor setup is local deterministic ControlPlane code, not a
+deployed Cloud Run/Firestore claim. `git diff --check` passed.
+
+Owner: Raghav.
+
+Next action: review the scoped diff in the `feat/memory-provenance` worktree,
+then commit/push only with explicit authorization; rerun both live producer
+and gate commands within their 24-hour freshness window when publishing
+current evidence.
+
+Kill condition: if either producer or independent gate fails, or its
+evidence becomes stale, revert that status row and diagram node to BLOCKED or
+amber; do not broaden the claim to cover deployed Auditor behavior.
+
+Status: shipped
+
 
 ---
 

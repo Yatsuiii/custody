@@ -314,7 +314,7 @@ evidence and the correction history in `DECISIONS.md` #2.
 
 | | |
 | --- | --- |
-| Core, verified against real google-adk 2.6.3 | **built**, 376 tests |
+| Core, verified against real google-adk 2.6.3 | **built**, 385 tests |
 | Trust-boundary failure injection: Memory Bank unreachable, Agent Registry timeout, malformed live tool surface | **built**, 13 tests, each proven against a deliberately broken fail-open build |
 | Derivation graph and retroactive revocation | **built** |
 | Selective live Memory Bank deletion (new opt-in write path) | **built**, `make live-memory-deletion` |
@@ -326,6 +326,8 @@ evidence and the correction history in `DECISIONS.md` #2.
 | Agent Runtime, Agent Identity, and enforced Agent Gateway IAP | **built**, `make live-gateway` |
 | Model Armor content screening | **built**, `make live-model-armor` |
 | Agent Observability | **built**, `make live-observability` |
+| Onboarding Agent: drafts a vouch request, never grants it | **built**, `make live-onboarding` / `make onboarding-gates` |
+| Escalation Agent: drafts a post-revocation notice, never revokes it | **built**, `make live-escalation` / `make escalation-gates` |
 
 Nothing in this table moves to built without a command that demonstrates it.
 
@@ -629,6 +631,52 @@ Non-goal: no console or human-facing review queue exists yet; a verdict is
 read from `proof-out/live-review.json` today, and any resulting demotion or
 revocation still goes through the existing `/demote`/`/revoke` endpoints,
 driven by a human.
+
+### The Custody Onboarding Agent: drafts a vouch request, never grants it
+
+`custody/onboarding.py` closes the department-intake gap without adding a
+second write path. `draft_vouch` reads the tool the requester named, sends the
+original request text through the injected `explain` callable for human-facing
+evidence, and returns a frozen `VouchDraft` shaped like a catalog grant. It
+does not call `/vouch`, import `custody.catalog` or `custody.graph`, or carry a
+trust/origin field; the department must still review and submit the draft
+through the existing deterministic endpoint.
+
+Live proof (`make live-onboarding`, proof
+`aa5c4f9307bc42b29e6ff4ec7ee0dcfb`): a real
+`gemini-3.5-flash` call through Vertex AI read the specific request,
+reproduced its fresh per-run marker, and returned the expected
+`VouchDraft`. `make onboarding-gates` reported 10/10 PASS, including a
+separate Gemini call issued by the independent judge.
+
+Non-goal: this is not automated approval, catalog mutation, tool discovery, or
+a claim that the proposed tool is trustworthy. It drafts language and leaves
+the trust decision with the existing human-controlled `/vouch` path.
+
+### The Custody Escalation Agent: drafts a post-revocation notice, never revokes it
+
+`custody/escalation.py` closes the notification gap after the deterministic
+Auditor sweep. `draft_notice` accepts only the department, tool, demotion
+actor, and demotion timestamp through a structural read-only protocol, then
+asks the injected `explain` callable to phrase those supplied facts for a
+human. Its frozen `Notice` has no trust/origin field, and the module imports
+neither `custody.catalog` nor `custody.graph`, so the drafting response cannot
+reach the revocation machinery.
+
+Live proof (`make live-escalation`, proof
+`068bd99a3d7c46138faac17fae519efd`): the local deterministic
+`ControlPlane` vouched and admitted a probe, then the Auditor sweep removed
+its record; a real `gemini-3.5-flash` call through Vertex AI read that
+post-sweep demotion context and reproduced its fresh marker in the notice.
+`make escalation-gates` reported 12/12 PASS, including recomputation of the
+demotion id and a separate Gemini call issued by the independent judge.
+The producer's claim boundary remains narrow: this run does not claim that
+the deployed Cloud Run/Firestore Auditor was exercised.
+
+Non-goal: this is not an Auditor, a trust adjudicator, or a replacement for
+`CustodyGraph.revoke`. It only drafts a notice after the existing demotion and
+revocation paths have done their work; forwarding or acting on it remains a
+human decision.
 
 ### Best Multimodal UX candidacy: the Dependency Cartography page
 

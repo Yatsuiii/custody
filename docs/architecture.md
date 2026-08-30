@@ -24,20 +24,36 @@ flowchart TB
         GRAPH["graph.py<br/>derivation graph<br/>descendants · revoke"]
         CAT["catalog.py<br/>per-department grants"]
         GATE["action.py<br/>export must cite trusted memory"]
+        ONBOARD["onboarding.py<br/>draft VouchDraft<br/>never grants"]
+        AUDIT["control_plane.py /auditor<br/>deterministic sweep"]
+        REVOCATION[["revocation event<br/>demotion's descendants removed"]]
+        ESCALATE["escalation.py<br/>draft Notice<br/>never revokes"]
     end
 
     subgraph google["Google Cloud"]
         MB[("Memory Bank<br/>via BaseMemoryService")]
         FS[("Firestore<br/>graph · quarantine · audit")]
-        GEM["Gemini via Vertex<br/>explains a quarantine<br/>never labels one"]
+        GEM["Gemini via Vertex<br/>drafts language<br/>never decides facts"]
     end
 
     QUAR[["quarantine<br/>withheld, reviewable"]]
+    HUMAN(["human operator"])
 
     A1 & A2 & A3 -->|"discover and bind tools"| REV
+    A1 & A2 & A3 -->|"department request"| ONBOARD
     REV -->|"admitted session events"| ORIGIN
     ORIGIN --> SPLIT
     CAT -->|"which tools this<br/>department vouched for"| SPLIT
+    ONBOARD -.->|"draft only; human may submit via /vouch"| CAT
+    ONBOARD -->|"request text"| GEM
+    GEM -->|"evidence prose"| ONBOARD
+    CAT -->|"outstanding demotion"| AUDIT
+    AUDIT -->|"deterministic CustodyGraph.revoke"| GRAPH
+    GRAPH -->|"revocation event"| REVOCATION
+    REVOCATION -->|"read-only demotion context"| ESCALATE
+    ESCALATE -->|"incident notice"| HUMAN
+    ESCALATE -->|"demotion context"| GEM
+    GEM -->|"notice prose"| ESCALATE
     SPLIT -->|"trusted only"| MB
     SPLIT -->|"untrusted"| QUAR
     SPLIT -->|"records"| GRAPH
@@ -48,15 +64,17 @@ flowchart TB
     A1 -->|"export request"| GATE
 
     classDef built fill:#1f6f3f,stroke:#0d3d22,color:#fff
-    class REV,ORIGIN,SPLIT,GRAPH,CAT,GATE,QUAR,MB,GEM,FS built
+    class REV,ORIGIN,SPLIT,GRAPH,CAT,GATE,AUDIT,REVOCATION,ONBOARD,ESCALATE,QUAR,MB,GEM,FS built
 ```
 
-Green is built and evidenced. Every node above is green: Firestore was the
-last amber one, and it is live behind the same ports as the offline SQLite
-store (`custody/firestore_store.py`, `custody/nonce_ledger.py`), carrying
-the derivation graph, the demotion log, the approved revision pins, and the
-dispatch nonce ledger. See `README.md`'s status table for the command that
-demonstrates each.
+Green is built and evidenced. Onboarding and Escalation now have fresh
+marker-bound live Gemini proofs and independent gates; the Escalation proof's
+deterministic Auditor setup is explicitly local rather than a claim about the
+deployed Cloud Run/Firestore Auditor. Firestore is live behind the same ports
+as the offline SQLite store (`custody/firestore_store.py`,
+`custody/nonce_ledger.py`), carrying the derivation graph, the demotion log,
+the approved revision pins, and the dispatch nonce ledger. See `README.md`'s
+status table for the command that demonstrates each.
 
 ## The live Gateway enforcement slice
 
