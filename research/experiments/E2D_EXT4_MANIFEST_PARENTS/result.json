@@ -1,0 +1,46 @@
+{
+  "checks": {
+    "manifest_ok_cap_matches_inline": true,
+    "manifest_ok_support_matches_inline": true,
+    "manifest_ok_is_none_capped": true,
+    "digest_mismatch_is_incomplete": true,
+    "digest_mismatch_capped_inform": true,
+    "digest_mismatch_no_partial_parents": true,
+    "digest_mismatch_has_unknown_context": true,
+    "missing_chunk_is_incomplete": true,
+    "missing_chunk_no_partial_parents": true,
+    "missing_chunk_has_unknown_context": true
+  },
+  "manifest_ok": {
+    "caps": {
+      "export.send": 0
+    },
+    "support": [
+      "E-BENIGN-1",
+      "E-MAL-1",
+      "E-VENDOR-2"
+    ]
+  },
+  "digest_mismatch": {
+    "transform_class": "INCOMPLETE",
+    "caps": {
+      "export.send": 1
+    },
+    "support": [
+      "E-MANIFEST-DIGEST-MISMATCH",
+      "UNKNOWN_CONTEXT"
+    ]
+  },
+  "missing_chunk": {
+    "transform_class": "INCOMPLETE",
+    "caps": {
+      "export.send": 1
+    },
+    "support": [
+      "E-MANIFEST-MISSING-CHUNK",
+      "UNKNOWN_CONTEXT"
+    ]
+  },
+  "verdict": "PASS",
+  "verdict_reason": "all checks passed"
+}

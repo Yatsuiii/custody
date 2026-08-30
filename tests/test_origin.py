@@ -247,5 +247,111 @@ class RecordsAreEvidence(unittest.TestCase):
         self.assertIn("alpha", admitted.text)
 
 
+class MultiParentSynthesisE0(unittest.TestCase):
+    """E0 (research/experiments/E0_CURRENT_LINEAGE_REPRO): does a model turn
+    that genuinely synthesizes two independently-trusted tool responses in
+    one invocation get a derived_from edge to *both*, or only the most
+    recently seen one?
+
+    `tests/test_graph.py::test_a_record_with_two_parents_survives_unless_both_are_pulled`
+    already proves CustodyGraph.revoke walks a two-parent derived_from tuple
+    correctly when one is supplied directly. This test instead exercises
+    take_custody itself, the layer that is supposed to populate that tuple
+    from real events, and only that layer is in question here.
+    """
+
+    def test_a_synthesis_of_two_trusted_sources_keeps_both_parents(self):
+        """E0 originally reproduced this as a bug: derived_from named only
+        the most recently processed tool response, silently dropping the
+        edge to the earlier one. E1 (research/experiments/
+        E1_MULTIPARENT_LINEAGE) fixed `lineage` in custody/origin.py to
+        accumulate every distinct trusted arrival in an invocation rather
+        than overwrite it. This test now asserts the fixed behavior; see
+        research/experiments/E0_CURRENT_LINEAGE_REPRO/RESULT.md for the
+        pre-fix reproduction evidence.
+        """
+        trust = ToolTrust(trusted=frozenset({"crm_lookup", "payroll_lookup"}))
+        session = [
+            tool("crm_lookup", "balance: 500"),
+            tool("payroll_lookup", "salary: 1000"),
+            model("Combining both: balance 500 and salary 1000."),
+        ]
+        result = take_custody(session, trust)
+        root_a, root_b, synthesis = result.admitted
+
+        self.assertIs(root_a.record.trust, Trust.TRUSTED)
+        self.assertIs(root_b.record.trust, Trust.TRUSTED)
+        self.assertIs(synthesis.record.origin, Origin.MODEL)
+        self.assertIs(synthesis.record.trust, Trust.TRUSTED)
+
+        self.assertEqual(
+            set(synthesis.record.derived_from),
+            {root_a.record.id, root_b.record.id},
+        )
+
+    def test_a_three_way_synthesis_keeps_all_three_parents(self):
+        trust = ToolTrust(
+            trusted=frozenset({"crm_lookup", "payroll_lookup", "hr_lookup"})
+        )
+        session = [
+            tool("crm_lookup", "balance: 500"),
+            tool("payroll_lookup", "salary: 1000"),
+            tool("hr_lookup", "title: engineer"),
+            model("Summary: balance 500, salary 1000, title engineer."),
+        ]
+        result = take_custody(session, trust)
+        root_a, root_b, root_c, synthesis = result.admitted
+        self.assertEqual(
+            set(synthesis.record.derived_from),
+            {root_a.record.id, root_b.record.id, root_c.record.id},
+        )
+
+    def test_revoking_either_parent_reaches_the_synthesis(self):
+        """The functional consequence of the fix: revocation is symmetric,
+        unlike E0's pre-fix reproduction where only one direction worked."""
+        from custody.graph import CustodyGraph
+
+        trust = ToolTrust(trusted=frozenset({"crm_lookup", "payroll_lookup"}))
+        session = [
+            tool("crm_lookup", "balance: 500"),
+            tool("payroll_lookup", "salary: 1000"),
+            model("Combining both: balance 500 and salary 1000."),
+        ]
+        result = take_custody(session, trust)
+        root_a, root_b, synthesis = result.admitted
+
+        graph_a = CustodyGraph()
+        graph_a.extend([root_a.record, root_b.record, synthesis.record])
+        removed_a = graph_a.revoke(tool="crm_lookup", revocation_id="rev-a").removed
+        self.assertIn(synthesis.record.id, removed_a)
+
+        graph_b = CustodyGraph()
+        graph_b.extend([root_a.record, root_b.record, synthesis.record])
+        removed_b = graph_b.revoke(
+            tool="payroll_lookup", revocation_id="rev-b"
+        ).removed
+        self.assertIn(synthesis.record.id, removed_b)
+
+    def test_a_chained_restatement_is_still_two_hops_not_a_shortcut(self):
+        """Regression guard: the fix must not flatten a restatement of a
+        restatement into a direct edge to the original tool response
+        (existing behavior, tests/test_graph.py::RetrievalIsAttributedAsA
+        Citation, must remain unchanged by this fix)."""
+        trust = ToolTrust(trusted=frozenset({"crm_lookup"}))
+        session = [
+            tool("crm_lookup", "balance: 500"),
+            model("Balance is 500."),
+            model("To restate: the balance is five hundred."),
+        ]
+        result = take_custody(session, trust)
+        root, first_restatement, second_restatement = result.admitted
+        self.assertEqual(first_restatement.record.derived_from, (root.record.id,))
+        self.assertEqual(
+            second_restatement.record.derived_from,
+            (first_restatement.record.id,),
+        )
+        self.assertNotIn(root.record.id, second_restatement.record.derived_from)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -21,6 +21,29 @@ from custody.graph import Revocation
 from custody.memory_bank import memory_id_for
 from custody.origin import Admitted
 
+#: The metadata key `write_record` embeds at admission time, and the one
+#: `search_memory` reads back on retrieval. Round-trips through Vertex AI
+#: Memory Bank's own `Memory.metadata` field -- not a self-declared parent
+#: id from an arbitrary external tool, but Custody's own write recovered
+#: on Custody's own read.
+CUSTODY_RECORD_ID_KEY = "custody_record_id"
+
+
+@dataclass(frozen=True)
+class RetrievedFact:
+    """One search result, with the custody record id if Custody wrote it.
+
+    `record_id` is `None` when the memory carries no `custody_record_id`
+    metadata -- a memory written before this field existed, or one written
+    by something other than `AgentEngineMemoryBank.write_record`. Absence
+    here must not become a guess: `custody.origin`'s resolver falls back to
+    content-digest matching for exactly this case, never treats a missing
+    id as license to invent one.
+    """
+
+    text: str
+    record_id: str | None
+
 
 class AgentEngineMemoriesClient(Protocol):
     """The narrow slice of `agent_engines.memories` this module needs."""
@@ -65,18 +88,24 @@ class AgentEngineMemoryBank:
             if error.code != 409:
                 raise
 
-    async def search_memory(self, *, app_name: str, user_id: str, query: str):
+    async def search_memory(
+        self, *, app_name: str, user_id: str, query: str
+    ) -> list[RetrievedFact]:
         pager = await self.memories.retrieve(
             name=self.engine_name,
             scope={"app_name": app_name, "user_id": user_id},
             similarity_search_params={"search_query": query, "top_k": 10},
         )
-        facts = []
+        results: list[RetrievedFact] = []
         async for retrieved in pager:
             memory = retrieved.memory
-            if memory is not None and memory.fact:
-                facts.append(memory.fact)
-        return facts
+            if memory is None or not memory.fact:
+                continue
+            metadata = getattr(memory, "metadata", None) or {}
+            value = metadata.get(CUSTODY_RECORD_ID_KEY)
+            record_id = getattr(value, "string_value", None) if value is not None else None
+            results.append(RetrievedFact(text=memory.fact, record_id=record_id))
+        return results
 
 
 class RevokableGraph(Protocol):

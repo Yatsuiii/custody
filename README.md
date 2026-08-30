@@ -97,6 +97,28 @@ $ make demo
 The instruction reached instruction-eligible context in the first run and never
 entered memory in the second. **What changed is the memory path, not the model.**
 
+## Research
+
+A falsification programme was run against this system's own thesis. It found
+independent confirmation that a narrower follow-on question — revoking
+influence scoped to a *sub-interval* of a source's trust lifetime, not just
+whole-tool revocation — is unexplored by a field survey; found and fixed a
+real bug in its own foundation; traced one whole class of failure to a single
+line; and produced a mechanism design with preregistered gates. It is still
+active, and the question it exists to answer is still open.
+
+Derivation-graph-based selective repair itself — the mechanism this product
+ships — is an active academic direction, not a claim unique to Custody:
+published work on dependency-guided rollback repair for memory-augmented
+agents (Aug 2026) reports selective, graph-scoped recovery in the same
+shape. Custody's contribution is bringing that discipline natively into
+Google's Agent Platform primitives (ADK's event graph, Memory Bank, Agent
+Registry, Agent Gateway, Firestore) with no model ever allowed to write a
+trust or origin fact — production integration, not a new graph algorithm.
+
+See **[RESEARCH.md](RESEARCH.md)** for the index, the verdicts, and the
+limitations, with commit-pinned links to every source document.
+
 ## The gap this fills
 
 ADK gives every memory an author. From `memory/memory_entry.py`, a `MemoryEntry`
@@ -134,8 +156,9 @@ memory = CustodyMemoryBank(
 
 A tool your fleet trusted turns out to be compromised. Without a derivation
 graph, "which memories descended from it" is not a hard question, it is an
-unanswerable one. So the options are purge everything, purge every department
-that touched it, or leave the poisoned lineage in place.
+unanswerable one. So an enterprise fleet without one is left with purge
+everything, purge every department that touched it, or leave the poisoned
+lineage in place — the three responses this fixture measures below.
 
 ```
 $ make cost

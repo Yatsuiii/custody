@@ -1,0 +1,147 @@
+{
+  "baseline_commit": "040c28c36d10a6c89144a19e01b0eae77a88ec64",
+  "experiment_source_digest": "ab4d4b364f72093d9886574cf699b1444cfa6caea15634745ba90ca7ea32b89b",
+  "fixture_digest": "6f44c6029334a8eeee19ce7969fd9243b271d3826423e9f0476a270eb890fd06",
+  "mechanism_mode": "STRUCTURAL_ENVELOPE_A",
+  "metrics": {
+    "direct_parent_recall": 1.0,
+    "caps_before_window_match_plan": true,
+    "affected_recall": 1.0,
+    "affected_set_exact_match": true,
+    "false_act_permits": 0,
+    "same_record_authority_increases": 0,
+    "benign_inform_retained": true,
+    "outside_sibling_preserved": true,
+    "syn_act_none_unaffected_by_window": true,
+    "replay_digest_stable": true,
+    "replay_probe_detail": {
+      "after_intent_before_plan": true,
+      "after_plan_before_first_outcome": true,
+      "midway_repair": true,
+      "after_outcomes_before_complete": true
+    },
+    "unsafe_fault_windows": 0,
+    "unsafe_fault_window_names": [],
+    "mechanism_uses_no_semantic_inference": true
+  },
+  "per_record": {
+    "E-RELAY-1": {
+      "direct_parent_ids": [],
+      "caps": {
+        "export.send": 1
+      },
+      "support": [
+        "E-RELAY-1",
+        "UNKNOWN_CONTEXT"
+      ],
+      "effective_cap_after_w1": 1
+    },
+    "E-BENIGN-1": {
+      "direct_parent_ids": [],
+      "caps": {
+        "export.send": 2
+      },
+      "support": [
+        "E-BENIGN-1"
+      ],
+      "effective_cap_after_w1": 2
+    },
+    "E-BENIGN-PARA-1": {
+      "direct_parent_ids": [
+        "E-BENIGN-1"
+      ],
+      "caps": {
+        "export.send": 1
+      },
+      "support": [
+        "E-BENIGN-1"
+      ],
+      "effective_cap_after_w1": 1
+    },
+    "E-BENIGN-IDENTITY-1": {
+      "direct_parent_ids": [
+        "E-BENIGN-1"
+      ],
+      "caps": {
+        "export.send": 2
+      },
+      "support": [
+        "E-BENIGN-1"
+      ],
+      "effective_cap_after_w1": 2
+    },
+    "E-MAL-1": {
+      "direct_parent_ids": [],
+      "caps": {
+        "export.send": 0
+      },
+      "support": [
+        "E-MAL-1"
+      ],
+      "effective_cap_after_w1": 0
+    },
+    "E-MAL-PARA-1": {
+      "direct_parent_ids": [
+        "E-MAL-1"
+      ],
+      "caps": {
+        "export.send": 0
+      },
+      "support": [
+        "E-MAL-1"
+      ],
+      "effective_cap_after_w1": 0
+    },
+    "E-VENDOR-2": {
+      "direct_parent_ids": [],
+      "caps": {
+        "export.send": 2
+      },
+      "support": [
+        "E-VENDOR-2"
+      ],
+      "effective_cap_after_w1": 0
+    },
+    "E-SYN-ACT-ACT": {
+      "direct_parent_ids": [
+        "E-BENIGN-1",
+        "E-VENDOR-2"
+      ],
+      "caps": {
+        "export.send": 2
+      },
+      "support": [
+        "E-BENIGN-1",
+        "E-VENDOR-2"
+      ],
+      "effective_cap_after_w1": 0
+    },
+    "E-SYN-ACT-NONE": {
+      "direct_parent_ids": [
+        "E-BENIGN-1",
+        "E-MAL-1"
+      ],
+      "caps": {
+        "export.send": 0
+      },
+      "support": [
+        "E-BENIGN-1",
+        "E-MAL-1"
+      ],
+      "effective_cap_after_w1": 0
+    }
+  },
+  "window": {
+    "id": "W1",
+    "root_ids": [
+      "E-VENDOR-2"
+    ],
+    "affected_ids": [
+      "E-SYN-ACT-ACT",
+      "E-VENDOR-2"
+    ],
+    "phase": "COMPLETE"
+  },
+  "verdict": "PASS",
+  "verdict_reason": "all nine PASS conditions satisfied"
+}

@@ -89,9 +89,17 @@ class RecordWritingMemoryBank:
     async def search_memory(
         self, *, app_name: str, user_id: str, query: str
     ) -> list[str]:
-        facts = await self._writer.search_memory(
+        retrieved = await self._writer.search_memory(
             app_name=app_name, user_id=user_id, query=query
         )
+        # `_writer.search_memory` now also carries each result's custody
+        # record id (custody/adapters/memory_bank.py's RetrievedFact), read
+        # back from Memory Bank's own metadata. This script's own callers
+        # only ever check fact text, so that id is not consumed here; it
+        # exists for a caller that constructs the multi-item shape
+        # custody.origin._retrieved_items reads (a real ADK load_memory
+        # tool call would be such a caller -- G1's agent has none today).
+        facts = [r.text for r in retrieved]
         self.last_search_facts = facts
         return facts
 
