@@ -68,12 +68,7 @@ draft before recording; the deadline is hard.
 ## Environment you'll need
 
 ```
-export CLOUDSDK_CONFIG="/run/media/Yatsuiii/Windows-SSD/custody/.gcloud"
-export CUSTODY_PROJECT=project-988bc9fe-092c-4b32-90c
-export CUSTODY_AGENT_ENGINE_ID=6936011268348182528
-export CUSTODY_REGION=us-central1
-CONTROL_PLANE=https://custody-control-plane-742122658452.us-central1.run.app
-cd /run/media/Yatsuiii/Windows-SSD/custody-codex-check
+export CLOUDSDK_CONFIG="/run/media/Yatsuiii/Windows-SSD/custody/.gcloud"; export CUSTODY_PROJECT="project-988bc9fe-092c-4b32-90c"; export CUSTODY_AGENT_ENGINE_ID="6936011268348182528"; export CUSTODY_REGION="us-central1"; export PYTHON="/run/media/Yatsuiii/Windows-SSD/custody/.venv/bin/python"; CONTROL_PLANE="https://custody-control-plane-742122658452.us-central1.run.app"; cd "/run/media/Yatsuiii/Windows-SSD/custody-codex-check"
 ```
 
 Python: use `/run/media/Yatsuiii/Windows-SSD/custody/.venv/bin/python`
