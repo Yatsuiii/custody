@@ -83,6 +83,9 @@ Allowed files:
 - `Makefile` (add `scheduler-gates` target + help line only)
 - `README.md` (update G5's status row/prose to match the real gate result)
 - `.claude/SESSION_CONTRACT.md` (this entry)
+- `FILMING_HANDOFF.md` (new — a self-contained handoff for a fresh session
+  whose only job is recording the demo video: shot list, exact commands,
+  timings, known gaps to route around. No code change.)
 - `scripts/live_fleet.py` (bug fix only: its own local `CustodyMemoryBank.
   search_memory` was never updated to unwrap `RetrievedFact.text`, the same
   fix `scripts/live_memory_bank.py`'s equivalent class already carries from
