@@ -575,21 +575,29 @@ the other.
 `make model-armor-gates` reported nine PASS results across the offline judge
 and the independent live Google Cloud attestation.
 
-### G5's elapsed-time clock, in progress
+### G5's elapsed-time clock: real, 17 days, independently judged
 
-G5 needs one custody record with genuine timestamps spanning from first
-deploy to filming, not fast-forwarded. That cannot be produced in one
-sitting, so this is a status, not a pass/fail gate. `custody/firestore_store.py`
-backs the derivation graph with Firestore (Native mode, `us-central1`), same
-ports as the offline SQLite store; the control plane's `POST /auditor`
-(idempotent per UTC day) seeded one fixed synthetic record on 2026-08-13 and
-a daily Cloud Scheduler job keeps the heartbeat going. Durability across a
+G5 needed one custody record with genuine timestamps spanning from first
+deploy to filming, not fast-forwarded — that cannot be produced in one
+sitting, so it stayed a status rather than a pass/fail gate until enough
+real days actually passed. `custody/firestore_store.py` backs the
+derivation graph with Firestore (Native mode, `us-central1`), same ports as
+the offline SQLite store; the control plane's `POST /auditor` (idempotent
+per UTC day) seeded one fixed synthetic record on 2026-08-13, and a daily
+Cloud Scheduler job (`custody-g5-auditor`, `0 6 * * *` UTC) has kept the
+heartbeat going every day since, with no missed fire. Durability across a
 real Cloud Run cold start is already verified: the seed record's admission
-timestamp was byte-identical after forcing a new revision. What's still
-open: enough real days need to pass, then the record gets revoked near
-filming and `scripts/scheduler_gates.py` (not yet written; building a judge
-before there is a multi-day span to judge would have nothing real to check)
-independently proves the whole span.
+timestamp was byte-identical after forcing a new revision.
+
+As of 2026-08-31, `elapsed_days_since_seed` reads **17** from a direct
+`/auditor` call — real elapsed calendar time, not a fast-forwarded clock.
+`scripts/scheduler_gates.py` independently re-derives both durable claims
+itself rather than rereading any file: `gcloud scheduler jobs describe
+custody-g5-auditor` for the job's own state/schedule/last-fire timestamp,
+and a fresh `/auditor` POST for the elapsed-day count. `make
+scheduler-gates` reports 7/7 PASS. The seed record's revocation is left for
+filming, live, on camera, so the demo shows the revoke happening rather
+than a pre-baked state.
 
 ### The Provenance Auditor: real trust re-examination, not just a heartbeat
 

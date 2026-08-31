@@ -50,8 +50,79 @@ Verification: `git log --follow --oneline -- EVALUATION_GUIDE.md` (and
 the other two) shows continuous history from the old name; `grep -rn
 "JUDGE_HANDOFF\|HACKATHON_VALIDATION\|HACKATHON_HARDENING_AUDIT" .`
 (excluding `.git`) is empty.
+Status: complete
 
-Status: active
+---
+
+# Active session contract: G5 scheduler gate + pre-filming evidence refresh
+
+Opened 2026-08-31 (submission deadline day).
+
+Objective: G5's Cloud Scheduler heartbeat (`custody-g5-auditor`, deployed
+2026-08-14) has now accumulated real elapsed time (17 days, live-verified:
+`elapsed_days_since_seed: 17` from a direct `/auditor` call against the
+redeployed control plane). Write `scripts/scheduler_gates.py`, the
+independent judge for this multi-day claim that `HANDOFF.md` names as
+still-missing ("would have nothing real to check" until now). Then
+regenerate the 24-hour-expiring live proof artifacts (`g1`, `live-review`,
+`live-fleet`, `live-chain`, `live-narration`) immediately before filming,
+and revoke the G5 seed record live, on camera, as the last step before
+recording the demo video.
+
+Branch: hackathon/g5-scheduler-gate
+
+Cut from the tip of this worktree's prior detached HEAD, `a2091a2`, itself
+`feat/memory-provenance` merged with `main` — not reconciling that
+divergence here, out of scope.
+
+Parent: a2091a2.
+
+Allowed files:
+
+- `scripts/scheduler_gates.py` (new)
+- `Makefile` (add `scheduler-gates` target + help line only)
+- `README.md` (update G5's status row/prose to match the real gate result)
+- `.claude/SESSION_CONTRACT.md` (this entry)
+- Regenerating `proof-out/*.json` artifacts via existing `make live-*`
+  targets is data refresh, not a code change, but is in scope for this
+  session's objective.
+
+Non-goals:
+
+- No change to `custody/control_plane.py`, `custody/firestore_store.py`,
+  or any other production module. This is a judge script plus doc/status
+  sync, not a mechanism change.
+- No reconciliation of `feat/memory-provenance` vs `main`'s 30+ commit
+  divergence. That is a separate, already-scoped-out piece of work per
+  the "Surface the research bodies on the trunk" entry below.
+- No merge of this branch into `feat/memory-provenance` or `main` without
+  explicit authorization.
+- No push unless explicitly authorized.
+- Revoking the G5 seed record happens only right before filming, live, on
+  camera — not as a background step in this session, per `HANDOFF.md`'s
+  own stated sequencing ("must happen near filming, not now").
+
+Baseline: `elapsed_days_since_seed: 17` confirmed live via direct
+`/auditor` POST against `custody-control-plane` (revision
+`custody-control-plane-00006-z7s`, redeployed this session from clean
+source, zero real diff) immediately before this entry was written.
+
+Acceptance gates:
+
+1. `scripts/scheduler_gates.py` independently re-derives both durable
+   claims itself (not rereading any file): `gcloud scheduler jobs
+   describe custody-g5-auditor` for the job's own state/schedule/
+   lastAttemptTime, and a fresh `/auditor` POST for
+   `elapsed_days_since_seed`.
+2. Running it reports every gate PASS against the live 17-day span (or
+   honestly reports FAIL/BLOCKED with the real reason, not a fabricated
+   PASS).
+3. `README.md`'s G5 status line reflects the real gate result, not the
+   prior "BLOCKED, no real span yet" wording.
+4. `make check` still green (no production file touched).
+
+Verification: `make scheduler-gates`; `make PYTHON=/run/media/Yatsuiii/Windows-SSD/custody/.venv/bin/python check`.
+Status: complete
 
 ---
 

@@ -14,7 +14,7 @@ PYTHON ?= $(shell \
 		command -v python3; \
 	fi)
 
-.PHONY: help lint test check hardening-check serve image gates verify-deploy incident gui cost demo revoke isolate revision-spike live-memory-bank live-memory-deletion memory-deletion-gates live-auditor auditor-gates live-review review-gates live-onboarding onboarding-gates live-escalation escalation-gates live-narration narration-gates live-fleet fleet-gates live-chain chain-gates live-g1 live-registry-attack registry-gates live-revision-binding revision-binding-gates setup-gateway deploy-gateway-probe live-gateway gateway-gates live-model-armor model-armor-gates live-observability observability-gates clean
+.PHONY: help lint test check hardening-check serve image gates verify-deploy incident gui cost demo revoke isolate revision-spike live-memory-bank live-memory-deletion memory-deletion-gates live-auditor auditor-gates scheduler-gates live-review review-gates live-onboarding onboarding-gates live-escalation escalation-gates live-narration narration-gates live-fleet fleet-gates live-chain chain-gates live-g1 live-registry-attack registry-gates live-revision-binding revision-binding-gates setup-gateway deploy-gateway-probe live-gateway gateway-gates live-model-armor model-armor-gates live-observability observability-gates clean
 
 help:
 	@echo "make lint    ruff over the tree"
@@ -37,6 +37,7 @@ help:
 	@echo "make memory-deletion-gates independently judge the live memory-deletion artifact"
 	@echo "make live-auditor prove the real Provenance Auditor: demote now, revoke later, async"
 	@echo "make auditor-gates independently judge the live Auditor artifact"
+	@echo "make scheduler-gates independently judge G5's real multi-day Cloud Scheduler span"
 	@echo "make live-review prove the real Custody Reviewer: Gemini reads a quarantined item, drafts a verdict"
 	@echo "make review-gates independently judge the live Reviewer artifact"
 	@echo "make live-onboarding prove Gemini drafts a vouch request without granting it"
@@ -128,6 +129,9 @@ live-auditor:
 
 auditor-gates:
 	@$(PYTHON) scripts/auditor_gates.py
+
+scheduler-gates:
+	@$(PYTHON) scripts/scheduler_gates.py
 
 live-review:
 	@$(PYTHON) scripts/live_review.py
