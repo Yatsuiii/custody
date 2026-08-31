@@ -88,7 +88,9 @@ Python: use `/run/media/Yatsuiii/Windows-SSD/custody/.venv/bin/python`
    right. These checks make no live call.
 2. Open these tabs in order: `incident.html`, the Devpost gallery's
    six-agent diagram, `timeline.html`, `fleet.html`, the public GitHub repo,
-   and the Devpost draft. Put `incident.html` on screen before recording.
+   the Devpost draft, the [Cloud Scheduler jobs page](https://console.cloud.google.com/cloudscheduler?project=project-988bc9fe-092c-4b32-90c),
+   and the [Cloud Run service dashboard](https://console.cloud.google.com/run/detail/us-central1/custody-control-plane/metrics?project=project-988bc9fe-092c-4b32-90c).
+   Put `incident.html` on screen before recording.
 3. Put `make scheduler-gates` and the one-time revoke command in the first
    terminal's history. Put the Reviewer command in a second terminal tab.
 4. Start a disposable ten-second screen-and-microphone recording. Say one
@@ -131,6 +133,9 @@ make PYTHON=/run/media/Yatsuiii/Windows-SSD/custody/.venv/bin/python scheduler-g
 > fast-forward.
 
 `[Hold on the 10/10 PASS output for two seconds.]`
+
+`[Switch to the Cloud Scheduler jobs page or Cloud Run service dashboard for five
+seconds so the Google Cloud resource is visible, then return to the script.]`
 
 ### Beat 2 — architecture in one glance (0:55–1:05)
 
