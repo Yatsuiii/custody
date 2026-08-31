@@ -139,9 +139,10 @@ class RecordWritingMemoryBank:
     async def search_memory(
         self, *, app_name: str, user_id: str, query: str
     ) -> list[str]:
-        return await self._writer.search_memory(
+        retrieved = await self._writer.search_memory(
             app_name=app_name, user_id=user_id, query=query
         )
+        return [r.text for r in retrieved]
 
 
 async def _poll_search(

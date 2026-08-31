@@ -83,6 +83,13 @@ Allowed files:
 - `Makefile` (add `scheduler-gates` target + help line only)
 - `README.md` (update G5's status row/prose to match the real gate result)
 - `.claude/SESSION_CONTRACT.md` (this entry)
+- `scripts/live_fleet.py` (bug fix only: its own local `CustodyMemoryBank.
+  search_memory` was never updated to unwrap `RetrievedFact.text`, the same
+  fix `scripts/live_memory_bank.py`'s equivalent class already carries from
+  the `fix/receipt-collector-id-resolution` session now merged into this
+  worktree's history. Discovered because `make live-fleet` crashed
+  regenerating this session's pre-filming evidence — same one-line unwrap
+  pattern, not a new mechanism.)
 - Regenerating `proof-out/*.json` artifacts via existing `make live-*`
   targets is data refresh, not a code change, but is in scope for this
   session's objective.
