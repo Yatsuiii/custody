@@ -77,17 +77,19 @@ Python: use `/run/media/Yatsuiii/Windows-SSD/custody/.venv/bin/python`
 
 ## Ten-minute preflight — do not consume G5 here
 
-1. Set the environment above in one terminal, enlarge the terminal font,
-   and run `clear`. Check that `echo "$CUSTODY_PROJECT"` and
+1. Open two terminal tabs. Paste the paste-safe environment line above in
+   **both** terminals, enlarge the terminal font, and run `clear`. Check that
+   `echo "$CUSTODY_PROJECT"` and
    `test -x /run/media/Yatsuiii/Windows-SSD/custody/.venv/bin/python` look
-   right. These checks make no live call.
+   right in both shells. These checks make no live call.
 2. Open these tabs in order: `incident.html`, the Devpost gallery's
    six-agent diagram, `timeline.html`, `fleet.html`, the public GitHub repo,
    the Devpost draft, the [Cloud Scheduler jobs page](https://console.cloud.google.com/cloudscheduler?project=project-988bc9fe-092c-4b32-90c),
    and the [Cloud Run service dashboard](https://console.cloud.google.com/run/detail/us-central1/custody-control-plane/metrics?project=project-988bc9fe-092c-4b32-90c).
    Put `incident.html` on screen before recording.
-3. Put `make scheduler-gates` and the one-time revoke command in the first
-   terminal's history. Put the Reviewer command in a second terminal tab.
+3. Put `make scheduler-gates` and the one-time revoke command in terminal one.
+   Put the Reviewer command in terminal two; do not assume a new tab inherited
+   terminal one's environment.
 4. Start a disposable ten-second screen-and-microphone recording. Say one
    sentence, switch browser tabs, stop, and play it back. Verify readable
    text and audible speech. This is the only dry run needed.
