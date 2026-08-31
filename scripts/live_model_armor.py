@@ -29,7 +29,7 @@ if str(REPO_ROOT) not in sys.path:
 
 OUT = REPO_ROOT / "proof-out" / "live-model-armor.json"
 FAILURE = REPO_ROOT / "proof-out" / "live-model-armor.failure.json"
-CONFIG = REPO_ROOT / ".gcloud"
+CONFIG = Path(os.environ.get("CLOUDSDK_CONFIG", REPO_ROOT / ".gcloud"))
 
 PROJECT = "project-988bc9fe-092c-4b32-90c"
 PROJECT_NUMBER = "742122658452"

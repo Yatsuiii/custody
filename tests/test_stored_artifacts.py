@@ -22,15 +22,18 @@ from typing import Callable
 from scripts import (
     auditor_gates,
     chain_gates,
+    escalation_gates,
     fleet_gates,
     gateway_gates,
     memory_deletion_gates,
     model_armor_gates,
     narration_gates,
+    onboarding_gates,
     observability_gates,
     registry_gates,
     review_gates,
     revision_binding_gates,
+    scheduler_gates,
 )
 
 PROOF_OUT = Path(__file__).parent.parent / "proof-out"
@@ -58,6 +61,9 @@ ARTIFACT_JUDGES: dict[str, Callable[[dict], dict[str, bool]]] = {
     "live-narration.json": narration_gates.judge_offline,
     "live-review.json": review_gates.judge_offline,
     "live-auditor.json": auditor_gates.judge_offline,
+    "live-onboarding.json": onboarding_gates.judge_offline,
+    "live-escalation.json": escalation_gates.judge_offline,
+    "live-scheduler.json": scheduler_gates.judge_offline,
 }
 
 

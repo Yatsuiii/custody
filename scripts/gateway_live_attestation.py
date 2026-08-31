@@ -25,7 +25,7 @@ from pathlib import Path
 from typing import Any, Protocol
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-CONFIG = REPO_ROOT / ".gcloud"
+CONFIG = Path(os.environ.get("CLOUDSDK_CONFIG", REPO_ROOT / ".gcloud"))
 
 # These values are deliberately independent of the evidence producer.  They
 # are the trust anchor that prevents a coherent artifact from redirecting live

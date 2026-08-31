@@ -5,8 +5,10 @@ from __future__ import annotations
 import copy
 import unittest
 from datetime import UTC, datetime, timedelta
+from unittest.mock import patch
 
 from scripts.gates import judge_g1, judge_g5, still_outstanding
+from scripts.scheduler_gates import CLAIM_BOUNDARY as SCHEDULER_CLAIM_BOUNDARY
 
 NOW = datetime(2026, 8, 13, 3, 0, tzinfo=UTC)
 PROOF_ID = "proof-123"
@@ -81,6 +83,32 @@ def valid_evidence() -> dict:
     }
 
 
+def valid_scheduler_evidence() -> dict:
+    return {
+        "schema_version": 1,
+        "captured_at": (NOW - timedelta(minutes=1)).isoformat(),
+        "project": "project-123",
+        "region": "us-central1",
+        "service": "custody-control-plane",
+        "job": "custody-g5-auditor",
+        "claim_boundary": SCHEDULER_CLAIM_BOUNDARY,
+        "scheduler": {
+            "state": "ENABLED",
+            "schedule": "0 6 * * *",
+            "last_attempt_time": (NOW - timedelta(hours=8)).isoformat(),
+        },
+        "auditor": {
+            "day": NOW.date().isoformat(),
+            "elapsed_days_since_seed": 2,
+            "first_run": False,
+        },
+        "seed": {
+            "id": "g5-elapsed-time-seed",
+            "revocation_id": None,
+        },
+    }
+
+
 class G1EvidenceIsIndependentlyJudged(unittest.TestCase):
     def test_complete_live_evidence_passes(self):
         self.assertEqual(judge_g1(valid_evidence(), now=NOW).state, "PASS")
@@ -110,8 +138,8 @@ class G1EvidenceIsIndependentlyJudged(unittest.TestCase):
         self.assertEqual(judge_g1(evidence, now=NOW).state, "BLOCKED")
 
 
-class G5NamesTheGroupsItCannotDemonstrate(unittest.TestCase):
-    """G5 stays BLOCKED on elapsed time, but for reasons that stay true.
+class G5NamesWhatItCannotDemonstrate(unittest.TestCase):
+    """G5 passes only when every group and real-time proof is current.
 
     Telemetry was hardcoded unreachable while O1 was unbuilt. Once O1
     landed, the hardcode kept G5 unpassable for a reason that had stopped
@@ -128,9 +156,36 @@ class G5NamesTheGroupsItCannotDemonstrate(unittest.TestCase):
         self.assertIn("telemetry", with_junk.detail)
         self.assertEqual(without.state, "BLOCKED")
 
-    def test_g5_stays_blocked_even_with_every_group_demonstrable(self):
-        """Real elapsed time is the one thing no artifact can stand in for."""
+    def test_g5_stays_blocked_without_a_current_scheduler_artifact(self):
         self.assertEqual(judge_g5({}).state, "BLOCKED")
+
+    def test_g5_passes_when_groups_and_scheduler_artifact_pass(self):
+        evidence = {
+            "g1": valid_evidence(),
+            "registry": {},
+            "gateway": {},
+            "observability": {},
+            "scheduler": valid_scheduler_evidence(),
+        }
+        with patch("scripts.gates._all_live_gates_pass", return_value=True):
+            verdict = judge_g5(evidence, now=NOW)
+        self.assertEqual(verdict.state, "PASS")
+        self.assertIn("2 elapsed day(s)", verdict.detail)
+
+    def test_a_substantively_bad_scheduler_artifact_fails(self):
+        scheduler = valid_scheduler_evidence()
+        scheduler["scheduler"]["state"] = "PAUSED"
+        evidence = {
+            "g1": valid_evidence(),
+            "registry": {},
+            "gateway": {},
+            "observability": {},
+            "scheduler": scheduler,
+        }
+        with patch("scripts.gates._all_live_gates_pass", return_value=True):
+            verdict = judge_g5(evidence, now=NOW)
+        self.assertEqual(verdict.state, "FAIL")
+        self.assertIn("scheduler_job_enabled", verdict.detail)
 
     def test_the_expected_end_state_reads_as_a_sentence(self):
         """4 of 4 groups is the goal, so it must not print an empty list.
@@ -138,8 +193,10 @@ class G5NamesTheGroupsItCannotDemonstrate(unittest.TestCase):
         This shipped: the line read "missing  and a Cloud Scheduler record"
         the moment the last group started passing.
         """
-        self.assertEqual(still_outstanding([]),
-                         "missing only a Cloud Scheduler record")
+        self.assertEqual(
+            still_outstanding([]),
+            "missing only a current Cloud Scheduler proof",
+        )
 
     def test_an_outstanding_group_is_still_named(self):
         self.assertIn("missing telemetry and", still_outstanding(["telemetry"]))

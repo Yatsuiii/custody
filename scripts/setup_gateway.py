@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-CONFIG = REPO_ROOT / ".gcloud"
+CONFIG = Path(os.environ.get("CLOUDSDK_CONFIG", REPO_ROOT / ".gcloud"))
 RESOURCE_DIR = REPO_ROOT / "live" / "gateway"
 PROJECT = "project-988bc9fe-092c-4b32-90c"
 REGION = "us-central1"

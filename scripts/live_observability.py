@@ -48,7 +48,7 @@ from scripts.live_memory_bank import prove_adk_memory_bank  # noqa: E402
 
 OUT = REPO_ROOT / "proof-out" / "live-observability.json"
 FAILURE = REPO_ROOT / "proof-out" / "live-observability.failure.json"
-CONFIG = REPO_ROOT / ".gcloud"
+CONFIG = Path(os.environ.get("CLOUDSDK_CONFIG", REPO_ROOT / ".gcloud"))
 
 LOG_NAME = "custody-observability"
 SPAN_NAME = "custody.g1.admission"

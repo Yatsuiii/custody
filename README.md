@@ -252,7 +252,7 @@ git clone https://github.com/Yatsuiii/custody.git && cd custody
 python3.12 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 
-make check     # ruff, then 377 tests. On a genuinely fresh clone with no
+make check     # ruff, then 409 tests. On a genuinely fresh clone with no
                # live proofs run yet, expect "OK (skipped=1)" — one test
                # honestly skips re-judging proof-out/ artifacts that don't
                # exist yet, rather than faking a pass. 0 failures either way.
@@ -575,7 +575,7 @@ the other.
 `make model-armor-gates` reported nine PASS results across the offline judge
 and the independent live Google Cloud attestation.
 
-### G5's elapsed-time clock: real, 17 days, independently judged
+### G5's elapsed-time clock: real, 18 days, independently judged
 
 G5 needed one custody record with genuine timestamps spanning from first
 deploy to filming, not fast-forwarded — that cannot be produced in one
@@ -589,15 +589,19 @@ heartbeat going every day since, with no missed fire. Durability across a
 real Cloud Run cold start is already verified: the seed record's admission
 timestamp was byte-identical after forcing a new revision.
 
-As of 2026-08-31, `elapsed_days_since_seed` reads **17** from a direct
+As of 2026-08-31, `elapsed_days_since_seed` reads **18** from a direct
 `/auditor` call — real elapsed calendar time, not a fast-forwarded clock.
 `scripts/scheduler_gates.py` independently re-derives both durable claims
-itself rather than rereading any file: `gcloud scheduler jobs describe
+itself: `gcloud scheduler jobs describe
 custody-g5-auditor` for the job's own state/schedule/last-fire timestamp,
-and a fresh `/auditor` POST for the elapsed-day count. `make
-scheduler-gates` reports 7/7 PASS. The seed record's revocation is left for
-filming, live, on camera, so the demo shows the revoke happening rather
-than a pre-baked state.
+a fresh `/auditor` POST for the elapsed-day count, and a direct read of the
+still-unrevoked seed. The command writes those bounded raw fields to
+`proof-out/live-scheduler.json`; `scripts/gates.py` independently re-judges
+that artifact alongside the four current capability-group proofs rather
+than trusting the producer's exit code. `make scheduler-gates` reports 10/10
+PASS and `make gates` reports 5/5 PASS, 0 blocked. The seed record's
+revocation is left for filming, live, on camera, so the demo shows the revoke
+happening rather than a pre-baked state.
 
 ### The Provenance Auditor: real trust re-examination, not just a heartbeat
 

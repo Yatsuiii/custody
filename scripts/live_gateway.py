@@ -33,7 +33,7 @@ from google.auth import load_credentials_from_file  # noqa: E402
 
 OUT = REPO_ROOT / "proof-out" / "live-gateway.json"
 FAILURE = REPO_ROOT / "proof-out" / "live-gateway.failure.json"
-CONFIG = REPO_ROOT / ".gcloud"
+CONFIG = Path(os.environ.get("CLOUDSDK_CONFIG", REPO_ROOT / ".gcloud"))
 ADC = CONFIG / "application_default_credentials.json"
 
 PROJECT = "project-988bc9fe-092c-4b32-90c"

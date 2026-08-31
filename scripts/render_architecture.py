@@ -2,15 +2,16 @@
 
 The incident page (`make gui`) covers exactly one thing: G3, the blast-
 radius/revocation story. Everything else this project has live-proven — R1,
-R2, S1, G1/G2/G4/G5, M1, O1, D1/D2, the N=25 fleet, the Provenance Auditor,
-the Custody Reviewer — has no GUI surface until this page. It reads two
+R2, S1, G1/G2/G4/G5, M1, O1, D1/D2, the N=25 fleet, and the four
+draft-or-deterministic fleet agents — has no GUI surface until this page. It reads two
 kinds of evidence, both already on disk, neither re-verified live at render
 time:
 
 1. G1-G5: `scripts/gates.py` is offline and fast (it regenerates G2-G4's
    demo fixtures deterministically and reads G1/G5 back from disk), so its
    real stdout is captured and parsed here, not re-derived.
-2. R1, R2, S1, M1, O1, D1/D2, Auditor, Reviewer, Fleet: each already has a
+2. R1, R2, S1, M1, O1, D1/D2, Onboarding, Auditor, Escalation, Reviewer,
+   Fleet: each already has a
    `proof-out/live-*.json` artifact from a real run against Google Cloud.
    This script reads each file's own self-reported `proof_id`,
    `captured_at`, and `claim_boundary` directly. It does NOT re-run the
@@ -34,6 +35,7 @@ import sys
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Callable
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
@@ -42,10 +44,12 @@ if str(REPO_ROOT) not in sys.path:
 from scripts import (  # noqa: E402
     auditor_gates,
     chain_gates,
+    escalation_gates,
     fleet_gates,
     gateway_gates,
     memory_deletion_gates,
     model_armor_gates,
+    onboarding_gates,
     observability_gates,
     registry_gates,
     review_gates,
@@ -54,25 +58,6 @@ from scripts import (  # noqa: E402
 
 OUT_HTML = REPO_ROOT / "web" / "architecture.html"
 PROOF_OUT = REPO_ROOT / "proof-out"
-
-#: A stored revision string carries an algorithm tag, but a live-proof
-#: artifact does not. So "does this artifact still pass its own claim" is
-#: answered the same way `tests/test_stored_artifacts.py` already answers it
-#: for `make check`: run the artifact's own offline judge, here at render
-#: time instead of test time. Every judge below is pure (evidence dict in,
-#: bool dict out) -- none of the `*_live` siblings that make live calls.
-JUDGE_FN = {
-    "R1": registry_gates.judge,
-    "R2": revision_binding_gates.judge,
-    "S1": gateway_gates.judge,
-    "M1": model_armor_gates.judge,
-    "O1": observability_gates.judge,
-    "D1/D2": memory_deletion_gates.judge,
-    "Auditor": auditor_gates.judge_offline,
-    "Reviewer": review_gates.judge_offline,
-    "Fleet N=25": fleet_gates.judge_offline,
-    "F1": chain_gates.judge_offline,
-}
 
 #: A judge reports its own freshness separately from every substantive
 #: gate, because "captured a while ago" and "no longer proves the claim"
@@ -111,30 +96,8 @@ class LiveProof:
     category: str
     script: str
     filename: str
-
-
-LIVE_PROOFS = [
-    LiveProof("R1", "Revision-aware admission", "Discovery & lifecycle",
-              "scripts/live_registry_attack.py", "live-registry-attack.json"),
-    LiveProof("R2", "Dispatch bound to the tools/list that authorized it", "Discovery & lifecycle",
-              "scripts/live_revision_binding.py", "live-revision-binding.json"),
-    LiveProof("S1", "Agent Gateway allow/deny enforcement", "Security & governance",
-              "scripts/live_gateway.py", "live-gateway.json"),
-    LiveProof("M1", "Model Armor content screening", "Security & governance",
-              "scripts/live_model_armor.py", "live-model-armor.json"),
-    LiveProof("O1", "Agent Observability, trace carries the custody digest", "Telemetry",
-              "scripts/live_observability.py", "live-observability.json"),
-    LiveProof("D1/D2", "Selective deletion from live Memory Bank", "Execution & state",
-              "scripts/live_memory_deletion.py", "live-memory-deletion.json"),
-    LiveProof("Auditor", "Demote now, revoke later, on the Scheduler's own clock", "Fleet & agents",
-              "scripts/live_auditor.py", "live-auditor.json"),
-    LiveProof("Reviewer", "Gemini drafts a verdict on a quarantined item", "Fleet & agents",
-              "scripts/live_review.py", "live-review.json"),
-    LiveProof("Fleet N=25", "A tool shared across departments, revoked once, pulled from both", "Fleet & agents",
-              "scripts/live_fleet.py", "live-fleet.json"),
-    LiveProof("F1", "A genuine live derived_from chain, sales -> support -> finance", "Fleet & agents",
-              "scripts/live_chain.py", "live-chain.json"),
-]
+    judge: Callable[..., dict[str, bool]]
+    widget: Callable[[dict], dict | None]
 
 CATEGORY_ORDER = ["Discovery & lifecycle", "Execution & state", "Security & governance", "Telemetry", "Fleet & agents"]
 
@@ -291,6 +254,48 @@ def widget_review(data: dict) -> dict | None:
     }
 
 
+def widget_onboarding(data: dict) -> dict | None:
+    request = data.get("request_text")
+    evidence = data.get("draft", {}).get("evidence")
+    if not (request and evidence):
+        return None
+    return {
+        "type": "pair_text",
+        "a": {
+            "label": "department request — no trust grant",
+            "value": request,
+            "state": "neutral",
+        },
+        "b": {
+            "label": "Gemini VouchDraft — draft only",
+            "value": evidence,
+            "state": "neutral",
+        },
+    }
+
+
+def widget_escalation(data: dict) -> dict | None:
+    setup = data.get("setup", {})
+    record_id = setup.get("record_id")
+    removed = setup.get("revocation", {}).get("removed", [])
+    summary = data.get("notice", {}).get("summary")
+    if not (record_id and record_id in removed and summary):
+        return None
+    return {
+        "type": "pair_text",
+        "a": {
+            "label": "deterministic Auditor sweep",
+            "value": f"{record_id} removed before Gemini was asked to draft",
+            "state": "danger",
+        },
+        "b": {
+            "label": "Gemini escalation notice — draft only",
+            "value": summary,
+            "state": "neutral",
+        },
+    }
+
+
 def widget_fleet(data: dict) -> dict | None:
     shared = data.get("shared_tool_departments")
     untouched = data.get("untouched_departments")
@@ -323,11 +328,48 @@ def widget_chain(data: dict) -> dict | None:
     }
 
 
-WIDGET_FN = {
-    "R1": widget_r1, "R2": widget_r2, "S1": widget_s1, "M1": widget_m1, "O1": widget_o1,
-    "D1/D2": widget_d1d2, "Auditor": widget_auditor, "Reviewer": widget_review,
-    "Fleet N=25": widget_fleet, "F1": widget_chain,
-}
+# A proof owns the two transformations needed to render it: evidence -> gate
+# state and evidence -> replay widget. Keeping those handlers beside the
+# proof metadata makes adding a row a single registration rather than three
+# synchronized mappings.
+LIVE_PROOFS = [
+    LiveProof("R1", "Revision-aware admission", "Discovery & lifecycle",
+              "scripts/live_registry_attack.py", "live-registry-attack.json",
+              registry_gates.judge, widget_r1),
+    LiveProof("R2", "Dispatch bound to the tools/list that authorized it", "Discovery & lifecycle",
+              "scripts/live_revision_binding.py", "live-revision-binding.json",
+              revision_binding_gates.judge, widget_r2),
+    LiveProof("S1", "Agent Gateway allow/deny enforcement", "Security & governance",
+              "scripts/live_gateway.py", "live-gateway.json",
+              gateway_gates.judge, widget_s1),
+    LiveProof("M1", "Model Armor content screening", "Security & governance",
+              "scripts/live_model_armor.py", "live-model-armor.json",
+              model_armor_gates.judge, widget_m1),
+    LiveProof("O1", "Agent Observability, trace carries the custody digest", "Telemetry",
+              "scripts/live_observability.py", "live-observability.json",
+              observability_gates.judge, widget_o1),
+    LiveProof("D1/D2", "Selective deletion from live Memory Bank", "Execution & state",
+              "scripts/live_memory_deletion.py", "live-memory-deletion.json",
+              memory_deletion_gates.judge, widget_d1d2),
+    LiveProof("Onboarding", "Gemini drafts vouch evidence without granting trust", "Fleet & agents",
+              "scripts/live_onboarding.py", "live-onboarding.json",
+              onboarding_gates.judge_offline, widget_onboarding),
+    LiveProof("Auditor", "Demote now, revoke later, on the Scheduler's own clock", "Fleet & agents",
+              "scripts/live_auditor.py", "live-auditor.json",
+              auditor_gates.judge_offline, widget_auditor),
+    LiveProof("Escalation", "Gemini drafts a post-revocation notice without revoking", "Fleet & agents",
+              "scripts/live_escalation.py", "live-escalation.json",
+              escalation_gates.judge_offline, widget_escalation),
+    LiveProof("Reviewer", "Gemini drafts a verdict on a quarantined item", "Fleet & agents",
+              "scripts/live_review.py", "live-review.json",
+              review_gates.judge_offline, widget_review),
+    LiveProof("Fleet N=25", "A tool shared across departments, revoked once, pulled from both", "Fleet & agents",
+              "scripts/live_fleet.py", "live-fleet.json",
+              fleet_gates.judge_offline, widget_fleet),
+    LiveProof("F1", "A genuine live derived_from chain, sales -> support -> finance", "Fleet & agents",
+              "scripts/live_chain.py", "live-chain.json",
+              chain_gates.judge_offline, widget_chain),
+]
 
 
 def load_live_evidence(now: datetime) -> list[dict]:
@@ -355,12 +397,12 @@ def load_live_evidence(now: datetime) -> list[dict]:
         rows.append({
             "id": proof.id, "title": proof.title, "category": proof.category,
             "script": proof.script,
-            "status": evidence_state(JUDGE_FN[proof.id], data, now),
+            "status": evidence_state(proof.judge, data, now),
             "has_evidence": True,
             "proof_id": data.get("proof_id"), "captured_at": data.get("captured_at"),
             "age": age_string(data["captured_at"], now) if data.get("captured_at") else None,
             "claim_boundary": data.get("claim_boundary"),
-            "widget": WIDGET_FN[proof.id](data),
+            "widget": proof.widget(data),
         })
     return rows
 

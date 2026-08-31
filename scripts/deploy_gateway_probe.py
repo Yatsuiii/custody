@@ -24,7 +24,8 @@ PROJECT_NUMBER = "742122658452"
 PROJECT = "project-988bc9fe-092c-4b32-90c"
 DISPLAY_NAME = "custody-gateway-probe"
 GATEWAY = "custody-fleet-egress"
-ADC = REPO_ROOT / ".gcloud" / "application_default_credentials.json"
+CONFIG = Path(os.environ.get("CLOUDSDK_CONFIG", REPO_ROOT / ".gcloud"))
+ADC = CONFIG / "application_default_credentials.json"
 
 
 def _required(name: str) -> str:

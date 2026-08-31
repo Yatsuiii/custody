@@ -42,6 +42,7 @@ from scripts.isolate import grant  # noqa: E402
 from scripts.gateway_gates import judge as judge_gateway  # noqa: E402
 from scripts.observability_gates import judge as judge_observability  # noqa: E402
 from scripts.registry_gates import judge as judge_registry  # noqa: E402
+from scripts.scheduler_gates import judge_offline as judge_scheduler  # noqa: E402
 from scripts.revoke import (  # noqa: E402
     COMPROMISED_TOOL,
     sales_session,
@@ -409,18 +410,20 @@ def judge_g4(e: dict) -> Verdict:
     )
 
 
-def _all_live_gates_pass(evidence: dict | None, judge) -> bool:
+def _all_live_gates_pass(
+    evidence: dict | None, judge, *, now: datetime | None = None
+) -> bool:
     if evidence is None:
         return False
     try:
-        gates = judge(evidence)
+        gates = judge(evidence, now=now)
     except (AttributeError, KeyError, IndexError, TypeError, ValueError):
         return False
     return bool(gates) and all(gates.values())
 
 
 def still_outstanding(missing: list[str]) -> str:
-    """Name what G5 is waiting on, including when it is only elapsed time.
+    """Name what G5 is waiting on, including when only Scheduler is absent.
 
     Every capability group can be demonstrable while G5 is still BLOCKED,
     because the Cloud Scheduler record is a separate requirement. That case
@@ -428,18 +431,18 @@ def still_outstanding(missing: list[str]) -> str:
     print an empty list into a line a judge reads.
     """
     if not missing:
-        return "missing only a Cloud Scheduler record"
-    return f"missing {', '.join(missing)} and a Cloud Scheduler record"
+        return "missing only a current Cloud Scheduler proof"
+    return f"missing {', '.join(missing)} and a current Cloud Scheduler proof"
 
 
-def judge_g5(e: dict) -> Verdict:
+def judge_g5(e: dict, *, now: datetime | None = None) -> Verdict:
     groups = {
         "discovery/lifecycle": _all_live_gates_pass(
-            e.get("registry"), judge_registry
+            e.get("registry"), judge_registry, now=now
         ),
-        "execution/state": judge_g1(e.get("g1")).state == "PASS",
+        "execution/state": judge_g1(e.get("g1"), now=now).state == "PASS",
         "security/governance": _all_live_gates_pass(
-            e.get("gateway"), judge_gateway
+            e.get("gateway"), judge_gateway, now=now
         ),
         # Judged from O1's own artifact, never inferred from Gateway request
         # logs: the observability judge is what requires the real Agent
@@ -449,19 +452,53 @@ def judge_g5(e: dict) -> Verdict:
         # O1 landed made G5 unpassable for a reason that had stopped being
         # true, which is the failure this file exists to prevent.
         "telemetry": _all_live_gates_pass(
-            e.get("observability"), judge_observability
+            e.get("observability"), judge_observability, now=now
         ),
     }
     passed = [name for name, complete in groups.items() if complete]
     missing = [name for name, complete in groups.items() if not complete]
+
+    scheduler = e.get("scheduler")
+    scheduler_gates: dict[str, bool] = {}
+    if scheduler is not None:
+        try:
+            scheduler_gates = judge_scheduler(scheduler, now=now)
+        except (AttributeError, KeyError, IndexError, TypeError, ValueError):
+            scheduler_gates = {"malformed_live_scheduler_evidence": False}
+    scheduler_failures = [
+        name for name, complete in scheduler_gates.items() if not complete
+    ]
+    substantive_scheduler_failures = [
+        name for name in scheduler_failures if name != "fresh_live_evidence"
+    ]
+
+    if substantive_scheduler_failures:
+        return Verdict(
+            "G5",
+            "four capability groups, with real elapsed time",
+            "FAIL",
+            "the captured Cloud Scheduler evidence fails: "
+            + ", ".join(substantive_scheduler_failures),
+        )
+
+    if not missing and scheduler_gates and not scheduler_failures:
+        elapsed = scheduler["auditor"]["elapsed_days_since_seed"]
+        last_attempt = scheduler["scheduler"]["last_attempt_time"]
+        return Verdict(
+            "G5",
+            "four capability groups, with real elapsed time",
+            "PASS",
+            f"4 of 4 groups independently demonstrable; Scheduler last fired "
+            f"at {last_attempt}; live Auditor reports {elapsed} elapsed day(s)",
+        )
+
     outstanding = still_outstanding(missing)
     return Verdict(
         "G5",
         "four capability groups, with real elapsed time",
         "BLOCKED",
         f"{len(passed)} of 4 groups independently demonstrable "
-        f"({', '.join(passed) or 'none'}); {outstanding} "
-        "proving real elapsed time. Model Armor "
+        f"({', '.join(passed) or 'none'}); {outstanding}. Model Armor "
         "(`make model-armor-gates`) is live-proven and folds into "
         "security/governance; it is not itself a required G5 group.",
     )
@@ -499,6 +536,7 @@ async def main() -> int:
         "registry": read_optional("live-registry-attack.json"),
         "gateway": read_optional("live-gateway.json"),
         "observability": read_optional("live-observability.json"),
+        "scheduler": read_optional("live-scheduler.json"),
     }
 
     verdicts = [
@@ -521,7 +559,10 @@ async def main() -> int:
     if failed:
         print("  a gate FAILED; this is a regression, not a missing account\n")
         return 1
-    print("  blocked gates name missing proof; they are not regressions\n")
+    if blocked:
+        print("  blocked gates name missing proof; they are not regressions\n")
+    else:
+        print("  all acceptance gates passed\n")
     return 0
 
 

@@ -22,7 +22,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 OUT = REPO_ROOT / "proof-out" / "live-revision-binding.json"
-CONFIG = REPO_ROOT / ".gcloud"
+CONFIG = Path(os.environ.get("CLOUDSDK_CONFIG", REPO_ROOT / ".gcloud"))
 
 
 def judge(evidence: dict, *, now: datetime | None = None) -> dict[str, bool]:

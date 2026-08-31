@@ -46,7 +46,7 @@ from custody.revision import DIGEST_ALGORITHM, Denial, SurfaceAttestation  # noq
 
 OUT = REPO_ROOT / "proof-out" / "live-revision-binding.json"
 FAILURE = REPO_ROOT / "proof-out" / "live-revision-binding.failure.json"
-CONFIG = REPO_ROOT / ".gcloud"
+CONFIG = Path(os.environ.get("CLOUDSDK_CONFIG", REPO_ROOT / ".gcloud"))
 SERVER_SOURCE = REPO_ROOT / "live" / "registry_attack" / "server"
 #: The custody package server.py imports; vendored into the Cloud Build
 #: context (this directory, not the repo root) before every build, and
