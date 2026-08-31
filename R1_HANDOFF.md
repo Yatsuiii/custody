@@ -14,7 +14,7 @@
 
 This file is for a **fresh session implementing the R1 fix**. It assumes no
 prior context. If you are judging the submission instead, read
-`JUDGE_HANDOFF.md`. If you are continuing general build work, read
+`EVALUATION_GUIDE.md`. If you are continuing general build work, read
 `HANDOFF.md`.
 
 Everything below was found during a read-only judging pass. No code was
@@ -444,7 +444,7 @@ metadata. It was **not** re-run during the judging pass, so whether it still
 passes end to end today is unverified. Budget for it failing on unrelated
 cloud drift, and do not start it with fifteen minutes left.
 
-Credentials, per `JUDGE_HANDOFF.md:86-95`: the project's resources live under
+Credentials, per `EVALUATION_GUIDE.md:86-95`: the project's resources live under
 `project-988bc9fe-092c-4b32-90c`, owned by `yoursturuly@gmail.com`. The
 environment's default `gcloud` config is authenticated as a **different**
 account against an unrelated project, so pass the repo's own config

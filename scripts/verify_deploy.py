@@ -4,7 +4,7 @@ Three live regressions have been caused by a deploy that reported success:
 an inline ``<script>`` corrupted in transit, which blanked every widget
 while still returning 200; a project setting that put a login wall in front
 of every URL; and a 404 at ``/``, the one URL ``README.md`` and
-``JUDGE_HANDOFF.md`` send judges to. None was visible in the deploy output.
+``EVALUATION_GUIDE.md`` send judges to. None was visible in the deploy output.
 
 So this compares the bytes the origin serves against the bytes ``make gui``
 just built, per route. Byte equality is what catches the corruption case:

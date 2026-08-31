@@ -1,3 +1,60 @@
+# Active session contract: rename judge/hackathon-named docs on main
+
+Opened 2026-08-31 (submission deadline day).
+
+Objective: User's concern, verbatim: judges browsing the public GitHub repo
+land on `main` (the default branch) and see files literally named for
+judges/hackathon evaluation (`JUDGE_HANDOFF.md`,
+`HACKATHON_VALIDATION.md`, `HACKATHON_HARDENING_AUDIT.md`), which reads as
+staged/performative rather than genuine engineering documentation. Content
+in these files is accurate and useful (real verification steps); only the
+naming is the problem. Rename to neutral names, preserve content and git
+history via `git mv`, on `main` only — not the 80+ other branches, which
+nobody browses unless directly linked.
+
+Branch: chore/rename-judge-facing-docs
+
+Parent: origin/main @ c3f1e74.
+
+Allowed files:
+
+- `JUDGE_HANDOFF.md` -> `EVALUATION_GUIDE.md` (rename only, `git mv`)
+- `HACKATHON_VALIDATION.md` -> `SUBMISSION_VALIDATION.md` (rename only)
+- `HACKATHON_HARDENING_AUDIT.md` -> `HARDENING_AUDIT.md` (rename only)
+- Any other file that references these three by their old name (grep-
+  found, update the reference only, not surrounding content)
+- `.claude/SESSION_CONTRACT.md` (this entry)
+
+Non-goals:
+
+- No content rewrite. This is a rename-and-fix-references pass, not an
+  editorial pass. Do not add, remove, or reword substantive claims.
+- No touching any branch other than `main`.
+- No touching code, tests, or `proof-out/`.
+- No push without explicit authorization (ask before pushing to the
+  public default branch).
+
+Baseline: `git -c core.fileMode=false status --short` clean on
+`origin/main` before any rename.
+
+Acceptance gates:
+
+1. All three files renamed via `git mv` (history preserved, verifiable
+   with `git log --follow`).
+2. `grep -rn` for the three old filenames across the tree (excluding
+   `.git`) returns nothing outside historical/archived content that is
+   explicitly out of scope.
+3. No other file's content changed beyond the reference-name fix.
+
+Verification: `git log --follow --oneline -- EVALUATION_GUIDE.md` (and
+the other two) shows continuous history from the old name; `grep -rn
+"JUDGE_HANDOFF\|HACKATHON_VALIDATION\|HACKATHON_HARDENING_AUDIT" .`
+(excluding `.git`) is empty.
+
+Status: active
+
+---
+
 # Active session contract: Onboarding and Escalation agents
 
 Objective: add the draft-only Onboarding and Escalation agents described in

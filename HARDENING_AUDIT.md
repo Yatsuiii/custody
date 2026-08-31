@@ -9,7 +9,7 @@ Phase: Phase 1 audit complete; implementation changes were not yet applied when 
 
 This audit is the first artifact for the hardening session. The implementation
 artifact will be a small, reviewable diff plus deterministic tests. The final
-artifact will also include `HACKATHON_VALIDATION.md`.
+artifact will also include `SUBMISSION_VALIDATION.md`.
 
 The worktree was already dirty before this branch was created. Existing changes
 to `web/architecture.html`, `web/incident.html`, untracked web pages, research
@@ -19,7 +19,7 @@ of this hardening diff.
 Read before editing:
 
 - `README.md`, `docs/architecture.md`, `DECISIONS.md`, `HANDOFF.md`,
-  `JUDGE_HANDOFF.md`, `SUBMISSION_HANDOFF.md`, and the submission draft.
+  `EVALUATION_GUIDE.md`, `SUBMISSION_HANDOFF.md`, and the submission draft.
 - `Makefile`, `Dockerfile`, `pyproject.toml`, `requirements.txt`, and
   `web/vercel.json`.
 - The core in `custody/`, the live proof producers and judges in `scripts/`,
@@ -366,7 +366,7 @@ Acceptance gates:
 
 ### 3. Add a single local hardening preflight target and validation artifact
 
-Files: `Makefile` and `HACKATHON_VALIDATION.md`.
+Files: `Makefile` and `SUBMISSION_VALIDATION.md`.
 
 Why: make the pre-submission proof loop repeatable without changing the demo or
 adding a network dependency. It will run the existing offline checks and point

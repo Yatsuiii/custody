@@ -3,7 +3,7 @@
 This file is for a **fresh session finishing the submission**. It assumes no
 prior context.
 
-- Judging the project instead? `JUDGE_HANDOFF.md`.
+- Judging the project instead? `EVALUATION_GUIDE.md`.
 - Want the build history? `HANDOFF.md` and `.claude/SESSION_CONTRACT.md`.
 - Want the R1 digest story? `R1_HANDOFF.md`, now closed.
 
@@ -247,7 +247,7 @@ What it covers, and why each one is there rather than assumed:
    `architecture.html` and no `index.html`, so a plain static deploy leaves
    `/` dead. `web/vercel.json` rewrites `/` to `/incident.html` to fix
    that. This exact regression shipped unnoticed once, and it matters
-   because `README.md` and `JUDGE_HANDOFF.md` both send judges to the bare
+   because `README.md` and `EVALUATION_GUIDE.md` both send judges to the bare
    root URL — it is the first thing a judge hits.
 2. **Every page must match `web/` byte for byte.** Status codes cannot
    catch the corrupted-`<script>` failure: it returned a clean 200 and
@@ -285,7 +285,7 @@ Neither should be settled silently. Both are judgment calls.
 **Should `proof-out/` be committed?** Today it is gitignored, so a fresh
 clone has no live evidence and every live gate reports BLOCKED. That is now
 stated plainly in `README.md`'s "Status, honestly" and in
-`JUDGE_HANDOFF.md`, so nobody is misled — but a judge who clones instead of
+`EVALUATION_GUIDE.md`, so nobody is misled — but a judge who clones instead of
 opening the deployed page still cannot verify a single live claim. Against
 committing: every artifact expires in 24 hours, so the repo would carry
 permanently-stale evidence, which is the exact drift this project exists to

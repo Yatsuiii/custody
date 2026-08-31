@@ -36,7 +36,7 @@ class TheRegressionsThatActuallyShipped(unittest.TestCase):
     def test_a_dead_root_fails_even_though_the_named_pages_are_fine(self):
         """web/ has no index.html, so a plain static deploy leaves / dead.
 
-        Both README.md and JUDGE_HANDOFF.md send judges to the bare root,
+        Both README.md and EVALUATION_GUIDE.md send judges to the bare root,
         so this passing while the other two routes work is the whole point.
         """
         responses = healthy() | {"/": Response(404, b"")}
