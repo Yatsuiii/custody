@@ -142,14 +142,16 @@ make PYTHON=/run/media/Yatsuiii/Windows-SSD/custody/.venv/bin/python scheduler-g
 ### Beat 3 — exact blast radius, not a purge (1:05–1:55)
 
 `[Return to incident.html. Point to vendor_portal, lineage, 32 affected, and
-575 preserved; then switch briefly to the timeline comparison table.]`
+575 preserved. At about 1:35 switch to timeline.html and hold the vouched →
+compromised → revoked strip plus the purge comparison table for ten seconds.]`
 
-> Here, `vendor_portal` propagated from sales to support to finance. When it is
-> compromised, the graph finds 32 descendants across three departments and
-> preserves 575 unrelated records. The unit of revocation is one descendant,
-> not an app or department. Against the strongest practical baseline—a coarse
-> purge—the fixture preserves between 19 and 93 additional percentage points
-> of memory, depending on tool reach.
+> Here, `vendor_portal` propagated from sales to support to finance. The lifecycle
+> is explicit: vouched on day one, compromised on day sixteen, then revoked.
+> The graph finds 32 descendants across three departments and preserves 575
+> unrelated records. The unit of revocation is one descendant, not an app or
+> department. Against the strongest practical baseline—a coarse purge—the
+> fixture preserves between 19 and 93 additional percentage points of memory,
+> depending on tool reach.
 
 ### Beat 4 — real Gemini, structurally unable to decide (1:55–2:35)
 
