@@ -1,3 +1,5 @@
+> **Moved.** This project now lives in [`Yatsuiii/reproduction-receipts/custody`](https://github.com/Yatsuiii/reproduction-receipts/tree/main/custody), with its full history. This repository is archived and kept so existing links keep working. New work happens there.
+
 # Custody
 
 Chain of custody for agent memory.
